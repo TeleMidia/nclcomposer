@@ -28,18 +28,16 @@ ComposerNCLAdapter::ComposerNCLAdapter()
 
 void ComposerNCLAdapter::addElement(Entity *entity)
 {
-  if (!entity)
-    return;
+  Q_ASSERT (entity != nullptr);
 
-  std::vector <Attribute> attributes =
-      createVectorAttribute(entity);
+  std::vector <Attribute> attributes = createVectorAttribute(entity);
+  Entity *parent = static_cast<Entity *> (entity->getParent());
 
-  if (!idToVirtualId.count(entity->getParentUniqueId()))
+  if (parent
+      && !idToVirtualId.count(parent->getUniqueId())
+      && parent->getType() != "document")
   {
-    Entity *parent = entity->getParent();
-
-    if (parent->getType() != "document")
-      addElement(parent);
+    addElement(parent);
   }
 
   virtualId virtualId =
@@ -48,7 +46,8 @@ void ComposerNCLAdapter::addElement(Entity *entity)
   if (virtualId != "")
     idToVirtualId.insert(entity->getUniqueId(), virtualId);
 
-  if (entity->getParent()->getType() != "document")
+  if (parent
+      && parent->getType() != "document")
   {
     nclModel.addChild(idToVirtualId[entity->getParentUniqueId()], virtualId);
   }

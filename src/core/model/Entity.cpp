@@ -19,141 +19,197 @@
 
 CPR_CORE_BEGIN_NAMESPACE
 
-Entity::Entity (QDomDocument &doc, Entity *parent) : QObject ()
+Node::Node (QDomDocument &doc, Node *parent) : QObject ()
 {
   setUniqueID (QUuid::createUuid ().toString ());
-
   this->_doc = doc;
-  _element = doc.createElement ("empty");
-
-  this->parent = parent;
+  this->_parent = parent;
 }
 
-Entity::Entity (const QMap<QString, QString> &atts, QDomDocument &doc,
-                Entity *parent)
-    : QObject ()
+Node::Node (const QString &uniqueId, QDomDocument &doc, Node *parent)
 {
-  setUniqueID (QUuid::createUuid ().toString ());
-
+  setUniqueID (uniqueId);
   this->_doc = doc;
-  _element = doc.createElement ("empty");
-
-  foreach (const QString &att, atts.keys ())
-    _element.setAttribute (att, atts[att]);
-
-  this->parent = parent;
+  this->_parent = parent;
 }
 
-Entity::Entity (const QString &uniqueId, const QString &type,
-                const QMap<QString, QString> &atts, QDomDocument &doc,
-                Entity *parent)
-    : QObject ()
+Node::~Node ()
 {
-  this->_id = uniqueId;
-  this->_doc = doc;
-  _element = doc.createElement (type);
-
-  foreach (const QString &att, atts.keys ())
-    _element.setAttribute (att, atts[att]);
-
-  this->parent = parent;
-  this->setType (type);
-}
-
-Entity::~Entity ()
-{
-  if (deleteChildren)
+  if (_deleteChildren)
   {
-    while (children.size ())
+    while (_children.size ())
     {
-      Entity *child = children.at (0);
+      Node *child = _children.at (0);
       delete child;
-      children.pop_front ();
+      _children.pop_front ();
     }
   }
 }
 
 void
-Entity::setAttribute (const QString &name, const QString &value)
+Node::setUniqueID (const QString &uniqueId)
 {
-  _element.setAttribute (name, value);
+  this->_uid = uniqueId;
+}
+
+QString
+Node::getUniqueId () const
+{
+  return this->_uid;
 }
 
 void
-Entity::setAtrributes (const QMap<QString, QString> &newatts)
+Node::setParent (Node *parent)
 {
-  foreach (const QString &att, newatts.keys ())
-    _element.setAttribute (att, newatts[att]);
-}
-
-void
-Entity::setType (const QString &type)
-{
-  _element.setTagName (type);
-}
-
-void
-Entity::setUniqueID (const QString &uniqueId)
-{
-  this->_id = uniqueId;
-}
-
-void
-Entity::setParent (Entity *parent)
-{
-  this->parent = parent;
+  this->_parent = parent;
 }
 
 bool
-Entity::addChild (Entity *entity, int pos)
+Node::addChild (Node *entity, int pos)
 {
   assert (entity != nullptr);
   QString _id = entity->getUniqueId ();
 
   // Check if the entity is already children of this entity
   // TODO: THIS CAN BE IMPROVED!! Maybe checking if the parentUniqueID.
-  for (int i = 0; i < children.size (); i++)
+  for (int i = 0; i < _children.size (); i++)
   {
-    if (children.at (i)->getUniqueId () == _id)
+    if (_children.at (i)->getUniqueId () == _id)
       return false;
   }
 
-  children.insert (pos >= 0 ? pos : children.size (), entity);
+  _children.insert (pos >= 0 ? pos : _children.size (), entity);
   entity->setParent (this);
   return true;
 }
 
 //! Deletes the child and its children in a recursive way
 bool
-Entity::deleteChild (Entity *entity)
+Node::deleteChild (Node *node)
 {
-  assert (entity != nullptr);
+  assert (node != nullptr);
 
-  entity->setDeleteChildren (true);
-  for (int i = 0; i < children.size (); i++)
+  node->setDeleteChildren (true);
+  for (int i = 0; i < _children.size (); i++)
   {
-    if (children.at (i) == entity)
+    if (_children.at (i) == node)
     {
-      children.remove (i);
+      _children.removeAt (i);
     }
   }
 
-  delete entity;
+  delete node;
 
   return true;
+}
+
+Node *
+Node::getParent () const
+{
+  return _parent;
+}
+
+QString
+Node::getParentUniqueId () const
+{
+  return _parent->getUniqueId ();
+}
+
+void
+Node::setDeleteChildren (bool _del)
+{
+  this->_deleteChildren = _del;
+}
+
+QList<Node *>
+Node::getChildren () const
+{
+  return this->_children;
+}
+
+QList<Entity *>
+Node::getEntityChildren () const
+{
+  QList<Entity *> children;
+  for (auto i = _children.begin(); i != _children.end(); ++i)
+  {
+    Entity *ent = dynamic_cast <Entity *>(*i);
+    if (ent)
+      children.append(ent);
+  }
+  return children;
+}
+
+// Entity
+Entity::Entity (QDomDocument &doc, Entity *parent) :
+  Node (doc, parent)
+{
+
+}
+
+Entity::Entity (const QMap<QString, QString> &atts, QDomDocument &doc,
+                Entity *parent)
+    : Node (doc, parent)
+{
+  this->_doc = doc;
+  _domNode = doc.createElement ("empty");
+
+  foreach (const QString &att, atts.keys ())
+    _domNode.toElement ().setAttribute (att, atts[att]);
+
+  this->_parent = parent;
+}
+
+Entity::Entity (const QString &uniqueId, const QString &type,
+                const QMap<QString, QString> &atts, QDomDocument &doc,
+                Entity *parent)
+    : Node (uniqueId, doc, parent)
+{
+  this->_doc = doc;
+  _domNode = doc.createElement (type);
+
+  foreach (const QString &att, atts.keys ())
+    _domNode.toElement ().setAttribute (att, atts[att]);
+
+  this->_parent = parent;
+  this->setType (type);
+}
+
+Entity::~Entity ()
+{
+
+}
+
+void
+Entity::setAttribute (const QString &name, const QString &value)
+{
+  _domNode.toElement ().setAttribute (name, value);
+}
+
+void
+Entity::setAtrributes (const QMap<QString, QString> &newatts)
+{
+  foreach (const QString &att, newatts.keys ())
+    _domNode.toElement ().setAttribute (att, newatts[att]);
+}
+
+void
+Entity::setType (const QString &type)
+{
+  _domNode.toElement ().setTagName (type);
 }
 
 QString
 Entity::getAttribute (const QString &name) const
 {
-  return _element.attribute (name);
+  return _domNode.toElement ().attribute (name);
 }
 
 QMap<QString, QString>
 Entity::getAttributes () const
 {
   QMap<QString, QString> attrs;
-  QDomNamedNodeMap domAttrs = _element.attributes ();
+  QDomNamedNodeMap domAttrs = _domNode.toElement ().attributes ();
   for (int i = 0; i < domAttrs.length (); i++)
   {
     QDomAttr item = domAttrs.item (i).toAttr ();
@@ -166,55 +222,25 @@ Entity::getAttributes () const
 bool
 Entity::hasAttribute (const QString &name) const
 {
-  return _element.attributes ().contains (name);
-}
-
-QString
-Entity::getUniqueId () const
-{
-  return _id;
+  return _domNode.toElement ().attributes ().contains (name);
 }
 
 QString
 Entity::getType () const
 {
-  return _element.tagName ();
-}
-
-Entity *
-Entity::getParent () const
-{
-  return parent;
-}
-
-QString
-Entity::getParentUniqueId () const
-{
-  return parent->getUniqueId ();
-}
-
-void
-Entity::setDeleteChildren (bool _delete)
-{
-  this->deleteChildren = _delete;
-}
-
-QVector<Entity *>
-Entity::getChildren () const
-{
-  return this->children;
+  return _domNode.toElement ().tagName ();
 }
 
 //! Prints the Entity and its children
-void
-Entity::print ()
-{
-  for (int i = 0; i < children.size (); i++)
-  {
-    Entity *child = children.at (i);
-    child->print ();
-  }
-}
+//void
+//Entity::print ()
+//{
+//  for (int i = 0; i < _children.size (); i++)
+//  {
+//    Entity *child = _children.at (i);
+//    child->print ();
+//  }
+//}
 
 QString
 Entity::toString (int ntab, bool writeuid)
@@ -242,9 +268,9 @@ Entity::toString (int ntab, bool writeuid)
   }
   out += ">\n";
 
-  for (int i = 0; i < children.size (); i++)
+  for (int i = 0; i < _children.size (); i++)
   {
-    Entity *child = children.at (i);
+    Node *child = _children.at (i);
     out += child->toString (ntab + 1, writeuid);
   }
   for (int i = 0; i < ntab; i++)
@@ -259,7 +285,7 @@ Entity *
 Entity::cloneEntity ()
 {
   return new Entity (getUniqueId (), getType (), getAttributes (), this->_doc,
-                     this->parent);
+                     (Entity*) this->_parent);
 }
 
 CPR_CORE_END_NAMESPACE

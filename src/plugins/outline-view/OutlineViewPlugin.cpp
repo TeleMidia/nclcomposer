@@ -224,10 +224,10 @@ OutlineViewPlugin::updateFromModel ()
       else
         first = false;
 
-      QVector<Entity *> children = entity->getChildren ();
-      for (int i = 0; i < children.size (); i++)
+      QList<Entity *> children = entity->getEntityChildren ();
+      foreach (Entity *ent, children)
       {
-        entities.push_back (children.at (i));
+        entities.push_back (ent);
       }
     }
   }
@@ -253,7 +253,7 @@ OutlineViewPlugin::init ()
 
   QTreeWidgetItem *item;
   QStack<Entity *> stack;
-  Entity *entity = project->getChildren ().at (0);
+  Entity *entity = project->getEntityChildren ().first();
 
   QMap<QString, QString> attrs;
   QMap<QString, QString>::iterator begin, end, it;
@@ -271,21 +271,21 @@ OutlineViewPlugin::init ()
     entity = stack.top ();
     stack.pop ();
 
-    QVector<Entity *> children = entity->getChildren ();
-    for (int i = 0; i < children.size (); i++)
+    QList <Entity *> children = entity->getEntityChildren ();
+    foreach (Entity *child, children)
     {
-      if (_idToItem.contains (children.at (i)->getUniqueId ()))
+      if (_idToItem.contains (child->getUniqueId ()))
         continue;
 
       attrs.clear ();
-      attrs = children.at (i)->getAttributes ();
+      attrs = child->getAttributes ();
 
       item = _window->addElement (
-          _idToItem[entity->getUniqueId ()], -1, children.at (i)->getType (),
-          children.at (i)->getUniqueId (), attrs, 0, 0);
+          _idToItem[entity->getUniqueId ()], -1, child->getType (),
+          child->getUniqueId (), attrs, 0, 0);
 
-      _idToItem[children.at (i)->getUniqueId ()] = item;
-      stack.push_front (children.at (i));
+      _idToItem[child->getUniqueId ()] = item;
+      stack.push_front (child);
     }
   }
 }

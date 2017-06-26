@@ -32,10 +32,123 @@ class MessageControl;
 class ProjectReader;
 
 class Project;
-
+class Entity;
 class EditCommand;
 class AddCommand;
 class RemoveCommand;
+
+
+/*!
+ * \ingroup core
+ * \brief A Node is a common root for all the core model classes.
+ *
+ * The internal model Composer model is a tree of Entities.
+ */
+class COMPOSERCORESHARED_EXPORT Node : public QObject
+{
+  Q_OBJECT
+
+  friend class Project;
+  friend class MessageControl;
+  friend class ProjectReader;
+
+  friend class EditCommand;
+  friend class AddCommand;
+  friend class RemoveCommand;
+
+public:
+  QString getUniqueId () const;
+
+  Node *getParent () const;
+
+  QString getParentUniqueId () const;
+
+  /*!
+   * \brief Tell if the children should be deleted when this entity is deleted
+   *        through destructor.
+   *
+   * \param mustDelete tell if the children also must be deleted.
+   */
+  void setDeleteChildren (bool mustDelete);
+
+  /*!
+   * \brief
+   * \return
+   */
+  QList<Node *> getChildren () const;
+
+  QList<Entity *> getEntityChildren () const;
+
+  /*!
+   * \brief Converts the current Entity to an XML String.
+   *
+   * \param ntabs the number of tabs to be inserted before the current entity.
+   */
+  virtual QString toString (int ntabs, bool writeuid) = 0;
+
+protected:
+  QDomDocument _doc;
+  QDomNode _domNode;
+  QString _uid;
+  Node *_parent;
+  bool _deleteChildren = true;
+
+  /*!
+   * \brief children is a list of Entity that is children than this Entity.
+   */
+  QList<Node *> _children;
+
+  /*!
+   * \brief Constructor.
+   *
+   * \param parent The QObject parent.
+   */
+  explicit Node (QDomDocument &doc, Node *parent = 0);
+
+  /*!
+   * \brief Contructor.
+   *
+   * \param uniqueId the uniqueId of this Entiy.
+   * \param type the type of the Entity.
+   * \param atts attributes to be set to this Entity.
+   * \param parent the QObject parent.
+   */
+  explicit Node (const QString &uniqueId, QDomDocument &doc, Node *parent = 0);
+
+  /*!
+   * \brief Destructor.
+   */
+  virtual ~Node ();
+
+  /*!
+   *  \brief Set the unique identifier of the entity to the value passed as
+   *      parameter.
+   *
+   * \param _id The new uniqueId of the entity.
+   */
+  void setUniqueID (const QString &uniqueId);
+
+  /*!
+   * \brief Set the parent of the Entity.
+   *
+   * \param parent The new parent of this Entity.
+   */
+  void setParent (Node *_parent);
+
+  // OBS: This method updates the parent reference
+  bool addChild (Node *node, int pos = -1);
+
+  /*!
+   * \brief This call deletes the child and his children in a recursive way.
+   *
+   * \param entity The Entity child to be removed.
+   */
+  bool deleteChild (Node *node);
+  /*!
+   * \brief
+   */
+  void print ();
+};
 
 /*!
  * \ingroup core
@@ -43,7 +156,7 @@ class RemoveCommand;
  *
  * The internal model Composer model is a tree of Entities.
  */
-class COMPOSERCORESHARED_EXPORT Entity : public QObject
+class COMPOSERCORESHARED_EXPORT Entity : public Node
 {
   Q_OBJECT
 
@@ -80,34 +193,15 @@ public:
   */
   bool hasAttribute (const QString &name) const;
 
-  QString getUniqueId () const;
-
   QString getType () const;
 
-  Entity *getParent () const;
-
-  QString getParentUniqueId () const;
-
-  /*!
-   * \brief Tell if the children should be deleted when this entity is deleted
-   *        through destructor.
-   *
-   * \param mustDelete tell if the children also must be deleted.
-   */
-  void setDeleteChildren (bool mustDelete);
-
-  /*!
-   * \brief
-   * \return
-   */
-  QVector<Entity *> getChildren () const;
 
   /*!
    * \brief Converts the current Entity to an XML String.
    *
    * \param ntabs the number of tabs to be inserted before the current entity.
    */
-  QString toString (int ntabs, bool writeuid = true);
+  virtual QString toString (int ntabs, bool writeuid = true) override;
 
   /*!
    * \brief Creates a clone of the current entity.
@@ -171,48 +265,12 @@ protected:
    *
    * \param type The type of the entity.
    */
-  void setType (const QString &_type);
+  void setType (const QString &type);
 
-  /*!
-   *  \brief Set the unique identifier of the entity to the value passed as
-   *      parameter.
-   *
-   * \param _id The new uniqueId of the entity.
-   */
-  void setUniqueID (const QString &uniqueId);
-
-  /*!
-   * \brief Set the parent of the Entity.
-   *
-   * \param parent The new parent of this Entity.
-   */
-  void setParent (Entity *parent);
-
-  // OBS: This method updates the parent reference
-  bool addChild (Entity *entity, int pos = -1);
-
-  /*!
-   * \brief This call deletes the child and his children in a recursive way.
-   *
-   * \param entity The Entity child to be removed.
-   */
-  bool deleteChild (Entity *entity);
   /*!
    * \brief
    */
-  void print ();
-
-private:
-  QDomDocument _doc;
-  QDomElement _element;
-  QString _id;
-  Entity *parent;
-  bool deleteChildren = true;
-
-  /*!
-   * \brief children is a list of Entity that is children than this Entity.
-   */
-  QVector<Entity *> children;
+//  void print ();
 };
 
 CPR_CORE_END_NAMESPACE

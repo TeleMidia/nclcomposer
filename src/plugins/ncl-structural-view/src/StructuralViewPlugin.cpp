@@ -178,11 +178,10 @@ void StructuralViewPlugin::updateFromModel()
     Entity *current = stack.top();
     stack.pop();
 
-    QVector <Entity *> children = current->getChildren();
-    for(int i = 0; i <children.size(); i++)
+    foreach (Entity *child, current->getEntityChildren())
     {
-      insertInView(children[i], false);
-      stack.push(children[i]);
+      insertInView(child, false);
+      stack.push(child);
     }
   }
 
@@ -1077,7 +1076,7 @@ void StructuralViewPlugin::changeInCore(QString uid, QMap<QString, QString> prop
           if (isInterface)
           {
             pp.insert(STR_PROPERTY_REFERENCE_INTERFACE_ID, entity->getAttribute("id"));
-            pp.insert(STR_PROPERTY_REFERENCE_COMPONENT_ID, entity->getParent()->getAttribute("id"));
+            pp.insert(STR_PROPERTY_REFERENCE_COMPONENT_ID, ((Entity *)entity->getParent())->getAttribute("id"));
 
             parent = _mapCoreToView.value(entity->getParent()->getParentUniqueId());
           }
@@ -1116,7 +1115,7 @@ void StructuralViewPlugin::changeInCore(QString uid, QMap<QString, QString> prop
       QVector<QString> paramUids;
       QVector<QString> paramNames;
 
-      foreach (Entity* c, entity->getChildren()) {
+      foreach (Entity* c, entity->getEntityChildren()) {
         if (c->getType() == tag) {
           paramUids.append(c->getUniqueId());
           paramNames.append(c->getAttribute("name"));
@@ -1227,7 +1226,7 @@ QString StructuralViewPlugin::getUidById(const QString &id, Entity* entity)
       return entity->getUniqueId();
   }
 
-  foreach(Entity* child, entity->getChildren()) {
+  foreach(Entity* child, entity->getEntityChildren ()) {
     QString result = getUidById(id, child);
 
     if (result != "") {
@@ -1247,7 +1246,7 @@ QString StructuralViewPlugin::getUidByName(const QString &name, Entity* entity)
   if (entity->getAttribute("name") == name)
     return entity->getUniqueId();
 
-  foreach(Entity* child, entity->getChildren()) {
+  foreach(Entity* child, entity->getEntityChildren()) {
     QString result = getUidByName(name, child);
 
     if (result != "") {
@@ -1271,7 +1270,7 @@ void StructuralViewPlugin::adjustConnectors()
     QMap<QString, QVector<QString> > actions;
     QMap<QString, QVector<QString> > params;
 
-    foreach (Entity* e, connectorBase->getChildren())
+    foreach (Entity* e, connectorBase->getEntityChildren())
     {
       // loading data from local causalConnector
       if (e->getType() == "causalConnector") {
@@ -1282,7 +1281,7 @@ void StructuralViewPlugin::adjustConnectors()
 
         connId = e->getAttribute("id");
 
-        foreach (Entity* ec, e->getChildren()) {
+        foreach (Entity* ec, e->getEntityChildren()) {
           if (ec->getType() == "simpleCondition") {
             connConditions.append(ec->getAttribute("role"));
           }
@@ -1296,7 +1295,7 @@ void StructuralViewPlugin::adjustConnectors()
           }
 
           if (ec->getType() == "compoundCondition") {
-            foreach (Entity* ecc, ec->getChildren()) {
+            foreach (Entity* ecc, ec->getEntityChildren()) {
               if (ecc->getType() == "simpleCondition") {
                 connConditions.append(ecc->getAttribute("role"));
               }
@@ -1304,7 +1303,7 @@ void StructuralViewPlugin::adjustConnectors()
           }
 
           if (ec->getType() == "compoundAction") {
-            foreach (Entity* ecc, ec->getChildren()) {
+            foreach (Entity* ecc, ec->getEntityChildren()) {
               if (ecc->getType() == "simpleAction") {
                 connActions .append(ecc->getAttribute("role"));
               }

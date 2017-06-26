@@ -140,21 +140,21 @@ Project::removeEntity (Entity *entity, bool appendChild) throw (EntityNotFound)
   QMutexLocker locker (_lockEntities);
   if (_entities.contains (entity->getUniqueId ()))
   {
-    Entity *parent = entity->getParent ();
+    Node *parent = entity->getParent ();
     if (parent)
     {
-      QStack<Entity *> stack;
+      QStack<Node *> stack;
       // remove all children
       stack.push (entity);
       while (stack.size ())
       {
-        Entity *currentEntity = stack.top ();
+        Node *currentEntity = stack.top ();
         stack.pop ();
         _entities.remove (currentEntity->getUniqueId ());
 
-        QVector<Entity *> children = currentEntity->getChildren ();
-        for (int i = 0; i < children.size (); i++)
-          stack.push (children.at (i));
+        QList <Node *> children = currentEntity->getChildren ();
+        for (auto i = children.begin(); i != children.end (); ++i)
+          stack.push (*i);
       }
 
       // DELETE the entity and its children recursivelly
@@ -255,7 +255,7 @@ Project::getEntityByAttrId (const QString &id)
   QMutexLocker locker (_lockEntities);
   QMapIterator<QString, Entity *> it (_entities);
   QList<Entity *> listRet;
-  qCDebug (CPR_CORE) << "Project::getEntitiesbyType " << _element.tagName ();
+  qCDebug (CPR_CORE) << "Project::getEntitiesbyType " << _domNode.toElement ().tagName ();
 
   while (it.hasNext ())
   {

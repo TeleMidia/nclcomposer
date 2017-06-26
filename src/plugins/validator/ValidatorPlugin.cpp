@@ -47,7 +47,7 @@ void ValidatorPlugin::init()
 
   if (!project) return;
 
-  foreach (Entity *entity, project->getChildren())
+  foreach (Entity *entity, project->getEntityChildren ())
     updateModel(entity);
 
 
@@ -61,7 +61,7 @@ void ValidatorPlugin::updateModel (Entity *entity)
 {
   adapter.addElement(entity);
 
-  foreach (Entity *child, entity->getChildren())
+  foreach (Entity *child, entity->getEntityChildren ())
   {
     updateModel(child);
   }

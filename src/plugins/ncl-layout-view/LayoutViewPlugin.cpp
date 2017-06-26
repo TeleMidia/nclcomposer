@@ -140,7 +140,7 @@ void NCLLayoutViewPlugin::loadRegionbase()
     {
       addRegionBaseToView(regionbaseEntity);
 
-      QVector<Entity*> children = regionbaseEntity->getChildren();
+      QList<Entity*> children = regionbaseEntity->getEntityChildren ();
 
       foreach(Entity* child, children)
       {
@@ -156,8 +156,7 @@ void NCLLayoutViewPlugin::loadRegion(Entity* region)
   {
     addRegionToView(region);
 
-    QVector<Entity*> children = region->getChildren();
-    foreach(Entity* child, children)
+    foreach(Entity* child, region->getEntityChildren ())
     {
       loadRegion(child);
     }
@@ -260,10 +259,9 @@ void NCLLayoutViewPlugin::init()
       addRegionToView(current);
     }
 
-    QVector <Entity *> children = current->getChildren();
-    for(int i = 0; i < children.size(); i++)
+    foreach (Entity *child, current->getEntityChildren ())
     {
-      stack.push(children.at(i));
+      stack.push(child);
     }
   }
 
@@ -1119,7 +1117,6 @@ QString NCLLayoutViewPlugin::getHeadUid()
 
 QMap <QString, QString> NCLLayoutViewPlugin::getRegionAttributes(Entity *region)
 {
-  QMap <QString, QString>::iterator begin, end, it;
   QVector <double> widths;
   QVector <double> heights;
   QVector <double> tops;
@@ -1151,7 +1148,8 @@ QMap <QString, QString> NCLLayoutViewPlugin::getRegionAttributes(Entity *region)
       else if(name == "top") tops.push_back(cvalue);
       else if(name == "left") lefts.push_back(cvalue);
     }
-    currentRegion = currentRegion->getParent();
+
+    currentRegion = static_cast <Entity *> (currentRegion->getParent());
   }
 
   int i;
@@ -1313,10 +1311,9 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
       else if (msgBox.clickedButton() == importPropButton)
       {
         QMap <QString, QString> propertyNameToUID;
-        QVector <Entity *> currentProperties = media->getChildren();
-        for(int i = 0; i < currentProperties.size(); i++)
+
+        foreach (Entity *propEntity, media->getEntityChildren ())
         {
-          Entity *propEntity = currentProperties.at(i);
           if(propEntity->hasAttribute("name"))
           {
             propertyNameToUID.insert(propEntity->getAttribute("name"),

@@ -188,7 +188,7 @@ RulesViewPlugin::findAllRules (Entity *root)
   if (!root)
     return;
 
-  foreach (Entity *entity, root->getChildren ())
+  foreach (Entity *entity, root->getEntityChildren ())
   {
     QString type = entity->getType ();
     if (type != RULE_LABEL && type != COMPOSITERULE_LABEL)

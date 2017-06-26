@@ -326,7 +326,7 @@ MessageControl::onRemoveEntity (Entity *entity)
         // This message is send before the real delete to try to avoid
         // the plugins keep pointers to invalid memory location.
         QList<Entity *> willBeRemoved;
-        QStack<Entity *> stack;
+        QStack<Node *> stack;
 
         // remove all children
         /**
@@ -335,20 +335,22 @@ MessageControl::onRemoveEntity (Entity *entity)
         stack.push (entity);
         while (stack.size ())
         {
-          Entity *currentEntity = stack.top ();
+          Node *node = stack.top ();
 
           // \fixme While sending messages to plugins it is possible that
           // plugin itself remove the entity (and in future we could get a
           // trash.
           // That is the reason why we keep a clone here!!
-          willBeRemoved.push_back (currentEntity->cloneEntity ());
+          Entity *ent = dynamic_cast <Entity *> (node);
+          if (ent)
+            willBeRemoved.push_back (ent->cloneEntity ());
 
           stack.pop ();
 
-          QVector<Entity *> children = currentEntity->getChildren ();
-          for (int i = 0; i < children.size (); i++)
+          QList<Node *> children = node->getChildren ();
+          for (auto i = children.begin (); i != children.end (); ++i)
           {
-            stack.push (children.at (i));
+            stack.push (*i);
           }
         }
 
@@ -418,7 +420,7 @@ MessageControl::sendEntityAddedMessageToPlugins (
   {
     IPlugin *inst = *it;
 
-    // \fixme: This is an workaround. I am delaying the calling for plugin
+    // \fixme: This is an workaround. I am delaying the calling for the plugin
     // that triggered the message
     if (inst->getPluginInstanceID () == pluginInstanceId)
     {
