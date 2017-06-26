@@ -19,8 +19,8 @@
 #include "ComposerCore_global.h"
 #include "Singleton.h"
 
-#include <QVariant>
 #include <QMap>
+#include <QVariant>
 
 CPR_CORE_BEGIN_NAMESPACE
 
@@ -37,14 +37,25 @@ private:
   QVariant _value, _defaultValue;
 
 public:
-  Preference (const QString &name,
-              QVariant::Type type,
-              const QVariant &defaultValue = QVariant(""),
-              const QString  &category = "");
+  Preference (const QString &name, QVariant::Type type,
+              const QVariant &defaultValue = QVariant (""),
+              const QString &category = "");
 
-  void setValue (const QVariant &value) { this->_value = value; }
-  QVariant value() { return _value; }
-  QString category() { return _category; }
+  void
+  setValue (const QVariant &value)
+  {
+    this->_value = value;
+  }
+  QVariant
+  value ()
+  {
+    return _value;
+  }
+  QString
+  category ()
+  {
+    return _category;
+  }
 };
 
 /*!
@@ -53,7 +64,7 @@ public:
  */
 class COMPOSERCORESHARED_EXPORT Preferences
 {
-  SINGLETON(Preferences)
+  SINGLETON (Preferences)
 
 public:
   /*!
@@ -64,22 +75,22 @@ public:
    */
   QVariant get (const QString &id);
 
-  void save() const;
-  void restore() const;
+  void save () const;
+  void restore () const;
 
-  void registerPreference(const QString& key, Preference* preference);
+  void registerPreference (const QString &key, Preference *preference);
 
-  Preference* getValue(const QString& key) const;
-  void setValue(const QString& key, const QVariant& value);
+  Preference *getValue (const QString &key) const;
+  void setValue (const QString &key, const QVariant &value);
 
-  QStringList categories() const;
-  QList<Preference*> preferences(const QString& category) const;
+  QStringList categories () const;
+  QList<Preference *> preferences (const QString &category) const;
 
 private:
   Preferences ();
   ~Preferences ();
 
-  QMap<QString, Preference*> _preferences;
+  QMap<QString, Preference *> _preferences;
   bool _enableSaveRestore;
 };
 

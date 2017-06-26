@@ -19,101 +19,103 @@
 #include "Utilities.h"
 using namespace cpr::core;
 
-#include <QSet>
 #include <QDebug>
+#include <QSet>
 
 CPR_CORE_BEGIN_NAMESPACE
 
-Preference::Preference (const QString &name,
-                        QVariant::Type type,
-                        const QVariant &defaultValue,
-                        const QString &category):
-  _name(name), _type(type), _category(category)
+Preference::Preference (const QString &name, QVariant::Type type,
+                        const QVariant &defaultValue, const QString &category)
+    : _name (name), _type (type), _category (category)
 {
   _value = defaultValue;
   _defaultValue = defaultValue;
 }
 
+INIT_SINGLETON (Preferences)
 
-INIT_SINGLETON(Preferences)
+Preferences::Preferences () {}
 
-Preferences::Preferences()
+Preferences::~Preferences ()
 {
+  qDeleteAll (_preferences);
+  _preferences.clear ();
 }
 
-Preferences::~Preferences()
+void
+Preferences::setValue (const QString &key, const QVariant &value)
 {
-  qDeleteAll( _preferences );
-  _preferences.clear();
+  _preferences.value (key)->setValue (value);
 }
 
-void Preferences::setValue(const QString &key, const QVariant &value)
+Preference *
+Preferences::getValue (const QString &key) const
 {
-  _preferences.value(key)->setValue(value);
+  return _preferences.value (key);
 }
 
-Preference* Preferences::getValue(const QString &key) const
+void
+Preferences::registerPreference (const QString &key, Preference *preference)
 {
-  return _preferences.value(key);
+  if (_preferences.contains (key))
+    qCWarning (CPR_CORE) << "Trying to register an already registered " << key
+                         << "preference.  It will be ignored!";
+
+  Q_ASSERT (!_preferences.contains (key));
+  _preferences.insert (key, preference);
 }
 
-void Preferences::registerPreference(const QString &key, Preference *preference)
-{
-  if (_preferences.contains(key))
-    qCWarning(CPR_CORE) <<  "Trying to register an already registered "
-                         << key << "preference.  It will be ignored!";
-
-  Q_ASSERT(!_preferences.contains(key));
-  _preferences.insert(key, preference);
-}
-
-void Preferences::restore() const
+void
+Preferences::restore () const
 {
   GlobalSettings settings;
-  settings.beginGroup("preferences");
-  for (const QString& key : _preferences.keys())
+  settings.beginGroup ("preferences");
+  for (const QString &key : _preferences.keys ())
   {
-    if (settings.contains(key))
-    {// options of the preference object are hard coded and never change.
-      QVariant value = settings.value(key);
-      _preferences[key]->setValue(value);
+    if (settings.contains (key))
+    { // options of the preference object are hard coded and never change.
+      QVariant value = settings.value (key);
+      _preferences[key]->setValue (value);
     }
   }
-  settings.endGroup();    //Preferences
+  settings.endGroup (); // Preferences
 }
 
-void Preferences::save() const
+void
+Preferences::save () const
 {
   GlobalSettings settings;
-  settings.beginGroup("preferences");
-  for (const QString& key : _preferences.keys())
+  settings.beginGroup ("preferences");
+  for (const QString &key : _preferences.keys ())
   {
-    settings.setValue(key, _preferences[key]->value());
+    settings.setValue (key, _preferences[key]->value ());
   }
-  settings.endGroup();
+  settings.endGroup ();
 }
 
-QStringList Preferences::categories() const
+QStringList
+Preferences::categories () const
 {
   QSet<QString> categories;
-  for (const QString& key : _preferences.keys())
+  for (const QString &key : _preferences.keys ())
   {
-    categories << _preferences[key]->category();
+    categories << _preferences[key]->category ();
   }
-  categories.remove("");
+  categories.remove ("");
 
-  QStringList sortedCategories = categories.toList();
-  std::sort(sortedCategories.begin(), sortedCategories.end());
+  QStringList sortedCategories = categories.toList ();
+  std::sort (sortedCategories.begin (), sortedCategories.end ());
 
   return sortedCategories;
 }
 
-QList<Preference *> Preferences::preferences(const QString& category) const
+QList<Preference *>
+Preferences::preferences (const QString &category) const
 {
-  QList<Preference*> preferences;
-  for (const QString& key : _preferences.keys())
+  QList<Preference *> preferences;
+  for (const QString &key : _preferences.keys ())
   {
-    if (_preferences[key]->category() == category)
+    if (_preferences[key]->category () == category)
     {
       preferences << _preferences[key];
     }

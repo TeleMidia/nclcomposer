@@ -18,10 +18,10 @@
 
 #include "ComposerCore_global.h"
 
-#include <QString>
-#include <QMap>
 #include <QDir>
 #include <QFileInfo>
+#include <QMap>
+#include <QString>
 
 #include <QLoggingCategory>
 
@@ -30,14 +30,7 @@
 /*!
  \brief
 */
-typedef enum
-{
-  CPR,
-  NCL,
-  SMIL,
-  HTML,
-  NONE
-} LanguageType;
+typedef enum { CPR, NCL, SMIL, HTML, NONE } LanguageType;
 
 CPR_CORE_BEGIN_NAMESPACE
 
@@ -59,14 +52,14 @@ public:
    * \param ext
    * \return
    */
-  static LanguageType getLanguageTypeByExtension(const QString &ext);
+  static LanguageType getLanguageTypeByExtension (const QString &ext);
 
   /*!
    * \brief getExtensionForLanguageType
    * \param type
    * \return
    */
-  static QString getExtensionForLanguageType(LanguageType type);
+  static QString getExtensionForLanguageType (LanguageType type);
 
   /*!
    * \brief relativePath
@@ -75,9 +68,9 @@ public:
    * \param bIsFile
    * \return
    */
-  static QString relativePath( const QString &absolutePath,
+  static QString relativePath (const QString &absolutePath,
                                const QString &relativeTo,
-                               bool bIsFile = false );
+                               bool bIsFile = false);
 
   /*!
    * \brief getAbsolutePath
@@ -85,35 +78,35 @@ public:
    * \param relativeTo
    * \return
    */
-  static QString absolutePath ( const QString &path,
-                                const QString &relativeTo );
+  static QString absolutePath (const QString &path, const QString &relativeTo);
 
   /*!
    * \brief getLastFileDialogPath
    * \return
    */
-  static QString getLastFileDialogPath();
+  static QString getLastFileDialogPath ();
 
   /*!
    * \brief updateLastFileDialogPath
    * \param filepath
    */
-  static void updateLastFileDialogPath( const QString &filepath );
+  static void updateLastFileDialogPath (const QString &filepath);
 
   /*!
    * \brief splitParameters
    * \param params
    * \return
    */
-  static QStringList splitParams(QString &params);
+  static QStringList splitParams (QString &params);
 
 private:
   static QMap<QString, LanguageType> _types; /*!< TODO */
 };
 
-COMPOSERCORESHARED_EXPORT Q_DECLARE_LOGGING_CATEGORY(CPR_CORE)
-COMPOSERCORESHARED_EXPORT Q_DECLARE_LOGGING_CATEGORY(CPR_GUI)
+COMPOSERCORESHARED_EXPORT
+    Q_DECLARE_LOGGING_CATEGORY (CPR_CORE) COMPOSERCORESHARED_EXPORT
+    Q_DECLARE_LOGGING_CATEGORY (CPR_GUI)
 
-CPR_CORE_END_NAMESPACE
+        CPR_CORE_END_NAMESPACE
 
 #endif // DEFINITIONS_H

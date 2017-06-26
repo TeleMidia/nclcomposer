@@ -12,4 +12,3 @@
 
  You should have received a copy of the GNU General Lesser Public License
  along with NCL Composer.  If not, see <http://www.gnu.org/licenses/>. */
-

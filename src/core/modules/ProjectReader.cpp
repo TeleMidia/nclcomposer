@@ -17,175 +17,172 @@
 
 CPR_CORE_BEGIN_NAMESPACE
 
-ProjectReader::ProjectReader()
+ProjectReader::ProjectReader () {}
+
+ProjectReader::~ProjectReader () {}
+
+Project *
+ProjectReader::readFile (const QString &location)
 {
-
-}
-
-ProjectReader::~ProjectReader()
-{
-
-}
-
-Project *ProjectReader::readFile(const QString &location)
-{
-  QFile file(location);
+  QFile file (location);
   bool error = false;
   _project = nullptr;
 
-  if(!file.open(QIODevice::ReadOnly))
+  if (!file.open (QIODevice::ReadOnly))
   {
-    qCDebug(CPR_CORE) << "ERROR: Could not open the file " << location;
+    qCDebug (CPR_CORE) << "ERROR: Could not open the file " << location;
     error = true;
   }
 
-  QByteArray data = file.readAll();
-  QString content(qUncompress(data));
+  QByteArray data = file.readAll ();
+  QString content (qUncompress (data));
   /* READING MODEL */
   QString startCpModelStr = "#COMPOSER_MODEL#\n";
   QString endCpModelStr = "\n#END_COMPOSER_MODEL#";
 
-  int startCpModel = content.indexOf(startCpModelStr)+startCpModelStr.size();
-  int endCpModel = content.indexOf(endCpModelStr);
+  int startCpModel
+      = content.indexOf (startCpModelStr) + startCpModelStr.size ();
+  int endCpModel = content.indexOf (endCpModelStr);
 
   _domDocument = QDomDocument ("cprDoc");
-  _project = new Project(_domDocument);
-  _project->setLocation(location);
+  _project = new Project (_domDocument);
+  _project->setLocation (location);
 
-  if(content != "")
+  if (content != "")
   {
-    QString modelStr = content.mid(startCpModel, endCpModel-startCpModel);
-    parseModelString(modelStr);
+    QString modelStr = content.mid (startCpModel, endCpModel - startCpModel);
+    parseModelString (modelStr);
   }
   /* FINISH READING MODEL */
 
   /* READING PLUGIN DATA */
-  QString pluginsData = content.mid(endCpModel + endCpModelStr.size());
+  QString pluginsData = content.mid (endCpModel + endCpModelStr.size ());
   QString startPluginDataStr = "#COMPOSER_PLUGIN_DATA ";
   QString endPluginDataStr = "\n#END_COMPOSER_PLUGIN_DATA#";
 
   int pos = 0;
-  while(pos >= 0 && pos < pluginsData.size())
+  while (pos >= 0 && pos < pluginsData.size ())
   {
-    int startPluginData = pluginsData.indexOf(startPluginDataStr, pos);
-    int endStartPluginData =
-            pluginsData.indexOf("#\n", startPluginData
-                                     + startPluginDataStr.size());
+    int startPluginData = pluginsData.indexOf (startPluginDataStr, pos);
+    int endStartPluginData = pluginsData.indexOf (
+        "#\n", startPluginData + startPluginDataStr.size ());
 
-    QString pluginID = pluginsData.mid(
-          startPluginData + startPluginDataStr.size(),
-          endStartPluginData- (startPluginData + startPluginDataStr.size())
-        );
+    QString pluginID = pluginsData.mid (
+        startPluginData + startPluginDataStr.size (),
+        endStartPluginData - (startPluginData + startPluginDataStr.size ()));
 
-    int endPluginData = pluginsData.indexOf( endPluginDataStr,
-                                             startPluginData);
+    int endPluginData
+        = pluginsData.indexOf (endPluginDataStr, startPluginData);
 
     // +2 and -2 because of the previously #\n
-    QString data = pluginsData.mid( endStartPluginData+2,
-                                    endPluginData-endStartPluginData-2);
+    QString data = pluginsData.mid (endStartPluginData + 2,
+                                    endPluginData - endStartPluginData - 2);
 
-    pos = endPluginData + endPluginDataStr.size() + 1;
+    pos = endPluginData + endPluginDataStr.size () + 1;
 
-    _project->setPluginData(pluginID, data.toLatin1());
+    _project->setPluginData (pluginID, data.toLatin1 ());
   }
   /* FINISH READING MODEL */
 
-  if(error)
-    qCDebug(CPR_CORE) << "ERROR: File is corrupted " << location;
+  if (error)
+    qCDebug (CPR_CORE) << "ERROR: File is corrupted " << location;
 
-  file.close();
+  file.close ();
 
   return _project;
 }
 
-bool ProjectReader::parseModelString(const QString &str)
+bool
+ProjectReader::parseModelString (const QString &str)
 {
   QXmlInputSource inputSource;
-  inputSource.setData(str);
+  inputSource.setData (str);
 
   QXmlSimpleReader reader;
-  reader.setContentHandler(this);
-  reader.setErrorHandler(this);
+  reader.setContentHandler (this);
+  reader.setErrorHandler (this);
 
-  return reader.parse(inputSource);
+  return reader.parse (inputSource);
 }
 
-bool ProjectReader::startElement( const QString &namespaceURI,
-                                  const QString &localName,
-                                  const QString &qName,
-                                  const QXmlAttributes &attributes)
+bool
+ProjectReader::startElement (const QString &namespaceURI,
+                             const QString &localName, const QString &qName,
+                             const QXmlAttributes &attributes)
 {
-  Q_UNUSED(namespaceURI);
-  Q_UNUSED(localName);
+  Q_UNUSED (namespaceURI);
+  Q_UNUSED (localName);
 
-  QMap<QString,QString> atts;
+  QMap<QString, QString> atts;
   QString uniqueId = "";
 
   Entity *parentEntity = nullptr;
   if (qName != "document")
   {
-    _lockStack.lock();
-    parentEntity = _elementStack.top();
-    _lockStack.unlock();
+    _lockStack.lock ();
+    parentEntity = _elementStack.top ();
+    _lockStack.unlock ();
   }
 
-  for (int i=0; i < attributes.count(); i++)
+  for (int i = 0; i < attributes.count (); i++)
   {
-    if(attributes.qName(i) != "uniqueEntityId")
-      atts[attributes.qName(i)] = attributes.value(i);
+    if (attributes.qName (i) != "uniqueEntityId")
+      atts[attributes.qName (i)] = attributes.value (i);
     else
-      uniqueId = attributes.value(i);
+      uniqueId = attributes.value (i);
   }
 
   Entity *entity = nullptr;
-  if(qName != "document" && parentEntity != nullptr)
+  if (qName != "document" && parentEntity != nullptr)
   {
-    if(uniqueId == "")
-      qCDebug(CPR_CORE) << "trying to add an entity whithout an uniqueId";
+    if (uniqueId == "")
+      qCDebug (CPR_CORE) << "trying to add an entity whithout an uniqueId";
     else
     {
-      entity = new Entity(uniqueId, qName, atts, _project->getDomDocument(),
-                          _project);
-      _project->addEntity(entity, parentEntity->getUniqueId());
+      entity = new Entity (uniqueId, qName, atts, _project->getDomDocument (),
+                           _project);
+      _project->addEntity (entity, parentEntity->getUniqueId ());
     }
   }
   else
     entity = _project;
 
-  _lockStack.lock();
-  _elementStack.push(entity);
-  _lockStack.unlock();
+  _lockStack.lock ();
+  _elementStack.push (entity);
+  _lockStack.unlock ();
   return true;
 }
 
-bool ProjectReader::endElement( const QString &namespaceURI,
-                                const QString &localName,
-                                const QString &qName)
+bool
+ProjectReader::endElement (const QString &namespaceURI,
+                           const QString &localName, const QString &qName)
 {
-  Q_UNUSED(namespaceURI)
-  Q_UNUSED(localName)
-  Q_UNUSED(qName)
+  Q_UNUSED (namespaceURI)
+  Q_UNUSED (localName)
+  Q_UNUSED (qName)
 
-  _lockStack.lock();
-  if(_elementStack.size())
-    _elementStack.pop();
-  _lockStack.unlock();
-
-  return true;
-}
-
-bool ProjectReader::characters(const QString &str)
-{
-  Q_UNUSED(str)
+  _lockStack.lock ();
+  if (_elementStack.size ())
+    _elementStack.pop ();
+  _lockStack.unlock ();
 
   return true;
 }
 
-bool ProjectReader::fatalError(const QXmlParseException &exception)
+bool
+ProjectReader::characters (const QString &str)
 {
-  qCDebug(CPR_CORE) << "Fatal error on line" << exception.lineNumber()
-           << ", column" << exception.columnNumber() << ":"
-           << exception.message();
+  Q_UNUSED (str)
+
+  return true;
+}
+
+bool
+ProjectReader::fatalError (const QXmlParseException &exception)
+{
+  qCDebug (CPR_CORE) << "Fatal error on line" << exception.lineNumber ()
+                     << ", column" << exception.columnNumber () << ":"
+                     << exception.message ();
 
   return false;
 }

@@ -17,8 +17,8 @@
 #define ATTRIBUTEREFERENCES_H
 #include "ComposerCore_global.h"
 
-#include <QString>
 #include <QMap>
+#include <QString>
 
 CPR_CORE_BEGIN_NAMESPACE
 
@@ -32,19 +32,20 @@ CPR_CORE_BEGIN_NAMESPACE
 class COMPOSERCORESHARED_EXPORT AttributeReferences
 {
 public:
-  enum REFERENCE_SCOPE {
+  enum REFERENCE_SCOPE
+  {
     ANY_SCOPE = 0,
     SAME_SCOPE,
     USERDEFINED_SCOPE
   };
 
 private:
-  QString element, attr, /*!< TODO */
-          ref_element, ref_attr; /*!< TODO */
+  QString element, attr,     /*!< TODO */
+      ref_element, ref_attr; /*!< TODO */
 
   REFERENCE_SCOPE scope;
   QString userDefinedScope;
-  QMap <QString, REFERENCE_SCOPE> stringToScope;
+  QMap<QString, REFERENCE_SCOPE> stringToScope;
 
 public:
   /*!
@@ -57,11 +58,9 @@ public:
    *    attribute).
    * \param scope Which scope.
    */
-  AttributeReferences(const QString &element,
-                      const QString &attr,
-                      const QString &ref_element,
-                      const QString &ref_attr,
-                      REFERENCE_SCOPE scope = ANY_SCOPE);
+  AttributeReferences (const QString &element, const QString &attr,
+                       const QString &ref_element, const QString &ref_attr,
+                       REFERENCE_SCOPE scope = ANY_SCOPE);
   /*!
    * \brief Constructor.
    *
@@ -72,56 +71,55 @@ public:
    *                    attribute).
    * \param scope Which scope (as a string).
    */
-  AttributeReferences(const QString &element,
-                      const QString &attr,
-                      const QString &ref_element,
-                      const QString &ref_attr,
-                      const QString &scope);
+  AttributeReferences (const QString &element, const QString &attr,
+                       const QString &ref_element, const QString &ref_attr,
+                       const QString &scope);
   /*!
    * \brief Get the source element.
    *
    * \return QString the name of the source element.
    */
-  QString getElement();
+  QString getElement ();
   /*!
    * \brief Get the source attribute.
    *
    * \return QString the name of the source attribute.
    */
-  QString getAttribute();
+  QString getAttribute ();
   /*!
    * \brief Get the name of referred element.
    *
    * \return QString The name of the referred element.
    */
-  QString getRefElement();
+  QString getRefElement ();
   /*!
-   * \brief Get the name of the referred attribute (an ref_element's attribute).
+   * \brief Get the name of the referred attribute (an ref_element's
+   * attribute).
    *
    * \return QString The name of the referred attribute.
    */
-  QString getRefAttribute();
+  QString getRefAttribute ();
   /*!
    * \brief Sets the scope of the object as a string.
    *
    * \return QString the name of the scope.
    */
-  void setScope(const QString &scope);
+  void setScope (const QString &scope);
   /*!
    * \brief Gets the scope of the object as a REFERENCE_SCOPE.
    *
    * \return REFERENCE_SCOPE the type of the scope.
    */
-  REFERENCE_SCOPE getScope();
+  REFERENCE_SCOPE getScope ();
   /*!
    * \brief Gets the string where the user define the scope.
    *
    * \return QString the user defined scope.
    */
-  QString getUserDefinedScope();
+  QString getUserDefinedScope ();
 
 private:
-  void initializeStringToScope();
+  void initializeStringToScope ();
 };
 
 CPR_CORE_END_NAMESPACE

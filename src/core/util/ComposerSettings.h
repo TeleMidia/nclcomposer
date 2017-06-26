@@ -25,20 +25,20 @@ CPR_CORE_BEGIN_NAMESPACE
  * \ingroup core
  * \brief The GlobalSettings class
  */
-class COMPOSERCORESHARED_EXPORT GlobalSettings: public QSettings
+class COMPOSERCORESHARED_EXPORT GlobalSettings : public QSettings
 {
 public:
-  GlobalSettings();
+  GlobalSettings ();
 
-  void loadDefaults(const QString &dataPath);
-  void addPlatformDefaults();
-  QStringList getExtensionsPaths();
+  void loadDefaults (const QString &dataPath);
+  void addPlatformDefaults ();
+  QStringList getExtensionsPaths ();
 };
 
-class COMPOSERCORESHARED_EXPORT ProjectSettings: public QSettings
+class COMPOSERCORESHARED_EXPORT ProjectSettings : public QSettings
 {
 public:
-  ProjectSettings(const QString &project);
+  ProjectSettings (const QString &project);
 };
 
 CPR_CORE_END_NAMESPACE

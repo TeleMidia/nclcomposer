@@ -28,16 +28,16 @@ CPR_CORE_BEGIN_NAMESPACE
 class EditCommand : public QUndoCommand
 {
 public:
-  EditCommand( Project *_project, Entity *entity,
-               QMap <QString, QString> _newAttrs, QUndoCommand *parent = 0 );
+  EditCommand (Project *_project, Entity *entity,
+               QMap<QString, QString> _newAttrs, QUndoCommand *parent = 0);
 
-  void undo();
-  void redo();
+  void undo ();
+  void redo ();
 
 private:
   Project *_project;
   QString _uniqueId;
-  QMap <QString, QString> _attrs, _newAttrs;
+  QMap<QString, QString> _attrs, _newAttrs;
   MessageControl *_msgControl;
 };
 
@@ -47,10 +47,10 @@ private:
 class RemoveCommand : public QUndoCommand
 {
 public:
-  RemoveCommand(Project *project, Entity *entity, QUndoCommand *parent = 0);
+  RemoveCommand (Project *project, Entity *entity, QUndoCommand *parent = 0);
 
-  void undo();
-  void redo();
+  void undo ();
+  void redo ();
 
 private:
   Project *_project;
@@ -66,11 +66,11 @@ private:
 class AddCommand : public QUndoCommand
 {
 public:
-  AddCommand(Project *_project, Entity *_entity, QString _parentUniqueId,
-             QUndoCommand *parent = 0);
+  AddCommand (Project *_project, Entity *_entity, QString _parentUniqueId,
+              QUndoCommand *parent = 0);
 
-  void undo();
-  void redo();
+  void undo ();
+  void redo ();
 
 private:
   Project *_project;

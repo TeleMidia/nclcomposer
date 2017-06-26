@@ -15,6 +15,4 @@
 
 #include "DocumentTreeItem.h"
 
-DocumentTreeItem::DocumentTreeItem()
-{
-}
+DocumentTreeItem::DocumentTreeItem () {}

@@ -13,146 +13,150 @@
  You should have received a copy of the GNU General Lesser Public License
  along with NCL Composer.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include <qglobal.h>
 #include <QApplication>
-#include <QResource>
-#include <QObject>
-#include <QStringList>
 #include <QCommandLineParser>
+#include <QObject>
+#include <QResource>
+#include <QStringList>
+#include <qglobal.h>
 
 #include <util/ComposerSettings.h>
 
 #include "ComposerMainWindow.h"
 using namespace cpr::gui;
 
-Q_DECLARE_LOGGING_CATEGORY(CPR_MAIN)
-Q_LOGGING_CATEGORY(CPR_MAIN, "cpr.main")
+Q_DECLARE_LOGGING_CATEGORY (CPR_MAIN)
+Q_LOGGING_CATEGORY (CPR_MAIN, "cpr.main")
 
 // \todo this function should move from here
-void loadTranslations()
+void
+loadTranslations ()
 {
   /* Get the current language code */
   GlobalSettings settings;
-  settings.beginGroup("languages");
-  QString language_code = settings.value("currentLanguage",
-                                         QString("en")).toString();
-  settings.endGroup();
-  qCDebug(CPR_MAIN) << "Current Language = " << language_code;
+  settings.beginGroup ("languages");
+  QString language_code
+      = settings.value ("currentLanguage", QString ("en")).toString ();
+  settings.endGroup ();
+  qCDebug (CPR_MAIN) << "Current Language = " << language_code;
 
-  QLocale locale = QLocale(language_code);
-  QLocale::setDefault(locale);
+  QLocale locale = QLocale (language_code);
+  QLocale::setDefault (locale);
 
   /* Get all paths were can be translations */
-  settings.beginGroup("extensions");
-  QStringList extensions_paths = settings.value("path").toStringList();
-  settings.endGroup();
+  settings.beginGroup ("extensions");
+  QStringList extensions_paths = settings.value ("path").toStringList ();
+  settings.endGroup ();
 
-  qCDebug(CPR_MAIN) << "Looking for extensions in " <<  extensions_paths;
+  qCDebug (CPR_MAIN) << "Looking for extensions in " << extensions_paths;
 
   /* Go in each path and search for files from that language */
-  foreach(QString curPath, extensions_paths)
+  foreach (QString curPath, extensions_paths)
   {
-    QDir curDir(curPath);
-    //filter only the files for the current language code
-    curDir.setNameFilters(QStringList() << "*_" + language_code + ".qm");
+    QDir curDir (curPath);
+    // filter only the files for the current language code
+    curDir.setNameFilters (QStringList () << "*_" + language_code + ".qm");
 
-    QFileInfoList fileInfoList = curDir.entryInfoList();
+    QFileInfoList fileInfoList = curDir.entryInfoList ();
 
     // for each translation file install in the application.
-    foreach(QFileInfo fileInfo, fileInfoList)
+    foreach (QFileInfo fileInfo, fileInfoList)
     {
-      qCDebug(CPR_MAIN) << "Loading translation file = " << fileInfo.absoluteFilePath();
-      QTranslator *composerTranslator = new QTranslator(qApp);
-      composerTranslator->load(fileInfo.absoluteFilePath());
-      QCoreApplication::installTranslator(composerTranslator);
+      qCDebug (CPR_MAIN) << "Loading translation file = "
+                         << fileInfo.absoluteFilePath ();
+      QTranslator *composerTranslator = new QTranslator (qApp);
+      composerTranslator->load (fileInfo.absoluteFilePath ());
+      QCoreApplication::installTranslator (composerTranslator);
     }
   }
 }
 
-bool handleArguments (QCommandLineParser &cmdParser, bool &initGUI)
+bool
+handleArguments (QCommandLineParser &cmdParser, bool &initGUI)
 {
   QString desc;
   desc += "NCL Composer is a flexible authoring tool for interactive \n"
           "multimedia applications.\n";
   desc += "Copyright (C) 2011-2017 by ";
-  desc += QCoreApplication::organizationName();
+  desc += QCoreApplication::organizationName ();
   desc += ".";
   desc += "\n\nNCL Composer is free software; see the source for copying "
           "conditions.\n"
           "There is NO warranty; not even for MERCHANTABILITY or FITNESS \n"
           "FOR PARTICULAR PURPOSE.";
 
-  cmdParser.setApplicationDescription(desc);
+  cmdParser.setApplicationDescription (desc);
 
-  const QCommandLineOption helpOption = cmdParser.addHelpOption();
-  const QCommandLineOption versionOption = cmdParser.addVersionOption();
-  cmdParser.addPositionalArgument("projects", "List of projects to open.");
+  const QCommandLineOption helpOption = cmdParser.addHelpOption ();
+  const QCommandLineOption versionOption = cmdParser.addVersionOption ();
+  cmdParser.addPositionalArgument ("projects", "List of projects to open.");
 
-  if(!cmdParser.parse(QCoreApplication::arguments()))
+  if (!cmdParser.parse (QCoreApplication::arguments ()))
     return false;
 
-  if (cmdParser.isSet(helpOption))
+  if (cmdParser.isSet (helpOption))
   {
-    cmdParser.showHelp();
+    cmdParser.showHelp ();
     initGUI = false;
   }
 
-  if (cmdParser.isSet(versionOption))
+  if (cmdParser.isSet (versionOption))
   {
-    cmdParser.showVersion();
+    cmdParser.showVersion ();
     initGUI = false;
   }
 
   return true;
 }
 
-int main(int argc, char *argv[])
+int
+main (int argc, char *argv[])
 {
   bool initGUI = true;
-  QApplication a(argc, argv);
+  QApplication a (argc, argv);
 
-  QCoreApplication::setOrganizationName("TeleMidia Lab/PUC-Rio");
-  QCoreApplication::setOrganizationDomain("telemidia.pucrio.br");
-  QCoreApplication::setApplicationName("NCL Composer");
-  QCoreApplication::setApplicationVersion(NCLCOMPOSER_GUI_VERSION);
-  
-  QApplication::addLibraryPath(QApplication::applicationDirPath());
+  QCoreApplication::setOrganizationName ("TeleMidia Lab/PUC-Rio");
+  QCoreApplication::setOrganizationDomain ("telemidia.pucrio.br");
+  QCoreApplication::setApplicationName ("NCL Composer");
+  QCoreApplication::setApplicationVersion (NCLCOMPOSER_GUI_VERSION);
+
+  QApplication::addLibraryPath (QApplication::applicationDirPath ());
 
   QCommandLineParser cmdParser;
-  handleArguments(cmdParser, initGUI);
+  handleArguments (cmdParser, initGUI);
 
   if (initGUI)
   {
-    QResource::registerResource("images.qrc");
+    QResource::registerResource ("images.qrc");
     GlobalSettings settings;
 
     /* If the settings is empty (i.e. it is the first time we are running,
      * copy all values from the default settings */
-    if (settings.allKeys().empty())
+    if (settings.allKeys ().empty ())
     {
-      const QString defaultIni =
-              QApplication::applicationDirPath()+"/../share/nclcomposer/default.ini";
+      const QString defaultIni = QApplication::applicationDirPath ()
+                                 + "/../share/nclcomposer/default.ini";
 
-      qCInfo(CPR_MAIN) << "This is the first time you are running "
+      qCInfo (CPR_MAIN) << "This is the first time you are running "
                         << "NCL Composer.  It will copy the default settings"
                         << "from " << defaultIni;
 
-      settings.loadDefaults(defaultIni);
+      settings.loadDefaults (defaultIni);
     }
 
-    settings.addPlatformDefaults();
+    settings.addPlatformDefaults ();
 
-    loadTranslations();
-    a.setQuitOnLastWindowClosed(true);
+    loadTranslations ();
+    a.setQuitOnLastWindowClosed (true);
 
     ComposerMainWindow w;
-    w.init(a);
+    w.init (a);
 
     // Load files passed as positional arguments
-    const QStringList filesToOpen = cmdParser.positionalArguments();
-    w.openProjects(filesToOpen);
+    const QStringList filesToOpen = cmdParser.positionalArguments ();
+    w.openProjects (filesToOpen);
 
-    return a.exec();
+    return a.exec ();
   }
 
   return 1;

@@ -15,70 +15,72 @@
 
 #include "util/Utilities.h"
 
-#include <QStringList>
 #include <QDebug>
+#include <QStringList>
 
 CPR_CORE_BEGIN_NAMESPACE
 
-Q_LOGGING_CATEGORY(CPR_CORE, "cpr.core")
-Q_LOGGING_CATEGORY(CPR_GUI, "cpr.gui")
+Q_LOGGING_CATEGORY (CPR_CORE, "cpr.core")
+Q_LOGGING_CATEGORY (CPR_GUI, "cpr.gui")
 
-QMap<QString,LanguageType> Utilities::_types = { {"cpr",  NCL},
-                                                 {"ncl",  NCL},
-                                                 {"smil", SMIL},
-                                                 {"html", HTML} };
+QMap<QString, LanguageType> Utilities::_types
+    = { { "cpr", NCL }, { "ncl", NCL }, { "smil", SMIL }, { "html", HTML } };
 
-QString Utilities::normalizeXMLID(const QString &id)
+QString
+Utilities::normalizeXMLID (const QString &id)
 {
-  QString tmp = id.normalized(QString::NormalizationForm_KD);
-  tmp.remove(QRegExp("[^a-zA-Z_-\\.\\s]"));
-  if(tmp.at(0).isDigit())
+  QString tmp = id.normalized (QString::NormalizationForm_KD);
+  tmp.remove (QRegExp ("[^a-zA-Z_-\\.\\s]"));
+  if (tmp.at (0).isDigit ())
     tmp = "_" + tmp;
 
   return tmp;
 }
 
-LanguageType Utilities::getLanguageTypeByExtension(const QString &ext)
+LanguageType
+Utilities::getLanguageTypeByExtension (const QString &ext)
 {
-  if (!_types.contains(ext))
+  if (!_types.contains (ext))
     return NONE;
   else
     return _types[ext];
 }
 
-QString Utilities::getExtensionForLanguageType(LanguageType type)
+QString
+Utilities::getExtensionForLanguageType (LanguageType type)
 {
-  QMap<QString,LanguageType>::iterator it;
-  for (it = _types.begin(); it != _types.end(); ++it)
-    if(type == it.value())
-      return it.key();
+  QMap<QString, LanguageType>::iterator it;
+  for (it = _types.begin (); it != _types.end (); ++it)
+    if (type == it.value ())
+      return it.key ();
   return "";
 }
 
-QString Utilities::relativePath( const QString &absPath,
-                                 const QString &relTo,
-                                 bool bIsFile /*= false*/ )
+QString
+Utilities::relativePath (const QString &absPath, const QString &relTo,
+                         bool bIsFile /*= false*/)
 {
-  //force the "/" instead of "\\"
+  // force the "/" instead of "\\"
   QString absolutePath = absPath;
-  absolutePath.replace("\\", "/");
+  absolutePath.replace ("\\", "/");
   QString relativeTo = relTo;
-  relativeTo = relativeTo.replace("\\", "/");
+  relativeTo = relativeTo.replace ("\\", "/");
 
-  QStringList absoluteDirectories = absolutePath.split("/",
-                                                       QString::SkipEmptyParts);
-  QStringList relativeDirectories = relativeTo.split("/",
-                                                     QString::SkipEmptyParts);
+  QStringList absoluteDirectories
+      = absolutePath.split ("/", QString::SkipEmptyParts);
+  QStringList relativeDirectories
+      = relativeTo.split ("/", QString::SkipEmptyParts);
 
-  //Get the shortest of the two paths
-  int length = absoluteDirectories.count() < relativeDirectories.count() ?
-               absoluteDirectories.count() : relativeDirectories.count();
+  // Get the shortest of the two paths
+  int length = absoluteDirectories.count () < relativeDirectories.count ()
+                   ? absoluteDirectories.count ()
+                   : relativeDirectories.count ();
 
-  //Use to determine where in the loop we exited
+  // Use to determine where in the loop we exited
   int lastCommonRoot = -1;
   int index;
 
-  //Find common root
+  // Find common root
   for (index = 0; index < length; index++)
   {
     if (absoluteDirectories[index] == relativeDirectories[index])
@@ -87,82 +89,85 @@ QString Utilities::relativePath( const QString &absPath,
       break;
   }
 
-  //If we didn't find a common prefix then throw
+  // If we didn't find a common prefix then throw
   if (lastCommonRoot == -1)
-    throw QString("Paths do not have a common base");
+    throw QString ("Paths do not have a common base");
 
-  //Build up the relative path
+  // Build up the relative path
   QString relativePath;
 
-  //Add on the ..
+  // Add on the ..
   for (index = lastCommonRoot + 1;
-       index < absoluteDirectories.count() - (bIsFile?1:0); index++)
+       index < absoluteDirectories.count () - (bIsFile ? 1 : 0); index++)
   {
-    if (absoluteDirectories[index].length() > 0)
+    if (absoluteDirectories[index].length () > 0)
     {
-      relativePath.append("../");
-//      relativePath.append(QDir::separator());
+      relativePath.append ("../");
+      //      relativePath.append(QDir::separator());
     }
   }
 
-  //Add on the folders
-  for (index = lastCommonRoot + 1; index < relativeDirectories.count() - 1;
+  // Add on the folders
+  for (index = lastCommonRoot + 1; index < relativeDirectories.count () - 1;
        index++)
   {
-    relativePath.append( relativeDirectories[index] ).append("/");
+    relativePath.append (relativeDirectories[index]).append ("/");
   }
 
-  relativePath.append(relativeDirectories[relativeDirectories.count() - 1]);
+  relativePath.append (relativeDirectories[relativeDirectories.count () - 1]);
 
   return relativePath;
 }
 
-QString Utilities::absolutePath( const QString &path,
-                                 const QString &relativeTo )
+QString
+Utilities::absolutePath (const QString &path, const QString &relativeTo)
 {
   QFileInfo fInfo (path);
-  if(fInfo.isAbsolute())
+  if (fInfo.isAbsolute ())
     return path;
   else
     return relativeTo + "/" + path;
 }
 
-QString Utilities::getLastFileDialogPath()
+QString
+Utilities::getLastFileDialogPath ()
 {
   GlobalSettings settings;
-  QString lastFileDialogPath = QDir::homePath();
+  QString lastFileDialogPath = QDir::homePath ();
 
-  settings.beginGroup("mainwindow"); // TODO: A better name to mainwindow.
-  if(settings.contains("lastFileDialogPath"))
-    lastFileDialogPath = settings.value("lastFileDialogPath").toString();
-  settings.endGroup();
+  settings.beginGroup ("mainwindow"); // TODO: A better name to mainwindow.
+  if (settings.contains ("lastFileDialogPath"))
+    lastFileDialogPath = settings.value ("lastFileDialogPath").toString ();
+  settings.endGroup ();
 
-  qCDebug(CPR_CORE) << lastFileDialogPath;
+  qCDebug (CPR_CORE) << lastFileDialogPath;
 
   return lastFileDialogPath;
 }
 
-void Utilities::updateLastFileDialogPath(const QString &filepath)
+void
+Utilities::updateLastFileDialogPath (const QString &filepath)
 {
-  QFileInfo fileInfo(filepath);
+  QFileInfo fileInfo (filepath);
 
   GlobalSettings settings;
-  settings.beginGroup("mainwindow");
-  settings.setValue("lastFileDialogPath", fileInfo.absolutePath());
-  settings.endGroup();
+  settings.beginGroup ("mainwindow");
+  settings.setValue ("lastFileDialogPath", fileInfo.absolutePath ());
+  settings.endGroup ();
 }
 
-QStringList Utilities::splitParams(QString &params)
+QStringList
+Utilities::splitParams (QString &params)
 {
   QStringList plist;
   QRegExp rx;
-  rx.setPattern("([-${}\\w\\\\:]+|\\\".*\\\")");
+  rx.setPattern ("([-${}\\w\\\\:]+|\\\".*\\\")");
 
   int pos = 0;
-  while ((pos = rx.indexIn(params, pos)) != -1)
+  while ((pos = rx.indexIn (params, pos)) != -1)
   {
-    plist << rx.cap(1);
-    pos += rx.matchedLength();
+    plist << rx.cap (1);
+    pos += rx.matchedLength ();
   }
 
   return plist;

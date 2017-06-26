@@ -17,11 +17,11 @@
 
 CPR_CORE_BEGIN_NAMESPACE
 
-AttributeReferences::AttributeReferences ( const QString &element,
-                                           const QString &attr,
-                                           const QString &ref_element,
-                                           const QString &ref_attr,
-                                           REFERENCE_SCOPE scope)
+AttributeReferences::AttributeReferences (const QString &element,
+                                          const QString &attr,
+                                          const QString &ref_element,
+                                          const QString &ref_attr,
+                                          REFERENCE_SCOPE scope)
 {
   this->element = element;
   this->attr = attr;
@@ -29,24 +29,24 @@ AttributeReferences::AttributeReferences ( const QString &element,
   this->ref_attr = ref_attr;
   this->scope = scope;
 
-  initializeStringToScope();
+  initializeStringToScope ();
 }
 
-AttributeReferences::AttributeReferences ( const QString &element,
-                                           const QString &attr,
-                                           const QString &ref_element,
-                                           const QString &ref_attr,
-                                           const QString &scope)
+AttributeReferences::AttributeReferences (const QString &element,
+                                          const QString &attr,
+                                          const QString &ref_element,
+                                          const QString &ref_attr,
+                                          const QString &scope)
 {
   this->element = element;
   this->attr = attr;
   this->ref_element = ref_element;
   this->ref_attr = ref_attr;
 
-  initializeStringToScope();
+  initializeStringToScope ();
 
-  if(stringToScope.contains(scope))
-    this->scope = stringToScope.value(scope);
+  if (stringToScope.contains (scope))
+    this->scope = stringToScope.value (scope);
   else
   {
     this->scope = USERDEFINED_SCOPE;
@@ -54,41 +54,48 @@ AttributeReferences::AttributeReferences ( const QString &element,
   }
 }
 
-QString AttributeReferences::getElement()
+QString
+AttributeReferences::getElement ()
 {
   return this->element;
 }
 
-QString AttributeReferences::getAttribute()
+QString
+AttributeReferences::getAttribute ()
 {
   return this->attr;
 }
 
-QString AttributeReferences::getRefElement()
+QString
+AttributeReferences::getRefElement ()
 {
   return this->ref_element;
 }
 
-QString AttributeReferences::getRefAttribute()
+QString
+AttributeReferences::getRefAttribute ()
 {
   return this->ref_attr;
 }
 
-AttributeReferences::REFERENCE_SCOPE AttributeReferences::getScope()
+AttributeReferences::REFERENCE_SCOPE
+AttributeReferences::getScope ()
 {
   return this->scope;
 }
 
-void AttributeReferences::initializeStringToScope()
+void
+AttributeReferences::initializeStringToScope ()
 {
-  if(!stringToScope.size())
+  if (!stringToScope.size ())
   {
-    stringToScope.insert(QString("SAME"), SAME_SCOPE);
-    stringToScope.insert(QString("ANY"), ANY_SCOPE);
+    stringToScope.insert (QString ("SAME"), SAME_SCOPE);
+    stringToScope.insert (QString ("ANY"), ANY_SCOPE);
   }
 }
 
-QString AttributeReferences::getUserDefinedScope()
+QString
+AttributeReferences::getUserDefinedScope ()
 {
   return this->userDefinedScope;
 }

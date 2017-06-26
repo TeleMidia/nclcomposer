@@ -16,16 +16,16 @@
 #ifndef ILAYOUTPLUGIN_H
 #define ILAYOUTPLUGIN_H
 
-#include <QtPlugin>
 #include <QString>
 #include <QtGui/QIcon>
+#include <QtPlugin>
 
 #include <QJsonObject>
 
 #include "util/ComposerCore_global.h"
 
-#include "util/Utilities.h"
 #include "IPlugin.h"
+#include "util/Utilities.h"
 using namespace cpr::core;
 
 CPR_CORE_BEGIN_NAMESPACE
@@ -35,21 +35,22 @@ CPR_CORE_BEGIN_NAMESPACE
  * \brief A Factory interface for building plugin instances.
  *
  * This extension point is used by the core to build instances of an specific
- * plugin. Each instance can be related to a different open project. Each plugin
+ * plugin. Each instance can be related to a different open project. Each
+ * plugin
  * instance is binded with its project instance during the setup of this
  * project. The whole process is transparent for plugin developers.
  */
 class COMPOSERCORESHARED_EXPORT IPluginFactory
 {
 public:
-  virtual ~IPluginFactory() { }
+  virtual ~IPluginFactory () {}
 
   /*!
    * \brief Through this call the core is able to create a new plugin instance.
    *
    * \return The new plugin instance.
    */
-  virtual IPlugin* createPluginInstance() = 0;
+  virtual IPlugin *createPluginInstance () = 0;
 
   /*!
    * \brief When an Project is closed by the user and it is no longer
@@ -64,37 +65,60 @@ public:
    *
    * \param The plugin instance.
    */
-  virtual void releasePluginInstance(IPlugin *) = 0;
+  virtual void releasePluginInstance (IPlugin *) = 0;
 
-  virtual QString id() const = 0;
+  virtual QString id () const = 0;
 
-  virtual QIcon icon() const { return QIcon(); }
-  virtual QWidget* getPreferencePageWidget() { return nullptr; }
-  virtual void setDefaultValues() {}
-  virtual void applyValues() {}
+  virtual QIcon
+  icon () const
+  {
+    return QIcon ();
+  }
+  virtual QWidget *
+  getPreferencePageWidget ()
+  {
+    return nullptr;
+  }
+  virtual void
+  setDefaultValues ()
+  {
+  }
+  virtual void
+  applyValues ()
+  {
+  }
 
-  virtual QList<LanguageType> getSupportedLanguages()
+  virtual QList<LanguageType>
+  getSupportedLanguages ()
   {
     QList<LanguageType> lTypes;
-    lTypes.append(NCL);
+    lTypes.append (NCL);
     return lTypes;
   }
 
-  void setMetadata(const QJsonObject &obj) { this->metadata_obj = obj; }
-  QJsonObject metadata() { return this->metadata_obj; }
+  void
+  setMetadata (const QJsonObject &obj)
+  {
+    this->metadata_obj = obj;
+  }
+  QJsonObject
+  metadata ()
+  {
+    return this->metadata_obj;
+  }
 
 private:
-    QJsonObject metadata_obj;
+  QJsonObject metadata_obj;
 };
 
 CPR_CORE_END_NAMESPACE
 
-Q_DECLARE_METATYPE(cpr::core::IPluginFactory*)
+Q_DECLARE_METATYPE (cpr::core::IPluginFactory *)
 
 /**
  * This is required for the QTPlugin system works.
  * Declaring the interface that is going to be used by external plugins.
  */
 #define IPluginFactory_iid "br.puc_rio.telemidia.composer.IPluginFactory"
-Q_DECLARE_INTERFACE(IPluginFactory, IPluginFactory_iid)
+Q_DECLARE_INTERFACE (IPluginFactory, IPluginFactory_iid)
 #endif

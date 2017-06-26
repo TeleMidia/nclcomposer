@@ -20,71 +20,76 @@
 
 CPR_CORE_BEGIN_NAMESPACE
 
-EditCommand::EditCommand(Project *project, Entity *entity,
-                         QMap <QString, QString> newAttrs, QUndoCommand *parent)
-  : QUndoCommand(parent)
+EditCommand::EditCommand (Project *project, Entity *entity,
+                          QMap<QString, QString> newAttrs,
+                          QUndoCommand *parent)
+    : QUndoCommand (parent)
 {
   this->_project = project;
 
-  this->_uniqueId = entity->getUniqueId();
-  _attrs = entity->getAttributes();
+  this->_uniqueId = entity->getUniqueId ();
+  _attrs = entity->getAttributes ();
   this->_newAttrs = newAttrs;
 
-  _msgControl = PluginControl::getInstance()->getMessageControl(project);
+  _msgControl = PluginControl::getInstance ()->getMessageControl (project);
 }
 
-void EditCommand::undo()
+void
+EditCommand::undo ()
 {
-  _msgControl->anonymousChangeEntity(this->_uniqueId, this->_attrs);
+  _msgControl->anonymousChangeEntity (this->_uniqueId, this->_attrs);
 }
 
-void EditCommand::redo()
+void
+EditCommand::redo ()
 {
-  _msgControl->anonymousChangeEntity(this->_uniqueId, this->_newAttrs);
+  _msgControl->anonymousChangeEntity (this->_uniqueId, this->_newAttrs);
 }
 
-RemoveCommand::RemoveCommand(Project *project, Entity *entity,
-                             QUndoCommand *parent)
+RemoveCommand::RemoveCommand (Project *project, Entity *entity,
+                              QUndoCommand *parent)
 {
-  Q_UNUSED(parent)
+  Q_UNUSED (parent)
 
-  this->_parentUniqueId = entity->getParentUniqueId();
+  this->_parentUniqueId = entity->getParentUniqueId ();
   this->_entity = entity;
   this->_project = project;
 
-  _msgControl = PluginControl::getInstance()->getMessageControl(project);
+  _msgControl = PluginControl::getInstance ()->getMessageControl (project);
 
   _first = true;
 }
 
-void RemoveCommand::undo()
+void
+RemoveCommand::undo ()
 {
-  _msgControl->anonymousAddEntity(this->_entity, _parentUniqueId);
+  _msgControl->anonymousAddEntity (this->_entity, _parentUniqueId);
 
   // I have to do this because the core is responsible to Remove the entity.
-  this->_entity = _entity->cloneEntity();
+  this->_entity = _entity->cloneEntity ();
 
   _first = false;
 
   // \todo Undo every child of the entity (recursively).
 }
 
-void RemoveCommand::redo()
+void
+RemoveCommand::redo ()
 {
-  //I have to do this because the core is responsible to Remove the entity.
-  Entity *entityTmp = this->_entity->cloneEntity();
-  if(_first)
-    _project->removeEntity(this->_entity, false);
+  // I have to do this because the core is responsible to Remove the entity.
+  Entity *entityTmp = this->_entity->cloneEntity ();
+  if (_first)
+    _project->removeEntity (this->_entity, false);
   else
-    _msgControl->anonymousRemoveEntity(this->_entity->getUniqueId());
+    _msgControl->anonymousRemoveEntity (this->_entity->getUniqueId ());
 
   this->_entity = entityTmp;
 }
 
-AddCommand::AddCommand(Project *project, Entity *entity,
-                       QString parentUniqueId, QUndoCommand *parent)
+AddCommand::AddCommand (Project *project, Entity *entity,
+                        QString parentUniqueId, QUndoCommand *parent)
 {
-  Q_UNUSED(parent)
+  Q_UNUSED (parent)
 
   this->_parentUniqueId = parentUniqueId;
   this->_entity = entity;
@@ -92,27 +97,29 @@ AddCommand::AddCommand(Project *project, Entity *entity,
 
   _first = true;
 
-  _msgControl = PluginControl::getInstance()->getMessageControl(project);
+  _msgControl = PluginControl::getInstance ()->getMessageControl (project);
 }
 
-void AddCommand::undo()
+void
+AddCommand::undo ()
 {
-  this->_entity = this->_entity->cloneEntity();
+  this->_entity = this->_entity->cloneEntity ();
 
-  _msgControl->anonymousRemoveEntity(this->_entity->getUniqueId());
+  _msgControl->anonymousRemoveEntity (this->_entity->getUniqueId ());
 
   _first = false;
 }
 
-void AddCommand::redo()
+void
+AddCommand::redo ()
 {
-  //I have to do this because the core is responsible to Remove the entity.
-  Entity *entityTmp = this->_entity->cloneEntity();
-  //TODO - calll validator to check
-  if(_first)
-    _project->addEntity(this->_entity, _parentUniqueId);
+  // I have to do this because the core is responsible to Remove the entity.
+  Entity *entityTmp = this->_entity->cloneEntity ();
+  // TODO - calll validator to check
+  if (_first)
+    _project->addEntity (this->_entity, _parentUniqueId);
   else
-    _msgControl->anonymousAddEntity(this->_entity, _parentUniqueId);
+    _msgControl->anonymousAddEntity (this->_entity, _parentUniqueId);
 
   this->_entity = entityTmp;
 }

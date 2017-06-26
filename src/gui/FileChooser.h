@@ -19,8 +19,9 @@
 #include <QWidget>
 #include <util/ComposerCore_global.h>
 
-namespace Ui {
-  class FileChooser;
+namespace Ui
+{
+class FileChooser;
 }
 
 CPR_GUI_BEGIN_NAMESPACE
@@ -28,10 +29,10 @@ CPR_GUI_BEGIN_NAMESPACE
 class FileChooser : public QWidget
 {
   Q_OBJECT
-  Q_ENUMS(FILECHOOSER_TYPE)
+  Q_ENUMS (FILECHOOSER_TYPE)
 
 public:
-  enum  FILECHOOSER_TYPE
+  enum FILECHOOSER_TYPE
   {
     OPEN_FILENAME,
     SAVE_FILENAME,
@@ -39,24 +40,22 @@ public:
     OPEN_FILENAMES
   };
 
-  explicit FileChooser(const QString &label,
-                       FileChooser::FILECHOOSER_TYPE fctype,
-                       const QString &caption = "",
-                       const QString &filter = "",
-                       QWidget *parent = 0);
-  ~FileChooser();
+  explicit FileChooser (const QString &label,
+                        FileChooser::FILECHOOSER_TYPE fctype,
+                        const QString &caption = "",
+                        const QString &filter = "", QWidget *parent = 0);
+  ~FileChooser ();
 
-  QString getText();
-  void setText(const QString &value);
-  
+  QString getText ();
+  void setText (const QString &value);
+
 private:
   Ui::FileChooser *ui;
   FILECHOOSER_TYPE fctype;
   QString filter, caption;
 
-
 private slots:
-  void on_pushButton_pressed();
+  void on_pushButton_pressed ();
 };
 
 CPR_GUI_END_NAMESPACE

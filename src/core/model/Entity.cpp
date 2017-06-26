@@ -19,118 +19,122 @@
 
 CPR_CORE_BEGIN_NAMESPACE
 
-Entity::Entity(QDomDocument &doc, Entity *parent) :
-  QObject()
+Entity::Entity (QDomDocument &doc, Entity *parent) : QObject ()
 {
-  setUniqueID(QUuid::createUuid().toString());
+  setUniqueID (QUuid::createUuid ().toString ());
 
   this->_doc = doc;
-  _element = doc.createElement("empty");
+  _element = doc.createElement ("empty");
 
   this->parent = parent;
 }
 
-Entity::Entity(const QMap<QString,QString> &atts, QDomDocument &doc,
-               Entity *parent) :
-    QObject()
+Entity::Entity (const QMap<QString, QString> &atts, QDomDocument &doc,
+                Entity *parent)
+    : QObject ()
 {
-  setUniqueID(QUuid::createUuid().toString());
+  setUniqueID (QUuid::createUuid ().toString ());
 
   this->_doc = doc;
-  _element = doc.createElement("empty");
+  _element = doc.createElement ("empty");
 
-  foreach (const QString &att, atts.keys())
-    _element.setAttribute(att, atts[att]);
+  foreach (const QString &att, atts.keys ())
+    _element.setAttribute (att, atts[att]);
 
   this->parent = parent;
 }
 
-Entity::Entity(const QString &uniqueId,
-               const QString &type,
-               const QMap<QString, QString> &atts,
-               QDomDocument &doc,
-               Entity *parent) :
-  QObject()
+Entity::Entity (const QString &uniqueId, const QString &type,
+                const QMap<QString, QString> &atts, QDomDocument &doc,
+                Entity *parent)
+    : QObject ()
 {
   this->_id = uniqueId;
   this->_doc = doc;
-  _element = doc.createElement(type);
+  _element = doc.createElement (type);
 
-  foreach (const QString &att, atts.keys())
-    _element.setAttribute(att, atts[att]);
+  foreach (const QString &att, atts.keys ())
+    _element.setAttribute (att, atts[att]);
 
   this->parent = parent;
-  this->setType(type);
+  this->setType (type);
 }
 
-Entity::~Entity()
+Entity::~Entity ()
 {
   if (deleteChildren)
   {
-    while (children.size())
+    while (children.size ())
     {
-      Entity *child = children.at(0);
+      Entity *child = children.at (0);
       delete child;
-      children.pop_front();
+      children.pop_front ();
     }
   }
 }
 
-void Entity::setAttribute(const QString &name, const QString &value)
+void
+Entity::setAttribute (const QString &name, const QString &value)
 {
-  _element.setAttribute(name, value);
+  _element.setAttribute (name, value);
 }
 
-void Entity::setAtrributes(const QMap<QString,QString> &newatts)
+void
+Entity::setAtrributes (const QMap<QString, QString> &newatts)
 {
-  foreach (const QString &att, newatts.keys())
-    _element.setAttribute(att, newatts[att]);
+  foreach (const QString &att, newatts.keys ())
+    _element.setAttribute (att, newatts[att]);
 }
 
-void Entity::setType(const QString &type)
+void
+Entity::setType (const QString &type)
 {
-  _element.setTagName(type);
+  _element.setTagName (type);
 }
 
-void Entity::setUniqueID(const QString &uniqueId)
+void
+Entity::setUniqueID (const QString &uniqueId)
 {
   this->_id = uniqueId;
 }
 
-void Entity::setParent(Entity *parent)
+void
+Entity::setParent (Entity *parent)
 {
   this->parent = parent;
 }
 
-bool Entity::addChild(Entity *entity, int pos)
+bool
+Entity::addChild (Entity *entity, int pos)
 {
-  assert(entity != nullptr);
-  QString _id = entity->getUniqueId();
+  assert (entity != nullptr);
+  QString _id = entity->getUniqueId ();
 
   // Check if the entity is already children of this entity
   // TODO: THIS CAN BE IMPROVED!! Maybe checking if the parentUniqueID.
-  for(int i = 0; i < children.size(); i++)
+  for (int i = 0; i < children.size (); i++)
   {
-    if(children.at(i)->getUniqueId() == _id )
+    if (children.at (i)->getUniqueId () == _id)
       return false;
   }
 
-  children.insert(pos >= 0 ? pos: children.size(), entity);
-  entity->setParent(this);
+  children.insert (pos >= 0 ? pos : children.size (), entity);
+  entity->setParent (this);
   return true;
 }
 
 //! Deletes the child and its children in a recursive way
-bool Entity::deleteChild(Entity *entity)
+bool
+Entity::deleteChild (Entity *entity)
 {
-  assert(entity != nullptr);
+  assert (entity != nullptr);
 
-  entity->setDeleteChildren(true);
-  for(int i = 0; i < children.size(); i++)
+  entity->setDeleteChildren (true);
+  for (int i = 0; i < children.size (); i++)
   {
-    if(children.at(i) == entity)
+    if (children.at (i) == entity)
     {
-      children.remove(i);
+      children.remove (i);
     }
   }
 
@@ -139,111 +143,123 @@ bool Entity::deleteChild(Entity *entity)
   return true;
 }
 
-QString Entity::getAttribute(const QString &name) const
+QString
+Entity::getAttribute (const QString &name) const
 {
-  return _element.attribute(name);
+  return _element.attribute (name);
 }
 
-QMap <QString, QString> Entity::getAttributes () const
+QMap<QString, QString>
+Entity::getAttributes () const
 {
-  QMap <QString, QString> attrs;
-  QDomNamedNodeMap domAttrs = _element.attributes();
-  for (int i = 0; i < domAttrs.length(); i++)
+  QMap<QString, QString> attrs;
+  QDomNamedNodeMap domAttrs = _element.attributes ();
+  for (int i = 0; i < domAttrs.length (); i++)
   {
-    QDomAttr item = domAttrs.item(i).toAttr();
-    attrs[item.name()] = item.value();
+    QDomAttr item = domAttrs.item (i).toAttr ();
+    attrs[item.name ()] = item.value ();
   }
 
   return attrs;
 }
 
-bool Entity::hasAttribute(const QString &name) const
+bool
+Entity::hasAttribute (const QString &name) const
 {
-  return _element.attributes().contains(name);
+  return _element.attributes ().contains (name);
 }
 
-QString Entity::getUniqueId() const
+QString
+Entity::getUniqueId () const
 {
   return _id;
 }
 
-QString Entity::getType() const
+QString
+Entity::getType () const
 {
-  return _element.tagName();
+  return _element.tagName ();
 }
 
-Entity* Entity::getParent() const
+Entity *
+Entity::getParent () const
 {
   return parent;
 }
 
-QString Entity::getParentUniqueId() const
+QString
+Entity::getParentUniqueId () const
 {
-  return parent->getUniqueId();
+  return parent->getUniqueId ();
 }
 
-void Entity::setDeleteChildren(bool _delete)
+void
+Entity::setDeleteChildren (bool _delete)
 {
   this->deleteChildren = _delete;
 }
 
-QVector <Entity *> Entity::getChildren() const
+QVector<Entity *>
+Entity::getChildren () const
 {
   return this->children;
 }
 
 //! Prints the Entity and its children
-void Entity::print()
+void
+Entity::print ()
 {
-  for (int i = 0; i < children.size(); i++)
+  for (int i = 0; i < children.size (); i++)
   {
-    Entity *child = children.at(i);
-    child->print();
+    Entity *child = children.at (i);
+    child->print ();
   }
 }
 
-QString Entity::toString(int ntab, bool writeuid)
+QString
+Entity::toString (int ntab, bool writeuid)
 {
   QString out = "";
-  for(int i = 0; i < ntab; i++)
+  for (int i = 0; i < ntab; i++)
     out += "\t";
 
   out += "<";
-  out.append(getType().toLatin1());
-  QMap <QString, QString> atts = getAttributes();
-  for(const QString &attr: atts.keys())
+  out.append (getType ().toLatin1 ());
+  QMap<QString, QString> atts = getAttributes ();
+  for (const QString &attr : atts.keys ())
   {
     out += " ";
-    out.append(attr);
+    out.append (attr);
     out += "=\"";
-    out += atts.value(attr);
+    out += atts.value (attr);
     out += "\"";
   }
-  if(writeuid)
+  if (writeuid)
   {
     out += " uniqueEntityId=\"";
-    out += getUniqueId();
+    out += getUniqueId ();
     out += "\"";
   }
   out += ">\n";
 
-  for (int i = 0; i < children.size(); i++)
+  for (int i = 0; i < children.size (); i++)
   {
-    Entity *child = children.at(i);
-    out += child->toString(ntab+1, writeuid);
+    Entity *child = children.at (i);
+    out += child->toString (ntab + 1, writeuid);
   }
-  for(int i = 0; i < ntab; i++)
+  for (int i = 0; i < ntab; i++)
     out += "\t";
   out += "</";
-  out += getType();
+  out += getType ();
   out += ">\n";
   return out;
 }
 
-Entity *Entity::cloneEntity()
+Entity *
+Entity::cloneEntity ()
 {
-  return new Entity(
-        getUniqueId(), getType(), getAttributes(), this->_doc, this->parent);
+  return new Entity (getUniqueId (), getType (), getAttributes (), this->_doc,
+                     this->parent);
 }
 
 CPR_CORE_END_NAMESPACE

@@ -16,58 +16,59 @@
 #ifndef COMPOSERMAINWINDOW_H
 #define COMPOSERMAINWINDOW_H
 
-#include <QtDebug>
-#include <QStringList>
-#include <QMap>
 #include <QFileSystemModel>
+#include <QMap>
+#include <QStringList>
+#include <QtDebug>
 
-#include <QCoreApplication>
 #include <QApplication>
+#include <QCoreApplication>
 #include <QTimer>
 
-#include <QToolButton>
-#include <QDockWidget>
 #include <QAtomicInt>
+#include <QDockWidget>
+#include <QToolButton>
 
-#include <QMainWindow>
-#include <QTabWidget>
-#include <QMenu>
 #include <QAction>
-#include <QMessageBox>
-#include <QMenuBar>
-#include <QTreeWidget>
-#include <QWizardPage>
-#include <QWizard>
-#include <QVBoxLayout>
-#include <QFileDialog>
-#include <QPushButton>
-#include <QLabel>
-#include <QGridLayout>
-#include <QLineEdit>
-#include <QToolBar>
-#include <QListWidget>
-#include <QDialog>
 #include <QBitmap>
+#include <QDialog>
+#include <QFileDialog>
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QListWidget>
+#include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
+#include <QMessageBox>
 #include <QPainter>
+#include <QPushButton>
+#include <QTabWidget>
+#include <QToolBar>
 #include <QTreeView>
+#include <QTreeWidget>
+#include <QVBoxLayout>
+#include <QWizard>
+#include <QWizardPage>
 
+#include <modules/LanguageControl.h>
 #include <modules/PluginControl.h>
 #include <modules/ProjectControl.h>
-#include <modules/LanguageControl.h>
 #include <util/ComposerSettings.h>
 using namespace cpr::core;
 
 #include "ComposerSplashScreen.h"
 
+#include "AboutDialogs.h"
 #include "PerspectiveManager.h"
 #include "PreferencesDialog.h"
 #include "WelcomeWidget.h"
-#include "AboutDialogs.h"
 using namespace cpr::gui;
 
 #include <qtoolwindowmanager.h>
 
-namespace Ui {
+namespace Ui
+{
 class ComposerMainWindow;
 }
 
@@ -81,31 +82,31 @@ CPR_GUI_BEGIN_NAMESPACE
  * This class is the main window of NCL Composer.
  * \fixme This class is too big it must be refactored
  */
-class ComposerMainWindow :
-        public QMainWindow {
+class ComposerMainWindow : public QMainWindow
+{
   Q_OBJECT
 
 private:
   static const int _maximumRecentProjectsSize = 10;
   Ui::ComposerMainWindow *_ui;
 
-  QTabWidget  *_tabProjects; /*!< Each open project is show in a different tab.
-                                  The tabProjects variable keeps the list of the
-                                  projects open tabs. */
+  QTabWidget *_tabProjects; /*!< Each open project is show in a different tab.
+                                 The tabProjects variable keeps the list of the
+                                 projects open tabs. */
 
-  QToolButton  *_tbLanguageDropList; /*!< Action that shows the list of
-                                          languages as a menu. */
+  QToolButton *_tbLanguageDropList; /*!< Action that shows the list of
+                                         languages as a menu. */
 
-  QMenu        *_menuPerspective; /*!< Contains the list of perspectives. */
-  QMenu        *_menuMultidevice; /*!<todo */
-  QMenu        *_menuLanguage;    /*!< Contains the list of supported
-                                       languages.*/
+  QMenu *_menuPerspective; /*!< Contains the list of perspectives. */
+  QMenu *_menuMultidevice; /*!<todo */
+  QMenu *_menuLanguage;    /*!< Contains the list of supported
+                                languages.*/
 
-  QAction      *_projectViewAction; /*!< TODO */
+  QAction *_projectViewAction; /*!< TODO */
 
-  QMap<QString, QToolWindowManager*> _projectsWidgets; /*!< Keeps a reference
-                                                            to each project
-                                                            widget. */
+  QMap<QString, QToolWindowManager *> _projectsWidgets; /*!< Keeps a reference
+                                                             to each project
+                                                             widget. */
 
   PreferencesDialog *_preferencesDialog; /*!< TODO */
 
@@ -118,38 +119,39 @@ private:
   QProgressDialog *_taskProgressBar;
   QTimer *_autoSaveTimer; // auto save timer
 
-  QSimpleUpdater* _updater;
+  QSimpleUpdater *_updater;
 #if WITH_WIZARD
   QProcess wizardProcess;
   QProcess talProcess;
 #endif
 
 private:
-  void readSettings();
-  void initModules();
+  void readSettings ();
+  void initModules ();
 
-  void loadStyleSheets();
-  void initGUI();
+  void loadStyleSheets ();
+  void initGUI ();
 
-  void createAboutPluginsWidgets();
-  void createMenus();
-  void createActions();
+  void createAboutPluginsWidgets ();
+  void createMenus ();
+  void createActions ();
 
-  void readExtensions();
-  void closeEvent(QCloseEvent *event);
-  void cleanUp();
-  void updateRecentProjectsWidgets();
+  void readExtensions ();
+  void closeEvent (QCloseEvent *event);
+  void cleanUp ();
+  void updateRecentProjectsWidgets ();
 
-  void updateTabWithProject(int index, QString newLocation);
+  void updateTabWithProject (int index, QString newLocation);
 
-  QTranslator _translator;   /**< contains the translations for this application */
+  QTranslator
+      _translator; /**< contains the translations for this application */
   QTranslator _translatorQt; /**< contains the translations for qt */
-  QString     _currLang;     /**< contains the currently loaded language */
-  QString     _langPath;     /**< Path of language files. This is always fixed to
-                                  /languages. */
-  void loadLanguage(const QString& rLanguage);
-  void createLanguageMenu(void);
-  void switchTranslator(QTranslator& translator, const QString& filename);
+  QString _currLang;         /**< contains the currently loaded language */
+  QString _langPath; /**< Path of language files. This is always fixed to
+                          /languages. */
+  void loadLanguage (const QString &rLanguage);
+  void createLanguageMenu (void);
+  void switchTranslator (QTranslator &translator, const QString &filename);
 
   /*!
    * \brief Shows a prompt where the user can choose where its plugins are
@@ -157,113 +159,113 @@ private:
    *
    * \return QString the path to the choosen directory.
    */
-  QString promptChooseExtDirectory();
-
+  QString promptChooseExtDirectory ();
 
   /*!
    * \brief
    * \todo Move this function from here!
    */
-  void checkTemporaryFileLastModified(const QString &filename);
+  void checkTemporaryFileLastModified (const QString &filename);
 
   /*!
    * \brief Remove the temporary file related to location.
    * \todo Move this function from here!
    */
-  bool removeTemporaryFile(QString location);
+  bool removeTemporaryFile (QString location);
 
 protected:
-  void changeEvent(QEvent*);
-  void keyPressEvent(QKeyEvent *event);
+  void changeEvent (QEvent *);
+  void keyPressEvent (QKeyEvent *event);
 
 protected slots:
-  void slotLanguageChanged(QAction* action);
+  void slotLanguageChanged (QAction *action);
 
 private slots:
-  void about();
-  void aboutPlugins();
+  void about ();
+  void aboutPlugins ();
 
-  void updateViewMenu();
-  void showEditPreferencesDialog();
+  void updateViewMenu ();
+  void showEditPreferencesDialog ();
 
-  void tabClosed(int index);
-  void closeCurrentTab();
-  void showCurrentWidgetFullScreen();
-  void closeAllFiles();
+  void tabClosed (int index);
+  void closeCurrentTab ();
+  void showCurrentWidgetFullScreen ();
+  void closeAllFiles ();
 
-  void startOpenProject(QString projectLoc);
-  void endOpenProject(QString projectLoc);
+  void startOpenProject (QString projectLoc);
+  void endOpenProject (QString projectLoc);
 
-  void saveCurrentGeometryAsPerspective();
-  void restorePerspective();
-  void savePerspective(QString layoutName);
-  void saveDefaultPerspective(QString defaultPerspectiveName);
-  void restorePerspective(QString layoutName);
+  void saveCurrentGeometryAsPerspective ();
+  void restorePerspective ();
+  void savePerspective (QString layoutName);
+  void saveDefaultPerspective (QString defaultPerspectiveName);
+  void restorePerspective (QString layoutName);
 
-  void launchProjectWizard();
-  void addToRecentProjects(QString projectUrl);
-  void userPressedRecentProject(QString src);
-  void userPressedRecentProject();
+  void launchProjectWizard ();
+  void addToRecentProjects (QString projectUrl);
+  void userPressedRecentProject (QString src);
+  void userPressedRecentProject ();
   void clearRecentProjects (void);
-  void importFromDocument();
+  void importFromDocument ();
 
-  void updateMenuPerspectives();
-  void updateMenuLanguages();
+  void updateMenuPerspectives ();
+  void updateMenuLanguages ();
 
-  void restorePerspectiveFromMenu();
+  void restorePerspectiveFromMenu ();
 
-  void currentTabChanged(int n);
+  void currentTabChanged (int n);
 
-  void setProjectAsDirty(QString location, bool isDirty);
+  void setProjectAsDirty (QString location, bool isDirty);
 
-  void gotoNCLClubWebsite();
+  void gotoNCLClubWebsite ();
 
-  void autoSaveCurrentProjects();
+  void autoSaveCurrentProjects ();
 
-  void addDefaultStructureToProject ( Project *project,
-                                      bool shouldCopyDefaultConnBase = true,
-                                      bool shouldCreateADefaultRegion = true,
-                                      bool save = true );
+  void addDefaultStructureToProject (Project *project,
+                                     bool shouldCopyDefaultConnBase = true,
+                                     bool shouldCreateADefaultRegion = true,
+                                     bool save = true);
 
-  void on_actionReport_Bug_triggered();
+  void on_actionReport_Bug_triggered ();
 
-  void pluginWidgetViewToggled(bool);
+  void pluginWidgetViewToggled (bool);
 
 #ifdef WITH_SERV_PUB
-  void on_actionPublish_triggered();
+  void on_actionPublish_triggered ();
 #endif
 
 #if WITH_WIZARD
-  void on_actionProject_from_Wizard_triggered();
-  void wizardFinished(int resp);
+  void on_actionProject_from_Wizard_triggered ();
+  void wizardFinished (int resp);
 #endif
 
-  void on_actionKeyboard_shortcuts_triggered();
+  void on_actionKeyboard_shortcuts_triggered ();
 
 public:
-  explicit ComposerMainWindow(QWidget *parent = 0);
-  virtual ~ComposerMainWindow();
+  explicit ComposerMainWindow (QWidget *parent = 0);
+  virtual ~ComposerMainWindow ();
 
-  void init(const QApplication &app);
+  void init (const QApplication &app);
 
 public slots:
-  void errorDialog(QString);
-  void addPluginWidget(IPluginFactory *fac, IPlugin *plugin, Project *project);
-  void openProject();
-  void onOpenProjectTab(QString location);
+  void errorDialog (QString);
+  void addPluginWidget (IPluginFactory *fac, IPlugin *plugin,
+                        Project *project);
+  void openProject ();
+  void onOpenProjectTab (QString location);
 
-  void saveCurrentProject();
-  void saveAsCurrentProject();
+  void saveCurrentProject ();
+  void saveAsCurrentProject ();
 
-  bool showHelp();
+  bool showHelp ();
 
-  void undo();
-  void redo();
+  void undo ();
+  void redo ();
 
-  void openProjects(const QStringList &projects);
+  void openProjects (const QStringList &projects);
 
 private slots:
-  void checkForUpdates();
+  void checkForUpdates ();
 };
 
 CPR_GUI_END_NAMESPACE

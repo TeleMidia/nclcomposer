@@ -18,13 +18,13 @@
 
 #include "util/ComposerCore_global.h"
 
-#include <QObject>
-#include <QMutex>
-#include <QMutexLocker>
-#include <QMap>
-#include <QUuid>
 #include <QDebug>
 #include <QDomElement>
+#include <QMap>
+#include <QMutex>
+#include <QMutexLocker>
+#include <QObject>
+#include <QUuid>
 
 CPR_CORE_BEGIN_NAMESPACE
 
@@ -43,7 +43,7 @@ class RemoveCommand;
  *
  * The internal model Composer model is a tree of Entities.
  */
-class COMPOSERCORESHARED_EXPORT Entity: public QObject
+class COMPOSERCORESHARED_EXPORT Entity : public QObject
 {
   Q_OBJECT
 
@@ -62,14 +62,14 @@ public:
    * \param name - The name of the attribute been requested
    * \return A string with the requested attribute.
    */
-  QString getAttribute(const QString &name) const;
+  QString getAttribute (const QString &name) const;
 
   /*!
    * \brief Gets the attributes of the entity.
    *
    * \return a QMap with the attributes of the entity
    */
-  QMap<QString, QString> getAttributes() const;
+  QMap<QString, QString> getAttributes () const;
 
   /*!
    * \brief This method is used to verify if this element has certain
@@ -78,15 +78,15 @@ public:
    * \param name - The name of the attribute to be verified.
    * \return an boolean depending of the existence of the attribute.
   */
-  bool hasAttribute(const QString &name) const;
+  bool hasAttribute (const QString &name) const;
 
-  QString getUniqueId() const;
+  QString getUniqueId () const;
 
-  QString getType() const;
+  QString getType () const;
 
-  Entity* getParent() const;
+  Entity *getParent () const;
 
-  QString getParentUniqueId() const;
+  QString getParentUniqueId () const;
 
   /*!
    * \brief Tell if the children should be deleted when this entity is deleted
@@ -94,27 +94,27 @@ public:
    *
    * \param mustDelete tell if the children also must be deleted.
    */
-  void setDeleteChildren(bool mustDelete);
+  void setDeleteChildren (bool mustDelete);
 
   /*!
    * \brief
    * \return
    */
-  QVector <Entity *> getChildren() const;
+  QVector<Entity *> getChildren () const;
 
   /*!
    * \brief Converts the current Entity to an XML String.
    *
    * \param ntabs the number of tabs to be inserted before the current entity.
    */
-  QString toString(int ntabs, bool writeuid = true);
+  QString toString (int ntabs, bool writeuid = true);
 
   /*!
    * \brief Creates a clone of the current entity.
    *
    * All the content of the entity will be cloned, including its uniqueId.
    */
-  Entity *cloneEntity();
+  Entity *cloneEntity ();
 
 protected:
   /*!
@@ -122,7 +122,7 @@ protected:
    *
    * \param parent The QObject parent.
    */
-  explicit Entity(QDomDocument &doc, Entity *parent=0);
+  explicit Entity (QDomDocument &doc, Entity *parent = 0);
 
   /*!
    * \brief Constructor.
@@ -130,9 +130,8 @@ protected:
    * \param atts attributes to be set to this Entity.
    * \param parent the QObject parent.
    */
-  explicit Entity(const QMap<QString,QString> &atts,
-                  QDomDocument &doc,
-                  Entity *parent=0);
+  explicit Entity (const QMap<QString, QString> &atts, QDomDocument &doc,
+                   Entity *parent = 0);
 
   /*!
    * \brief Contructor.
@@ -142,16 +141,14 @@ protected:
    * \param atts attributes to be set to this Entity.
    * \param parent the QObject parent.
    */
-  explicit Entity(const QString &uniqueId,
-                  const QString &_type,
-                  const QMap<QString,QString> &atts,
-                  QDomDocument &doc,
-                  Entity *parent=0);
+  explicit Entity (const QString &uniqueId, const QString &_type,
+                   const QMap<QString, QString> &atts, QDomDocument &doc,
+                   Entity *parent = 0);
 
   /*!
    * \brief Destructor.
    */
-  virtual ~Entity();
+  virtual ~Entity ();
 
   /*!
    * \brief This method is used to set an specific attribute of the element
@@ -159,7 +156,7 @@ protected:
    * \param name - The name of the attribute to be set
    * \param value - The value this attribute is going to be set
    */
-  void setAttribute(const QString &name, const QString &value);
+  void setAttribute (const QString &name, const QString &value);
 
   /*!
    * \brief Set the attributes of the current entity to the value passed as
@@ -167,14 +164,14 @@ protected:
    *
    * \param newAtts the new value of entity's attributes.
    */
-  void setAtrributes(const QMap<QString,QString> &newatts);
+  void setAtrributes (const QMap<QString, QString> &newatts);
 
   /*!
    * \brief Set the entity's type to the value passed as parameter.
    *
    * \param type The type of the entity.
    */
-  void setType(const QString &_type);
+  void setType (const QString &_type);
 
   /*!
    *  \brief Set the unique identifier of the entity to the value passed as
@@ -182,40 +179,40 @@ protected:
    *
    * \param _id The new uniqueId of the entity.
    */
-  void setUniqueID(const QString &uniqueId);
+  void setUniqueID (const QString &uniqueId);
 
   /*!
    * \brief Set the parent of the Entity.
    *
    * \param parent The new parent of this Entity.
    */
-  void setParent(Entity *parent);
+  void setParent (Entity *parent);
 
   // OBS: This method updates the parent reference
-  bool addChild(Entity *entity, int pos = -1);
+  bool addChild (Entity *entity, int pos = -1);
 
   /*!
    * \brief This call deletes the child and his children in a recursive way.
    *
    * \param entity The Entity child to be removed.
    */
-  bool deleteChild(Entity *entity);
+  bool deleteChild (Entity *entity);
   /*!
    * \brief
    */
-  void print();
+  void print ();
 
 private:
   QDomDocument _doc;
   QDomElement _element;
   QString _id;
-  Entity* parent;
+  Entity *parent;
   bool deleteChildren = true;
 
   /*!
    * \brief children is a list of Entity that is children than this Entity.
    */
-  QVector <Entity*> children;
+  QVector<Entity *> children;
 };
 
 CPR_CORE_END_NAMESPACE
