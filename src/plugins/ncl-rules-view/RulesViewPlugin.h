@@ -1,11 +1,11 @@
 #ifndef RULESVIEWPLUGIN_H
 #define RULESVIEWPLUGIN_H
 
-#include <extensions/IPlugin.h>
 #include <QMap>
+#include <extensions/IPlugin.h>
 
-#include "RulesView.h"
 #include "RulesTreeWidget.h"
+#include "RulesView.h"
 
 using namespace cpr::core;
 
@@ -17,40 +17,44 @@ class RulesViewPlugin : public IPlugin
 {
   Q_OBJECT
 public:
-  explicit RulesViewPlugin();
+  explicit RulesViewPlugin ();
   ~RulesViewPlugin ();
 
-  QWidget* getWidget() {return _rulesTable; }
+  QWidget *
+  getWidget ()
+  {
+    return _rulesTable;
+  }
 
   void addRule (Entity *);
 
 public slots:
-  void init();
+  void init ();
 
-  void onEntityAdded(const QString &pluginID, Entity *);
-  void onEntityChanged(const QString &pluginID, Entity *entity);
-  void onEntityRemoved(const QString &pluginID, const QString &entityID);
+  void onEntityAdded (const QString &pluginID, Entity *);
+  void onEntityChanged (const QString &pluginID, Entity *entity);
+  void onEntityRemoved (const QString &pluginID, const QString &entityID);
 
-  void changeSelectedEntity(const QString &pluginID, void *param);
+  void changeSelectedEntity (const QString &pluginID, void *param);
 
 private slots:
-  void updateValue(QTreeWidgetItem*);
+  void updateValue (QTreeWidgetItem *);
 
   void sendAddEntitySignal (QTreeWidgetItem *, int);
   void sendRemoveEntitySignal (QTreeWidgetItem *);
-  void sendSelectionChangedSignal();
+  void sendSelectionChangedSignal ();
 
 private:
   void findAllRules (Entity *);
   void releaseItemChildren (QTreeWidgetItem *);
 
-  Project * _currentProject;
+  Project *_currentProject;
 
-  QString * _selectedUId;
+  QString *_selectedUId;
 
-  RulesTreeWidget * _rulesTable;
-  Entity * _ruleBaseEntity;
-  QMap <QTreeWidgetItem *, QString> _items;
+  RulesTreeWidget *_rulesTable;
+  Entity *_ruleBaseEntity;
+  QMap<QTreeWidgetItem *, QString> _items;
 };
 
 #endif // RULESVIEWPLUGIN_H

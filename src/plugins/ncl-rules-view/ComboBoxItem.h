@@ -8,12 +8,12 @@ class ComboBoxItem : public QComboBox
 {
   Q_OBJECT
 public:
-  explicit ComboBoxItem(QTreeWidgetItem*, int, QWidget *parent=0);
+  explicit ComboBoxItem (QTreeWidgetItem *, int, QWidget *parent = 0);
 
 signals:
 
 public slots:
-  void changeItem(int);
+  void changeItem (int);
 
 private:
   QTreeWidgetItem *_item;

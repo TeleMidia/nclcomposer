@@ -1,38 +1,39 @@
 #include "RulesTreeWidget.h"
 
-#include <QMenu>
 #include <QDebug>
 #include <QIcon>
+#include <QMenu>
 #include <QMessageBox>
 #include <QMouseEvent>
 
 #include "CompositeRuleItem.h"
 
-RulesTreeWidget::RulesTreeWidget(QWidget *parent) :
-  QTreeWidget(parent)
+RulesTreeWidget::RulesTreeWidget (QWidget *parent) : QTreeWidget (parent)
 {
-  setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
-          SLOT(onCustomContextMenuRequested(const QPoint&)));
+  setContextMenuPolicy (Qt::CustomContextMenu);
+  connect (this, SIGNAL (customContextMenuRequested (const QPoint &)),
+           SLOT (onCustomContextMenuRequested (const QPoint &)));
 
-  connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
-          SLOT(editItem(QTreeWidgetItem*,int)));
+  connect (this, SIGNAL (itemDoubleClicked (QTreeWidgetItem *, int)),
+           SLOT (editItem (QTreeWidgetItem *, int)));
 
-
-  setEditTriggers(NoEditTriggers);
+  setEditTriggers (NoEditTriggers);
 }
 
-void RulesTreeWidget::onCustomContextMenuRequested(const QPoint &pos)
+void
+RulesTreeWidget::onCustomContextMenuRequested (const QPoint &pos)
 {
-  QTreeWidgetItem* item = itemAt(pos);
+  QTreeWidgetItem *item = itemAt (pos);
 
-  if (!item) return;
+  if (!item)
+    return;
 
-  showContextMenu(item, pos);
+  showContextMenu (item, pos);
 }
 
-void RulesTreeWidget::showContextMenu(QTreeWidgetItem* item,
-                                      const QPoint& globalPos)
+void
+RulesTreeWidget::showContextMenu (QTreeWidgetItem *item,
+                                  const QPoint &globalPos)
 {
   QMenu menu;
 
@@ -42,85 +43,85 @@ void RulesTreeWidget::showContextMenu(QTreeWidgetItem* item,
   QAction *andOpAction = 0;
   QAction *orOpAction = 0;
 
-  if (item->type() == COMPOSITERULE_TYPE || item->type() == RULEBASE_TYPE)
+  if (item->type () == COMPOSITERULE_TYPE || item->type () == RULEBASE_TYPE)
   {
-    addRuleAction = menu.addAction(QIcon(":/icon/rule-insert"), "Add Rule");
-    addCompositeRuleAction = menu.addAction( QIcon(":/icon/rule-insert"),
-                                             "Add Composite Rule");
+    addRuleAction = menu.addAction (QIcon (":/icon/rule-insert"), "Add Rule");
+    addCompositeRuleAction
+        = menu.addAction (QIcon (":/icon/rule-insert"), "Add Composite Rule");
   }
 
-  removeRuleAction = menu.addAction (item->type() == RULEBASE_TYPE ?
-                                       QIcon(":/icon/rulebase-remove") : QIcon(":/icon/rule-remove"),
-                                     item->type() == RULEBASE_TYPE ?
-                                       "Remove ruleBase" : "Remove Rule");
+  removeRuleAction = menu.addAction (
+      item->type () == RULEBASE_TYPE ? QIcon (":/icon/rulebase-remove")
+                                     : QIcon (":/icon/rule-remove"),
+      item->type () == RULEBASE_TYPE ? "Remove ruleBase" : "Remove Rule");
 
-  removeRuleAction->setShortcut(QKeySequence::Delete);
+  removeRuleAction->setShortcut (QKeySequence::Delete);
 
-
-  if (item->type() == COMPOSITERULE_TYPE)
+  if (item->type () == COMPOSITERULE_TYPE)
   {
-    menu.addSeparator();
-    QMenu *opMenu = menu.addMenu("Operator");
-    andOpAction = opMenu->addAction("and");
-    orOpAction = opMenu->addAction("or");
+    menu.addSeparator ();
+    QMenu *opMenu = menu.addMenu ("Operator");
+    andOpAction = opMenu->addAction ("and");
+    orOpAction = opMenu->addAction ("or");
   }
 
-  QAction *choosenAction = menu.exec(mapToGlobal(globalPos));
+  QAction *choosenAction = menu.exec (mapToGlobal (globalPos));
   if (choosenAction)
   {
     if (choosenAction == andOpAction || choosenAction == orOpAction)
     {
-      CompositeRuleItem *compositeRule = dynamic_cast <CompositeRuleItem *>
-          (item);
+      CompositeRuleItem *compositeRule
+          = dynamic_cast<CompositeRuleItem *> (item);
       if (choosenAction == andOpAction)
         compositeRule->setOperator (AND_OP);
       else
-        compositeRule->setOperator(OR_OP);
+        compositeRule->setOperator (OR_OP);
     }
     else if (choosenAction == removeRuleAction)
     {
-      int button =
-          QMessageBox::question(this, "Remove Element",
-                                "Do you really want remove this element?",
-                                QMessageBox::Yes, QMessageBox::No);
+      int button = QMessageBox::question (
+          this, "Remove Element", "Do you really want remove this element?",
+          QMessageBox::Yes, QMessageBox::No);
 
       if (button == QMessageBox::Yes)
         emit removeEntityRequested (item);
     }
     else if (choosenAction == addRuleAction)
-      emit addRuleRequested(item, RULE_TYPE);
+      emit addRuleRequested (item, RULE_TYPE);
     else if (choosenAction == addCompositeRuleAction)
-      emit addRuleRequested(item, COMPOSITERULE_TYPE);
+      emit addRuleRequested (item, COMPOSITERULE_TYPE);
   }
 }
 
-void RulesTreeWidget::editItem(QTreeWidgetItem *item, const int &column)
+void
+RulesTreeWidget::editItem (QTreeWidgetItem *item, const int &column)
 {
   bool isColumnEditable = false;
-  if (item->type() == RULEBASE_TYPE || item->type() == COMPOSITERULE_TYPE)
+  if (item->type () == RULEBASE_TYPE || item->type () == COMPOSITERULE_TYPE)
   {
     if (column == 1)
       isColumnEditable = true;
   }
-  else if (item->type() == RULE_TYPE)
+  else if (item->type () == RULE_TYPE)
   {
     if (column > 0)
       isColumnEditable = true;
   }
 
   if (isColumnEditable)
-    QTreeWidget::editItem(item, column);
+    QTreeWidget::editItem (item, column);
 }
 
-void RulesTreeWidget::mousePressEvent(QMouseEvent *event)
+void
+RulesTreeWidget::mousePressEvent (QMouseEvent *event)
 {
-  if (event->button() == Qt::RightButton && topLevelItemCount() == 0)
+  if (event->button () == Qt::RightButton && topLevelItemCount () == 0)
   {
     QMenu menu;
 
-    menu.addAction (QIcon(":/icon/rulebase-insert"), "Add ruleBase");
-    if (menu.exec(mapToGlobal(event->pos())))
-      emit addRuleRequested(0, RULEBASE_TYPE);
+    menu.addAction (QIcon (":/icon/rulebase-insert"), "Add ruleBase");
+    if (menu.exec (mapToGlobal (event->pos ())))
+      emit addRuleRequested (0, RULEBASE_TYPE);
   }
-  QTreeWidget::mousePressEvent(event);
+  QTreeWidget::mousePressEvent (event);
 }

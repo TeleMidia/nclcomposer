@@ -3,7 +3,8 @@
 
 #include <QTreeWidget>
 
-enum {
+enum
+{
   RULEBASE_TYPE = QTreeWidgetItem::UserType,
   RULE_TYPE,
   COMPOSITERULE_TYPE
@@ -13,18 +14,18 @@ class RulesTreeWidget : public QTreeWidget
 {
   Q_OBJECT
 public:
-  explicit RulesTreeWidget(QWidget *parent = 0);
+  explicit RulesTreeWidget (QWidget *parent = 0);
 
 protected:
-  void mousePressEvent(QMouseEvent *event);
+  void mousePressEvent (QMouseEvent *event);
 
 signals:
   void removeEntityRequested (QTreeWidgetItem *);
-  void addRuleRequested (QTreeWidgetItem*, int);
+  void addRuleRequested (QTreeWidgetItem *, int);
 
 private slots:
-  void onCustomContextMenuRequested(const QPoint &pos);
-  void showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos);
+  void onCustomContextMenuRequested (const QPoint &pos);
+  void showContextMenu (QTreeWidgetItem *item, const QPoint &globalPos);
   void editItem (QTreeWidgetItem *item, const int &column);
 };
 

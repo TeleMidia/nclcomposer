@@ -2,30 +2,33 @@
 
 #include <QDebug>
 
-CompositeRuleItem::CompositeRuleItem(QTreeWidget *view, const QString &id,
-                                     const QString &op, const int &type,
-                                     QWidget *parent) :
-  QObject (parent), QTreeWidgetItem (view, type)
+CompositeRuleItem::CompositeRuleItem (QTreeWidget *view, const QString &id,
+                                      const QString &op, const int &type,
+                                      QWidget *parent)
+    : QObject (parent), QTreeWidgetItem (view, type)
 {
   init (id, op);
 }
 
-CompositeRuleItem::CompositeRuleItem(QTreeWidgetItem *item, const QString &id,
-                                     const QString &op, int type, QWidget *parent) :
-  QObject (parent), QTreeWidgetItem (item, type)
+CompositeRuleItem::CompositeRuleItem (QTreeWidgetItem *item, const QString &id,
+                                      const QString &op, int type,
+                                      QWidget *parent)
+    : QObject (parent), QTreeWidgetItem (item, type)
 {
   init (id, op);
 }
 
-void CompositeRuleItem::init(const QString &id, const QString &op)
+void
+CompositeRuleItem::init (const QString &id, const QString &op)
 {
-  setText(ID_COLUMN, id);
-  setOperator(op);
+  setText (ID_COLUMN, id);
+  setOperator (op);
 
-  setFlags(flags() | Qt::ItemIsEditable);
+  setFlags (flags () | Qt::ItemIsEditable);
 }
 
-void CompositeRuleItem::setOperator(const int &op)
+void
+CompositeRuleItem::setOperator (const int &op)
 {
   QString operatorLabel = "";
   switch (op)
@@ -41,10 +44,11 @@ void CompositeRuleItem::setOperator(const int &op)
       return;
   }
 
-  setOperator(operatorLabel);
+  setOperator (operatorLabel);
 }
 
-void CompositeRuleItem::setOperator(const QString &op)
+void
+CompositeRuleItem::setOperator (const QString &op)
 {
   _operator = op;
 
@@ -52,5 +56,5 @@ void CompositeRuleItem::setOperator(const QString &op)
   if (_operator != "")
     label += "(" + _operator + ")";
 
-  setText(ELEMENT_COLUMN, label);
+  setText (ELEMENT_COLUMN, label);
 }

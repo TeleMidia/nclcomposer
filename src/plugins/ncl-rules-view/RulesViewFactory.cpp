@@ -1,16 +1,13 @@
 #include "RulesViewFactory.h"
 
-RulesViewFactory::RulesViewFactory()
-{
-}
+RulesViewFactory::RulesViewFactory () {}
 
-RulesViewFactory::~RulesViewFactory ()
-{
-}
+RulesViewFactory::~RulesViewFactory () {}
 
-void RulesViewFactory::releasePluginInstance(IPlugin *plugin)
+void
+RulesViewFactory::releasePluginInstance (IPlugin *plugin)
 {
-  RulesViewPlugin *rulesView = qobject_cast<RulesViewPlugin*>(plugin);
+  RulesViewPlugin *rulesView = qobject_cast<RulesViewPlugin *> (plugin);
 
   if (rulesView)
   {
@@ -18,9 +15,10 @@ void RulesViewFactory::releasePluginInstance(IPlugin *plugin)
   }
 }
 
-QList<LanguageType> RulesViewFactory::getSupportedLanguages()
+QList<LanguageType>
+RulesViewFactory::getSupportedLanguages ()
 {
   QList<LanguageType> lTypes;
-  lTypes.append(NCL);
+  lTypes.append (NCL);
   return lTypes;
 }

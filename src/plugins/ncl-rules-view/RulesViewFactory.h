@@ -10,23 +10,33 @@ using namespace cpr::core;
 /*!
  * \brief Handles the creation and deletion of RulesViewPlugin objects.
  */
-class RulesViewFactory : public QObject,
-    public IPluginFactory
+class RulesViewFactory : public QObject, public IPluginFactory
 {
   Q_OBJECT
-  Q_INTERFACES(IPluginFactory)
-  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "ncl-rules-view.json")
+  Q_INTERFACES (IPluginFactory)
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "ncl-rules-view.json")
 
 public:
-  RulesViewFactory();
+  RulesViewFactory ();
   ~RulesViewFactory ();
 
-  IPlugin* createPluginInstance() { return new RulesViewPlugin (); }
-  void releasePluginInstance(IPlugin *);
-  QList<LanguageType> getSupportedLanguages();
-  QString id() const { return "br.puc-rio.telemidia.RulesView"; }
-  QIcon icon() const { return QIcon (); }
-
+  IPlugin *
+  createPluginInstance ()
+  {
+    return new RulesViewPlugin ();
+  }
+  void releasePluginInstance (IPlugin *);
+  QList<LanguageType> getSupportedLanguages ();
+  QString
+  id () const
+  {
+    return "br.puc-rio.telemidia.RulesView";
+  }
+  QIcon
+  icon () const
+  {
+    return QIcon ();
+  }
 };
 
 #endif // RULESVIEWFACTORY_H
