@@ -251,9 +251,8 @@ signals:
    * \param parentId
    * \param force
    */
-  // \fixme Maybe, this message should be addContent
-  void addEntity (const QString &entity_content, const QString &parentId,
-                  Data::Format format, bool force);
+  void addContent (const QString &entity_content, const QString &parentId,
+                   Data::Format format, bool force);
 
   /*!
    * \brief This message can be used to edit the attributes of an Entity.

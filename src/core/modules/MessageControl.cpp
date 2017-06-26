@@ -184,7 +184,7 @@ MessageControl::onAddEntity (const QString &type,
 }
 
 void
-MessageControl::onAddEntity (const QString &entity_content,
+MessageControl::onAddContent (const QString &entity_content,
                              const QString &parentId, Data::Format format)
 {
   /// Casts to IPlugin to make sure it's a plugin

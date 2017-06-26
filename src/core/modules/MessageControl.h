@@ -72,8 +72,8 @@ public slots:
      \param atts
      \param force
     */
-  void onAddEntity (const QString &entity_content, const QString &parentId,
-                    Data::Format format);
+  void onAddContent (const QString &entity_content, const QString &parentId,
+                     Data::Format format);
   /*!
      \brief
 

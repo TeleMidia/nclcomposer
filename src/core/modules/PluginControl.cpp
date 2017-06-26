@@ -224,45 +224,61 @@ void
 PluginControl::launchNewPlugin (IPlugin *plugin, MessageControl *mControl)
 {
   /* Connect signals from the plugin to slots of the core */
-  connect (plugin, SIGNAL (addEntity (const QString &, const QString &,
-                                      const QMap<QString, QString> &)),
-           mControl, SLOT (onAddEntity (const QString &, const QString &,
-                                        const QMap<QString, QString> &)),
-           Qt::DirectConnection);
-
-  connect (plugin, SIGNAL (addComment (const QString &, const QString &)),
-           mControl, SLOT (onAddComment (const QString &, const QString &)),
+  connect (plugin,
+           &IPlugin::addEntity,
+           mControl,
+           &MessageControl::onAddEntity,
            Qt::DirectConnection);
 
   connect (plugin,
-           SIGNAL (addEntity (const QString &, const QString &, Data::Format)),
+           &IPlugin::addContent,
            mControl,
-           SLOT (onAddEntity (const QString &, const QString &, Data::Format)),
+           &MessageControl::onAddContent,
            Qt::DirectConnection);
 
   connect (plugin,
-           SIGNAL (setAttributes (Entity *, const QMap<QString, QString> &)),
+           &IPlugin::addComment,
            mControl,
-           SLOT (onEditEntity (Entity *, const QMap<QString, QString> &)),
+           &MessageControl::onAddComment,
            Qt::DirectConnection);
 
-  connect (plugin, SIGNAL (removeEntity (Entity *)), mControl,
-           SLOT (onRemoveEntity (Entity *)), Qt::DirectConnection);
+  connect (plugin,
+           &IPlugin::setAttributes,
+           mControl,
+           &MessageControl::onEditEntity,
+           Qt::DirectConnection);
 
-  connect (plugin, SIGNAL (setListenFilter (const QStringList &)), mControl,
-           SLOT (setListenFilter (const QStringList &)), Qt::DirectConnection);
+  connect (plugin,
+           &IPlugin::removeEntity,
+           mControl,
+           &MessageControl::onRemoveEntity,
+           Qt::DirectConnection);
 
-  connect (plugin, SIGNAL (setCurrentProjectAsDirty ()), mControl,
-           SLOT (setCurrentProjectAsDirty ()), Qt::DirectConnection);
+  connect (plugin,
+           &IPlugin::setListenFilter,
+           mControl,
+           &MessageControl::setListenFilter,
+           Qt::DirectConnection);
+
+  connect (plugin,
+           &IPlugin::setCurrentProjectAsDirty,
+           mControl,
+           &MessageControl::setCurrentProjectAsDirty,
+           Qt::DirectConnection);
 
   // broadcastMessage
-  connect (plugin, SIGNAL (sendBroadcastMessage (const char *, void *)), this,
-           SLOT (sendBroadcastMessage (const char *, void *)),
+  connect (plugin,
+           &IPlugin::sendBroadcastMessage,
+           this,
+           &PluginControl::sendBroadcastMessage,
            Qt::DirectConnection);
 
   /* setPluginData */
-  connect (plugin, SIGNAL (setPluginData (const QByteArray &)), mControl,
-           SLOT (setPluginData (const QByteArray &)), Qt::DirectConnection);
+  connect (plugin,
+           &IPlugin::setPluginData,
+           mControl,
+           &MessageControl::setPluginData,
+           Qt::DirectConnection);
 }
 
 void
