@@ -32,12 +32,11 @@ class COMPOSERCORESHARED_EXPORT Preference
 {
 private:
   QString _name;
-  QVariant::Type _type;
   QString _category;
   QVariant _value, _defaultValue;
 
 public:
-  Preference (const QString &name, QVariant::Type type,
+  Preference (const QString &name,
               const QVariant &defaultValue = QVariant (""),
               const QString &category = "");
 
@@ -46,11 +45,13 @@ public:
   {
     this->_value = value;
   }
+
   QVariant
   value ()
   {
     return _value;
   }
+
   QString
   category ()
   {

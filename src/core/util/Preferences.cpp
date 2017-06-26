@@ -24,9 +24,9 @@ using namespace cpr::core;
 
 CPR_CORE_BEGIN_NAMESPACE
 
-Preference::Preference (const QString &name, QVariant::Type type,
+Preference::Preference (const QString &name,
                         const QVariant &defaultValue, const QString &category)
-    : _name (name), _type (type), _category (category)
+    : _name (name), _category (category)
 {
   _value = defaultValue;
   _defaultValue = defaultValue;

@@ -60,7 +60,6 @@ void NCLTextEditor::initParameters()
 
   Preferences::getInstance()->registerPreference ("cpr.textual.bgCaretLine",
                                                   new Preference ("bgCaretLine",
-                                                                  QVariant::String,
                                                                   "#B9D3EE",
                                                                   "Textual"));
 
