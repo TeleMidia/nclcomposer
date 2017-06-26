@@ -16,26 +16,26 @@
 #include "util/ComposerSettings.h"
 
 #include <QApplication>
-#include <QStringList>
-#include <QDir>
 #include <QDebug>
+#include <QDir>
+#include <QStringList>
 
 CPR_CORE_BEGIN_NAMESPACE
 
-GlobalSettings::GlobalSettings() :
-  QSettings(QSettings::IniFormat, QSettings::UserScope,
-            "telemidia", "nclcomposer")
+GlobalSettings::GlobalSettings ()
+    : QSettings (QSettings::IniFormat, QSettings::UserScope, "telemidia",
+                 "nclcomposer")
 {
-
 }
 
-void GlobalSettings::loadDefaults(const QString &dataPath)
+void
+GlobalSettings::loadDefaults (const QString &dataPath)
 {
-  QSettings defaultSettings(dataPath, QSettings::IniFormat);
+  QSettings defaultSettings (dataPath, QSettings::IniFormat);
 
-  QStringList keys = defaultSettings.allKeys();
+  QStringList keys = defaultSettings.allKeys ();
   for (const QString &key : keys)
-    setValue( key, defaultSettings.value(key) );
+    setValue (key, defaultSettings.value (key));
 }
 
 /*!
@@ -44,109 +44,109 @@ void GlobalSettings::loadDefaults(const QString &dataPath)
  * \fixme This function came from GUI, maybe some of the MACROS used above are
  * not working.
  */
-void GlobalSettings::addPlatformDefaults()
+void
+GlobalSettings::addPlatformDefaults ()
 {
   /* Defaults plugins paths */
   QStringList defaultPluginsPath;
 
 #ifndef Q_OS_MAC
   // The first path will look for plug-ins is relative to the executable
-  defaultPluginsPath << QApplication::applicationDirPath();
-  defaultPluginsPath << QApplication::applicationDirPath() + "/plugins";
-  defaultPluginsPath
-      << QApplication::applicationDirPath() + "/../lib/nclcomposer/plugins";
+  defaultPluginsPath << QApplication::applicationDirPath ();
+  defaultPluginsPath << QApplication::applicationDirPath () + "/plugins";
+  defaultPluginsPath << QApplication::applicationDirPath ()
+                            + "/../lib/nclcomposer/plugins";
 
   // Then, we will look for plug-ins in user's home.
-  defaultPluginsPath << QDir::homePath() + QString("/nclcomposer/plugins");
+  defaultPluginsPath << QDir::homePath () + QString ("/nclcomposer/plugins");
 #endif
 
-  // After that we will look for plugins in the default system path
+// After that we will look for plugins in the default system path
 #ifdef Q_OS_MAC
-    defaultPluginsPath
-        << QApplication::applicationDirPath() + "/../PlugIns/composer/";
+  defaultPluginsPath << QApplication::applicationDirPath ()
+                            + "/../PlugIns/composer/";
 #endif
 
-  this->beginGroup("extensions");
-  QStringList extensions_path = this->value("path").toStringList();
-  extensions_path << defaultPluginsPath; //add default to extensions path
-  extensions_path.removeDuplicates();
-  this->setValue("path", extensions_path); //udpate with the new value
-  this->endGroup();
+  this->beginGroup ("extensions");
+  QStringList extensions_path = this->value ("path").toStringList ();
+  extensions_path << defaultPluginsPath; // add default to extensions path
+  extensions_path.removeDuplicates ();
+  this->setValue ("path", extensions_path); // udpate with the new value
+  this->endGroup ();
   /* End defaults plugin path */
 
   /* Default language */
-  this->beginGroup("languages");
-  if(!this->contains("currentLanguage"))
-    this->setValue("currentLanguage", "en");
+  this->beginGroup ("languages");
+  if (!this->contains ("currentLanguage"))
+    this->setValue ("currentLanguage", "en");
 
   // Set the defaults supported languages
-  if(!this->contains("supportedLanguages"))
+  if (!this->contains ("supportedLanguages"))
   {
     QStringList list;
-    list << "en_US" << "pt_BR" << "es_ES";
-    this->setValue("supportedLanguages", list);
+    list << "en_US"
+         << "pt_BR"
+         << "es_ES";
+    this->setValue ("supportedLanguages", list);
   }
-  this->endGroup();
+  this->endGroup ();
   /* End default language */
 
   /* Import Bases */
   QString defaultConnBaseDir;
-  this->beginGroup("importBases");
+  this->beginGroup ("importBases");
 
-  if(!this->contains("default_connector_base"))
+  if (!this->contains ("default_connector_base"))
   {
 #ifdef Q_OS_MAC
 #ifdef QT_NO_DEBUG_OUTPUT
     defaultConnBaseDir
-        = QApplication::applicationDirPath() + "/../PlugIns/composer/";
+        = QApplication::applicationDirPath () + "/../PlugIns/composer/";
 #else
-    defaultConnBaseDir
-        = "/Library/Application Support/Composer/Data/";
+    defaultConnBaseDir = "/Library/Application Support/Composer/Data/";
 #endif
 #else
     defaultConnBaseDir
-        = QApplication::applicationDirPath() + "/../share/nclcomposer/";
+        = QApplication::applicationDirPath () + "/../share/nclcomposer/";
 #endif
   }
 
-  this->setValue("default_conn_base",
-                    defaultConnBaseDir + "defaultConnBase.ncl");
-  this->endGroup();
+  this->setValue ("default_conn_base",
+                  defaultConnBaseDir + "defaultConnBase.ncl");
+  this->endGroup ();
   /*End Import Bases*/
 
   /* Stylesheet */
-  this->beginGroup("theme");
-  if(!this->contains("stylesheet"))
+  this->beginGroup ("theme");
+  if (!this->contains ("stylesheet"))
   {
-    this->setValue("stylesheet",
-                   QApplication::applicationDirPath()
-                   + "/../share/nclcomposer/style.qss");
+    this->setValue ("stylesheet", QApplication::applicationDirPath ()
+                                      + "/../share/nclcomposer/style.qss");
   }
 
-  if(!this->contains("stylesheet_ini"))
+  if (!this->contains ("stylesheet_ini"))
   {
-    this->setValue("stylesheet_ini",
-                   QApplication::applicationDirPath()
-                   + "/../share/nclcomposer/style.ini");
+    this->setValue ("stylesheet_ini", QApplication::applicationDirPath ()
+                                          + "/../share/nclcomposer/style.ini");
   }
-  this->endGroup();
+  this->endGroup ();
   /* End Stylesheet */
 }
 
-QStringList GlobalSettings::getExtensionsPaths()
+QStringList
+GlobalSettings::getExtensionsPaths ()
 {
-  beginGroup("extensions");
-  QStringList extPaths = value("path").toStringList();
-  endGroup();
+  beginGroup ("extensions");
+  QStringList extPaths = value ("path").toStringList ();
+  endGroup ();
 
-  extPaths.removeDuplicates(); // Remove duplicate paths
+  extPaths.removeDuplicates (); // Remove duplicate paths
   return extPaths;
 }
 
-ProjectSettings::ProjectSettings(const QString &project) :
-  QSettings(project + ".ini", QSettings::IniFormat)
+ProjectSettings::ProjectSettings (const QString &project)
+    : QSettings (project + ".ini", QSettings::IniFormat)
 {
-
 }
 
 CPR_CORE_END_NAMESPACE

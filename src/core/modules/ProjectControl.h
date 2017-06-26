@@ -16,17 +16,17 @@
 #ifndef DOCUMENTCONTROL_H
 #define DOCUMENTCONTROL_H
 
+#include <QFile>
 #include <QObject>
 #include <QProcess>
-#include <QFile>
 #include <QTextStream>
 
 #include <iostream>
 
 #include "util/ComposerCore_global.h"
 
-#include "PluginControl.h"
 #include "LanguageControl.h"
+#include "PluginControl.h"
 #include "model/Project.h"
 #include "util/Singleton.h"
 #include "util/Utilities.h"
@@ -41,7 +41,7 @@ CPR_CORE_BEGIN_NAMESPACE
 class COMPOSERCORESHARED_EXPORT ProjectControl : public QObject
 {
   Q_OBJECT
-  SINGLETON(ProjectControl)
+  SINGLETON (ProjectControl)
 
 public:
   /*!
@@ -50,7 +50,7 @@ public:
    * \param location
    * \return
    */
-  Project *getOpenProject(const QString &location);
+  Project *getOpenProject (const QString &location);
 
 public slots:
   /*!
@@ -58,13 +58,13 @@ public slots:
    * \param location
    * \return
    */
-  bool closeProject(const QString &location);
+  bool closeProject (const QString &location);
 
   /*!
    * \brief saveProject
    * \param location
    */
-  void saveProject(const QString &location);
+  void saveProject (const QString &location);
 
   /*!
    * \brief moveProject
@@ -73,15 +73,15 @@ public slots:
    * \param dest
    * \param saveDesc
    */
-  void moveProject(const QString &location, const QString &dest,
-                   bool saveDesc = false);
+  void moveProject (const QString &location, const QString &dest,
+                    bool saveDesc = false);
 
   /*!
    * \brief saveTemporaryProject
    *
    * \param location
    */
-  void saveTemporaryProject(const QString &location);
+  void saveTemporaryProject (const QString &location);
 
   /*!
    * \brief launchProject
@@ -89,8 +89,7 @@ public slots:
    * \param location
    * \return
    */
-  bool launchProject(const QString &location);
-
+  bool launchProject (const QString &location);
 
   /*!
    * \brief importFromDocument
@@ -98,7 +97,7 @@ public slots:
    * \param docLocation
    * \param projLocation
    */
-  void importFromDocument(const QString &docPath, const QString &projPath);
+  void importFromDocument (const QString &docPath, const QString &projPath);
 
 signals:
   /*!
@@ -106,49 +105,48 @@ signals:
    *
    * \param document
    */
-  void startOpenProject(const QString &document);
+  void startOpenProject (const QString &document);
 
   /*!
    * \brief endOpenProject
    *
    * \param document
    */
-  void endOpenProject(const QString &document);
+  void endOpenProject (const QString &document);
 
   /*!
    * \brief projectAlreadyOpen
    */
-  void projectAlreadyOpen(const QString&);
+  void projectAlreadyOpen (const QString &);
 
   /*!
    * \brief notifyError
    *
    * \param strError
    */
-  void notifyError(const QString &strError);
+  void notifyError (const QString &strError);
 
   /*!
    * \brief dirtyProject
    */
-  void dirtyProject(const QString&, bool);
+  void dirtyProject (const QString &, bool);
 
 private:
   /*!
    * \brief Constructor.
    */
-  ProjectControl();
+  ProjectControl ();
 
   /*!
    * \brief Destructor.
    */
-  ~ProjectControl();
+  ~ProjectControl ();
 
-  QMap<QString, Project*> _openProjects; /*!< A map that keeps all the open
-                                             projects. */
+  QMap<QString, Project *> _openProjects; /*!< A map that keeps all the open
+                                              projects. */
 
 private slots:
-  void projectIsDirty(bool isDirty);
-
+  void projectIsDirty (bool isDirty);
 };
 
 CPR_CORE_END_NAMESPACE

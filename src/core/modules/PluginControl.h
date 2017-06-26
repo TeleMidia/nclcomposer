@@ -16,27 +16,27 @@
 #ifndef PLUGINCONTROL_H
 #define PLUGINCONTROL_H
 
-#include <QString>
-#include <QObject>
-#include <QDir>
-#include <QPluginLoader>
-#include <QObject>
-#include <QMultiHash>
-#include <QList>
-#include <QHashIterator>
 #include <QDebug>
+#include <QDir>
+#include <QHashIterator>
+#include <QList>
+#include <QMultiHash>
+#include <QObject>
+#include <QObject>
+#include <QPluginLoader>
+#include <QString>
 
-#include <util/Utilities.h>
 #include "util/ComposerCore_global.h"
+#include <util/Utilities.h>
 
-#include "MessageControl.h"
 #include "LanguageControl.h"
-#include "model/Project.h"
-#include "util/Singleton.h"
+#include "MessageControl.h"
 #include "extensions/IDocumentParser.h"
 #include "extensions/ILanguageProfile.h"
-#include "extensions/IPluginFactory.h"
 #include "extensions/IPlugin.h"
+#include "extensions/IPluginFactory.h"
+#include "model/Project.h"
+#include "util/Singleton.h"
 using namespace cpr::core;
 
 CPR_CORE_BEGIN_NAMESPACE
@@ -53,7 +53,7 @@ CPR_CORE_BEGIN_NAMESPACE
 class COMPOSERCORESHARED_EXPORT PluginControl : public QObject
 {
   Q_OBJECT
-  SINGLETON(PluginControl)
+  SINGLETON (PluginControl)
 
 public:
   /*!
@@ -62,19 +62,19 @@ public:
    * \param factory
    * \param project
    */
-  void launchNewPlugin(IPluginFactory *factory, Project *project);
+  void launchNewPlugin (IPluginFactory *factory, Project *project);
 
   /*!
    * \brief Load all the plugins from the default extensions paths.
    */
-  void loadPlugins();
+  void loadPlugins ();
 
   /*!
    * \brief
    *
    * \param pluginsDirPath
    */
-  void loadPlugins(const QString &pluginsDirPath);
+  void loadPlugins (const QString &pluginsDirPath);
 
   /*!
    * \brief
@@ -82,13 +82,13 @@ public:
    * \param fileName
    * \return IPluginFactory *
    */
-  IPluginFactory* loadPlugin(const QString &fileName);
+  IPluginFactory *loadPlugin (const QString &fileName);
 
   /*!
    * \brief
    * \return QList<IPluginFactory *>
    */
-  QList<IPluginFactory*> getLoadedPlugins();
+  QList<IPluginFactory *> getLoadedPlugins ();
 
   /*!
    * \brief
@@ -96,7 +96,7 @@ public:
    * \param doc
    * \return bool
    */
-  bool releasePlugins(Project *doc);
+  bool releasePlugins (Project *doc);
 
   /*!
    * \brief TODO
@@ -104,7 +104,7 @@ public:
    * \param
    * \return
    */
-  MessageControl *getMessageControl(Project *project);
+  MessageControl *getMessageControl (Project *project);
 
   /*!
    * \brief
@@ -112,12 +112,12 @@ public:
    * \param parser
    * \param mControl
    */
-  void connectParser(IDocumentParser *parser, MessageControl *mControl);
+  void connectParser (IDocumentParser *parser, MessageControl *mControl);
 
   /*!
    * \brief
    */
-  QList <IPlugin*> getPluginInstances(Project *project);
+  QList<IPlugin *> getPluginInstances (Project *project);
   /* Should be private? */
 
 public slots:
@@ -126,14 +126,14 @@ public slots:
    *
    * \param doc
    */
-  void launchProject(Project *doc);
+  void launchProject (Project *doc);
 
   /*!
    * \brief
    *
    * \param location
    */
-  void savePluginsData(Project* project);
+  void savePluginsData (Project *project);
 
 signals:
   /*!
@@ -142,14 +142,14 @@ signals:
    * \param documentdId
    * \param location
    */
-  void newProjectLaunchedAndCreated(QString documentdId, QString location);
+  void newProjectLaunchedAndCreated (QString documentdId, QString location);
 
   /*!
    * \brief
    *
    * \param QString
    */
-  void notifyError(QString);
+  void notifyError (QString);
 
   /*!
    * \brief addPluginWidgetToWindow
@@ -158,9 +158,8 @@ signals:
    * \param plugin
    * \param documentId
    */
-  void addPluginWidgetToWindow( IPluginFactory *pluginFactory,
-                                IPlugin *plugin,
-                                QString documentId );
+  void addPluginWidgetToWindow (IPluginFactory *pluginFactory, IPlugin *plugin,
+                                QString documentId);
   /*!
    * \brief addPluginWidgetToWindow
    *
@@ -169,36 +168,35 @@ signals:
    * \param project
    * \param n
    */
-  void addPluginWidgetToWindow(IPluginFactory *pluginFactory,
-                               IPlugin *plugin,
-                               Project* project);
+  void addPluginWidgetToWindow (IPluginFactory *pluginFactory, IPlugin *plugin,
+                                Project *project);
 
 private:
   /*!
    * \brief Constructor.
    */
-  explicit PluginControl();
+  explicit PluginControl ();
   /*!
    * \brief Constructor.
    */
-  virtual ~PluginControl();
+  virtual ~PluginControl ();
 
-  QHash <QString, IPluginFactory*> _pluginFactories;
+  QHash<QString, IPluginFactory *> _pluginFactories;
   /*!< PluginFactory by pluginID */
 
-  QMultiHash <LanguageType, QString> _pluginsByType;
+  QMultiHash<LanguageType, QString> _pluginsByType;
   /*!< pluginID given LanguageType */
 
   /* TC by DocumentID */
   /* Is this right??
    * And when we have plugins that are not related to documents???
    */
-  QHash <Project *, MessageControl*> _messageControls; /*!< TODO */
+  QHash<Project *, MessageControl *> _messageControls; /*!< TODO */
 
-  QMultiHash<Project *, IPlugin*> _pluginInstances;
+  QMultiHash<Project *, IPlugin *> _pluginInstances;
   /*!< Plugin Instance given project location */
 
-  QMultiHash<IPlugin*, IPluginFactory*> _factoryByPlugin;
+  QMultiHash<IPlugin *, IPluginFactory *> _factoryByPlugin;
 
   /*!< Maps each IPlugin to its corresponding IPluginFactory */
   /*!
@@ -207,7 +205,7 @@ private:
    * \param plugin the plugin instance that must be connected.
    * \param mControl
    */
-  void launchNewPlugin(IPlugin *plugin, MessageControl *mControl);
+  void launchNewPlugin (IPlugin *plugin, MessageControl *mControl);
 
 private slots:
   /*!
@@ -216,7 +214,7 @@ private slots:
    * \param slot
    * \param payload
    */
-  void sendBroadcastMessage(const char *slot, void *payload);
+  void sendBroadcastMessage (const char *slot, void *payload);
 };
 
 CPR_CORE_END_NAMESPACE

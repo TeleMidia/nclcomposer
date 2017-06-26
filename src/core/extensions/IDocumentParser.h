@@ -32,14 +32,14 @@ class COMPOSERCORESHARED_EXPORT IDocumentParser : public QObject
   Q_OBJECT
 
 public:
-  virtual ~IDocumentParser(){}
+  virtual ~IDocumentParser () {}
   /*!
    * \brief Parses the content of the document. This function must be
    *  implemented by concrete Document Parsers.
    *
    *  \return bool returns true if success and false otherwise.
    */
-  virtual bool parseDocument() = 0;
+  virtual bool parseDocument () = 0;
 
   /*!
    * \brief Parses the content of the string passed as parameter. This function
@@ -48,14 +48,15 @@ public:
    *  \arg str the content to be parsed.
    *  \return bool returns true if success and false otherwise.
    */
-  virtual bool parseContent(const QString &str) = 0;
+  virtual bool parseContent (const QString &str) = 0;
 
   /*!
-   * \brief Returns the name of the Document Parser. This name should be unique.
+   * \brief Returns the name of the Document Parser. This name should be
+   * unique.
    *  This function must be implemented by concrete Document Parsers.
    * \return QString the name of the Document Parser.
    */
-  virtual QString getParserName() = 0;
+  virtual QString getParserName () = 0;
 
 public slots:
   /*!
@@ -65,7 +66,7 @@ public slots:
    *
    * \param error The description of the error.
    */
-  virtual void onEntityAddError(const QString &error) = 0;
+  virtual void onEntityAddError (const QString &error) = 0;
 
   /*!
    * \brief This slot is called after the addEntity has success. This
@@ -74,7 +75,7 @@ public slots:
    * \param uniqueID the unique id of the entity in the model.
    * \param entity the pointer to the entity.
    */
-  virtual void onEntityAdded(const QString &uniqueID, Entity *entity) = 0;
+  virtual void onEntityAdded (const QString &uniqueID, Entity *entity) = 0;
 
 signals:
   /*!
@@ -85,9 +86,8 @@ signals:
    * \param parentEntityId uniqueId of the father.
    * \param atts attributes of this entity.
    */
-  void addEntity( const QString &type,
-                  const QString &parentEntityId,
-                  const QMap<QString,QString>& atts);
+  void addEntity (const QString &type, const QString &parentEntityId,
+                  const QMap<QString, QString> &atts);
 };
 
 CPR_CORE_END_NAMESPACE

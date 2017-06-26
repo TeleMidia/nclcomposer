@@ -18,13 +18,13 @@
 
 #include "util/ComposerCore_global.h"
 
-#include <QObject>
 #include <QList>
+#include <QObject>
 #include <QStack>
 
 #include "model/Entity.h"
-#include "model/exception/ParentNotFound.h"
 #include "model/exception/EntityNotFound.h"
+#include "model/exception/ParentNotFound.h"
 #include "util/Utilities.h"
 using namespace cpr::core;
 
@@ -62,64 +62,64 @@ public:
    * \brief Returns the Entity with the uniqueid <id>.
    * \param _id The Unique Identifier of the required entity.
    */
-  Entity* getEntityById(const QString &id);
+  Entity *getEntityById (const QString &id);
 
   /*!
    * \brief Returns a list of the entities which are of the type <type>.
    * \param _type The entity type required.
    */
-  QList<Entity*> getEntitiesbyType(const QString &_type);
+  QList<Entity *> getEntitiesbyType (const QString &_type);
 
   /*!
    * \brief Returns the location of the project.
    * \todo This should be a URL.
    */
-  QString getLocation();
+  QString getLocation ();
 
   /*!
    * \brief Returns the Identifier of the project.
    */
-  QString getProjectId();
+  QString getProjectId ();
 
   /*!
    * \brief Returns the type of the project.
    */
-  LanguageType getProjectType();
+  LanguageType getProjectType ();
 
   /*!
    * \brief Returns the specific data of a plugin.
    *
    * \param pluginId
    */
-  QByteArray getPluginData(const QString &pluginId);
+  QByteArray getPluginData (const QString &pluginId);
 
   /*!
    * \brief Generates a descritor NCLID that are not present in the core.
    */
-  QString generateUniqueAttrId(const QString &tagname);
+  QString generateUniqueAttrId (const QString &tagname);
 
   /*!
    * \brief getEntityByAttrId
    * \param id
    * \return
    */
-  QList<Entity*> getEntityByAttrId(const QString &id);
+  QList<Entity *> getEntityByAttrId (const QString &id);
 
   /*!
    * \brief isDirty
    * \return
    */
-  bool isDirty();
+  bool isDirty ();
 
 signals:
-  void dirtyProject(bool isDirty);
+  void dirtyProject (bool isDirty);
 
 protected:
   /*!
    * \brief Constructor.
    * \param parent
    */
-  explicit Project(QDomDocument &doc);
+  explicit Project (QDomDocument &doc);
 
   /*!
    * \brief Constructor.
@@ -127,7 +127,7 @@ protected:
    * \param atts
    * \param parent
    */
-  Project(const QMap<QString,QString> &atts, QDomDocument &doc);
+  Project (const QMap<QString, QString> &atts, QDomDocument &doc);
 
   /*!
    * \brief Constructor.
@@ -136,19 +136,18 @@ protected:
    * \param atts
    * \param parent
    */
-  Project(const QString &uniqueId,
-          const QMap<QString,QString> &atts,
-          QDomDocument &doc);
+  Project (const QString &uniqueId, const QMap<QString, QString> &atts,
+           QDomDocument &doc);
 
   /*!
    * \brief init
    */
-  void init();
+  void init ();
 
   /*!
    * \brief Destructor;
    */
-  virtual ~Project();
+  virtual ~Project ();
 
   /*!
    * \brief Sets the location of the project.
@@ -156,14 +155,14 @@ protected:
    * \todo The locations should be an URL.
    * \param location the location of the project.
    */
-  void setLocation(const QString &location);
+  void setLocation (const QString &location);
 
   /*!
    * \brief Sets the type of the project.s
    * \param type The type of the project. Currently, there are support just
    *        for NCL projects.
    */
-  void setProjectType(LanguageType _type);
+  void setProjectType (LanguageType _type);
 
   /*!
    * \brief This method is used to add an Entity in the map and as child of
@@ -175,12 +174,13 @@ protected:
    *
    * \return true if success and false otherwise.
    */
-  bool addEntity(Entity* entity, const QString &parentId)
-    throw (EntityNotFound, ParentNotFound);
+  bool addEntity (Entity *entity,
+                  const QString &parentId) throw (EntityNotFound,
+                                                  ParentNotFound);
 
-  bool addEntity(Entity *entity, const QString &parentId,
-                 Entity *entity_before)
-    throw (EntityNotFound, ParentNotFound);
+  bool addEntity (Entity *entity, const QString &parentId,
+                  Entity *entity_before) throw (EntityNotFound,
+                                                ParentNotFound);
 
   /*!
    * \brief Sets specific plugin data to project file.
@@ -188,7 +188,7 @@ protected:
    * \param pluginId the plugin identifier that we want to set
    * \param data
    */
-  bool setPluginData(const QString &pluginId, const QByteArray &data);
+  bool setPluginData (const QString &pluginId, const QByteArray &data);
 
   /*!
    * \brief This method is used to remove and delete an Entity from the map.
@@ -199,31 +199,35 @@ protected:
    *                    children are also deleted.
    * \return an boolean depending on the success
    */
-  bool removeEntity(Entity* entity, bool appendChild) throw (EntityNotFound);
+  bool removeEntity (Entity *entity, bool appendChild) throw (EntityNotFound);
 
   /*!
    * \brief Transforms the current project to a string. This string will
    *        contain the internal model and the specific plugins data.
    */
-  QString toString();
+  QString toString ();
 
   /*!
    * \brief This slot must be called when there are some data (on the plugin
    *        data or on the model) that is not synchronized with the saved
    *        file.
    */
-  void setDirty(bool isDirty);
+  void setDirty (bool isDirty);
 
-  QDomDocument &getDomDocument () { return this->_doc; }
+  QDomDocument &
+  getDomDocument ()
+  {
+    return this->_doc;
+  }
 
 private:
-  QMutex *_lockEntities; /*!< TODO */
-  QMutex _lockLocation; /*!< TODO */
-  QMap<QString, Entity*> _entities; /*!< TODO */
+  QMutex *_lockEntities;                 /*!< TODO */
+  QMutex _lockLocation;                  /*!< TODO */
+  QMap<QString, Entity *> _entities;     /*!< TODO */
   QMap<QString, QByteArray> _pluginData; /*!< TODO */
 
-  QString _projectLocation; /*!< TODO */
-  QString _projectName; /*!< TODO */
+  QString _projectLocation;  /*!< TODO */
+  QString _projectName;      /*!< TODO */
   LanguageType _projectType; /*!< TODO */
 
   bool dirty;

@@ -16,17 +16,17 @@
 #ifndef PROJECTREADER_H
 #define PROJECTREADER_H
 
-#include "util/ComposerCore_global.h"
 #include "model/Project.h"
+#include "util/ComposerCore_global.h"
 using namespace cpr::core;
 
+#include <QRegExp>
 #include <QString>
 #include <QStringList>
-#include <QRegExp>
 #include <QXmlContentHandler>
 
-#include <QStack>
 #include <QMutex>
+#include <QStack>
 #include <QWaitCondition>
 #include <QXmlInputSource>
 
@@ -40,24 +40,21 @@ CPR_CORE_BEGIN_NAMESPACE
  * \brief It is responsible for parsing the NCL Composer Project and
  * generating the data of a Project object.
  */
-class COMPOSERCORESHARED_EXPORT ProjectReader: public QXmlDefaultHandler
+class COMPOSERCORESHARED_EXPORT ProjectReader : public QXmlDefaultHandler
 {
 public:
-  ProjectReader();
-  virtual ~ProjectReader();
+  ProjectReader ();
+  virtual ~ProjectReader ();
 
-  Project *readFile(const QString &location);
+  Project *readFile (const QString &location);
 
 protected:
-  bool startElement(const QString &namespaceURI,
-                    const QString &localName,
-                    const QString &qName,
-                    const QXmlAttributes &attributes);
-  bool endElement(const QString &namespaceURI,
-                  const QString &localName,
-                  const QString &qName);
-  bool characters(const QString &str);
-  bool fatalError(const QXmlParseException &exception);
+  bool startElement (const QString &namespaceURI, const QString &localName,
+                     const QString &qName, const QXmlAttributes &attributes);
+  bool endElement (const QString &namespaceURI, const QString &localName,
+                   const QString &qName);
+  bool characters (const QString &str);
+  bool fatalError (const QXmlParseException &exception);
 
 private:
   QDomDocument _domDocument;
@@ -65,9 +62,9 @@ private:
   Entity *_currentEntity;
   QMutex _lockStack;
   QWaitCondition _sync;
-  QStack<Entity*> _elementStack;
+  QStack<Entity *> _elementStack;
 
-  bool parseModelString(const QString &str);
+  bool parseModelString (const QString &str);
 };
 
 CPR_CORE_END_NAMESPACE

@@ -25,9 +25,9 @@ using namespace std;
 #include "util/ComposerCore_global.h"
 
 #include "extensions/IDocumentParser.h"
+#include "extensions/IPlugin.h"
 #include "model/Entity.h"
 #include "model/Project.h"
-#include "extensions/IPlugin.h"
 using namespace cpr::core;
 
 CPR_CORE_BEGIN_NAMESPACE
@@ -37,8 +37,7 @@ CPR_CORE_BEGIN_NAMESPACE
  * \brief Manages the messages sent from plugins to NCL Composer Core and
  * vice-versa.
  */
-class COMPOSERCORESHARED_EXPORT MessageControl :
-        public QObject
+class COMPOSERCORESHARED_EXPORT MessageControl : public QObject
 {
   Q_OBJECT
 
@@ -48,11 +47,11 @@ public:
    *
    * \param project
    */
-  explicit MessageControl(Project *project);
+  explicit MessageControl (Project *project);
   /*!
    * \brief Destructor.
    */
-  ~MessageControl();
+  ~MessageControl ();
 
 public slots:
   /*!
@@ -63,9 +62,8 @@ public slots:
      \param atts
      \param force
     */
-  void onAddEntity(const QString &type,
-                   const QString &parentEntityId,
-                   const QMap<QString,QString>& atts);
+  void onAddEntity (const QString &type, const QString &parentEntityId,
+                    const QMap<QString, QString> &atts);
   /*!
      \brief
 
@@ -74,9 +72,8 @@ public slots:
      \param atts
      \param force
     */
-  void onAddEntity(const QString &entity_content,
-                   const QString &parentId,
-                   Data::Format format);
+  void onAddEntity (const QString &entity_content, const QString &parentId,
+                    Data::Format format);
   /*!
      \brief
 
@@ -85,7 +82,7 @@ public slots:
      \param atts
      \param force
     */
-  void onAddComment(const QString &comment, const QString &parentId);
+  void onAddComment (const QString &comment, const QString &parentId);
 
   /*!
      \brief
@@ -94,7 +91,7 @@ public slots:
      \param atts
      \param force
     */
-  void onEditEntity(Entity *entity, const QMap<QString,QString> &atts);
+  void onEditEntity (Entity *entity, const QMap<QString, QString> &atts);
 
   /*!
      \brief
@@ -102,96 +99,94 @@ public slots:
      \param
      \param force
     */
-  void onRemoveEntity(Entity *entity);
+  void onRemoveEntity (Entity *entity);
 
   /*!
    * \brief TODO
    */
-  void setListenFilter(const QStringList &list);
+  void setListenFilter (const QStringList &list);
 
   /*!
    * \brief TODO
    */
-  void setPluginData(const QByteArray &data);
+  void setPluginData (const QByteArray &data);
 
   /*!
    * \brief TODO
    */
-  void setCurrentProjectAsDirty();
+  void setCurrentProjectAsDirty ();
 
   /*!
    * \brief This message is here, mainly for test purposes.
    *
    * It allows anyone send a addEntityMessage, even when it is not a plugin.
    */
-  void anonymousAddEntity(const QString &type,
-                          const QString &parentEntityId,
-                          const QMap<QString,QString>& atts,
-                          bool notifyPlugins = true);
+  void anonymousAddEntity (const QString &type, const QString &parentEntityId,
+                           const QMap<QString, QString> &atts,
+                           bool notifyPlugins = true);
 
   /*!
-   * \brief This is a variation of the previous message, where the user pass the
+   * \brief This is a variation of the previous message, where the user pass
+   * the
    *    pointer to an entity already created.
    */
-  void anonymousAddEntity(Entity *entity,
-                          const QString &parentEntityId,
-                          bool notifyPlugins = true);
+  void anonymousAddEntity (Entity *entity, const QString &parentEntityId,
+                           bool notifyPlugins = true);
 
   /*!
    * \brief This message is here, mainly for test purposes.
    *
    * It allows anyone send a removeEntityMessage, even if it is not a plugin.
    */
-  void anonymousRemoveEntity(const QString &entityUniqueId,
-                             bool notifyPlugins = true);
+  void anonymousRemoveEntity (const QString &entityUniqueId,
+                              bool notifyPlugins = true);
   /*!
    * \brief This message is here, mainly for test purposes.
    *
    * It allows anyone send a addEntityMessage, even if it is not a plugin.
    */
-  void anonymousUpdateFromModel();
+  void anonymousUpdateFromModel ();
 
   /*!
    * \brief This message is here, mainly for test purposes.
    *
    * It allows anyone send an addEntityMessage, even if it is not a plugin.
    */
-  void anonymousChangeEntity(const QString &entityId,
-                             const QMap<QString,QString>& atts,
-                             bool notifyPlugins = true);
+  void anonymousChangeEntity (const QString &entityId,
+                              const QMap<QString, QString> &atts,
+                              bool notifyPlugins = true);
 
-  void undo();
-  void redo();
+  void undo ();
+  void redo ();
 
 signals:
-  void entityAdded(const QString&, Entity*);
-
+  void entityAdded (const QString &, Entity *);
 
 private:
   Project *_project; /*!< TODO */
-  QMap <QString, QStringList> _listenEntities;
+  QMap<QString, QStringList> _listenEntities;
   QUndoStack *_qUndoStack;
 
   /*!
    * \brief TODO
    */
-  void sendEntityAddedMessageToPlugins(const QString &pluginInstanceId,
-                                       Entity *entity );
+  void sendEntityAddedMessageToPlugins (const QString &pluginInstanceId,
+                                        Entity *entity);
   /*!
    * \brief TODO
    */
-  void sendEntityChangedMessageToPlugins(const QString &pluginInstanceId,
-                                         Entity *entity );
+  void sendEntityChangedMessageToPlugins (const QString &pluginInstanceId,
+                                          Entity *entity);
   /*!
    * \brief TODO
    */
-  void sendEntityRemovedMessageToPlugins(const QString &pluginInstanceId,
-                                         Entity *entity );
+  void sendEntityRemovedMessageToPlugins (const QString &pluginInstanceId,
+                                          Entity *entity);
 
   /*!
    * \brief TODO
    */
-  bool pluginIsInterestedIn(const IPlugin *plugin, Entity *entity);
+  bool pluginIsInterestedIn (const IPlugin *plugin, Entity *entity);
 };
 
 CPR_CORE_END_NAMESPACE

@@ -16,10 +16,10 @@
 #ifndef LANGUAGECONTROL_H
 #define LANGUAGECONTROL_H
 
-#include <QObject>
-#include <QMap>
-#include <QPluginLoader>
 #include <QDir>
+#include <QMap>
+#include <QObject>
+#include <QPluginLoader>
 
 #include "util/ComposerCore_global.h"
 
@@ -38,44 +38,44 @@ CPR_CORE_BEGIN_NAMESPACE
 class COMPOSERCORESHARED_EXPORT LanguageControl : public QObject
 {
   Q_OBJECT
-  SINGLETON(LanguageControl) // Constructor wil be private
+  SINGLETON (LanguageControl) // Constructor wil be private
 
 public:
   /*!
    * \brief Load all the profiles from the default extensions paths.
    */
-  void loadProfiles();
+  void loadProfiles ();
   /*!
    * \brief Load all the profiles from a specific directory.
    *
    * \param profilesDirPath the directory path from where the profiles must be
    * loaded.
    */
-  void loadProfiles(const QString &profilesDirPath);
+  void loadProfiles (const QString &profilesDirPath);
 
   /*!
    * \brief Load a language profile from a specific fileName.
    *
    * \param fileName th
    */
-  ILanguageProfile* loadProfile(const QString &fileName);
+  ILanguageProfile *loadProfile (const QString &fileName);
 
   /*!
    * \brief
    * \param type
    */
-  ILanguageProfile* getProfileFromType(LanguageType type);
+  ILanguageProfile *getProfileFromType (LanguageType type);
 
   /*!
    * \brief
    * \param type
    */
-  bool removeProfile(LanguageType type);
+  bool removeProfile (LanguageType type);
 
   /*!
    * \brief
    */
-  QList<ILanguageProfile*> getLoadedProfiles();
+  QList<ILanguageProfile *> getLoadedProfiles ();
 
 signals:
   /*!
@@ -83,20 +83,20 @@ signals:
    *
    * \param QString
    */
-  void notifyError(QString);
+  void notifyError (QString);
 
 private:
-  QMap<LanguageType, ILanguageProfile*> _profiles; /*!< TODO */
+  QMap<LanguageType, ILanguageProfile *> _profiles; /*!< TODO */
 
   /*!
    * \brief Constructor (it is private because this class is a Singleton).
    */
-  LanguageControl();
+  LanguageControl ();
 
   /*!
    * \brief Destructor (it is private because this class is a Singleton).
    */
-  ~LanguageControl();
+  ~LanguageControl ();
 };
 
 CPR_CORE_END_NAMESPACE

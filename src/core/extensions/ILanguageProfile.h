@@ -16,14 +16,14 @@
 #ifndef ILANGUAGE_H
 #define ILANGUAGE_H
 
-#include <QtPlugin>
 #include <QList>
 #include <QString>
+#include <QtPlugin>
 
 #include "IDocumentParser.h"
-#include "util/Utilities.h"
 #include "model/Project.h"
 #include "util/AttributeReferences.h"
+#include "util/Utilities.h"
 using namespace cpr::core;
 
 CPR_CORE_BEGIN_NAMESPACE
@@ -36,37 +36,37 @@ CPR_CORE_BEGIN_NAMESPACE
 class COMPOSERCORESHARED_EXPORT ILanguageProfile
 {
 public:
-  virtual ~ILanguageProfile() {}
+  virtual ~ILanguageProfile () {}
 
-  virtual LanguageType getLanguageType()  = 0;
+  virtual LanguageType getLanguageType () = 0;
 
-  virtual QString getProfileName() = 0;
+  virtual QString getProfileName () = 0;
 
-  virtual QList<QString> getOutputDocumentTypes() = 0;
+  virtual QList<QString> getOutputDocumentTypes () = 0;
 
-  virtual IDocumentParser* createParser(Project *project) = 0;
+  virtual IDocumentParser *createParser (Project *project) = 0;
 
   virtual void releaseDocumentParser (IDocumentParser *parser) = 0;
 
-  //FUNCTIONS RELATED TO LANGUAGE STRUCTURE
-  virtual map <QString, map <QString, char> *> *getNesting() = 0;
+  // FUNCTIONS RELATED TO LANGUAGE STRUCTURE
+  virtual map<QString, map<QString, char> *> *getNesting () = 0;
 
-  virtual map <QString, bool> *getAttributes (const QString &element) = 0;
+  virtual map<QString, bool> *getAttributes (const QString &element) = 0;
 
-  virtual map <QString, char> *getChildren (const QString &tagname) = 0;
+  virtual map<QString, char> *getChildren (const QString &tagname) = 0;
 
-  virtual vector <AttributeReferences *>
-    getReferences (const QString &element, const QString &attr) = 0;
+  virtual vector<AttributeReferences *> getReferences (const QString &element,
+                                                       const QString &attr)
+      = 0;
 };
 
 CPR_CORE_END_NAMESPACE
-
 
 /**
   * This is require for the QTPlugin system work.
   * Declaring the interface that is going to be used by external plugins.
   */
 #define ILanguageProfile_iid "br.puc_rio.telemidia.composer.ILanguageProfile"
-Q_DECLARE_INTERFACE(ILanguageProfile, ILanguageProfile_iid)
+Q_DECLARE_INTERFACE (ILanguageProfile, ILanguageProfile_iid)
 
 #endif // ILANGUAGE_H

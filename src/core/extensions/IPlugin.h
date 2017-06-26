@@ -16,10 +16,10 @@
 #ifndef IPLUGIN_H
 #define IPLUGIN_H
 
-#include <QObject>
 #include <QEvent>
-#include <QMutexLocker>
 #include <QMutex>
+#include <QMutexLocker>
+#include <QObject>
 
 #include "model/Entity.h"
 #include "model/Project.h"
@@ -28,8 +28,13 @@ using namespace cpr::core;
 
 CPR_CORE_BEGIN_NAMESPACE
 
-namespace Data {
-  enum Format {XML, JSON};
+namespace Data
+{
+enum Format
+{
+  XML,
+  JSON
+};
 }
 
 /*!
@@ -52,22 +57,26 @@ class COMPOSERCORESHARED_EXPORT IPlugin : public QObject
   Q_OBJECT
 
 public:
-  inline QString getPluginInstanceID() const
+  inline QString
+  getPluginInstanceID () const
   {
     return this->pluginInstanceID;
   }
 
-  inline void setPluginInstanceID(const QString &pluginInstID)
+  inline void
+  setPluginInstanceID (const QString &pluginInstID)
   {
     this->pluginInstanceID = pluginInstID;
   }
 
-  inline void setLanguageProfile(ILanguageProfile *languageProfile)
+  inline void
+  setLanguageProfile (ILanguageProfile *languageProfile)
   {
     this->languageProfile = languageProfile;
   }
 
-  inline ILanguageProfile *getLanguageProfile()
+  inline ILanguageProfile *
+  getLanguageProfile ()
   {
     return this->languageProfile;
   }
@@ -77,9 +86,10 @@ public:
    * plugin instance.
    * \param document an NclDocument instance
    */
-  inline void setProject(Project *project)
+  inline void
+  setProject (Project *project)
   {
-    QMutexLocker locker(&mutex);
+    QMutexLocker locker (&mutex);
     this->project = project;
   }
 
@@ -89,9 +99,10 @@ public:
    *
    * \return project aProject instance
    */
-  inline Project* getProject()
+  inline Project *
+  getProject ()
   {
-    QMutexLocker locker(&mutex);
+    QMutexLocker locker (&mutex);
     return this->project;
   }
 
@@ -104,7 +115,11 @@ public:
    *
    * \return QWidget - wrapping the plugin interface
    */
-  virtual QWidget* getWidget() { return nullptr; }
+  virtual QWidget *
+  getWidget ()
+  {
+    return nullptr;
+  }
 
   /*!
    * \brief Says to plugin save its settings.
@@ -118,7 +133,11 @@ public:
    *   \return bool - true if the save was successfull,
    *                  false otherwise
    */
-  virtual bool saveSubsession() { return true; }
+  virtual bool
+  saveSubsession ()
+  {
+    return true;
+  }
 
 public slots:
   /*!
@@ -129,7 +148,7 @@ public slots:
    * core.
    * Messages send to core befor this call are IGNORED.
    */
-  virtual void init() /* = 0; */ { }
+  virtual void init () /* = 0; */ {}
 
   /*!
    * \brief Calls the plugin to update its internal model from model.
@@ -142,7 +161,7 @@ public slots:
    * the previous modifications, so it has to be forceed to reload
    * the Document*.
    */
-  virtual void updateFromModel() /*= 0*/{}
+  virtual void updateFromModel () /*= 0*/ {}
 
   /*!
    * \brief This is called by the core when a new Entity is added.
@@ -150,10 +169,10 @@ public slots:
    * This call is invoked by the core when a new Entity (from that
    * particular types the plugin is listening) is added in the model.
    */
-  virtual void onEntityAdded(const QString &pluginID, Entity *entity) /*= 0*/
+  virtual void onEntityAdded (const QString &pluginID, Entity *entity) /*= 0*/
   {
-    Q_UNUSED(pluginID);
-    Q_UNUSED(entity);
+    Q_UNUSED (pluginID);
+    Q_UNUSED (entity);
   }
 
   /*!
@@ -163,10 +182,11 @@ public slots:
    *     the entity.
    * \param entity The entity that was modified.
    */
-  virtual void onEntityChanged(const QString &pluginID, Entity *entity) /*= 0*/
+  virtual void onEntityChanged (const QString &pluginID,
+                                Entity *entity) /*= 0*/
   {
-    Q_UNUSED(pluginID);
-    Q_UNUSED(entity);
+    Q_UNUSED (pluginID);
+    Q_UNUSED (entity);
   }
 
   /*!
@@ -183,11 +203,11 @@ public slots:
    *     the entity.
    * \param entityID the entity's identifier that was removed.
    */
-  virtual void onEntityRemoved( const QString &pluginID,
-                                const QString &entityID ) /*= 0*/
+  virtual void onEntityRemoved (const QString &pluginID,
+                                const QString &entityID) /*= 0*/
   {
-    Q_UNUSED(pluginID);
-    Q_UNUSED(entityID);
+    Q_UNUSED (pluginID);
+    Q_UNUSED (entityID);
   }
 
   /*!
@@ -196,9 +216,9 @@ public slots:
    *
    * \param error A description of the error.
    */
-  virtual void errorMessage(const QString &error) /*= 0*/
+  virtual void errorMessage (const QString &error) /*= 0*/
   {
-    Q_UNUSED(error);
+    Q_UNUSED (error);
   }
 
 signals:
@@ -209,9 +229,8 @@ signals:
    * \param parentEntityId
    * \param atts
    */
-  void addEntity(const QString &type,
-                 const QString &parentEntityId,
-                 const QMap<QString,QString>& atts);
+  void addEntity (const QString &type, const QString &parentEntityId,
+                  const QMap<QString, QString> &atts);
 
   /*!
    * \brief This message can be used to add a new comment in the model.
@@ -221,11 +240,11 @@ signals:
    * \param atts
    * \param force
    */
-  void addComment(const QString &comment,
-                  const QString &parentEntityId);
+  void addComment (const QString &comment, const QString &parentEntityId);
 
   /*!
-   * \brief This message allows to add an Entity (and its children, recursively)
+   * \brief This message allows to add an Entity (and its children,
+   * recursively)
    *  through passing an XML content that has the content of this Entity.
    *
    * \param entity_content
@@ -233,10 +252,8 @@ signals:
    * \param force
    */
   // \fixme Maybe, this message should be addContent
-  void addEntity( const QString &entity_content,
-                  const QString &parentId,
-                  Data::Format format,
-                  bool force);
+  void addEntity (const QString &entity_content, const QString &parentId,
+                  Data::Format format, bool force);
 
   /*!
    * \brief This message can be used to edit the attributes of an Entity.
@@ -245,8 +262,7 @@ signals:
    * \param atts
    * \param force
    */
-  void setAttributes( Entity *entity,
-                      const QMap<QString,QString> &atts);
+  void setAttributes (Entity *entity, const QMap<QString, QString> &atts);
   /*!
    * \brief This message can be used to ask the core to remove an Entity.
    *
@@ -254,7 +270,7 @@ signals:
    * \param force It should be true if the user want to remove that entity even
    *  the internal model will not be consistent.
    */
-  void removeEntity(Entity *entity);
+  void removeEntity (Entity *entity);
 
   /*!
    * \brief Say the core that the plugin is interested in just the entities of
@@ -262,7 +278,7 @@ signals:
    *
    * \param entityTypes a list of strings that the plugin want to listen.
    */
-  void setListenFilter(const QStringList &entityTypes);
+  void setListenFilter (const QStringList &entityTypes);
 
   /*!
    * \brief Can be used to extend the current messages of Core.
@@ -278,7 +294,7 @@ signals:
    * The core will call this msg method to each plug-in that implements it when
    * sendBroadcastMethod is called.
    */
-  void sendBroadcastMessage(const char* msg, void *obj);
+  void sendBroadcastMessage (const char *msg, void *obj);
 
   /*!
    * \brief Each plugin is able to save its specific data by calling this
@@ -289,14 +305,14 @@ signals:
    *
    * \param data A byte array containing the data that plugin wants to save.
    */
-  void setPluginData(const QByteArray &data);
+  void setPluginData (const QByteArray &data);
 
   /*!
    * \brief TODO
    *
    * \todo This could be done with setBroadcastMessage?!
    */
-  void setCurrentProjectAsDirty();
+  void setCurrentProjectAsDirty ();
 
 protected:
   //! The Project binded with this particular plugin instance

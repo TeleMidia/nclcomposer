@@ -21,135 +21,139 @@ CPR_CORE_BEGIN_NAMESPACE
 
 INIT_SINGLETON (LanguageControl)
 
-LanguageControl::LanguageControl()
+LanguageControl::LanguageControl () {}
+
+LanguageControl::~LanguageControl ()
 {
+  QMap<LanguageType, ILanguageProfile *>::iterator it;
 
-}
-
-LanguageControl::~LanguageControl()
-{
-  QMap<LanguageType, ILanguageProfile*>::iterator it;
-
-  for(it = _profiles.begin(); it != _profiles.end(); ++it)
+  for (it = _profiles.begin (); it != _profiles.end (); ++it)
   {
-    ILanguageProfile *pf = it.value();
-    assert(pf != nullptr);
+    ILanguageProfile *pf = it.value ();
+    assert (pf != nullptr);
     delete pf;
     pf = nullptr;
   }
-  _profiles.clear();
+  _profiles.clear ();
 }
 
-bool LanguageControl::removeProfile(LanguageType type)
+bool
+LanguageControl::removeProfile (LanguageType type)
 {
-  if (!_profiles.contains(type))
+  if (!_profiles.contains (type))
     return false;
 
   ILanguageProfile *lp = _profiles[type];
-  assert(lp != nullptr);
+  assert (lp != nullptr);
   if (lp == nullptr)
     return false;
 
   delete lp;
   lp = nullptr;
-  _profiles.remove(type);
+  _profiles.remove (type);
 
   return true;
 }
 
-ILanguageProfile* LanguageControl::loadProfile(const QString &fileName)
+ILanguageProfile *
+LanguageControl::loadProfile (const QString &fileName)
 {
   ILanguageProfile *lProfile = nullptr;
-  QPluginLoader loader(fileName);
+  QPluginLoader loader (fileName);
 
-  QObject *profile = loader.instance();
+  QObject *profile = loader.instance ();
   if (profile)
   {
-    lProfile = qobject_cast<ILanguageProfile*> (profile);
+    lProfile = qobject_cast<ILanguageProfile *> (profile);
     if (lProfile)
     {
-      LanguageType type = lProfile->getLanguageType();
-      if (_profiles.contains(type))
+      LanguageType type = lProfile->getLanguageType ();
+      if (_profiles.contains (type))
       {
-        qCDebug(CPR_CORE)
+        qCDebug (CPR_CORE)
             << "LanguageControl::loadProfiles Profile for language ("
-            << Utilities::getExtensionForLanguageType(type) << ") already"
+            << Utilities::getExtensionForLanguageType (type) << ") already"
             << "exists";
       }
       else
       {
-        _profiles.insert(type, lProfile);
-        qCDebug(CPR_CORE) << fileName << " loaded --- "
-                            << "languageProfile = " << lProfile;
+        _profiles.insert (type, lProfile);
+        qCDebug (CPR_CORE) << fileName << " loaded --- "
+                           << "languageProfile = " << lProfile;
       }
     }
     else
     {
-      qCDebug(CPR_CORE) <<  fileName << "is not a ILanguageProfile.";
+      qCDebug (CPR_CORE) << fileName << "is not a ILanguageProfile.";
     }
   }
   else
-    qCDebug(CPR_CORE) << "Failed to load languageProfile (" << fileName <<")"
-                        << loader.errorString();
+    qCDebug (CPR_CORE) << "Failed to load languageProfile (" << fileName << ")"
+                       << loader.errorString ();
 
   return lProfile;
 }
 
-void LanguageControl::loadProfiles()
+void
+LanguageControl::loadProfiles ()
 {
   GlobalSettings settings;
-  QStringList extPaths = settings.getExtensionsPaths();
+  QStringList extPaths = settings.getExtensionsPaths ();
 
   // add all the paths to LibraryPath, i.e., plugins are allowed to install
   // dll dependencies in the extensions path.
-  for(const QString &extDir: extPaths)
-    QApplication::addLibraryPath(extDir + "/");
+  for (const QString &extDir : extPaths)
+    QApplication::addLibraryPath (extDir + "/");
 
-  // foreach path where extensions can be installed, try to load language profiles.
-  for(const QString &extDir: extPaths)
-    LanguageControl::getInstance()->loadProfiles(extDir);
+  // foreach path where extensions can be installed, try to load language
+  // profiles.
+  for (const QString &extDir : extPaths)
+    LanguageControl::getInstance ()->loadProfiles (extDir);
 }
 
-void LanguageControl::loadProfiles(const QString &profilesDirPath)
+void
+LanguageControl::loadProfiles (const QString &profilesDirPath)
 {
-  QDir profileDir = QDir(profilesDirPath);
-  qCDebug(CPR_CORE) << "Trying to load language profiles from "
-                    << profilesDirPath;
-  if(!profileDir.exists())
+  QDir profileDir = QDir (profilesDirPath);
+  qCDebug (CPR_CORE) << "Trying to load language profiles from "
+                     << profilesDirPath;
+  if (!profileDir.exists ())
   {
-    qCDebug(CPR_CORE) << profilesDirPath << " directory does not exist!";
+    qCDebug (CPR_CORE) << profilesDirPath << " directory does not exist!";
     return;
   }
 
   QStringList filter;
-  filter.append("*.so");
-  filter.append("*.dylib");
-  filter.append("*.dll");
-  profileDir.setNameFilters(filter);
+  filter.append ("*.so");
+  filter.append ("*.dylib");
+  filter.append ("*.dll");
+  profileDir.setNameFilters (filter);
 
-  for ( const QString& fileName:
-            profileDir.entryList(QDir::Files | QDir::NoSymLinks) )
+  for (const QString &fileName :
+       profileDir.entryList (QDir::Files | QDir::NoSymLinks))
   {
-    loadProfile(profileDir.absoluteFilePath(fileName));
+    loadProfile (profileDir.absoluteFilePath (fileName));
   }
 }
 
-ILanguageProfile* LanguageControl::getProfileFromType(LanguageType type)
+ILanguageProfile *
+LanguageControl::getProfileFromType (LanguageType type)
 {
-  if (_profiles.contains(type))
+  if (_profiles.contains (type))
     return _profiles[type];
   else
     return nullptr;
 }
 
-QList<ILanguageProfile*> LanguageControl::getLoadedProfiles()
+QList<ILanguageProfile *>
+LanguageControl::getLoadedProfiles ()
 {
-  QMap<LanguageType, ILanguageProfile*>::iterator it;
-  QList<ILanguageProfile*> list;
+  QMap<LanguageType, ILanguageProfile *>::iterator it;
+  QList<ILanguageProfile *> list;
 
-  for (it = _profiles.begin(); it != _profiles.end(); ++it)
+  for (it = _profiles.begin (); it != _profiles.end (); ++it)
   {
-    list.append(it.value());
+    list.append (it.value ());
   }
   return list;
 }
