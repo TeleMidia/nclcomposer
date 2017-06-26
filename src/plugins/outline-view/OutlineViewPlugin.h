@@ -36,17 +36,17 @@ public:
   /*!
    * \brief Constructor.
    */
-  explicit OutlineViewPlugin();
+  explicit OutlineViewPlugin ();
   /*!
    * \brief Destructor.
    */
-  ~OutlineViewPlugin();
+  ~OutlineViewPlugin ();
   /*!
    * \brief
    *
    * This function is part of the IPlugin API.
    */
-  void init();
+  void init ();
   /*!
    * \brief Returns the widget of that plugin. This widget will be presentated
    *      to the user.
@@ -56,7 +56,7 @@ public:
    * \return QWidget* the widget that represents this plugin. If nullptr, the
    *      plugin has not a visual representation
    */
-  QWidget* getWidget();
+  QWidget *getWidget ();
   /*!
    * \brief Save the specific data of this plugin.
    *
@@ -64,7 +64,7 @@ public:
    *
    * \return bool
    */
-  bool saveSubsession();
+  bool saveSubsession ();
 
 public slots:
   /*!
@@ -75,7 +75,7 @@ public slots:
    * \param ID The plugin identifier that called to add the Entity.
    * \param Entity* the Entity that was added.
    */
-  void onEntityAdded(const QString &pluginID, Entity *);
+  void onEntityAdded (const QString &pluginID, Entity *);
 
   /*!
    * \brief
@@ -85,7 +85,7 @@ public slots:
    * \param pluginID
    * \param
    */
-  void onEntityChanged(const QString &ID, Entity *);
+  void onEntityChanged (const QString &ID, Entity *);
 
   /*!
    * \brief
@@ -95,13 +95,13 @@ public slots:
    * \param ID
    * \param entityID
    */
-  void onEntityRemoved(const QString &pluginID, const QString &entityID);
+  void onEntityRemoved (const QString &pluginID, const QString &entityID);
 
   /*!
    * \brief This slot calls the outline plugin to update its own model.
    *
    */
-  void updateFromModel();
+  void updateFromModel ();
 
   /*!
    * \brief
@@ -110,7 +110,7 @@ public slots:
    *
    * \param error
    */
-  void errorMessage(const QString &error);
+  void errorMessage (const QString &error);
 
   /* Comunication from Debug to me */
   /*!
@@ -118,47 +118,47 @@ public slots:
    *
    * \param obj
    */
-  void debugHasSendClearAll(QString pluginIDm, void *obj);
+  void debugHasSendClearAll (QString pluginIDm, void *obj);
 
   /*!
    * \brief
    *
    * \param param
    */
-  void changeSelectedEntity(QString pluginId, void* param);
+  void changeSelectedEntity (QString pluginId, void *param);
 
   /*!
    * \brief
    */
-  void textualStartSync(QString, void*);
+  void textualStartSync (QString, void *);
 
   /*!
    * \brief
    */
-  void textualFinishSync(QString, void*);
+  void textualFinishSync (QString, void *);
 
   // COMUNICATION WITH VALIDATION PLUGIN //
   /*!
    * \brief This message is called by Validator plugin.
    *
    */
-  void clearValidationMessages(QString, void *param);
+  void clearValidationMessages (QString, void *param);
 
   /*!
    * \brief This message is called by Validator plugin.
    */
-  void validationError(QString pluginID, void *param);
+  void validationError (QString pluginID, void *param);
   // END COMMUNICATION WITH VALIDATION PLUGIN
 
   /*!
    * \brief
    */
-  void clearErrorMessages();
+  void clearErrorMessages ();
 
 private:
-  NCLTreeWidget *_window, *_windowBuffering; /*!< TODO */
-  QString *_selectedId; /*!< TODO */
-  QMap <QString, QTreeWidgetItem*> _idToItem; /*!< TODO */
+  NCLTreeWidget *_window, *_windowBuffering;  /*!< TODO */
+  QString *_selectedId;                       /*!< TODO */
+  QMap<QString, QTreeWidgetItem *> _idToItem; /*!< TODO */
   bool _isSyncingFromTextual;
 
 private slots:
@@ -168,22 +168,21 @@ private slots:
    * \param id
    *
    */
-  void elementRemovedByUser(QString id);
+  void elementRemovedByUser (QString id);
 
   /*!
    * \brief
    *
    * \param id
    */
-  void elementAddedByUser( QString type,
-                           QString parentId,
-                           QMap <QString, QString> & atts);
+  void elementAddedByUser (QString type, QString parentId,
+                           QMap<QString, QString> &atts);
   /*!
    * \brief
    */
-  void itemSelectionChanged();
+  void itemSelectionChanged ();
 
-  void openWithDefaultSystemEditor(QString entityId);
+  void openWithDefaultSystemEditor (QString entityId);
 };
 
 #endif // OUTLINEVIEWPLUGIN_H

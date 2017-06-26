@@ -17,86 +17,80 @@
  */
 #include "NCLParser.h"
 
-NCLParser::NCLParser(NCLTreeWidget *tree)
+NCLParser::NCLParser (NCLTreeWidget *tree)
 {
   _treeWidget = tree;
   _currentItem = 0;
 }
 
-bool NCLParser::startElement(const QString & /* namespaceURI */,
-                             const QString & /*localName */,
-                             const QString &qName,
-                             const QXmlAttributes &attributes)
+bool
+NCLParser::startElement (const QString & /* namespaceURI */,
+                         const QString & /*localName */, const QString &qName,
+                         const QXmlAttributes &attributes)
 {
-  QMap <QString, QString> attrs;
-  for(int i = 0; i < attributes.length(); i++)
+  QMap<QString, QString> attrs;
+  for (int i = 0; i < attributes.length (); i++)
   {
-    attrs[attributes.localName(i)] = attributes.value(i);
+    attrs[attributes.localName (i)] = attributes.value (i);
   }
 
   if (_currentItem)
   {
-    _currentItem = _treeWidget->addElement(_currentItem,
-                                           _currentItem->childCount(),
-                                           qName,
-                                           attributes.value("id"),
-                                           attrs,
-                                           _locator->lineNumber(),
-                                           _locator->columnNumber());
+    _currentItem = _treeWidget->addElement (
+        _currentItem, _currentItem->childCount (), qName,
+        attributes.value ("id"), attrs, _locator->lineNumber (),
+        _locator->columnNumber ());
   }
   else
   {
-    _currentItem = _treeWidget->addElement(0,
-                                           -1,
-                                           qName,
-                                           attributes.value("id"),
-                                           attrs,
-                                           _locator->lineNumber(),
-                                           _locator->columnNumber());
+    _currentItem = _treeWidget->addElement (
+        0, -1, qName, attributes.value ("id"), attrs, _locator->lineNumber (),
+        _locator->columnNumber ());
   }
-  //TODO: send a signal to all interested plugins.
+  // TODO: send a signal to all interested plugins.
   return true;
 }
 
-bool NCLParser::characters(const QString &str)
+bool
+NCLParser::characters (const QString &str)
 {
   _currentText += str;
   return true;
 }
 
-bool NCLParser::endElement(const QString & /* namespaceURI */,
-                           const QString & /* localName */,
-                           const QString & /* qName */)
+bool
+NCLParser::endElement (const QString & /* namespaceURI */,
+                       const QString & /* localName */,
+                       const QString & /* qName */)
 {
-  _currentItem = _currentItem->parent();
+  _currentItem = _currentItem->parent ();
   return true;
 }
 
-bool NCLParser::fatalError(const QXmlParseException &exception)
+bool
+NCLParser::fatalError (const QXmlParseException &exception)
 {
-  if(_currentItem != nullptr)
+  if (_currentItem != nullptr)
   {
-    _currentItem->setIcon(0, QIcon(":/images/error-icon-16.png"));
-    _currentItem->setTextColor(0, QColor("#FF0000"));
+    _currentItem->setIcon (0, QIcon (":/images/error-icon-16.png"));
+    _currentItem->setTextColor (0, QColor ("#FF0000"));
     //      currentItem->setBackgroundColor(0, QColor("#FF0000"));
   }
 
-  qDebug() <<  QObject::tr("Parse error at line %1, column "
-                           "%2:\n%3.")
-               .arg(exception.lineNumber())
-               .arg(exception.columnNumber())
-               .arg(exception.message());
+  qDebug () << QObject::tr ("Parse error at line %1, column "
+                            "%2:\n%3.")
+                   .arg (exception.lineNumber ())
+                   .arg (exception.columnNumber ())
+                   .arg (exception.message ());
 
-  emit fatalErrorFound ( exception.message(),
-                         QString("FILENAME"),
-                         exception.lineNumber(),
-                         exception.columnNumber(),
-                         0);
+  emit fatalErrorFound (exception.message (), QString ("FILENAME"),
+                        exception.lineNumber (), exception.columnNumber (), 0);
 
   return false;
 }
 
-void NCLParser::setDocumentLocator(QXmlLocator *locator)
+void
+NCLParser::setDocumentLocator (QXmlLocator *locator)
 {
   this->_locator = locator;
 }

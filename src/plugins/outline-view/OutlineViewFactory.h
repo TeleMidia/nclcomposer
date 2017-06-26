@@ -15,7 +15,7 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-//END_LICENSE
+// END_LICENSE
 #ifndef OUTLINEVIEWPLUGINFACTORY_H
 #define OUTLINEVIEWPLUGINFACTORY_H
 
@@ -27,44 +27,43 @@ using namespace cpr::core;
 /*!
  \brief Handles the creation and deletion of OutlineView objects.
 */
-class OutlineViewFactory :
-    public QObject, public IPluginFactory
+class OutlineViewFactory : public QObject, public IPluginFactory
 {
   Q_OBJECT
-  Q_INTERFACES(IPluginFactory)
-  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "outline-view.json")
+  Q_INTERFACES (IPluginFactory)
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "outline-view.json")
 
 public:
   /*!
    * \brief Constructor.
    */
-  OutlineViewFactory();
+  OutlineViewFactory ();
 
   /*!
    * \brief Creates an OutlineViewPlugin instance.
    *
    * \return IPlugin* A NEW instance of OutlineViewPlugin.
    */
-  IPlugin* createPluginInstance();
+  IPlugin *createPluginInstance ();
 
   /*!
    * \brief Destroy an instance of OutlineViewPlugin.
    *
    * \param IPlugin* the instance that must be destroyed.
    */
-  void releasePluginInstance(IPlugin *);
+  void releasePluginInstance (IPlugin *);
 
   /*!
    * \brief
    * \return QString
    */
-  QString id() const;
+  QString id () const;
 
   /*!
    * \brief
    * \return QIcon
    */
-  QIcon icon() const;
+  QIcon icon () const;
 };
 
 #endif // OUTLINEVIEWPLUGINFACTORY_H

@@ -21,15 +21,15 @@
 #include <map>
 using namespace std;
 
-#include <QDebug>
-#include <QtXml>
-#include <QHeaderView>
-#include <QMenu>
 #include <QAction>
-#include <QTreeWidget>
-#include <QShortcut>
+#include <QDebug>
+#include <QHeaderView>
 #include <QKeyEvent>
+#include <QMenu>
+#include <QShortcut>
+#include <QTreeWidget>
 #include <QWheelEvent>
+#include <QtXml>
 
 #define KEEP_ELEMENTS_ORDER 1
 
@@ -45,7 +45,7 @@ using namespace std;
  *  Composer Core.
  *
  */
-class NCLTreeWidget: public QTreeWidget
+class NCLTreeWidget : public QTreeWidget
 {
   Q_OBJECT
 
@@ -55,24 +55,28 @@ public:
    *
    * \param parent The
    */
-  explicit NCLTreeWidget(QWidget *parent = 0);
+  explicit NCLTreeWidget (QWidget *parent = 0);
 
   /*!
    * \brief Destroys the tree widget and all its items.
    */
-  virtual ~NCLTreeWidget();
+  virtual ~NCLTreeWidget ();
 
   /*!
    * \brief Sets the default font of the TreeWidget.
    */
-  void setDefaultFont(const QFont &_defaultFont);
+  void setDefaultFont (const QFont &_defaultFont);
 
   /*!
    * Reimplementation of mouseMoveEvent.
    */
-  void mouseMoveEvent(QMouseEvent *event);
+  void mouseMoveEvent (QMouseEvent *event);
 
-  QSize sizeHint() const { return QSize(250, 400); }
+  QSize
+  sizeHint () const
+  {
+    return QSize (250, 400);
+  }
 
 public slots:
   /**
@@ -81,7 +85,7 @@ public slots:
      * \param text The source of the document should be represented as a tree.
      * \return bool Return false if the
     */
-  bool updateFromText(QString text);
+  bool updateFromText (QString text);
 
   /*!
      * \brief Add an element as child of father and return this element
@@ -96,13 +100,10 @@ public slots:
      *
      * \return QTreeWidgetItem *
      */
-  QTreeWidgetItem* addElement ( QTreeWidgetItem *father,
-                                int pos,
-                                QString tagname,
-                                QString id,
-                                QMap <QString, QString> &attrs,
-                                int line_in_text = -1,
-                                int column_in_text = -1);
+  QTreeWidgetItem *addElement (QTreeWidgetItem *father, int pos,
+                               QString tagname, QString id,
+                               QMap<QString, QString> &attrs,
+                               int line_in_text = -1, int column_in_text = -1);
 
   /*!
    * \brief Returns a QTreeWidgetItem with identifier equal to itemId.
@@ -111,13 +112,13 @@ public slots:
    *
    * \return QTreeWidgetItem* The element with identifier itemId.
    */
-  QTreeWidgetItem* getItemById(QString itemId);
+  QTreeWidgetItem *getItemById (QString itemId);
   /**
      * \brief Remove the element
      *
      * \param itemId
     */
-  void removeItem(QString itemId);
+  void removeItem (QString itemId);
   /**
      * \brief
      *
@@ -125,8 +126,8 @@ public slots:
      * \param tagname
      * \param attrs
     */
-  void updateItem(QTreeWidgetItem* item, QString tagname,
-                  QMap <QString, QString> &attrs);
+  void updateItem (QTreeWidgetItem *item, QString tagname,
+                   QMap<QString, QString> &attrs);
 
   /*!
    * \brief
@@ -137,30 +138,26 @@ public slots:
    * \param column
    * \param severity
    */
-  void errorNotification( QString message,
-                          QString filename,
-                          int line,
-                          int column,
-                          int severity);
-  void expandAll();
-
+  void errorNotification (QString message, QString filename, int line,
+                          int column, int severity);
+  void expandAll ();
 
   /*!
    * \brief Reset font to its default family and size.
    */
-  void resetFont();
+  void resetFont ();
   /*!
    * \brief Increases the font and icon size.
    */
-  void zoomIn();
+  void zoomIn ();
   /*!
    * \brief Decreases the font and icon sizes.
    */
-  void zoomOut();
+  void zoomOut ();
   /*!
    * \brief Reset font and icon sizes to defaults.
    */
-  void resetZoom();
+  void resetZoom ();
 
 signals:
   /*!
@@ -171,7 +168,7 @@ signals:
    * \param
    * \param bool
    */
-  void elementAddedByUser(QString, QString, QMap<QString,QString>&);
+  void elementAddedByUser (QString, QString, QMap<QString, QString> &);
   /*!
    * \brief
    *
@@ -187,25 +184,21 @@ signals:
    * \param column
    * \param severity
    */
-  void parserErrorNotify( QString message,
-                          QString filename,
-                          int line,
-                          int column,
-                          int severity);
+  void parserErrorNotify (QString message, QString filename, int line,
+                          int column, int severity);
 
-  void userAskedToOpenWithDefaultSystemEditor(QString itemId);
-
+  void userAskedToOpenWithDefaultSystemEditor (QString itemId);
 
 private:
 #ifdef KEEP_ELEMENTS_ORDER
-  static QVector <QString> _entitiesOrder;
+  static QVector<QString> _entitiesOrder;
 #endif
 
   QAction *_insertNodeAct;
   QAction *_removeNodeAct;
   QAction *_expandAllAct;
   QAction *_openWithDefaultEditorAct;
-  QMenu   *_elementMenu;
+  QMenu *_elementMenu;
 
   QShortcut *_shortcutZoomOut;
   QShortcut *_shortcutZoomIn;
@@ -222,11 +215,11 @@ private:
   /*!
    * \brief Creates the QActions
    */
-  void createActions();
+  void createActions ();
   /*!
    * \brief Creates the menus and bind to previous created QActions.
    */
-  void createMenus();
+  void createMenus ();
 
   /* User events */
   /*!
@@ -235,34 +228,34 @@ private:
    *
    * \param event The QWheelEvent.
    */
-  void wheelEvent(QWheelEvent * event);
+  void wheelEvent (QWheelEvent *event);
   /*!
    * \brief Handles keypress event. This callback is called internally by Qt.
    *
    * \param event The QKeyEvent.
    */
-  void keyPressEvent(QKeyEvent *event);
+  void keyPressEvent (QKeyEvent *event);
 
 private slots:
   /*!
    * \brief
    */
-  void userAddNewElement();
+  void userAddNewElement ();
   /*!
    * \brief
    */
-  void userRemoveElement();
+  void userRemoveElement ();
   /*!
    * \brief
    */
-  void decreaseFont();
+  void decreaseFont ();
   /*!
    * \brief
    */
-  void increaseFont();
+  void increaseFont ();
 
-  void handleSelectionChanged();
-  void openWithDefaultSystemEditor();
+  void handleSelectionChanged ();
+  void openWithDefaultSystemEditor ();
 };
 
 #endif

@@ -17,18 +17,19 @@
  */
 #include "OutlineViewFactory.h"
 
-OutlineViewFactory::OutlineViewFactory()
+OutlineViewFactory::OutlineViewFactory () {}
+
+IPlugin *
+OutlineViewFactory::createPluginInstance ()
 {
+  return new OutlineViewPlugin ();
 }
 
-IPlugin* OutlineViewFactory::createPluginInstance()
+void
+OutlineViewFactory::releasePluginInstance (IPlugin *plugin)
 {
-  return new OutlineViewPlugin();
-}
-
-void OutlineViewFactory::releasePluginInstance(IPlugin *plugin)
-{
-  OutlineViewFactory *outlineView = qobject_cast<OutlineViewFactory*>(plugin);
+  OutlineViewFactory *outlineView
+      = qobject_cast<OutlineViewFactory *> (plugin);
 
   if (outlineView)
   {
@@ -37,12 +38,14 @@ void OutlineViewFactory::releasePluginInstance(IPlugin *plugin)
   }
 }
 
-QString OutlineViewFactory::id() const
+QString
+OutlineViewFactory::id () const
 {
   return "br.puc-rio.telemidia.OutlineView";
 }
 
-QIcon OutlineViewFactory::icon() const
+QIcon
+OutlineViewFactory::icon () const
 {
-  return QIcon(":/images/ncl.png");
+  return QIcon (":/images/ncl.png");
 }
