@@ -86,7 +86,7 @@ public slots:
      *     the entity.
      * \param entity the Entity that was added.
      */
-  virtual void onEntityAdded (const QString &pluginID, Entity *) override;
+  void onEntityAdded (const QString &pluginID, Entity *) override;
 
   /*!
      * \brief Called by the core when an Entity is changed.
@@ -106,8 +106,8 @@ public slots:
      *     the entity.
      * \param entityID the entity's identifier that was removed.
      */
-  virtual void onEntityRemoved (const QString &pluginID,
-                                const QString &entityID) override;
+  void onEntityRemoved (const QString &pluginID,
+                        const QString &entityID) override;
 
   /*!
    * \brief This is called by the core when some error triggered by this
@@ -115,7 +115,7 @@ public slots:
    *
    * \param error A description of the error.
    */
-  virtual void errorMessage (const QString &error) override;
+  void errorMessage (const QString &error) override;
 
   /*!
    * \brief

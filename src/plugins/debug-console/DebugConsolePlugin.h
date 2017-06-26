@@ -45,17 +45,16 @@ public:
   explicit DebugConsolePlugin ();
   ~DebugConsolePlugin ();
 
-  void init ();
-  QWidget *getWidget ();
-  bool saveSubsession ();
+  void init () override;
+  QWidget *getWidget () override;
+  bool saveSubsession () override;
 
 public slots:
-  void onEntityAdded (const QString &, Entity *);
-  void onEntityChanged (const QString &, Entity *);
-  /*void onEntityAboutToRemove(Entity *);*/
-  void onEntityRemoved (const QString &, const QString &);
+  void onEntityAdded (const QString &, Entity *) override;
+  void onEntityChanged (const QString &, Entity *) override;
+  void onEntityRemoved (const QString &, const QString &) override;
 
-  void errorMessage (const QString &);
+  void errorMessage (const QString &) override;
 
   void sendToAll ();
 };
