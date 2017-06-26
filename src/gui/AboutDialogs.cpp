@@ -20,321 +20,318 @@
 #include "ui_ShortcutsDialog.h"
 
 #include <QApplication>
-#include <QMessageBox>
-#include <QFile>
 #include <QDesktopServices>
-#include <QUrl>
 #include <QDialogButtonBox>
+#include <QFile>
+#include <QMessageBox>
+#include <QUrl>
 
 CPR_GUI_BEGIN_NAMESPACE
 
-AboutDialog::AboutDialog(QWidget *parent):
-  QDialog(parent, Qt::Dialog),
-  ui(new Ui::AboutDialog)
+AboutDialog::AboutDialog (QWidget *parent)
+    : QDialog (parent, Qt::Dialog), ui (new Ui::AboutDialog)
 {
-  ui->setupUi(this);
-  ui->label_ProgramName->setText( QString("NCL Composer ") +
-                                  qApp->applicationVersion() );
-  ui->label_buildDate->setText(QString (BUILD_DATE));
+  ui->setupUi (this);
+  ui->label_ProgramName->setText (QString ("NCL Composer ")
+                                  + qApp->applicationVersion ());
+  ui->label_buildDate->setText (QString (BUILD_DATE));
 
-  connect(ui->button_Close, SIGNAL(pressed()), this, SLOT(close()));
+  connect (ui->button_Close, SIGNAL (pressed ()), this, SLOT (close ()));
 
-  connect(ui->button_aboutQt, SIGNAL(pressed()), qApp, SLOT(aboutQt()));
+  connect (ui->button_aboutQt, SIGNAL (pressed ()), qApp, SLOT (aboutQt ()));
 }
 
-AboutDialog::~AboutDialog()
+AboutDialog::~AboutDialog () { delete ui; }
+
+void
+AboutDialog::showLicense ()
 {
-  delete ui;
+  QMessageBox box (this);
+  QFile file (":/LICENSE.LGPL");
+  box.setInformativeText (file.readAll ());
+  box.setTextFormat (Qt::RichText);
+  box.exec ();
 }
 
-void AboutDialog::showLicense()
+AboutPluginsDialog::AboutPluginsDialog (QWidget *parent) : QDialog (parent)
 {
-  QMessageBox box(this);
-  QFile file(":/LICENSE.LGPL");
-  box.setInformativeText(file.readAll());
-  box.setTextFormat(Qt::RichText);
-  box.exec();
-}
+  setWindowTitle (tr ("Installed Plugins"));
+  setSizePolicy (QSizePolicy::Expanding, QSizePolicy::Expanding);
+  resize (600, 400);
 
-AboutPluginsDialog::AboutPluginsDialog(QWidget *parent) :
-    QDialog(parent)
-{
-  setWindowTitle(tr("Installed Plugins"));
-  setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  resize(600, 400);
+  _treeWidgetPlugins = new QTreeWidget (this);
+  _treeWidgetPlugins->setAlternatingRowColors (true);
 
-  _treeWidgetPlugins = new QTreeWidget(this);
-  _treeWidgetPlugins->setAlternatingRowColors(true);
-
-  connect(_treeWidgetPlugins, SIGNAL(itemSelectionChanged()),
-          this, SLOT(selectedAboutCurrentPluginFactory()));
+  connect (_treeWidgetPlugins, SIGNAL (itemSelectionChanged ()), this,
+           SLOT (selectedAboutCurrentPluginFactory ()));
 
   QStringList header;
-  header << tr("Name") << tr("Load") << tr("Version") << tr("Vendor");
-  _treeWidgetPlugins->setHeaderLabels(header);
+  header << tr ("Name") << tr ("Load") << tr ("Version") << tr ("Vendor");
+  _treeWidgetPlugins->setHeaderLabels (header);
 
-  QDialogButtonBox *bOk = new QDialogButtonBox(QDialogButtonBox::Ok |
-                                               QDialogButtonBox::Close,
-                                               Qt::Horizontal,
-                                               this);
+  QDialogButtonBox *bOk = new QDialogButtonBox (
+      QDialogButtonBox::Ok | QDialogButtonBox::Close, Qt::Horizontal, this);
 
-  _detailsButton = bOk->button(QDialogButtonBox::Ok);
-  _detailsButton->setText(tr("Details"));
-  _detailsButton->setIcon(QIcon());
-  _detailsButton->setEnabled(false);
+  _detailsButton = bOk->button (QDialogButtonBox::Ok);
+  _detailsButton->setText (tr ("Details"));
+  _detailsButton->setIcon (QIcon ());
+  _detailsButton->setEnabled (false);
 
-  connect( bOk, SIGNAL(rejected()), this, SLOT(close()) );
-  connect( _detailsButton, SIGNAL(pressed()), this, SLOT(showPluginDetails()) );
-  connect( _treeWidgetPlugins, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(showPluginDetails()));
+  connect (bOk, SIGNAL (rejected ()), this, SLOT (close ()));
+  connect (_detailsButton, SIGNAL (pressed ()), this,
+           SLOT (showPluginDetails ()));
+  connect (_treeWidgetPlugins,
+           SIGNAL (itemDoubleClicked (QTreeWidgetItem *, int)),
+           SLOT (showPluginDetails ()));
 
-  QVBoxLayout *gLayout = new QVBoxLayout(this);
-  gLayout->addWidget(new QLabel(tr("<b>NCL Composer</b> is an IDE for"
-                                   " Declarative Multimedia languages."),
-                                this));
+  QVBoxLayout *gLayout = new QVBoxLayout (this);
+  gLayout->addWidget (new QLabel (tr ("<b>NCL Composer</b> is an IDE for"
+                                      " Declarative Multimedia languages."),
+                                  this));
 
-  gLayout->addWidget(new QLabel(tr("<b>Installed Plug-ins</b>")));
-  gLayout->addWidget(_treeWidgetPlugins);
-  gLayout->addWidget(bOk);
-  gLayout->setSizeConstraint(QLayout::SetNoConstraint);
-  setLayout(gLayout);
+  gLayout->addWidget (new QLabel (tr ("<b>Installed Plug-ins</b>")));
+  gLayout->addWidget (_treeWidgetPlugins);
+  gLayout->addWidget (bOk);
+  gLayout->setSizeConstraint (QLayout::SetNoConstraint);
+  setLayout (gLayout);
 
-  setModal(true);
+  setModal (true);
 
-  connect( this, SIGNAL(finished(int)),
-           this, SLOT(saveLoadPluginData(int)) );
+  connect (this, SIGNAL (finished (int)), this,
+           SLOT (saveLoadPluginData (int)));
 
-  _pluginDetailsDialog = new PluginDetailsDialog(this);
+  _pluginDetailsDialog = new PluginDetailsDialog (this);
 }
 
-void AboutPluginsDialog::loadPlugins()
+void
+AboutPluginsDialog::loadPlugins ()
 {
-  QList<ILanguageProfile*> langList = LanguageControl::getInstance()->
-      getLoadedProfiles();
-  QList<IPluginFactory*> pList = PluginControl::getInstance()->
-      getLoadedPlugins();
+  QList<ILanguageProfile *> langList
+      = LanguageControl::getInstance ()->getLoadedProfiles ();
+  QList<IPluginFactory *> pList
+      = PluginControl::getInstance ()->getLoadedPlugins ();
 
-
-  //search for categories
+  // search for categories
   QTreeWidgetItem *treeWidgetItem;
-  QMap <QString, QTreeWidgetItem*> categories;
+  QMap<QString, QTreeWidgetItem *> categories;
 
   QString category = "Language profile";
-  for (const ILanguageProfile *langProfile: langList)
+  for (const ILanguageProfile *langProfile : langList)
   {
-    if(!categories.contains(category))
+    if (!categories.contains (category))
     {
-      treeWidgetItem = new QTreeWidgetItem(_treeWidgetPlugins);
-      categories.insert(category, treeWidgetItem);
-      treeWidgetItem->setText(0, category);
-      treeWidgetItem->setTextColor(0, QColor("#0000FF"));
+      treeWidgetItem = new QTreeWidgetItem (_treeWidgetPlugins);
+      categories.insert (category, treeWidgetItem);
+      treeWidgetItem->setText (0, category);
+      treeWidgetItem->setTextColor (0, QColor ("#0000FF"));
     }
   }
 
-  for (IPluginFactory *pF: pList)
+  for (IPluginFactory *pF : pList)
   {
-    QString category = pF->metadata().value("category").toString();
+    QString category = pF->metadata ().value ("category").toString ();
 
-    if(!categories.contains(category))
+    if (!categories.contains (category))
     {
-      treeWidgetItem = new QTreeWidgetItem(_treeWidgetPlugins);
-      categories.insert(category, treeWidgetItem);
-      treeWidgetItem->setText(0, category);
-      treeWidgetItem->setTextColor(0, QColor("#0000FF"));
+      treeWidgetItem = new QTreeWidgetItem (_treeWidgetPlugins);
+      categories.insert (category, treeWidgetItem);
+      treeWidgetItem->setText (0, category);
+      treeWidgetItem->setTextColor (0, QColor ("#0000FF"));
     }
   }
 
-  for (ILanguageProfile *langProfile: langList)
+  for (ILanguageProfile *langProfile : langList)
   {
     QString category = "Language profile";
-    treeWidgetItem = new QTreeWidgetItem ( categories.value(category) );
-    treeWidgetItem->setText(0, langProfile->getProfileName());
+    treeWidgetItem = new QTreeWidgetItem (categories.value (category));
+    treeWidgetItem->setText (0, langProfile->getProfileName ());
 
-    treeWidgetItem->setCheckState(1, Qt::Checked);
-    treeWidgetItem->setDisabled(true);
+    treeWidgetItem->setCheckState (1, Qt::Checked);
+    treeWidgetItem->setDisabled (true);
   }
 
-  for (IPluginFactory *pF: pList)
+  for (IPluginFactory *pF : pList)
   {
-    QString category = pF->metadata().value("category").toString();
-    treeWidgetItem = new QTreeWidgetItem ( categories.value(category) );
-    treeWidgetItem->setText(0, pF->metadata().value("name").toString());
-    treeWidgetItem->setData(0, Qt::UserRole, qVariantFromValue(pF));
+    QString category = pF->metadata ().value ("category").toString ();
+    treeWidgetItem = new QTreeWidgetItem (categories.value (category));
+    treeWidgetItem->setText (0, pF->metadata ().value ("name").toString ());
+    treeWidgetItem->setData (0, Qt::UserRole, qVariantFromValue (pF));
 
     // Set checked (or not) based on the settings
     GlobalSettings settings;
-    settings.beginGroup("loadPlugins");
-    if(!settings.contains(pF->id()) || settings.value(pF->id()).toBool())
-      treeWidgetItem->setCheckState(1, Qt::Checked);
+    settings.beginGroup ("loadPlugins");
+    if (!settings.contains (pF->id ()) || settings.value (pF->id ()).toBool ())
+      treeWidgetItem->setCheckState (1, Qt::Checked);
     else
-      treeWidgetItem->setCheckState(1, Qt::Unchecked);
+      treeWidgetItem->setCheckState (1, Qt::Unchecked);
 
-    settings.endGroup();
-    treeWidgetItem->setText(2, pF->metadata().value("version").toString());
-    treeWidgetItem->setText(3, pF->metadata().value("vendor").toString());
+    settings.endGroup ();
+    treeWidgetItem->setText (2, pF->metadata ().value ("version").toString ());
+    treeWidgetItem->setText (3, pF->metadata ().value ("vendor").toString ());
   }
 
-  _treeWidgetPlugins->expandAll();
+  _treeWidgetPlugins->expandAll ();
 
-  _treeWidgetPlugins->setColumnWidth(0, 150);
-  _treeWidgetPlugins->resizeColumnToContents(0);
-  _treeWidgetPlugins->resizeColumnToContents(1);
-  _treeWidgetPlugins->resizeColumnToContents(2);
+  _treeWidgetPlugins->setColumnWidth (0, 150);
+  _treeWidgetPlugins->resizeColumnToContents (0);
+  _treeWidgetPlugins->resizeColumnToContents (1);
+  _treeWidgetPlugins->resizeColumnToContents (2);
 
-  _detailsButton->setEnabled(false);
-
+  _detailsButton->setEnabled (false);
 }
 
-void AboutPluginsDialog::selectedAboutCurrentPluginFactory()
+void
+AboutPluginsDialog::selectedAboutCurrentPluginFactory ()
 {
-  QList<QTreeWidgetItem*> selectedPlugins = _treeWidgetPlugins->selectedItems();
-  if(selectedPlugins.size())
+  QList<QTreeWidgetItem *> selectedPlugins
+      = _treeWidgetPlugins->selectedItems ();
+  if (selectedPlugins.size ())
   {
-    QTreeWidgetItem *item = selectedPlugins.at(0);
-    QVariant itemVariant = item->data(0, Qt::UserRole);
+    QTreeWidgetItem *item = selectedPlugins.at (0);
+    QVariant itemVariant = item->data (0, Qt::UserRole);
 
-    IPluginFactory *pluginFactory = itemVariant.value<IPluginFactory*>();
-    if(pluginFactory)
+    IPluginFactory *pluginFactory = itemVariant.value<IPluginFactory *> ();
+    if (pluginFactory)
     {
-      _pluginDetailsDialog->setCurrentPlugin(pluginFactory);
-      _detailsButton->setEnabled(true);
+      _pluginDetailsDialog->setCurrentPlugin (pluginFactory);
+      _detailsButton->setEnabled (true);
     }
   }
   else
-    _detailsButton->setEnabled(false);
+    _detailsButton->setEnabled (false);
 }
 
-void AboutPluginsDialog::saveLoadPluginData(int)
+void
+AboutPluginsDialog::saveLoadPluginData (int)
 {
   GlobalSettings settings;
-  settings.beginGroup("loadPlugins");
+  settings.beginGroup ("loadPlugins");
 
-  for (int i = 0; i < _treeWidgetPlugins->topLevelItemCount(); ++i)
+  for (int i = 0; i < _treeWidgetPlugins->topLevelItemCount (); ++i)
   {
-    QTreeWidgetItem *cat = _treeWidgetPlugins->topLevelItem(i);
-    for (int j = 0; j < cat->childCount(); ++j)
+    QTreeWidgetItem *cat = _treeWidgetPlugins->topLevelItem (i);
+    for (int j = 0; j < cat->childCount (); ++j)
     {
-      QTreeWidgetItem *item = cat->child(j);
-      QVariant itemVariant = item->data(0, Qt::UserRole);
-      IPluginFactory *pluginFactory = itemVariant.value<IPluginFactory*>();
-      if(pluginFactory)
+      QTreeWidgetItem *item = cat->child (j);
+      QVariant itemVariant = item->data (0, Qt::UserRole);
+      IPluginFactory *pluginFactory = itemVariant.value<IPluginFactory *> ();
+      if (pluginFactory)
       {
-        if(item->checkState(1))
+        if (item->checkState (1))
         {
-          settings.setValue(pluginFactory->id(), true);
+          settings.setValue (pluginFactory->id (), true);
         }
         else
         {
-          settings.setValue(pluginFactory->id(), false);
+          settings.setValue (pluginFactory->id (), false);
         }
       }
     }
   }
 
-  settings.endGroup();
+  settings.endGroup ();
 }
 
 /*!
  * \brief Shows the details of the current selected plugins.
  */
-void AboutPluginsDialog::showPluginDetails()
+void
+AboutPluginsDialog::showPluginDetails ()
 {
-  _pluginDetailsDialog->show();
+  _pluginDetailsDialog->show ();
 }
 
-PluginDetailsDialog::PluginDetailsDialog(QWidget *parent)
-    : QDialog(parent), ui(new Ui::PluginDetailsDialog())
+PluginDetailsDialog::PluginDetailsDialog (QWidget *parent)
+    : QDialog (parent), ui (new Ui::PluginDetailsDialog ())
 {
-  ui->setupUi(this);
+  ui->setupUi (this);
 }
 
-PluginDetailsDialog::~PluginDetailsDialog()
-{
-  delete ui;
-}
+PluginDetailsDialog::~PluginDetailsDialog () { delete ui; }
 
-void PluginDetailsDialog::setCurrentPlugin(IPluginFactory *currentPluginFactory)
+void
+PluginDetailsDialog::setCurrentPlugin (IPluginFactory *currentPluginFactory)
 {
   this->currentPluginFactory = currentPluginFactory;
 
-  ui->label_NameValue->setText(
-        currentPluginFactory->metadata().value("name").toString());
+  ui->label_NameValue->setText (
+      currentPluginFactory->metadata ().value ("name").toString ());
 
-  ui->label_VendorValue->setText(
-        currentPluginFactory->metadata().value("vendor").toString());
+  ui->label_VendorValue->setText (
+      currentPluginFactory->metadata ().value ("vendor").toString ());
 
-  ui->label_CompatibilityVersionValue->setText(
-        currentPluginFactory->metadata().value("compatVersion").toString());
+  ui->label_CompatibilityVersionValue->setText (
+      currentPluginFactory->metadata ().value ("compatVersion").toString ());
 
-  ui->label_PluginPathValue->setText(
-        currentPluginFactory->metadata().value("path").toString());
+  ui->label_PluginPathValue->setText (
+      currentPluginFactory->metadata ().value ("path").toString ());
 
-  ui->label_VersionValue->setText(
-        currentPluginFactory->metadata().value("version").toString());
+  ui->label_VersionValue->setText (
+      currentPluginFactory->metadata ().value ("version").toString ());
 
-  ui->label_CategoryValue->setText(
-        currentPluginFactory->metadata().value("category").toString());
+  ui->label_CategoryValue->setText (
+      currentPluginFactory->metadata ().value ("category").toString ());
 
-  ui->label_URLValue->setText(
-        currentPluginFactory->metadata().value("url").toString());
+  ui->label_URLValue->setText (
+      currentPluginFactory->metadata ().value ("url").toString ());
 
-  ui->textBrowser_Description->setText(
-        currentPluginFactory->metadata().value("description").toString());
+  ui->textBrowser_Description->setText (
+      currentPluginFactory->metadata ().value ("description").toString ());
 
-  ui->label_CopyrightValue->setText(
-        currentPluginFactory->metadata().value("copyright").toString());
+  ui->label_CopyrightValue->setText (
+      currentPluginFactory->metadata ().value ("copyright").toString ());
 
-  ui->textBrowser_License->setText(
-        currentPluginFactory->metadata().value("license").toString());
+  ui->textBrowser_License->setText (
+      currentPluginFactory->metadata ().value ("license").toString ());
 }
 
-ShortcutsDialog::ShortcutsDialog(QWidget *parent) :
-    QDialog(parent),
-    _ui(new Ui::ShortcutsDialog)
+ShortcutsDialog::ShortcutsDialog (QWidget *parent)
+    : QDialog (parent), _ui (new Ui::ShortcutsDialog)
 {
-  _ui->setupUi(this);
+  _ui->setupUi (this);
 
-  QList<QAction*> actions = parent->findChildren<QAction*>();
+  QList<QAction *> actions = parent->findChildren<QAction *> ();
 
-  QMap <QString, QTreeWidgetItem*> actionCategories;
-  for (QAction *act: actions)
+  QMap<QString, QTreeWidgetItem *> actionCategories;
+  for (QAction *act : actions)
   {
-    QString parentTitle = act->parentWidget()->windowTitle();
-    if (!act->shortcut().isEmpty())
+    QString parentTitle = act->parentWidget ()->windowTitle ();
+    if (!act->shortcut ().isEmpty ())
     {
-      if (!actionCategories.contains(parentTitle))
+      if (!actionCategories.contains (parentTitle))
       {
-        QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem(_ui->treeWidget);
-        actionCategories.insert(parentTitle, treeWidgetItem);
-        treeWidgetItem->setText(0, parentTitle);
-        treeWidgetItem->setTextColor(0, QColor("#0000FF"));
+        QTreeWidgetItem *treeWidgetItem
+            = new QTreeWidgetItem (_ui->treeWidget);
+        actionCategories.insert (parentTitle, treeWidgetItem);
+        treeWidgetItem->setText (0, parentTitle);
+        treeWidgetItem->setTextColor (0, QColor ("#0000FF"));
       }
     }
   }
 
-  for (QAction *act: actions)
+  for (QAction *act : actions)
   {
-    if (!act->shortcut().isEmpty())
+    if (!act->shortcut ().isEmpty ())
     {
-      QString parentTitle = act->parentWidget()->windowTitle();
-      QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem (actionCategories.value(parentTitle));
-      treeWidgetItem->setText(0, act->text());
-      treeWidgetItem->setText(1, act->shortcut().toString());
+      QString parentTitle = act->parentWidget ()->windowTitle ();
+      QTreeWidgetItem *treeWidgetItem
+          = new QTreeWidgetItem (actionCategories.value (parentTitle));
+      treeWidgetItem->setText (0, act->text ());
+      treeWidgetItem->setText (1, act->shortcut ().toString ());
     }
   }
 
-  _ui->treeWidget->expandAll();
-  _ui->treeWidget->resizeColumnToContents(0);
-  _ui->treeWidget->resizeColumnToContents(1);
+  _ui->treeWidget->expandAll ();
+  _ui->treeWidget->resizeColumnToContents (0);
+  _ui->treeWidget->resizeColumnToContents (1);
 }
 
-ShortcutsDialog::~ShortcutsDialog()
-{
-  delete _ui;
-}
+ShortcutsDialog::~ShortcutsDialog () { delete _ui; }
 
 CPR_GUI_END_NAMESPACE
 
-void cpr::gui::AboutDialog::on_button_Homepage_pressed()
+void
+cpr::gui::AboutDialog::on_button_Homepage_pressed ()
 {
-  QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br"));
+  QDesktopServices::openUrl (QUrl ("http://composer.telemidia.puc-rio.br"));
 }

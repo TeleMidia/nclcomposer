@@ -16,20 +16,20 @@
 #ifndef WELCOMEWIDGET_H
 #define WELCOMEWIDGET_H
 
-#include <QObject>
 #include <QDebug>
 #include <QEvent>
-#include <QWidget>
-#include <QTableWidget>
-#include <QListWidgetItem>
-#include <QProgressDialog>
 #include <QFileDialog>
+#include <QListWidgetItem>
+#include <QObject>
+#include <QProgressDialog>
+#include <QTableWidget>
+#include <QWidget>
 
-#include <QXmlStreamReader>
-#include <QtNetwork>
-#include <QUrl>
 #include <QDesktopServices>
 #include <QMessageBox>
+#include <QUrl>
+#include <QXmlStreamReader>
+#include <QtNetwork>
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -44,8 +44,9 @@
 #define NCL_CLUB_URL "http://club.ncl.org.br/rss.xml"
 #define MAX_RECENT_PROJECTS 6
 
-namespace Ui {
-  class WelcomeWidget;
+namespace Ui
+{
+class WelcomeWidget;
 }
 
 CPR_GUI_BEGIN_NAMESPACE
@@ -54,10 +55,11 @@ CPR_GUI_BEGIN_NAMESPACE
 http://www.streamreader.org/stackoverflow/questions/2480773/qt-styling-qtabwidget
 */
 // Sets the style sheet of the QTabWidget to expand the tabs.
-static void expandingTabsStyleSheet(QTabWidget *tw)
+static void
+expandingTabsStyleSheet (QTabWidget *tw)
 {
-  tw->setStyleSheet(QString("QTabBar::tab { width: %1px;} ")
-                    .arg(tw->size().width()/tw->count() - 20));
+  tw->setStyleSheet (QString ("QTabBar::tab { width: %1px;} ")
+                         .arg (tw->size ().width () / tw->count () - 20));
 }
 
 /*!
@@ -68,13 +70,15 @@ static void expandingTabsStyleSheet(QTabWidget *tw)
 class ResizeFilter : public QObject
 {
   QTabWidget *target;
-public:
-  ResizeFilter(QTabWidget *target) : QObject(target), target(target) {}
 
-  bool eventFilter(QObject */*object*/, QEvent *event)
+public:
+  ResizeFilter (QTabWidget *target) : QObject (target), target (target) {}
+
+  bool
+  eventFilter (QObject * /*object*/, QEvent *event)
   {
-    if (event->type() == QEvent::Resize)
-      expandingTabsStyleSheet(target);
+    if (event->type () == QEvent::Resize)
+      expandingTabsStyleSheet (target);
     return false;
   }
 };
@@ -85,10 +89,11 @@ public:
  *   Composer is open.
  *
  * Additionally, this widget allows the user to create new projects based on
- * examples from NCL Club and allows the user to install new plugins and see the
+ * examples from NCL Club and allows the user to install new plugins and see
+ * the
  * news related to the software.
  */
-class WelcomeWidget: public QWidget
+class WelcomeWidget : public QWidget
 {
   Q_OBJECT
 
@@ -97,25 +102,25 @@ public:
    * \brief Constructor.
    * \param parent The parent of this class.
    */
-  WelcomeWidget(QWidget *parent = 0);
+  WelcomeWidget (QWidget *parent = 0);
   /*!
    * \brief Destructor.
    */
-  virtual ~WelcomeWidget();
+  virtual ~WelcomeWidget ();
 
 public slots:
-  void updateRecentProjects(QStringList recentProjects);
+  void updateRecentProjects (QStringList recentProjects);
 
 private slots:
-  void on_commandLinkButton_29_clicked();
-  void on_commandLinkButton_6_clicked();
+  void on_commandLinkButton_29_clicked ();
+  void on_commandLinkButton_6_clicked ();
   // void on_commandLinkButton_9_clicked();
   // void on_commandLinkButton_30_clicked();
-  void on_commandLinkButton_10_clicked();
-  void on_commandLinkButton_11_clicked();
-  void on_commandLinkButton_31_clicked();
-  void on_commandLinkButton_7_clicked();
-  void on_commandLinkButton_8_clicked();
+  void on_commandLinkButton_10_clicked ();
+  void on_commandLinkButton_11_clicked ();
+  void on_commandLinkButton_31_clicked ();
+  void on_commandLinkButton_7_clicked ();
+  void on_commandLinkButton_8_clicked ();
 
 private:
   Ui::WelcomeWidget *ui;
@@ -126,24 +131,24 @@ private:
 
   int n_items;
 
-  void loadRSS();
-  void parseXml();
+  void loadRSS ();
+  void parseXml ();
 
-  //TODO: Create a class to handle individual RSS items
-  QVector <QString> description;
-  QVector <QString> imgSrc;
-  QVector <QString> downloadUrl;
+  // TODO: Create a class to handle individual RSS items
+  QVector<QString> description;
+  QVector<QString> imgSrc;
+  QVector<QString> downloadUrl;
   bool isImageEnclosure;
 
   QString currentTag, currentLink, currentTitle, currentDate, currentDesc,
-  currentImg, currentDownloadUrl;
+      currentImg, currentDownloadUrl;
 
-/* Loading Notify Messages */
+  /* Loading Notify Messages */
   QNetworkAccessManager httpNotifyMessages;
-  void updateNotifyMessages();
+  void updateNotifyMessages ();
 
 private slots:
-  void notifyMessagesReadData(QNetworkReply *);
+  void notifyMessagesReadData (QNetworkReply *);
 /* END Notify loading messages */
 
 #ifdef WITH_CLUBENCL
@@ -164,70 +169,64 @@ private:
   QString projectName;
   bool isDownloading;
 
-  void downloadFile();
-  void startRequest(const QUrl &url);
-  bool extract( const QString & filePath,
-                const QString & extDirPath,
-                const QString & singleFileName = QString(""));
+  void downloadFile ();
+  void startRequest (const QUrl &url);
+  bool extract (const QString &filePath, const QString &extDirPath,
+                const QString &singleFileName = QString (""));
 
 private slots:
-  void httpFinished();
-  void httpReadyRead();
-  void updateDataReadProgress(qint64 bytesRead, qint64 totalBytes);
-  void cancelDownload();
+  void httpFinished ();
+  void httpReadyRead ();
+  void updateDataReadProgress (qint64 bytesRead, qint64 totalBytes);
+  void cancelDownload ();
 
   /* END NCL Club download Application */
 
 private slots:
-  void changeCurrentItem(int item);
+  void changeCurrentItem (int item);
 
-  void readData(const QHttpResponseHeader &resp);
-  void finishRSSLoad(int, bool);
-  void downloadApplication();
+  void readData (const QHttpResponseHeader &resp);
+  void finishRSSLoad (int, bool);
+  void downloadApplication ();
 
-
-  bool doExtractCurrentFile( QString extDirPath,
-                             QString singleFileName,
+  bool doExtractCurrentFile (QString extDirPath, QString singleFileName,
                              bool stop);
 
 signals:
-  void extractNextFile( QString extDirPath,
-                        QString singleFileName,
-                        bool stop);
+  void extractNextFile (QString extDirPath, QString singleFileName, bool stop);
 #endif
 
 private slots:
-  void on_commandLinkButton_pressed();
-  void on_commandLinkButton_2_pressed();
-
+  void on_commandLinkButton_pressed ();
+  void on_commandLinkButton_2_pressed ();
 
 signals:
   /*!
    * \brief Signal emitted when the user press the Open Project button.
    */
-  void userPressedOpenProject();
+  void userPressedOpenProject ();
 
   /*!
    * \brief Signal emitted when the user press the New Project button.
    */
-  void userPressedNewProject();
+  void userPressedNewProject ();
 
   /*!
    * \brief Signal emitted when the user press the See installed plugins
    *   button.
    */
-  void userPressedSeeInstalledPlugins();
+  void userPressedSeeInstalledPlugins ();
 
   /*!
    *
    */
-  void userPressedRecentProject(QString project);
+  void userPressedRecentProject (QString project);
 
 private slots:
-  void sendRecentProjectClicked();
+  void sendRecentProjectClicked ();
 
-  void on_commandLinkButton_3_pressed();
-  void on_pushButton_Documentation_clicked();
+  void on_commandLinkButton_3_pressed ();
+  void on_pushButton_Documentation_clicked ();
 };
 
 CPR_GUI_END_NAMESPACE

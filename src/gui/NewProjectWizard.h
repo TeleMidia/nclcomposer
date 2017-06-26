@@ -19,7 +19,8 @@
 #include <QWizard>
 #include <util/ComposerCore_global.h>
 
-namespace Ui {
+namespace Ui
+{
 class NewProjectWizard;
 }
 
@@ -28,21 +29,20 @@ CPR_GUI_BEGIN_NAMESPACE
 class NewProjectWizard : public QWizard
 {
   Q_OBJECT
-  
-public:
-  explicit NewProjectWizard(QWidget *parent = 0);
-  ~NewProjectWizard();
 
-  QString getProjectFullPath();
-  bool shouldCopyDefaultConnBase();
-  bool shouldCreateADefaultRegion();
-  
+public:
+  explicit NewProjectWizard (QWidget *parent = 0);
+  ~NewProjectWizard ();
+
+  QString getProjectFullPath ();
+  bool shouldCopyDefaultConnBase ();
+  bool shouldCreateADefaultRegion ();
+
 private:
   Ui::NewProjectWizard *ui;
 
 private slots:
-  void browseDir();
-
+  void browseDir ();
 };
 
 CPR_GUI_END_NAMESPACE

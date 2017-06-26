@@ -16,134 +16,130 @@
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
 
-#include <QMetaObject>
 #include <QMetaMethod>
+#include <QMetaObject>
 
 #include <QDialogButtonBox>
 #include <QListWidgetItem>
 
 CPR_GUI_BEGIN_NAMESPACE
 
-PreferencesDialog::PreferencesDialog(QWidget *parent) :
-  QDialog(parent),
-  ui(new Ui::PreferencesDialog)
+PreferencesDialog::PreferencesDialog (QWidget *parent)
+    : QDialog (parent), ui (new Ui::PreferencesDialog)
 {
-  ui->setupUi(this);
-  this->setModal(true);
+  ui->setupUi (this);
+  this->setModal (true);
 
-  loadPreferencesPages();
+  loadPreferencesPages ();
 
-  connect( ui->listWidget,
-          SIGNAL(itemSelectionChanged()),
-          this,
-          SLOT(changeActivePage()) );
+  connect (ui->listWidget, SIGNAL (itemSelectionChanged ()), this,
+           SLOT (changeActivePage ()));
 
-  connect( ui->buttonBox_2,
-           SIGNAL(clicked(QAbstractButton*)),
-           this,
-           SLOT(buttonClicked(QAbstractButton*)) );
+  connect (ui->buttonBox_2, SIGNAL (clicked (QAbstractButton *)), this,
+           SLOT (buttonClicked (QAbstractButton *)));
 
-
-  connect( this,
-           SIGNAL(accepted()),
-           this,
-           SLOT(applyCurrentValues()) );
+  connect (this, SIGNAL (accepted ()), this, SLOT (applyCurrentValues ()));
 
   currentItem = nullptr;
   currentPage = nullptr;
 }
 
-PreferencesDialog::~PreferencesDialog()
+PreferencesDialog::~PreferencesDialog () { delete ui; }
+
+void
+PreferencesDialog::addPreferencePage (IPluginFactory *pF)
 {
-  delete ui;
+  if (pF->getPreferencePageWidget () == nullptr)
+    return;
+
+  addPreferencePage (pF->icon (), pF->metadata ().value ("name").toString (),
+                     (IPreferencesPage *)pF->getPreferencePageWidget ());
 }
 
-void PreferencesDialog::addPreferencePage(IPluginFactory *pF)
+void
+PreferencesDialog::addPreferencePage (QIcon icon, QString name,
+                                      IPreferencesPage *page)
 {
-  if (pF->getPreferencePageWidget() == nullptr)
-      return;
-
-  addPreferencePage( pF->icon(),
-                     pF->metadata().value("name").toString(),
-                     (IPreferencesPage*) pF->getPreferencePageWidget());
-}
-
-void PreferencesDialog::addPreferencePage(QIcon icon, QString name,
-                                          IPreferencesPage *page)
-{
-  new QListWidgetItem(icon, name, ui->listWidget, 0);
+  new QListWidgetItem (icon, name, ui->listWidget, 0);
 
   pages[name] = page;
-  page->hide();
-  ui->scrollAreaVerticalLayout->addWidget(page);
+  page->hide ();
+  ui->scrollAreaVerticalLayout->addWidget (page);
 }
 
-void PreferencesDialog::addPreferencePage(IPreferencesPage *page)
+void
+PreferencesDialog::addPreferencePage (IPreferencesPage *page)
 {
-  new QListWidgetItem(page->getIcon(), page->getName(), ui->listWidget, 0);
+  new QListWidgetItem (page->getIcon (), page->getName (), ui->listWidget, 0);
 
-  pages[page->getName()] = page;
-  page->hide();
-  ui->scrollAreaVerticalLayout->addWidget(page);
+  pages[page->getName ()] = page;
+  page->hide ();
+  ui->scrollAreaVerticalLayout->addWidget (page);
 }
 
-void PreferencesDialog::loadPreferencesPages()
+void
+PreferencesDialog::loadPreferencesPages ()
 {
-  QList<IPluginFactory*> plugins = PluginControl::getInstance()->
-      getLoadedPlugins();
-  QList<IPluginFactory*>::iterator it;
+  QList<IPluginFactory *> plugins
+      = PluginControl::getInstance ()->getLoadedPlugins ();
+  QList<IPluginFactory *>::iterator it;
 
-  for (it = plugins.begin(); it != plugins.end(); it++)
+  for (it = plugins.begin (); it != plugins.end (); it++)
   {
     IPluginFactory *pF = *it;
-    if (pF->getPreferencePageWidget() == nullptr)
-        continue;
+    if (pF->getPreferencePageWidget () == nullptr)
+      continue;
 
-    new QListWidgetItem( pF->icon(),
-                         pF->metadata().value("name").toString(),
-                         ui->listWidget, 0 );
+    new QListWidgetItem (pF->icon (),
+                         pF->metadata ().value ("name").toString (),
+                         ui->listWidget, 0);
 
-    IPreferencesPage *page = (IPreferencesPage*) pF->getPreferencePageWidget();
-    pages[pF->metadata().value("name").toString()] = page;
-    page->hide();
-    ui->scrollAreaVerticalLayout->addWidget(page);
+    IPreferencesPage *page
+        = (IPreferencesPage *)pF->getPreferencePageWidget ();
+    pages[pF->metadata ().value ("name").toString ()] = page;
+    page->hide ();
+    ui->scrollAreaVerticalLayout->addWidget (page);
   }
 }
 
-void PreferencesDialog::changeActivePage()
+void
+PreferencesDialog::changeActivePage ()
 {
   if (currentItem != nullptr)
   {
-    if(pages.contains(currentItem->text()))
+    if (pages.contains (currentItem->text ()))
     {
-      pages[currentItem->text()]->hide();
+      pages[currentItem->text ()]->hide ();
     }
   }
 
-  currentItem = ui->listWidget->currentItem();
-  if(currentItem != nullptr)
+  currentItem = ui->listWidget->currentItem ();
+  if (currentItem != nullptr)
   {
-    if(pages.contains(currentItem->text()))
+    if (pages.contains (currentItem->text ()))
     {
-      pages[currentItem->text()]->show();
-      currentPage = pages[currentItem->text()];
-      ui->pageTitle->setText(currentItem->text());
+      pages[currentItem->text ()]->show ();
+      currentPage = pages[currentItem->text ()];
+      ui->pageTitle->setText (currentItem->text ());
     }
   }
 }
 
-void PreferencesDialog::buttonClicked(QAbstractButton* button)
+void
+PreferencesDialog::buttonClicked (QAbstractButton *button)
 {
-  QDialogButtonBox::StandardButton std = ui->buttonBox_2->standardButton(button);
+  QDialogButtonBox::StandardButton std
+      = ui->buttonBox_2->standardButton (button);
 
-  if(std == QDialogButtonBox::Apply)
-    applyCurrentValues();
+  if (std == QDialogButtonBox::Apply)
+    applyCurrentValues ();
 }
 
-void PreferencesDialog::applyCurrentValues()
+void
+PreferencesDialog::applyCurrentValues ()
 {
   if (currentPage)
-    currentPage->applyValues();
+    currentPage->applyValues ();
 }
 
 /* void PreferencesDialog::show()

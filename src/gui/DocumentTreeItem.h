@@ -21,8 +21,11 @@
 class DocumentTreeItem : public QTreeWidgetItem
 {
 public:
-    DocumentTreeItem();
-    enum { DocumentType = QTreeWidgetItem::UserType+2};
+  DocumentTreeItem ();
+  enum
+  {
+    DocumentType = QTreeWidgetItem::UserType + 2
+  };
 };
 
 #endif // DOCUMENTTREEITEM_H

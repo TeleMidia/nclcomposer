@@ -16,54 +16,52 @@
 #include "NewProjectWizard.h"
 #include "ui_NewProjectWizard.h"
 
-#include <QFileDialog>
 #include <QDir>
+#include <QFileDialog>
 
 CPR_GUI_BEGIN_NAMESPACE
 
-NewProjectWizard::NewProjectWizard(QWidget *parent) :
-  QWizard(parent),
-  ui(new Ui::NewProjectWizard)
+NewProjectWizard::NewProjectWizard (QWidget *parent)
+    : QWizard (parent), ui (new Ui::NewProjectWizard)
 {
-  ui->setupUi(this);
+  ui->setupUi (this);
 
-  connect(ui->pushButton_Browser, SIGNAL(pressed()),
-          this, SLOT(browseDir()));
+  connect (ui->pushButton_Browser, SIGNAL (pressed ()), this,
+           SLOT (browseDir ()));
 
-  ui->lineEdit_CreateIn->setText(QDir::homePath());
+  ui->lineEdit_CreateIn->setText (QDir::homePath ());
 }
 
-NewProjectWizard::~NewProjectWizard()
+NewProjectWizard::~NewProjectWizard () { delete ui; }
+
+void
+NewProjectWizard::browseDir ()
 {
-  delete ui;
+  QString path = QFileDialog::getExistingDirectory (
+      this, tr ("New Project Location"), ui->lineEdit_CreateIn->text ());
+
+  if (!path.isNull () && !path.isEmpty ())
+    ui->lineEdit_CreateIn->setText (path);
 }
 
-void NewProjectWizard::browseDir()
+QString
+NewProjectWizard::getProjectFullPath ()
 {
-  QString path = QFileDialog::getExistingDirectory(
-        this,
-        tr("New Project Location"),
-        ui->lineEdit_CreateIn->text());
+  QString dir = ui->lineEdit_CreateIn->text ();
 
-  if(!path.isNull() && !path.isEmpty())
-    ui->lineEdit_CreateIn->setText(path);
+  return dir + "/" + ui->lineEdit_Name->text ();
 }
 
-QString NewProjectWizard::getProjectFullPath()
+bool
+NewProjectWizard::shouldCopyDefaultConnBase ()
 {
-  QString dir = ui->lineEdit_CreateIn->text();
-
-  return dir + "/" + ui->lineEdit_Name->text();
+  return ui->checkBox_ImportConnectorBase->isChecked ();
 }
 
-bool NewProjectWizard::shouldCopyDefaultConnBase()
+bool
+NewProjectWizard::shouldCreateADefaultRegion ()
 {
-  return ui->checkBox_ImportConnectorBase->isChecked();
-}
-
-bool NewProjectWizard::shouldCreateADefaultRegion()
-{
-  return ui->checkBox_AddDefaultRegion->isChecked();
+  return ui->checkBox_AddDefaultRegion->isChecked ();
 }
 
 CPR_GUI_END_NAMESPACE

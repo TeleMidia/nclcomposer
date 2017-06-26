@@ -16,8 +16,8 @@
 #ifndef ABOUTPLUGINS_H
 #define ABOUTPLUGINS_H
 
-#include <modules/PluginControl.h>
 #include <modules/LanguageControl.h>
+#include <modules/PluginControl.h>
 #include <util/ComposerSettings.h>
 using namespace cpr::core;
 
@@ -25,10 +25,11 @@ using namespace cpr::core;
 #include <QStringListModel>
 #include <QTreeWidget>
 
-namespace Ui {
-  class AboutDialog;
-  class PluginDetailsDialog;
-  class ShortcutsDialog;
+namespace Ui
+{
+class AboutDialog;
+class PluginDetailsDialog;
+class ShortcutsDialog;
 }
 
 CPR_GUI_BEGIN_NAMESPACE
@@ -42,18 +43,18 @@ public:
      \brief Constructor.
      \param parent The parent of this class.
     */
-  AboutDialog(QWidget *parent = 0);
+  AboutDialog (QWidget *parent = 0);
   /*!
      \brief Destructor.
     */
-  virtual ~AboutDialog();
+  virtual ~AboutDialog ();
 
 private:
   Ui::AboutDialog *ui;
 
 private slots:
-  void showLicense();
-  void on_button_Homepage_pressed();
+  void showLicense ();
+  void on_button_Homepage_pressed ();
 };
 
 class PluginDetailsDialog : public QDialog
@@ -63,28 +64,27 @@ private:
   IPluginFactory *currentPluginFactory;
 
 public:
-  PluginDetailsDialog(QWidget *parent = 0);
-  virtual ~PluginDetailsDialog();
+  PluginDetailsDialog (QWidget *parent = 0);
+  virtual ~PluginDetailsDialog ();
 
-  void setCurrentPlugin(IPluginFactory *plugin);
+  void setCurrentPlugin (IPluginFactory *plugin);
 };
-
 
 class AboutPluginsDialog : public QDialog
 {
   Q_OBJECT
 
 public:
-  AboutPluginsDialog(QWidget *parent);
-  virtual ~AboutPluginsDialog() { }
+  AboutPluginsDialog (QWidget *parent);
+  virtual ~AboutPluginsDialog () {}
 
 public slots:
-  void loadPlugins();
+  void loadPlugins ();
 
 private slots:
-  void selectedAboutCurrentPluginFactory();
-  void showPluginDetails();
-  void saveLoadPluginData(int);
+  void selectedAboutCurrentPluginFactory ();
+  void showPluginDetails ();
+  void saveLoadPluginData (int);
 
 private:
   QTreeWidget *_treeWidgetPlugins;
@@ -97,8 +97,8 @@ class ShortcutsDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit ShortcutsDialog(QWidget *parent = 0);
-  ~ShortcutsDialog();
+  explicit ShortcutsDialog (QWidget *parent = 0);
+  ~ShortcutsDialog ();
 
 private:
   QStringListModel _model;

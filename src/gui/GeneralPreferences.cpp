@@ -19,76 +19,74 @@
 #include <util/ComposerSettings.h>
 using namespace cpr::core;
 
-#include <QLocale>
 #include <QDebug>
+#include <QLocale>
 
 CPR_GUI_BEGIN_NAMESPACE
 
-GeneralPreferences::GeneralPreferences(QWidget *parent)
-  : IPreferencesPage(parent), ui(new Ui::GeneralPreferences)
+GeneralPreferences::GeneralPreferences (QWidget *parent)
+    : IPreferencesPage (parent), ui (new Ui::GeneralPreferences)
 {
-  ui->setupUi(this);
+  ui->setupUi (this);
   GlobalSettings settings;
-  settings.beginGroup("languages");
-  QStringList langs = settings.value("supportedLanguages").toStringList();
+  settings.beginGroup ("languages");
+  QStringList langs = settings.value ("supportedLanguages").toStringList ();
 
-  for (const QString &cur: langs)
+  for (const QString &cur : langs)
   {
-    QLocale locale(cur);
+    QLocale locale (cur);
 
-    ui->comboBox->insertItem(ui->comboBox->count(),
-                             QLocale::languageToString(locale.language()),
-                             cur);
+    ui->comboBox->insertItem (ui->comboBox->count (),
+                              QLocale::languageToString (locale.language ()),
+                              cur);
   }
 
-  QString current = settings.value("currentLanguage").toString();
-  int index = langs.indexOf(current);
-  if(index >= 0)
-    ui->comboBox->setCurrentIndex(index);
-  settings.endGroup();
+  QString current = settings.value ("currentLanguage").toString ();
+  int index = langs.indexOf (current);
+  if (index >= 0)
+    ui->comboBox->setCurrentIndex (index);
+  settings.endGroup ();
 
-  settings.beginGroup("theme");
-  QString currentQss = settings.value("stylesheet").toString();
-  fileChooser = new FileChooser(tr(""),
-                                FileChooser::OPEN_FILENAME,
-                                "", "", this);
+  settings.beginGroup ("theme");
+  QString currentQss = settings.value ("stylesheet").toString ();
+  fileChooser
+      = new FileChooser (tr (""), FileChooser::OPEN_FILENAME, "", "", this);
 
-  fileChooser->setText(currentQss);
-  settings.endGroup();
+  fileChooser->setText (currentQss);
+  settings.endGroup ();
 
-  ((QFormLayout *)ui->groupBox->layout())->setWidget(1, QFormLayout::FieldRole, fileChooser);
+  ((QFormLayout *)ui->groupBox->layout ())
+      ->setWidget (1, QFormLayout::FieldRole, fileChooser);
 }
 
-GeneralPreferences::~GeneralPreferences()
-{
+GeneralPreferences::~GeneralPreferences () {}
 
-}
-
-void GeneralPreferences::applyValues()
+void
+GeneralPreferences::applyValues ()
 {
   GlobalSettings settings;
-  settings.beginGroup("languages");
-  settings.setValue("currentLanguage",
-                    ui->comboBox->itemData(ui->comboBox->currentIndex())
-                    .toString());
-  settings.endGroup();
+  settings.beginGroup ("languages");
+  settings.setValue (
+      "currentLanguage",
+      ui->comboBox->itemData (ui->comboBox->currentIndex ()).toString ());
+  settings.endGroup ();
 
-  settings.beginGroup("theme");
-  settings.setValue("stylesheet", fileChooser->getText());
-  settings.endGroup();
+  settings.beginGroup ("theme");
+  settings.setValue ("stylesheet", fileChooser->getText ());
+  settings.endGroup ();
 
-  QFile css (fileChooser->getText());
-  css.open(QFile::ReadOnly);
-  QString css_content = css.readAll();
-  qApp->setStyleSheet(css_content);
-  foreach(QWidget *widget, qApp->topLevelWidgets())
-    widget->setStyleSheet(css_content);
-  css.close();
+  QFile css (fileChooser->getText ());
+  css.open (QFile::ReadOnly);
+  QString css_content = css.readAll ();
+  qApp->setStyleSheet (css_content);
+  foreach (QWidget *widget, qApp->topLevelWidgets ())
+    widget->setStyleSheet (css_content);
+  css.close ();
 }
 
-void GeneralPreferences::setDefaultValues()
+void
+GeneralPreferences::setDefaultValues ()
 {
-
 }
 
 CPR_GUI_END_NAMESPACE

@@ -22,26 +22,25 @@
 
 namespace Ui
 {
-  class PerpectiveManager;
+class PerpectiveManager;
 }
 
 /*!
  \brief Enum that informs what is the current behavior of the
     PerspectiveManager.
 */
-enum PERSPEC_BEHAVIOR //PERSPECTIVE BEHAVIOR
+enum PERSPEC_BEHAVIOR // PERSPECTIVE BEHAVIOR
 {
-    PERSPEC_SAVE = 0,
-    PERSPEC_LOAD
+  PERSPEC_SAVE = 0,
+  PERSPEC_LOAD
 };
-
 
 CPR_GUI_BEGIN_NAMESPACE
 
 /*!
  * \brief A dialog that allows the user to choose or save one perspective.
  */
-class PerspectiveManager: public QDialog
+class PerspectiveManager : public QDialog
 {
   Q_OBJECT
 
@@ -51,25 +50,25 @@ public:
    *
    * \param parent The parent of this class.
    */
-  PerspectiveManager(QWidget *parent = 0);
+  PerspectiveManager (QWidget *parent = 0);
 
   /*!
    * \brief Destructor.
    */
-  virtual ~PerspectiveManager();
+  virtual ~PerspectiveManager ();
 
   /*!
    * \brief Get the name of the perspective the user has selected.
    * \return QString The name of the perspective selected.
    */
-  QString getSelectedName();
+  QString getSelectedName ();
 
   /*!
    * \brief Get the name of the default perspective the user has selected.
    *
    * \return QString The name of the default perspective selected.
    */
-  QString getDefaultPerspective();
+  QString getDefaultPerspective ();
 
   /*!
    * \brief Set the current behavior of the PerpectiveManager. This function
@@ -77,48 +76,48 @@ public:
    *
    * \param behavior
    */
-  void setBehavior(PERSPEC_BEHAVIOR behavior);
+  void setBehavior (PERSPEC_BEHAVIOR behavior);
 
 public slots:
   /*!
    * \brief Called when the user clicks OK button
    */
-  void accept();
+  void accept ();
 
 protected:
   /*!
    *  \brief Reimplemented to update the dialog with the information of
    */
-  void showEvent(QShowEvent *);
+  void showEvent (QShowEvent *);
 
   /*!
    * \brief Removes the perspective with name: name.
    *
    * \param name The name of the perspective to be removed.
    */
-  void deletePerspective(QString name);
+  void deletePerspective (QString name);
 
 private:
-    Ui::PerpectiveManager *ui; /*!< The instantiation of the qtcreator designer
-                                    generated class.*/
-    QString selectedName; /*!< The current selected element. */
-    QString defaultPerspective;
-    PERSPEC_BEHAVIOR behavior; /*!< The current behavior of the
-                                    PerspectiveManager */
+  Ui::PerpectiveManager *ui; /*!< The instantiation of the qtcreator designer
+                                  generated class.*/
+  QString selectedName;      /*!< The current selected element. */
+  QString defaultPerspective;
+  PERSPEC_BEHAVIOR behavior; /*!< The current behavior of the
+                                  PerspectiveManager */
 
-    bool internalChange;
-    void updateContent();
+  bool internalChange;
+  void updateContent ();
 
 private slots:
   /*!
    * \brief Called when the user select the delete button.
    */
-  void deleteSelectedPerspective();
+  void deleteSelectedPerspective ();
 
   /*!
    * \brief Called when the user edit an item.
    */
-  void itemChanged(QTreeWidgetItem *, int);
+  void itemChanged (QTreeWidgetItem *, int);
 };
 
 CPR_GUI_END_NAMESPACE

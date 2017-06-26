@@ -16,11 +16,12 @@
 #ifndef GENERALPREFERENCES_H
 #define GENERALPREFERENCES_H
 
-#include "IPreferencesPage.h"
 #include "FileChooser.h"
+#include "IPreferencesPage.h"
 
-namespace Ui {
-  class GeneralPreferences;
+namespace Ui
+{
+class GeneralPreferences;
 }
 
 CPR_GUI_BEGIN_NAMESPACE
@@ -31,24 +32,32 @@ public:
   /*!
    * \brief Constructor.
    */
-  explicit GeneralPreferences(QWidget *parent = 0);
+  explicit GeneralPreferences (QWidget *parent = 0);
   /*!
    * \brief Destructor.
    */
-  virtual ~GeneralPreferences();
+  virtual ~GeneralPreferences ();
 
-  const QString getName() {return tr("General");}
-  const QIcon getIcon() {return QIcon(":/mainwindow/config");}
+  const QString
+  getName ()
+  {
+    return tr ("General");
+  }
+  const QIcon
+  getIcon ()
+  {
+    return QIcon (":/mainwindow/config");
+  }
 
 public slots:
   /*!
    * \brief Save the current setted values to settings.
    */
-  void applyValues();
+  void applyValues ();
   /*!
    * \brief Set the default values to settings.
    */
-  void setDefaultValues();
+  void setDefaultValues ();
 
 private:
   Ui::GeneralPreferences *ui;

@@ -16,11 +16,11 @@
 #ifndef PREFERENCES_H
 #define PREFERENCES_H
 
-#include <QDir>
-#include <QPluginLoader>
-#include <QDialog>
 #include <QAbstractButton>
+#include <QDialog>
+#include <QDir>
 #include <QListWidgetItem>
+#include <QPluginLoader>
 
 #include <extensions/IPluginFactory.h>
 #include <modules/PluginControl.h>
@@ -29,8 +29,9 @@ using namespace cpr::core;
 #include "IPreferencesPage.h"
 using namespace cpr::gui;
 
-namespace Ui {
-  class PreferencesDialog;
+namespace Ui
+{
+class PreferencesDialog;
 }
 
 CPR_GUI_BEGIN_NAMESPACE
@@ -40,32 +41,32 @@ class PreferencesDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit PreferencesDialog(QWidget *parent = 0);
-  ~PreferencesDialog();
+  explicit PreferencesDialog (QWidget *parent = 0);
+  ~PreferencesDialog ();
 
-  void addPreferencePage(IPluginFactory *);
-  void addPreferencePage(IPreferencesPage *page);
+  void addPreferencePage (IPluginFactory *);
+  void addPreferencePage (IPreferencesPage *page);
   /*!
    * \deprecated
    */
-  void addPreferencePage(QIcon icon, QString name, IPreferencesPage *widget);
+  void addPreferencePage (QIcon icon, QString name, IPreferencesPage *widget);
 
-/*public Q_SLOTS:
-    void show();
-    void selectFirst(); */
+  /*public Q_SLOTS:
+      void show();
+      void selectFirst(); */
 
 private:
   Ui::PreferencesDialog *ui;
   QListWidgetItem *currentItem;
   IPreferencesPage *currentPage;
 
-  void loadPreferencesPages();
-  QMap <QString, IPreferencesPage *> pages;
+  void loadPreferencesPages ();
+  QMap<QString, IPreferencesPage *> pages;
 
 private slots:
-  void changeActivePage();
-  void applyCurrentValues();
-  void buttonClicked(QAbstractButton*);
+  void changeActivePage ();
+  void applyCurrentValues ();
+  void buttonClicked (QAbstractButton *);
 };
 
 CPR_GUI_END_NAMESPACE

@@ -16,8 +16,8 @@
 #ifndef IPREFENCESPAGE_H
 #define IPREFENCESPAGE_H
 
-#include <QWidget>
 #include <QIcon>
+#include <QWidget>
 
 #include <util/ComposerCore_global.h>
 
@@ -27,15 +27,19 @@ class IPreferencesPage : public QWidget
 {
 
 public:
-  IPreferencesPage(QWidget *parent) : QWidget(parent) { }
+  IPreferencesPage (QWidget *parent) : QWidget (parent) {}
 
-  virtual const QString getName() { return windowTitle(); }
-  virtual const QIcon getIcon() = 0;
-  virtual ~IPreferencesPage() {}
+  virtual const QString
+  getName ()
+  {
+    return windowTitle ();
+  }
+  virtual const QIcon getIcon () = 0;
+  virtual ~IPreferencesPage () {}
 
 public slots:
-  virtual void applyValues() = 0;
-  virtual void setDefaultValues() = 0;
+  virtual void applyValues () = 0;
+  virtual void setDefaultValues () = 0;
 };
 
 CPR_GUI_END_NAMESPACE
