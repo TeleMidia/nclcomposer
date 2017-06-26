@@ -17,42 +17,41 @@
  */
 #include "DebugConsoleFactory.h"
 
-DebugConsoleFactory::DebugConsoleFactory()
-{
+DebugConsoleFactory::DebugConsoleFactory () {}
 
+DebugConsoleFactory::~DebugConsoleFactory () {}
+
+IPlugin *
+DebugConsoleFactory::createPluginInstance ()
+{
+  return new DebugConsolePlugin ();
 }
 
-DebugConsoleFactory::~DebugConsoleFactory()
+void
+DebugConsoleFactory::releasePluginInstance (IPlugin *plugin)
 {
-
-}
-
-IPlugin* DebugConsoleFactory::createPluginInstance()
-{
-  return new DebugConsolePlugin();
-}
-
-void DebugConsoleFactory::releasePluginInstance(IPlugin *plugin)
-{
-  DebugConsolePlugin *debug = qobject_cast<DebugConsolePlugin*>(plugin);
+  DebugConsolePlugin *debug = qobject_cast<DebugConsolePlugin *> (plugin);
 
   if (debug)
     delete debug;
 }
 
-QList<LanguageType> DebugConsoleFactory::getSupportedLanguages()
+QList<LanguageType>
+DebugConsoleFactory::getSupportedLanguages ()
 {
   QList<LanguageType> lTypes;
-  lTypes.append(NCL);
+  lTypes.append (NCL);
   return lTypes;
 }
 
-QString DebugConsoleFactory::id() const
+QString
+DebugConsoleFactory::id () const
 {
   return "br.puc-rio.telemidia.DebugConsole";
 }
 
-QIcon DebugConsoleFactory::icon()  const
+QIcon
+DebugConsoleFactory::icon () const
 {
-  return QIcon(":/images/icon.png");
+  return QIcon (":/images/icon.png");
 }

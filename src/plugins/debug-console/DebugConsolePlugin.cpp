@@ -18,46 +18,48 @@
 #include "DebugConsolePlugin.h"
 #include "DebugConsoleFactory.h"
 
-DebugConsolePlugin::DebugConsolePlugin()
+DebugConsolePlugin::DebugConsolePlugin ()
 {
-  window = new QWidget();
-  QGridLayout *layout = new QGridLayout(window);
-  QPushButton *bt = new QPushButton(window);
-  bt->setText(tr("Clear"));
-  layout->addWidget(bt);
-  list = new QListWidget(window);
-  list->setAlternatingRowColors(true);
-  layout->addWidget(list);
-  connect(bt, SIGNAL(clicked()), list, SLOT(clear()));
-  connect(bt, SIGNAL(clicked()), this, SLOT(sendToAll()));
-  window->setLayout(layout);
-  window->setWindowIcon(QIcon(":/images/icon.png"));
+  window = new QWidget ();
+  QGridLayout *layout = new QGridLayout (window);
+  QPushButton *bt = new QPushButton (window);
+  bt->setText (tr ("Clear"));
+  layout->addWidget (bt);
+  list = new QListWidget (window);
+  list->setAlternatingRowColors (true);
+  layout->addWidget (list);
+  connect (bt, SIGNAL (clicked ()), list, SLOT (clear ()));
+  connect (bt, SIGNAL (clicked ()), this, SLOT (sendToAll ()));
+  window->setLayout (layout);
+  window->setWindowIcon (QIcon (":/images/icon.png"));
   project = nullptr;
 }
 
-DebugConsolePlugin::~DebugConsolePlugin()
+DebugConsolePlugin::~DebugConsolePlugin ()
 {
-  if(window != nullptr)
+  if (window != nullptr)
     delete window;
   window = nullptr;
 }
 
-void DebugConsolePlugin::init()
+void
+DebugConsolePlugin::init ()
 {
-  //TODO: All
+  // TODO: All
 }
 
-QWidget* DebugConsolePlugin::getWidget()
+QWidget *
+DebugConsolePlugin::getWidget ()
 {
   return window;
 }
 
-void DebugConsolePlugin::onEntityAdded(const QString &pluginID,
-                                       Entity *entity)
+void
+DebugConsolePlugin::onEntityAdded (const QString &pluginID, Entity *entity)
 {
-  QString line = "PLUGIN (" + pluginID + ") added the Entity (" +
-      entity->getType() + " - " + entity->getUniqueId() +")";
-  list->insertItem(0, new QListWidgetItem(line));
+  QString line = "PLUGIN (" + pluginID + ") added the Entity ("
+                 + entity->getType () + " - " + entity->getUniqueId () + ")";
+  list->insertItem (0, new QListWidgetItem (line));
   // qCWarning(Debug) << "########### " << line;
   /* if(list->count())
     list->item(0)->setText(line);
@@ -65,21 +67,22 @@ void DebugConsolePlugin::onEntityAdded(const QString &pluginID,
     list->addItem(new QListWidgetItem(line));*/
 }
 
-void DebugConsolePlugin::errorMessage( const QString &error )
+void
+DebugConsolePlugin::errorMessage (const QString &error)
 {
   //    list->insertItem(0, new QListWidgetItem(error));
-  if(list->count())
-    list->item(0)->setText(error);
+  if (list->count ())
+    list->item (0)->setText (error);
   else
-    list->addItem(new QListWidgetItem(error));
+    list->addItem (new QListWidgetItem (error));
 }
 
-void DebugConsolePlugin::onEntityChanged( const QString &pluginID,
-                                          Entity *entity )
+void
+DebugConsolePlugin::onEntityChanged (const QString &pluginID, Entity *entity)
 {
-  QString line = "PLUGIN (" + pluginID + ") changed the Entity (" +
-      entity->getType() + " - " + entity->getUniqueId() +")";
-  list->insertItem(0, new QListWidgetItem(line));
+  QString line = "PLUGIN (" + pluginID + ") changed the Entity ("
+                 + entity->getType () + " - " + entity->getUniqueId () + ")";
+  list->insertItem (0, new QListWidgetItem (line));
   /*  if(list->count())
     list->item(0)->setText(line);
   else
@@ -91,25 +94,27 @@ void DebugConsolePlugin::onEntityChanged( const QString &pluginID,
 
 }*/
 
-void DebugConsolePlugin::onEntityRemoved( const QString &pluginID,
-                                          const QString &entityID )
+void
+DebugConsolePlugin::onEntityRemoved (const QString &pluginID,
+                                     const QString &entityID)
 {
-  QString line = "PLUGIN (" + pluginID + ") removed Entity (" +
-      entityID + ")";
-  list->insertItem(0, new QListWidgetItem(line));
+  QString line = "PLUGIN (" + pluginID + ") removed Entity (" + entityID + ")";
+  list->insertItem (0, new QListWidgetItem (line));
   /*if(list->count())
     list->item(0)->setText(line);
   else
     list->addItem(new QListWidgetItem(line));*/
 }
 
-bool DebugConsolePlugin::saveSubsession()
+bool
+DebugConsolePlugin::saveSubsession ()
 {
-  //TODO: All
+  // TODO: All
   return true;
 }
 
-void DebugConsolePlugin::sendToAll()
+void
+DebugConsolePlugin::sendToAll ()
 {
   /* Invoker <Result> in;
     in.addArgument<int>(10);
@@ -118,6 +123,5 @@ void DebugConsolePlugin::sendToAll()
 
     in.sendBroadcastMessage("debugHasSendClearAll"); */
 
-  emit sendBroadcastMessage("debugHasSendClearAll", nullptr);
+  emit sendBroadcastMessage ("debugHasSendClearAll", nullptr);
 }
-

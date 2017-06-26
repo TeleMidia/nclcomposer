@@ -18,8 +18,8 @@
 #ifndef DEBUGCONSOLE_H
 #define DEBUGCONSOLE_H
 
-#include "DebugConsole_global.h"
 #include "DebugConsolePlugin.h"
+#include "DebugConsole_global.h"
 
 #include <extensions/IPluginFactory.h>
 using namespace cpr::core;
@@ -27,23 +27,22 @@ using namespace cpr::core;
 /*!
  * \brief Handles the creation and deletion of DebugConsolePlugin objects.
  */
-class DebugConsoleFactory :
-        public QObject, public IPluginFactory
+class DebugConsoleFactory : public QObject, public IPluginFactory
 {
   Q_OBJECT
-  Q_INTERFACES(IPluginFactory)
+  Q_INTERFACES (IPluginFactory)
   Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "debug-console.json")
 
 public:
-  DebugConsoleFactory();
-  ~DebugConsoleFactory();
+  DebugConsoleFactory ();
+  ~DebugConsoleFactory ();
 
-  IPlugin* createPluginInstance();
-  void releasePluginInstance(IPlugin *);
-  QList<LanguageType> getSupportedLanguages();
+  IPlugin *createPluginInstance ();
+  void releasePluginInstance (IPlugin *);
+  QList<LanguageType> getSupportedLanguages ();
 
-  QString id() const;
-  QIcon icon() const;
+  QString id () const;
+  QIcon icon () const;
 };
 
 #endif // DEBUGCONSOLE_H

@@ -18,11 +18,11 @@
 #ifndef DEBUGCONSOLEPLUGIN_H
 #define DEBUGCONSOLEPLUGIN_H
 
-#include <QObject>
 #include <QGridLayout>
-#include <QPushButton>
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <QObject>
+#include <QPushButton>
 
 #include <extensions/IPlugin.h>
 using namespace cpr::core;
@@ -40,23 +40,24 @@ class DebugConsolePlugin : public IPlugin
 private:
   QListWidget *list;
   QWidget *window;
-public:
-  explicit DebugConsolePlugin();
-  ~DebugConsolePlugin();
 
-  void init();
-  QWidget* getWidget();
-  bool saveSubsession();
+public:
+  explicit DebugConsolePlugin ();
+  ~DebugConsolePlugin ();
+
+  void init ();
+  QWidget *getWidget ();
+  bool saveSubsession ();
 
 public slots:
-  void onEntityAdded(const QString &, Entity *);
-  void onEntityChanged(const QString &, Entity *);
+  void onEntityAdded (const QString &, Entity *);
+  void onEntityChanged (const QString &, Entity *);
   /*void onEntityAboutToRemove(Entity *);*/
-  void onEntityRemoved(const QString &, const QString &);
+  void onEntityRemoved (const QString &, const QString &);
 
-  void errorMessage(const QString &);
+  void errorMessage (const QString &);
 
-  void sendToAll();
+  void sendToAll ();
 };
 
 #endif // DEBUGCONSOLEPLUGIN_H
