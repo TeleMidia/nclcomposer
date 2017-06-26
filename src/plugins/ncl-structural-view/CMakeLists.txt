@@ -59,7 +59,9 @@ set(NCL_STRUCTURAL_VIEW_SOURCES
   src/ui/view/StructuralLinkTool.cpp
 )
 
-if (WITH_STRUCTURAL_AUTOADJUST)
+option(WITH_STRUCTURAL_AUTO_ADJUST "Build 'Structural View' with 'Auto Adjust' feature (require GraphViz)." OFF)
+
+if (WITH_STRUCTURAL_AUTO_ADJUST)
   # Cheking
   find_library(GRAPHVIZ_LIBS NAMES gvc cgraph)
 
