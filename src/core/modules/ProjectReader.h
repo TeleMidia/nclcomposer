@@ -59,7 +59,6 @@ protected:
 private:
   QDomDocument _domDocument;
   Project *_project;
-  Entity *_currentEntity;
   QMutex _lockStack;
   QWaitCondition _sync;
   QStack<Entity *> _elementStack;
