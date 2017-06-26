@@ -1,0 +1,6 @@
+BasedOnStyle:  GNU
+BreakBeforeBraces: Allman
+AlignTrailingComments: true
+UseTab: Never
+IndentCaseLabels: true
+
