@@ -12,6 +12,11 @@ StructuralInterface::StructuralInterface(StructuralEntity* parent)
   setLeft(0);
   setWidth(STR_DEFAULT_INTERFACE_W);
   setHeight(STR_DEFAULT_INTERFACE_H);
+
+  if (!STR_DEFAULT_WITH_INTERFACES)
+  {
+    setHidden(true);
+  }
 }
 
 StructuralInterface::~StructuralInterface()

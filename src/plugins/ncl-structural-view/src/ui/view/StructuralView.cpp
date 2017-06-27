@@ -1223,6 +1223,19 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
         StructuralEntity* tail = ((StructuralEdge*) entity)->getTail();
         StructuralEntity* head = ((StructuralEdge*) entity)->getHead();
 
+        if (!STR_DEFAULT_WITH_INTERFACES)
+        {
+          if (tail->getStructuralCategory() == Structural::Interface)
+          {
+            ((StructuralEdge*) entity)->setTail(tail->getStructuralParent());
+          }
+
+          if (head->getStructuralCategory() == Structural::Interface)
+          {
+            ((StructuralEdge*) entity)->setHead(head->getStructuralParent());
+          }
+        }
+
         if (tail != NULL && head != NULL)
         {
           if (entity->getStructuralParent() != NULL)
@@ -1859,6 +1872,7 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
       _dialog->setMode();
 
       if (_dialog->exec()) {
+
 
         if (!_dialog->getConditionInterface().isEmpty())
         {
