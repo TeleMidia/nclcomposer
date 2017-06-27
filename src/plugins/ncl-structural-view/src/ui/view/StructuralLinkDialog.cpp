@@ -187,184 +187,298 @@ void CompleteLineEdit::completeText(const QModelIndex &index)
 }
 
 StructuralLinkDialog::StructuralLinkDialog(QWidget* parent)
-  : QDialog(parent), firstTime(true)
+  : QDialog(parent), _aligned(false)
 {
-  form.setupUi(this);
+  _form.setupUi(this);
 
-  connLineEdit = new CompleteLineEdit(QStringList(), this);
-  this->form.gridLayout_2->addWidget(connLineEdit, 0, 1);
+  _form.tbLinkParams->hide();
+  _form.tbConditionParams->hide();
+  _form.tbActionParams->hide();
 
-  connect(connLineEdit, SIGNAL(textChanged(QString)),
-          SLOT(updateForm(QString)));
+  _form.lyDialog->setSizeConstraint(QLayout::SetMinAndMaxSize);
+  _form.lyLink->setSizeConstraint(QLayout::SetMinAndMaxSize);
+  _form.lyBinds->setSizeConstraint(QLayout::SetMinAndMaxSize);
 
-  connect(form.kbLinkParams, SIGNAL(stateChanged(int)), this, SLOT(changeLinkParamState(int)));
-  connect(form.kbConditionParams, SIGNAL(stateChanged(int)), this, SLOT(changeConditionParamState(int)));
-  connect(form.kbActionParams, SIGNAL(stateChanged(int)), this, SLOT(changeActionParamState(int)));
+  _form.lyLink->addWidget((_search = new CompleteLineEdit(QStringList(), this)), 0, 1);
 
-  changeModel = true;
+  _mode = CreateLink;
 
-  form.tbLinkParams->hide();
-  form.tbConditionParams->hide();
-  form.tbActionParams->hide();
+  connect(_search,SIGNAL(textChanged(QString)), SLOT(changeContent(QString)));
 
-  form.gridLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
-  form.gridLayout_2->setSizeConstraint(QLayout::SetMinAndMaxSize);
-  form.gridLayout_3->setSizeConstraint(QLayout::SetMinAndMaxSize);
+  connect(_form.kbLinkParams, SIGNAL(stateChanged(int)),this, SLOT(switchConnectorParam(int)));
+  connect(_form.kbConditionParams, SIGNAL(stateChanged(int)), this, SLOT(switchConditionParam(int)));
+  connect(_form.kbActionParams, SIGNAL(stateChanged(int)), this, SLOT(switchActionParam(int)));
 
-  _currentMode = CreateLink;
+  setMode();
 }
 
 StructuralLinkDialog::~StructuralLinkDialog()
 {
-
+  // TODO
 }
 
-void StructuralLinkDialog::setData(const QMap<QString, QVector<QString> > &conditions,
+QString StructuralLinkDialog::getConnector()
+{
+  return _search->text();
+}
+
+void StructuralLinkDialog::setConnector(const QString &connector)
+{
+  _search->setText(connector);
+}
+
+QMap<QString, QString> StructuralLinkDialog::getConnectorParams()
+{
+  return getParams(_form.tbLinkParams);
+}
+
+void StructuralLinkDialog::setConnectorParams(const QMap<QString, QString> &params)
+{
+  setParams(_form.tbLinkParams, params);
+}
+
+QString StructuralLinkDialog::getCondition()
+{
+  return _form.cbCondition->currentText();
+}
+
+void StructuralLinkDialog::setCondition(const QString &condition)
+{
+  _form.cbCondition->setCurrentText(condition);
+}
+
+QMap<QString, QString> StructuralLinkDialog::getConditionParams()
+{
+  return getParams(_form.tbConditionParams);
+}
+
+void StructuralLinkDialog::setConditionParams(const QMap<QString, QString> &params)
+{
+  setParams(_form.tbConditionParams, params);
+}
+
+QString StructuralLinkDialog::getConditionInterface()
+{
+  return _form.cbConditionInterface->currentText();
+}
+
+QMap<QString, QString> StructuralLinkDialog::getConditonInterfaces()
+{
+  return getInterfaces(_form.cbConditionInterface);
+}
+
+void StructuralLinkDialog::addConditionInterface(const QString &uid, const QString &name, const QIcon &icon)
+{
+  addInterface(_form.cbConditionInterface, uid, name, icon);
+}
+
+void StructuralLinkDialog::removeConditionInterface(const QString& name)
+{
+  removeInterface(_form.cbConditionInterface, name);
+}
+
+QString StructuralLinkDialog::getAction()
+{
+  return _form.cbAction->currentText();
+}
+
+void StructuralLinkDialog::setAction(const QString &action)
+{
+  _form.cbAction->setCurrentText(action);
+}
+
+QMap<QString, QString> StructuralLinkDialog::getActionParams()
+{
+  return getParams(_form.tbActionParams);
+}
+
+void StructuralLinkDialog::setActionParams(const QMap<QString, QString> &params)
+{
+  setParams(_form.tbActionParams, params);
+}
+
+QString StructuralLinkDialog::getActionInterface()
+{
+  return _form.cbActionInterface->currentText();
+}
+
+QMap<QString, QString> StructuralLinkDialog::getActionInterfaces()
+{
+  return getInterfaces(_form.cbConditionInterface);
+}
+
+void StructuralLinkDialog::addActionInterface(const QString &uid, const QString &name, const QIcon &icon)
+{
+  addInterface(_form.cbActionInterface, uid, name, icon);
+}
+
+void StructuralLinkDialog::removeActionInterface(const QString& name)
+{
+  removeInterface(_form.cbActionInterface, name);
+}
+
+void StructuralLinkDialog::setBase(const QMap<QString, QVector<QString> > &conditions,
                                    const QMap<QString, QVector<QString> > &actions,
                                    const QMap<QString, QVector<QString> > &params)
 {
+  // Cleaning data...
+  _form.cbConditionInterface->clear();
+  _form.cbActionInterface->clear();
+
+  // Setting data...
   _conditions = conditions;
   _actions = actions;
   _params = params;
 }
 
-void StructuralLinkDialog::init( const QString &connName,
-                                 const QString &condName,
-                                 const QString &actionName,
-                                 LinkDialogMode mode)
+void StructuralLinkDialog::setMode(const QString &connector,
+                                   const QString &condition,
+                                   const QString &action,
+                                   Mode mode)
 {
-  _currentMode = mode;
+  _mode = mode;
 
-  connLineEdit->clear();
-  connLineEdit->setStringList(_conditions.keys());
+  _search->clear();
+  _search->setStringList(_conditions.keys());
 
-  switch (_currentMode)
+  // Setting mode...
+  switch (_mode)
   {
     case CreateLink:
       setWindowTitle(tr("Create Link"));
 
-      connLineEdit->setEnabled(true);
+      _search->setEnabled(true);
 
-      form.tbLinkParams->setEnabled(true);
-      form.kbLinkParams->setEnabled(true);
-      form.kbLinkParams->setChecked(false);
+      _form.tbLinkParams->setEnabled(true);
+      _form.kbLinkParams->setEnabled(true);
+      _form.kbLinkParams->setChecked(false);
 
-      form.cbCondition->setEnabled(true);
-      form.tbConditionParams->setEnabled(true);
-      form.kbConditionParams->setEnabled(true);
-      form.kbConditionParams->setChecked(false);
+      _form.cbCondition->setEnabled(true);
+      _form.cbConditionInterface->setEnabled(true);
+      _form.tbConditionParams->setEnabled(true);
+      _form.kbConditionParams->setEnabled(true);
+      _form.kbConditionParams->setChecked(false);
 
-      form.cbAction->setEnabled(true);
-      form.tbActionParams->setEnabled(true);
-      form.kbActionParams->setEnabled(true);
-      form.kbActionParams->setChecked(false);
+      _form.cbAction->setEnabled(true);
+      _form.cbActionInterface->setEnabled(true);
+      _form.tbActionParams->setEnabled(true);
+      _form.kbActionParams->setEnabled(true);
+      _form.kbActionParams->setChecked(false);
 
       break;
 
     case EditLink:
       setWindowTitle(tr("Edit Link"));
 
-      // Disable editing of xconnector property
-      // for now.
-      connLineEdit->setEnabled(false);
+      _search->setEnabled(false);
 
-      form.tbLinkParams->setEnabled(true);
-      form.kbLinkParams->setEnabled(true);
-      form.kbLinkParams->setChecked(true);
+      _form.tbLinkParams->setEnabled(true);
+      _form.kbLinkParams->setEnabled(true);
+      _form.kbLinkParams->setChecked(true);
 
-      form.cbCondition->setEnabled(false);
-      form.tbConditionParams->setEnabled(false);
-      form.kbConditionParams->setEnabled(false);
-      form.kbConditionParams->setChecked(false);
+      _form.cbCondition->setEnabled(false);
+      _form.cbConditionInterface->setEnabled(false);
+      _form.tbConditionParams->setEnabled(false);
+      _form.kbConditionParams->setEnabled(false);
+      _form.kbConditionParams->setChecked(false);
 
-      form.cbAction->setEnabled(false);
-      form.tbActionParams->setEnabled(false);
-      form.kbActionParams->setEnabled(false);
-      form.kbActionParams->setChecked(false);
+      _form.cbAction->setEnabled(false);
+      _form.cbActionInterface->setEnabled(false);
+      _form.tbActionParams->setEnabled(false);
+      _form.kbActionParams->setEnabled(false);
+      _form.kbActionParams->setChecked(false);
 
       break;
 
     case CreateCondition:
       setWindowTitle(tr("Create Bind (Condition)"));
 
-      connLineEdit->setEnabled(false);
+      _search->setEnabled(false);
 
-      form.tbLinkParams->setEnabled(false);
-      form.kbLinkParams->setEnabled(false);
-      form.kbLinkParams->setChecked(false);
+      _form.tbLinkParams->setEnabled(false);
+      _form.kbLinkParams->setEnabled(false);
+      _form.kbLinkParams->setChecked(false);
 
-      form.cbCondition->setEnabled(true);
-      form.tbConditionParams->setEnabled(true);
-      form.kbConditionParams->setEnabled(true);
-      form.kbConditionParams->setChecked(false);
+      _form.cbCondition->setEnabled(true);
+      _form.cbConditionInterface->setEnabled(true);
+      _form.tbConditionParams->setEnabled(true);
+      _form.kbConditionParams->setEnabled(true);
+      _form.kbConditionParams->setChecked(false);
 
-      form.cbAction->setEnabled(false);
-      form.tbActionParams->setEnabled(false);
-      form.kbActionParams->setEnabled(false);
-      form.kbActionParams->setChecked(false);
+      _form.cbAction->setEnabled(false);
+      _form.cbActionInterface->setEnabled(false);
+      _form.tbActionParams->setEnabled(false);
+      _form.kbActionParams->setEnabled(false);
+      _form.kbActionParams->setChecked(false);
 
       break;
 
     case EditCondition:
       setWindowTitle(tr("Edit Bind (Condition)"));
 
-      connLineEdit->setEnabled(false);
+      _search->setEnabled(false);
 
-      form.tbLinkParams->setEnabled(false);
-      form.kbLinkParams->setEnabled(false);
-      form.kbLinkParams->setChecked(false);
+      _form.tbLinkParams->setEnabled(false);
+      _form.kbLinkParams->setEnabled(false);
+      _form.kbLinkParams->setChecked(false);
 
-      form.cbCondition->setEnabled(true);
-      form.tbConditionParams->setEnabled(true);
-      form.kbConditionParams->setEnabled(true);
-      form.kbConditionParams->setChecked(true);
+      _form.cbCondition->setEnabled(true);
+      _form.cbConditionInterface->setEnabled(true);
+      _form.tbConditionParams->setEnabled(true);
+      _form.kbConditionParams->setEnabled(true);
+      _form.kbConditionParams->setChecked(false);
 
-      form.cbAction->setEnabled(false);
-      form.tbActionParams->setEnabled(false);
-      form.kbActionParams->setEnabled(false);
-      form.kbActionParams->setChecked(false);
+      _form.cbAction->setEnabled(false);
+      _form.cbActionInterface->setEnabled(false);
+      _form.tbActionParams->setEnabled(false);
+      _form.kbActionParams->setEnabled(false);
+      _form.kbActionParams->setChecked(false);
 
       break;
 
     case CreateAction:
       setWindowTitle(tr("Create Bind (Action)"));
 
-      connLineEdit->setEnabled(false);
+      _search->setEnabled(false);
 
-      form.tbLinkParams->setEnabled(false);
-      form.kbLinkParams->setEnabled(false);
-      form.kbLinkParams->setChecked(false);
+      _form.tbLinkParams->setEnabled(false);
+      _form.kbLinkParams->setEnabled(false);
+      _form.kbLinkParams->setChecked(false);
 
-      form.cbCondition->setEnabled(false);
-      form.tbConditionParams->setEnabled(false);
-      form.kbConditionParams->setEnabled(false);
-      form.kbConditionParams->setChecked(false);
+      _form.cbCondition->setEnabled(false);
+      _form.cbConditionInterface->setEnabled(false);
+      _form.tbConditionParams->setEnabled(false);
+      _form.kbConditionParams->setEnabled(false);
+      _form.kbConditionParams->setChecked(false);
 
-      form.cbAction->setEnabled(true);
-      form.tbActionParams->setEnabled(true);
-      form.kbActionParams->setEnabled(true);
-      form.kbActionParams->setChecked(true);
+      _form.cbAction->setEnabled(true);
+      _form.cbActionInterface->setEnabled(true);
+      _form.tbActionParams->setEnabled(true);
+      _form.kbActionParams->setEnabled(true);
+      _form.kbActionParams->setChecked(true);
 
       break;
 
     case EditAction:
       setWindowTitle(tr("Edit Bind (Action)"));
 
-      connLineEdit->setEnabled(false);
+      _search->setEnabled(false);
 
-      form.tbLinkParams->setEnabled(false);
-      form.kbLinkParams->setEnabled(false);
-      form.kbLinkParams->setChecked(false);
+      _form.tbLinkParams->setEnabled(false);
+      _form.kbLinkParams->setEnabled(false);
+      _form.kbLinkParams->setChecked(false);
 
-      form.cbCondition->setEnabled(false);
-      form.tbConditionParams->setEnabled(false);
-      form.kbConditionParams->setEnabled(false);
-      form.kbConditionParams->setChecked(false);
+      _form.cbCondition->setEnabled(false);
+      _form.cbConditionInterface->setEnabled(false);
+      _form.tbConditionParams->setEnabled(false);
+      _form.kbConditionParams->setEnabled(false);
+      _form.kbConditionParams->setChecked(false);
 
-      form.cbAction->setEnabled(true);
-      form.tbActionParams->setEnabled(true);
-      form.kbActionParams->setEnabled(true);
-      form.kbActionParams->setChecked(true);
+      _form.cbAction->setEnabled(true);
+      _form.cbActionInterface->setEnabled(true);
+      _form.tbActionParams->setEnabled(true);
+      _form.kbActionParams->setEnabled(true);
+      _form.kbActionParams->setChecked(true);
 
       break;
 
@@ -372,31 +486,39 @@ void StructuralLinkDialog::init( const QString &connName,
       break;
   }
 
-  if (!connName.isEmpty() && _conditions.contains(connName))
+  // Setting content...
+  if (!connector.isEmpty() &&
+      _conditions.contains(connector))
   {
-    connLineEdit->setText(connName);
+    // Setting 'Connector'...
+    _search->setText(connector);
 
-    if (!condName.isEmpty() && _conditions.value(connName).contains(condName))
+    // Setting 'Condition'...
+    if (!condition.isEmpty() &&
+        _conditions.value(connector).contains(condition))
     {
-      int index = form.cbCondition->findText(condName);
-      form.cbCondition->setCurrentIndex(index);
+      int index = _form.cbCondition->findText(condition);
+      _form.cbCondition->setCurrentIndex(index);
     }
 
-    if (!actionName.isEmpty() && _actions.value(connName).contains(actionName))
+    // Setting 'Action'...
+    if (!action.isEmpty() &&
+        _actions.value(connector).contains(action))
     {
-      int index = form.cbCondition->findText(actionName);
-      form.cbAction->setCurrentIndex(index);
+      int index = _form.cbCondition->findText(action);
+      _form.cbAction->setCurrentIndex(index);
     }
   }
 
-  if(firstTime)
+  // Adjusting position...
+  if(!_aligned)
   {
     setMinimumWidth(350);
     updateGeometry();
 
     QRect screenGeometry;
 
-    if(this->parentWidget())
+    if (this->parentWidget())
     {
       screenGeometry = QApplication::desktop()->screenGeometry(this->parentWidget());
     }
@@ -412,113 +534,128 @@ void StructuralLinkDialog::init( const QString &connName,
     int y = screenGeometry.y() + (screenHeight - this->height()) / 2;
 
     this->move(x, y);
-    firstTime = false;
+
+    _aligned = true;
   }
 }
 
-void StructuralLinkDialog::updateForm(QString conn)
+void StructuralLinkDialog::changeContent(const QString &connector)
 {
-  form.cbCondition->clear();
+  // Updating 'Condition'...
+  _form.cbCondition->clear();
 
-  if (_currentMode == CreateCondition ||
-      _currentMode == EditCondition ||
-      _currentMode == CreateLink)
+  if (_mode == CreateCondition ||
+      _mode == EditCondition ||
+      _mode == CreateLink)
   {
-    foreach (QString b, _conditions.value(conn))
+    foreach (QString condition, _conditions.value(connector))
     {
       QString icon = ":/icon/bind-unknow-condition";
 
-      if (StructuralUtil::isCondition(b))
-          icon = ":/icon/bind-"+b.toLower();
+      if (StructuralUtil::isCondition(condition))
+          icon = ":/icon/bind-"+condition.toLower();
 
       if (icon.contains("attribution"))
         icon = ":/icon/bind-unknow-condition";
 
-      form.cbCondition->addItem(QIcon(icon), b);
+      _form.cbCondition->addItem(QIcon(icon), condition);
     }
   }
 
-  if (!form.cbCondition->count())
+  if (!_form.cbCondition->count())
   {
-    form.cbCondition->addItem(tr("Not available"));
+    _form.cbCondition->addItem(tr("Not available"));
   }
 
-  form.cbAction->clear();
-
-  if (_currentMode == CreateAction ||
-      _currentMode == EditAction ||
-      _currentMode == CreateLink)
+  if (!_form.cbConditionInterface->count())
   {
-    foreach (QString b, _actions.value(conn))
+    _form.cbConditionInterface->addItem(tr("Not available"));
+  }
+
+  // Updating 'Action'...
+  _form.cbAction->clear();
+
+  if (_mode == CreateAction ||
+      _mode == EditAction ||
+      _mode == CreateLink)
+  {
+    foreach (QString action, _actions.value(connector))
     {
       QString icon = ":/icon/bind-unknow-action";
 
-      if (StructuralUtil::isAction(b))
-          icon = ":/icon/bind-"+b.toLower();
+      if (StructuralUtil::isAction(action))
+          icon = ":/icon/bind-"+action.toLower();
 
       if (icon.contains("attribution"))
         icon = ":/icon/bind-unknow-action";
 
-      form.cbAction->addItem(QIcon(icon),b);
+      _form.cbAction->addItem(QIcon(icon),action);
     }
   }
 
-  if (!form.cbAction->count())
-    form.cbAction->addItem(tr("Not available"));
+  if (!_form.cbAction->count())
+  {
+    _form.cbAction->addItem(tr("Not available"));
+  }
+
+  if (!_form.cbActionInterface->count())
+  {
+    _form.cbActionInterface->addItem(tr("Not available"));
+  }
 
   int ncol = 2;
-  int nrow = _params.value(conn).size();
+  int nrow = _params.value(connector).size();
 
-  form.tbLinkParams->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-  form.tbConditionParams->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-  form.tbActionParams->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+  _form.tbLinkParams->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+  _form.tbConditionParams->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+  _form.tbActionParams->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
-  form.tbLinkParams->verticalHeader()->hide();
-  form.tbConditionParams->verticalHeader()->hide();
-  form.tbActionParams->verticalHeader()->hide();
+  _form.tbLinkParams->verticalHeader()->hide();
+  _form.tbConditionParams->verticalHeader()->hide();
+  _form.tbActionParams->verticalHeader()->hide();
 
   QStandardItemModel* mdLinkParams = new QStandardItemModel(nrow, ncol);
 
   mdLinkParams->setHorizontalHeaderItem(0, new QStandardItem("Name"));
   mdLinkParams->setHorizontalHeaderItem(1, new QStandardItem("Value"));
 
-  if (form.tbLinkParams->model() != NULL)
+  if (_form.tbLinkParams->model() != NULL)
   {
-    QAbstractItemModel* m = form.tbLinkParams->model();
+    QAbstractItemModel* m = _form.tbLinkParams->model();
     delete m;
   }
 
-  form.tbLinkParams->setModel(mdLinkParams);
+  _form.tbLinkParams->setModel(mdLinkParams);
 
   QStandardItemModel* mdConditionParams = new QStandardItemModel(nrow, ncol);
 
   mdConditionParams->setHorizontalHeaderItem(0, new QStandardItem("Name"));
   mdConditionParams->setHorizontalHeaderItem(1, new QStandardItem("Value"));
 
-  if (form.tbConditionParams->model() != NULL)
+  if (_form.tbConditionParams->model() != NULL)
   {
-    QAbstractItemModel* m = form.tbConditionParams->model();
+    QAbstractItemModel* m = _form.tbConditionParams->model();
     delete m;
   }
 
-  form.tbConditionParams->setModel(mdConditionParams);
+  _form.tbConditionParams->setModel(mdConditionParams);
 
   QStandardItemModel* mdActionParams = new QStandardItemModel(nrow, ncol);
 
   mdActionParams->setHorizontalHeaderItem(0, new QStandardItem("Name"));
   mdActionParams->setHorizontalHeaderItem(1, new QStandardItem("Value"));
 
-  if (form.tbActionParams->model() != NULL)
+  if (_form.tbActionParams->model() != NULL)
   {
-    QAbstractItemModel* m = form.tbActionParams->model();
+    QAbstractItemModel* m = _form.tbActionParams->model();
     delete m;
   }
 
-  form.tbActionParams->setModel(mdActionParams);
+  _form.tbActionParams->setModel(mdActionParams);
 
   int i = 0;
 
-  foreach(QString name, _params.value(conn))
+  foreach(QString name, _params.value(connector))
   {
     QStandardItem* linkItem = new QStandardItem(name);
     linkItem->setEditable(false);
@@ -542,81 +679,61 @@ void StructuralLinkDialog::updateForm(QString conn)
   }
 }
 
+void StructuralLinkDialog::switchConnectorParam(int state)
+{
+  if (!state)
+    _form.tbLinkParams->hide();
+  else
+    _form.tbLinkParams->show();
+}
+
+void StructuralLinkDialog::switchConditionParam(int state)
+{
+  if (!state)
+    _form.tbConditionParams->hide();
+  else
+    _form.tbConditionParams->show();
+}
+
+void StructuralLinkDialog::switchActionParam(int state)
+{
+  if (!state)
+    _form.tbActionParams->hide();
+  else
+    _form.tbActionParams->show();
+}
+
 void StructuralLinkDialog::moveEvent(QMoveEvent *event)
 {
   QDialog::moveEvent(event);
 
-  connLineEdit->updateListPos();
+  _search->updateListPos();
 }
 
 void StructuralLinkDialog::resizeEvent(QResizeEvent *event)
 {
   QDialog::resizeEvent(event);
 
-  connLineEdit->updateListSize();
+  _search->updateListSize();
 }
 
-bool StructuralLinkDialog::event(QEvent *evt)
+bool StructuralLinkDialog::event(QEvent *event)
 {
-  int ret = QDialog::event(evt);
+  int ret = QDialog::event(event);
 
-  if(evt->type() == QEvent::Show)
+  if(event->type() == QEvent::Show)
   {
-    QTimer::singleShot(0, this->connLineEdit, SLOT(setFocus()));
+    QTimer::singleShot(0, this->_search, SLOT(setFocus()));
   }
 
   return ret;
 }
 
-QString StructuralLinkDialog::getCurrentConnector()
-{
-  return this->connLineEdit->text();
-}
-
-void StructuralLinkDialog::changeLinkParamState(int state)
-{
-  if (!state)
-    form.tbLinkParams->hide();
-  else
-    form.tbLinkParams->show();
-}
-
-void StructuralLinkDialog::changeConditionParamState(int state)
-{
-  if (!state)
-    form.tbConditionParams->hide();
-  else
-    form.tbConditionParams->show();
-}
-
-void StructuralLinkDialog::changeActionParamState(int state)
-{
-  if (!state)
-    form.tbActionParams->hide();
-  else
-    form.tbActionParams->show();
-}
-
-QMap<QString, QString> StructuralLinkDialog::getLinkParams()
-{
-  return getParams(form.tbLinkParams);
-}
-
-QMap<QString, QString> StructuralLinkDialog::getConditionParams()
-{
-  return getParams(form.tbConditionParams);
-}
-
-QMap<QString, QString> StructuralLinkDialog::getActionParams()
-{
-  return getParams(form.tbActionParams);
-}
-
-QMap<QString, QString> StructuralLinkDialog::getParams(QTableView* table)
+QMap<QString, QString> StructuralLinkDialog::getParams(QTableView* widget)
 {
   QMap<QString, QString> p;
 
-  QAbstractItemModel* m = table->model();
+  QAbstractItemModel* m = widget->model();
 
   int nrow = m->rowCount();
 
@@ -626,24 +743,39 @@ QMap<QString, QString> StructuralLinkDialog::getParams(QTableView* table)
   return p;
 }
 
-void StructuralLinkDialog::updateCurrentLinkParam(const QMap<QString, QString> &params)
+QString StructuralLinkDialog::getInterface(const QComboBox* widget)
 {
-  updateCurrentParams(form.tbLinkParams, params);
+  return widget->currentData().toString();
 }
 
-void StructuralLinkDialog::updateCurrentConditionParam(const QMap<QString, QString> &params)
+QMap<QString, QString> StructuralLinkDialog::getInterfaces(const QComboBox* widget)
 {
-  updateCurrentParams(form.tbConditionParams, params);
+  QMap<QString, QString> interfaces;
+
+  for (auto i = 0; i < widget->count(); ++i)
+  {
+    interfaces[widget->itemData(i).toString()] = widget->itemText(i);
+  }
+
+  return interfaces;
 }
 
-void StructuralLinkDialog::updateCurrentActionParam(const QMap<QString, QString> &params)
+void StructuralLinkDialog::addInterface(QComboBox* widget, const QString &uid, const QString &name, const QIcon &icon)
 {
-  updateCurrentParams(form.tbActionParams, params);
+  widget->addItem(icon, name, uid);
 }
 
-void StructuralLinkDialog::updateCurrentParams(QTableView* table, const QMap<QString, QString> &params)
+void StructuralLinkDialog::removeInterface(QComboBox* widget, const QString &name)
 {
-  QAbstractItemModel* m = table->model();
+  int index = widget->findText(name);
+
+  if (index >= 0)
+    widget->removeItem(index);
+}
+
+void StructuralLinkDialog::setParams(QTableView* widget, const QMap<QString, QString> &params)
+{
+  QAbstractItemModel* m = widget->model();
 
   if (m != NULL)
   {

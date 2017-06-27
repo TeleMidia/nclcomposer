@@ -4,14 +4,14 @@
 #include <QDebug>
 #include <QDialog>
 #include <QShowEvent>
-
 #include <QStringListModel>
 #include <QSortFilterProxyModel>
-
-#include "ui_StructuralLinkForm.h"
-
 #include <QLineEdit>
 #include <QStringList>
+
+#include "Structural.h"
+
+#include "ui_StructuralLinkForm.h"
 
 class QListView;
 class QStringListModel;
@@ -52,9 +52,9 @@ class StructuralLinkDialog : public QDialog
 
 public:
   StructuralLinkDialog(QWidget* parent = 0);
-  ~StructuralLinkDialog();
+  virtual ~StructuralLinkDialog();
 
-  enum LinkDialogMode
+  enum Mode
   {
     CreateLink,
     CreateAction,
@@ -64,49 +64,74 @@ public:
     EditCondition
   };
 
-  void setData(const QMap<QString, QVector<QString> > &conditions,
-               const QMap<QString, QVector<QString> > &actions,
-               const QMap<QString, QVector<QString> > &StructuralLinkDialogparams);
+  QString getConnector();
+  void setConnector(const QString &connector);
 
-  void init(const QString &connName = "", const QString &condName = "",
-            const QString &actionName = "", LinkDialogMode mode = CreateLink);
+  QMap<QString, QString> getConnectorParams();
+  void setConnectorParams(const QMap<QString, QString> &params);
 
-  void updateCurrentLinkParam(const QMap<QString, QString> &params);
-  void updateCurrentConditionParam(const QMap<QString, QString> &params);
-  void updateCurrentActionParam(const QMap<QString, QString> &params);
+  QString getCondition();
+  void setCondition(const QString &condition);
 
-  QMap<QString, QString> getLinkParams();
   QMap<QString, QString> getConditionParams();
+  void setConditionParams(const QMap<QString, QString> &params);
+
+  QString getConditionInterface();
+  QMap<QString, QString> getConditonInterfaces();
+  void addConditionInterface(const QString &uid, const QString &name, const QIcon &icon);
+  void removeConditionInterface(const QString& name);
+
+  QString getAction();
+  void setAction(const QString &action);
+
   QMap<QString, QString> getActionParams();
+  void setActionParams(const QMap<QString, QString> &params);
+
+  QString getActionInterface();
+  QMap<QString, QString> getActionInterfaces();
+  void addActionInterface(const QString &uid, const QString &name, const QIcon &icon);
+  void removeActionInterface(const QString& name);
+
+  void setMode(const QString &connector = "",
+               const QString &condition = "",
+               const QString &action = "",
+               Mode mode = CreateLink);
+
+  void setBase(const QMap<QString, QVector<QString> > &conditions,
+               const QMap<QString, QVector<QString> > &actions,
+               const QMap<QString, QVector<QString> > &params);
 
 protected slots:
-  void updateForm(QString conn);
-  void changeLinkParamState(int state);
-  void changeConditionParamState(int state);
-  void changeActionParamState(int state);
+  void changeContent(const QString &connector);
+
+  void switchConnectorParam(int state);
+  void switchConditionParam(int state);
+  void switchActionParam(int state);
 
 protected:
-  virtual void moveEvent(QMoveEvent *event);
-  virtual void resizeEvent(QResizeEvent *event);
-  virtual bool event(QEvent *);
+  virtual void moveEvent(QMoveEvent* event);
+  virtual void resizeEvent(QResizeEvent* event);
+  virtual bool event(QEvent* event);
 
-public:
-  Ui::StructuralLinkForm form; //TODO: This shouldn't be public
+private:
+  QMap<QString, QString> getParams(QTableView* widget);
+  void setParams(QTableView* widget, const QMap<QString, QString> &params);
+
+  QString getInterface(const QComboBox* widget);
+  QMap<QString, QString> getInterfaces(const QComboBox* widget);
+  void addInterface(QComboBox* widget, const QString &uid, const QString &name, const QIcon &icon);
+  void removeInterface(QComboBox* widget, const QString &name);
+
+private:
+  Mode _mode;
+  bool _aligned;
+  CompleteLineEdit* _search;
 
   QMap<QString, QVector<QString> > _conditions;
   QMap<QString, QVector<QString> > _actions;
   QMap<QString, QVector<QString> > _params;
 
-  QString getCurrentConnector();
-
-private:
-  QMap<QString, QString> getParams(QTableView* table);
-  void updateCurrentParams(QTableView* table,
-                           const QMap<QString, QString> &params);
-  bool firstTime, changeModel;
-  LinkDialogMode _currentMode;
-  CompleteLineEdit *connLineEdit;
+  Ui::StructuralLinkForm _form;
 };
-
 
 #endif // STRUCTURALLINKDIALOG_H

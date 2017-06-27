@@ -1428,6 +1428,6 @@ void StructuralViewPlugin::adjustConnectors()
       }
     }
 
-    _window->getView()->getDialog()->setData(conditions, actions, params);
+    _window->getView()->getDialog()->setBase(conditions, actions, params);
   }
 }

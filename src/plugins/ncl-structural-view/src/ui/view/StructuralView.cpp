@@ -1813,7 +1813,7 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
     if (parent != NULL || !STR_DEFAULT_WITH_BODY)
     {
       emit requestedUpdate();
-      _dialog->init();
+      _dialog->setMode();
 
       if (_dialog->exec()) {
         ptail.setX(ptail.x()+tail->getWidth()/2);
@@ -1825,7 +1825,7 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
 
         QMap<QString, QString> properties;
         properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Link);
-        properties[STR_PROPERTY_REFERENCE_XCONNECTOR_ID] =_dialog->getCurrentConnector();
+        properties[STR_PROPERTY_REFERENCE_XCONNECTOR_ID] =_dialog->getConnector();
 
         qreal x;
         qreal y;
@@ -1882,7 +1882,7 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
         properties[STR_PROPERTY_ENTITY_TOP] = QString::number(y);
         properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(x);
 
-        QMap<QString, QString> params = _dialog->getLinkParams();
+        QMap<QString, QString> params = _dialog->getConnectorParams();
 
         foreach (QString key, params.keys())
         {
@@ -1901,8 +1901,8 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
 
         if (_entities.contains(uid))
         {
-          StructuralRole condition = StructuralUtil::translateStringToRole(_dialog->form.cbCondition->currentText());
-          StructuralRole action = StructuralUtil::translateStringToRole(_dialog->form.cbAction->currentText());
+          StructuralRole condition = StructuralUtil::translateStringToRole(_dialog->getCondition());
+          StructuralRole action = StructuralUtil::translateStringToRole(_dialog->getAction());
 
           createBind(tail,_entities.value(uid),condition,settings.value(STR_SETTING_CODE));
           createBind(_entities.value(uid),head,action,settings.value(STR_SETTING_CODE));
@@ -1963,11 +1963,11 @@ void StructuralView:: createBind(StructuralEntity* tail, StructuralEntity* head,
           setMode(Structural::Pointing);
           emit switchedPointer(true);
 
-          _dialog->init(entityLink->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","", StructuralLinkDialog::CreateAction);
+          _dialog->setMode(entityLink->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","", StructuralLinkDialog::CreateAction);
 
           if (_dialog->exec())
           {
-            QString role = _dialog->form.cbAction->currentText();
+            QString role = _dialog->getAction();
 
             properties[STR_PROPERTY_BIND_ROLE] = role;
             properties[STR_PROPERTY_ENTITY_ID] = role;
@@ -2005,11 +2005,11 @@ void StructuralView:: createBind(StructuralEntity* tail, StructuralEntity* head,
           setMode(Structural::Pointing);
           emit switchedPointer(true);
 
-          _dialog->init(entityLink->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","", StructuralLinkDialog::CreateCondition);
+          _dialog->setMode(entityLink->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","", StructuralLinkDialog::CreateCondition);
 
           if (_dialog->exec())
           {
-            QString role = _dialog->form.cbCondition->currentText();
+            QString role = _dialog->getCondition();
 
             properties[STR_PROPERTY_BIND_ROLE] = role;
             properties[STR_PROPERTY_ENTITY_ID] = role;
@@ -2629,7 +2629,7 @@ void StructuralView::performDialog(StructuralLink* entity)
 {
   emit requestedUpdate();
 
-  _dialog->init(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
+  _dialog->setMode(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
                    StructuralLinkDialog::EditLink);
 
   QMap<QString, QString> pLink;
@@ -2645,16 +2645,16 @@ void StructuralView::performDialog(StructuralLink* entity)
     }
   }
 
-  _dialog->updateCurrentLinkParam(pLink);
+  _dialog->setConnectorParams(pLink);
 
   if (_dialog->exec())
   {
     QMap<QString, QString> prev = entity->getStructuralProperties();
     QMap<QString, QString> properties = entity->getStructuralProperties();
 
-    properties.insert(STR_PROPERTY_REFERENCE_XCONNECTOR_ID, _dialog->getCurrentConnector());
+    properties.insert(STR_PROPERTY_REFERENCE_XCONNECTOR_ID, _dialog->getConnector());
 
-    QMap<QString, QString> p = _dialog->getLinkParams();
+    QMap<QString, QString> p = _dialog->getConnectorParams();
 
     foreach (QString name, p.keys())
     {
@@ -2708,22 +2708,20 @@ void StructuralView::performDialog(StructuralBind* entity)
 
   if (StructuralUtil::isCondition(entity->getRole()))
   {
-    _dialog->init(entity->getHead()->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
+    _dialog->setMode(entity->getHead()->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
                      StructuralLinkDialog::EditCondition);
 
-    int index = _dialog->form.cbCondition->findText(entity->getStructuralId());
-    _dialog->form.cbCondition->setCurrentIndex(index);
-    _dialog->updateCurrentConditionParam(pBind);
+    _dialog->setCondition(entity->getStructuralId());
+    _dialog->setConditionParams(pBind);
   }
   else if (StructuralUtil::isAction(entity->getRole()))
   {
 
-    _dialog->init(entity->getTail()->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
+    _dialog->setMode(entity->getTail()->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
                      StructuralLinkDialog::EditAction);
 
-    int index = _dialog->form.cbAction->findText(entity->getStructuralId());
-    _dialog->form.cbAction->setCurrentIndex(index);
-    _dialog->updateCurrentActionParam(pBind);
+    _dialog->setAction(entity->getStructuralId());
+    _dialog->setActionParams(pBind);
   }
 
   if (_dialog->exec())
@@ -2736,13 +2734,13 @@ void StructuralView::performDialog(StructuralBind* entity)
 
     if (StructuralUtil::isCondition(entity->getRole()))
     {
-      role = _dialog->form.cbCondition->currentText();
+      role = _dialog->getCondition();
       p = _dialog->getConditionParams();
 
     }
     else if (StructuralUtil::isAction(entity->getRole()))
     {
-      role = _dialog->form.cbAction->currentText();
+      role = _dialog->getAction();
       p = _dialog->getActionParams();
     }
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>284</width>
-    <height>519</height>
+    <height>683</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,7 +19,7 @@
   <property name="windowTitle">
    <string>New Link</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="lyDialog">
    <item row="2" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
@@ -41,7 +41,7 @@
      <property name="title">
       <string>Link Properties</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout" name="lyLink">
       <item row="0" column="0">
        <widget class="QLabel" name="lbLink">
         <property name="text">
@@ -92,8 +92,15 @@
      <property name="title">
       <string>Binds Properties</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="1" column="0">
+     <layout class="QGridLayout" name="lyBinds">
+      <item row="5" column="0">
+       <widget class="QLabel" name="lbActionInterface">
+        <property name="text">
+         <string>Inteface</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
        <widget class="QCheckBox" name="kbConditionParams">
         <property name="text">
          <string>Show Params</string>
@@ -103,7 +110,7 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="0" colspan="2">
+      <item row="7" column="0" colspan="2">
        <widget class="QTableView" name="tbActionParams">
         <property name="minimumSize">
          <size>
@@ -119,7 +126,14 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbConditionInterface">
+        <property name="text">
+         <string>Interface:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
        <widget class="QCheckBox" name="kbActionParams">
         <property name="text">
          <string>Show Params</string>
@@ -129,14 +143,14 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <widget class="QComboBox" name="cbAction">
         <property name="enabled">
          <bool>false</bool>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2">
+      <item row="3" column="0" colspan="2">
        <widget class="QTableView" name="tbConditionParams">
         <property name="minimumSize">
          <size>
@@ -152,7 +166,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <widget class="QLabel" name="lbAction">
         <property name="enabled">
          <bool>true</bool>
@@ -178,6 +192,12 @@
          <string>Condition:</string>
         </property>
        </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="cbConditionInterface"/>
+      </item>
+      <item row="5" column="1">
+       <widget class="QComboBox" name="cbActionInterface"/>
       </item>
      </layout>
     </widget>
