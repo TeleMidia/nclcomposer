@@ -1813,6 +1813,35 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
     if (parent != NULL || !STR_DEFAULT_WITH_BODY)
     {
       emit requestedUpdate();
+
+      StructuralEntity* componentTail = tail;
+
+      if (componentTail->getStructuralCategory() == Structural::Interface)
+      {
+        componentTail = parentTail;
+      }
+
+      foreach (StructuralEntity* entity, componentTail->getStructuralEntities())
+      {
+        _dialog->addConditionInterface(entity->getStructuralUid(),
+                                       entity->getStructuralId(),
+                                       StructuralUtil::getIcon(entity->getStructuralType()));
+      }
+
+      StructuralEntity* componentHead = head;
+
+      if (componentHead->getStructuralCategory() == Structural::Interface)
+      {
+        componentHead = parentHead;
+      }
+
+      foreach (StructuralEntity* entity, componentHead->getStructuralEntities())
+      {
+        _dialog->addActionInterface(entity->getStructuralUid(),
+                                    entity->getStructuralId(),
+                                    StructuralUtil::getIcon(entity->getStructuralType()));
+      }
+
       _dialog->setMode();
 
       if (_dialog->exec()) {
@@ -1963,6 +1992,20 @@ void StructuralView:: createBind(StructuralEntity* tail, StructuralEntity* head,
           setMode(Structural::Pointing);
           emit switchedPointer(true);
 
+          StructuralEntity* component = entityNonLink;
+
+          if (entityNonLink->getStructuralCategory() == Structural::Interface)
+          {
+            component = parentHead;
+          }
+
+          foreach (StructuralEntity* entity, component->getStructuralEntities())
+          {
+            _dialog->addActionInterface(entity->getStructuralUid(),
+                                        entity->getStructuralId(),
+                                        StructuralUtil::getIcon(entity->getStructuralType()));
+          }
+
           _dialog->setMode(entityLink->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","", StructuralLinkDialog::CreateAction);
 
           if (_dialog->exec())
@@ -2004,6 +2047,20 @@ void StructuralView:: createBind(StructuralEntity* tail, StructuralEntity* head,
 
           setMode(Structural::Pointing);
           emit switchedPointer(true);
+
+          StructuralEntity* component = entityNonLink;
+
+          if (entityNonLink->getStructuralCategory() == Structural::Interface)
+          {
+            component = parentHead;
+          }
+
+          foreach (StructuralEntity* entity, component->getStructuralEntities())
+          {
+            _dialog->addConditionInterface(entity->getStructuralUid(),
+                                           entity->getStructuralId(),
+                                           StructuralUtil::getIcon(entity->getStructuralType()));
+          }
 
           _dialog->setMode(entityLink->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","", StructuralLinkDialog::CreateCondition);
 
