@@ -2866,6 +2866,38 @@ void StructuralView::performDialog(StructuralBind* entity)
 
     _dialog->setCondition(entity->getStructuralId());
     _dialog->setConditionParams(pBind);
+
+    if (entity->getTail()->getStructuralCategory() == Structural::Interface)
+    {
+      foreach (StructuralEntity* e, entity->getTail()->getStructuralParent()->getStructuralEntities())
+      {
+        _dialog->addConditionInterface(e->getStructuralUid(),
+                                       e->getStructuralId(),
+                                       StructuralUtil::getIcon(e->getStructuralType()));
+      }
+
+      _dialog->setConditionInterface(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_ID));
+    }
+    else
+    {
+      foreach (StructuralEntity* e, entity->getTail()->getStructuralEntities())
+      {
+        _dialog->addConditionInterface(e->getStructuralUid(),
+                                       e->getStructuralId(),
+                                       StructuralUtil::getIcon(e->getStructuralType()));
+      }
+
+      if (!STR_DEFAULT_WITH_INTERFACES)
+      {
+        if (!entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID).isEmpty() &&
+            _entities.contains(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID)))
+        {
+          StructuralEntity* interface = _entities.value(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID));
+
+          _dialog->setConditionInterface(interface->getStructuralId());
+        }
+      }
+    }
   }
   else if (StructuralUtil::isAction(entity->getRole()))
   {
@@ -2875,6 +2907,38 @@ void StructuralView::performDialog(StructuralBind* entity)
 
     _dialog->setAction(entity->getStructuralId());
     _dialog->setActionParams(pBind);
+
+    if (entity->getHead()->getStructuralCategory() == Structural::Interface)
+    {
+      foreach (StructuralEntity* e, entity->getHead()->getStructuralParent()->getStructuralEntities())
+      {
+        _dialog->addActionInterface(e->getStructuralUid(),
+                                    e->getStructuralId(),
+                                    StructuralUtil::getIcon(e->getStructuralType()));
+      }
+
+      _dialog->setActionInterface(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_ID));
+    }
+    else
+    {
+      foreach (StructuralEntity* e, entity->getHead()->getStructuralEntities())
+      {
+        _dialog->addActionInterface(e->getStructuralUid(),
+                                    e->getStructuralId(),
+                                    StructuralUtil::getIcon(e->getStructuralType()));
+      }
+
+      if (!STR_DEFAULT_WITH_INTERFACES)
+      {
+        if (!entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID).isEmpty() &&
+            _entities.contains(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID)))
+        {
+          StructuralEntity* interface = _entities.value(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID));
+
+          _dialog->setActionInterface(interface->getStructuralId());
+        }
+      }
+    }
   }
 
   if (_dialog->exec())
@@ -2883,22 +2947,35 @@ void StructuralView::performDialog(StructuralBind* entity)
     QMap<QString, QString> properties = entity->getStructuralProperties();
 
     QString role;
+    QString property;
+    QString interface;
     QMap<QString, QString> p;
 
     if (StructuralUtil::isCondition(entity->getRole()))
     {
       role = _dialog->getCondition();
+      property = STR_PROPERTY_EDGE_TAIL;
+      interface = _dialog->getConditionInterface();
       p = _dialog->getConditionParams();
-
     }
     else if (StructuralUtil::isAction(entity->getRole()))
     {
       role = _dialog->getAction();
+      property = STR_PROPERTY_EDGE_HEAD;
+      interface = _dialog->getActionInterface();
       p = _dialog->getActionParams();
     }
 
     properties[STR_PROPERTY_BIND_ROLE] = role;
     properties[STR_PROPERTY_ENTITY_ID] = role;
+
+    if (!interface.isEmpty() &&
+        _entities.contains(interface))
+    {
+      properties[property] = interface;
+      properties[STR_PROPERTY_REFERENCE_INTERFACE_UID] = interface;
+      properties[STR_PROPERTY_REFERENCE_INTERFACE_ID] = _entities.value(interface)->getStructuralId();
+    }
 
     foreach (QString name, p.keys())
     {
