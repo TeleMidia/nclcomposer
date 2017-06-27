@@ -1814,37 +1814,78 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
     {
       emit requestedUpdate();
 
-      StructuralEntity* componentTail = tail;
-
-      if (componentTail->getStructuralCategory() == Structural::Interface)
+      if (tail->getStructuralCategory() == Structural::Interface)
       {
-        componentTail = parentTail;
+        foreach (StructuralEntity* entity, parentTail->getStructuralEntities())
+        {
+          _dialog->addConditionInterface(entity->getStructuralUid(),
+                                         entity->getStructuralId(),
+                                         StructuralUtil::getIcon(entity->getStructuralType()));
+        }
+
+        _dialog->setConditionInterface(tail->getStructuralId());
+      }
+      else
+      {
+        foreach (StructuralEntity* entity, tail->getStructuralEntities())
+        {
+          _dialog->addConditionInterface(entity->getStructuralUid(),
+                                         entity->getStructuralId(),
+                                         StructuralUtil::getIcon(entity->getStructuralType()));
+        }
       }
 
-      foreach (StructuralEntity* entity, componentTail->getStructuralEntities())
+      if (head->getStructuralCategory() == Structural::Interface)
       {
-        _dialog->addConditionInterface(entity->getStructuralUid(),
-                                       entity->getStructuralId(),
-                                       StructuralUtil::getIcon(entity->getStructuralType()));
+        foreach (StructuralEntity* entity, parentHead->getStructuralEntities())
+        {
+          _dialog->addActionInterface(entity->getStructuralUid(),
+                                      entity->getStructuralId(),
+                                      StructuralUtil::getIcon(entity->getStructuralType()));
+        }
+
+        _dialog->setActionInterface(head->getStructuralId());
       }
-
-      StructuralEntity* componentHead = head;
-
-      if (componentHead->getStructuralCategory() == Structural::Interface)
+      else
       {
-        componentHead = parentHead;
-      }
-
-      foreach (StructuralEntity* entity, componentHead->getStructuralEntities())
-      {
-        _dialog->addActionInterface(entity->getStructuralUid(),
-                                    entity->getStructuralId(),
-                                    StructuralUtil::getIcon(entity->getStructuralType()));
+        foreach (StructuralEntity* entity, head->getStructuralEntities())
+        {
+          _dialog->addActionInterface(entity->getStructuralUid(),
+                                      entity->getStructuralId(),
+                                      StructuralUtil::getIcon(entity->getStructuralType()));
+        }
       }
 
       _dialog->setMode();
 
       if (_dialog->exec()) {
+
+        if (!_dialog->getConditionInterface().isEmpty())
+        {
+          QString uid = _dialog->getConditionInterface();
+
+          if (_entities.contains(uid))
+          {
+            tail = _entities.value(uid);
+            parentTail = tail->getStructuralParent();
+
+            ptail = parentTail->mapToParent(tail->getLeft(),tail->getTop());
+          }
+        }
+
+        if (!_dialog->getActionInterface().isEmpty())
+        {
+          QString uid = _dialog->getActionInterface();
+
+          if (_entities.contains(uid))
+          {
+            head = _entities.value(uid);
+            parentHead = head->getStructuralParent();
+
+            phead = parentHead->mapToParent(head->getLeft(),head->getTop());
+          }
+        }
+
         ptail.setX(ptail.x()+tail->getWidth()/2);
         ptail.setY(ptail.y()+tail->getHeight()/2);
         phead.setX(phead.x()+head->getWidth()/2);
@@ -1930,6 +1971,7 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
 
         if (_entities.contains(uid))
         {
+
           StructuralRole condition = StructuralUtil::translateStringToRole(_dialog->getCondition());
           StructuralRole action = StructuralUtil::translateStringToRole(_dialog->getAction());
 
@@ -1992,24 +2034,44 @@ void StructuralView:: createBind(StructuralEntity* tail, StructuralEntity* head,
           setMode(Structural::Pointing);
           emit switchedPointer(true);
 
-          StructuralEntity* component = entityNonLink;
-
           if (entityNonLink->getStructuralCategory() == Structural::Interface)
           {
-            component = parentHead;
-          }
+            foreach (StructuralEntity* entity, parentNonLink->getStructuralEntities())
+            {
+              _dialog->addActionInterface(entity->getStructuralUid(),
+                                             entity->getStructuralId(),
+                                             StructuralUtil::getIcon(entity->getStructuralType()));
+            }
 
-          foreach (StructuralEntity* entity, component->getStructuralEntities())
+            _dialog->setActionInterface(entityNonLink->getStructuralId());
+          }
+          else
           {
-            _dialog->addActionInterface(entity->getStructuralUid(),
-                                        entity->getStructuralId(),
-                                        StructuralUtil::getIcon(entity->getStructuralType()));
+            foreach (StructuralEntity* entity, entityNonLink->getStructuralEntities())
+            {
+              _dialog->addActionInterface(entity->getStructuralUid(),
+                                             entity->getStructuralId(),
+                                             StructuralUtil::getIcon(entity->getStructuralType()));
+            }
           }
 
           _dialog->setMode(entityLink->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","", StructuralLinkDialog::CreateAction);
 
           if (_dialog->exec())
           {
+            if (!_dialog->getActionInterface().isEmpty())
+            {
+              QString uid = _dialog->getActionInterface();
+
+              if (_entities.contains(uid))
+              {
+                entityNonLink = _entities.value(uid);
+                parentNonLink = entityNonLink->getStructuralParent();
+
+                properties[STR_PROPERTY_EDGE_HEAD] = entityNonLink->getStructuralUid();
+              }
+            }
+
             QString role = _dialog->getAction();
 
             properties[STR_PROPERTY_BIND_ROLE] = role;
@@ -2048,24 +2110,44 @@ void StructuralView:: createBind(StructuralEntity* tail, StructuralEntity* head,
           setMode(Structural::Pointing);
           emit switchedPointer(true);
 
-          StructuralEntity* component = entityNonLink;
-
           if (entityNonLink->getStructuralCategory() == Structural::Interface)
           {
-            component = parentHead;
-          }
+            foreach (StructuralEntity* entity, parentNonLink->getStructuralEntities())
+            {
+              _dialog->addConditionInterface(entity->getStructuralUid(),
+                                             entity->getStructuralId(),
+                                             StructuralUtil::getIcon(entity->getStructuralType()));
+            }
 
-          foreach (StructuralEntity* entity, component->getStructuralEntities())
+            _dialog->setConditionInterface(entityNonLink->getStructuralId());
+          }
+          else
           {
-            _dialog->addConditionInterface(entity->getStructuralUid(),
-                                           entity->getStructuralId(),
-                                           StructuralUtil::getIcon(entity->getStructuralType()));
+            foreach (StructuralEntity* entity, entityNonLink->getStructuralEntities())
+            {
+              _dialog->addConditionInterface(entity->getStructuralUid(),
+                                             entity->getStructuralId(),
+                                             StructuralUtil::getIcon(entity->getStructuralType()));
+            }
           }
 
           _dialog->setMode(entityLink->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","", StructuralLinkDialog::CreateCondition);
 
           if (_dialog->exec())
           {
+            if (!_dialog->getConditionInterface().isEmpty())
+            {
+              QString uid = _dialog->getConditionInterface();
+
+              if (_entities.contains(uid))
+              {
+                entityNonLink = _entities.value(uid);
+                parentNonLink = entityNonLink->getStructuralParent();
+
+                properties[STR_PROPERTY_EDGE_TAIL] = entityNonLink->getStructuralUid();
+              }
+            }
+
             QString role = _dialog->getCondition();
 
             properties[STR_PROPERTY_BIND_ROLE] = role;

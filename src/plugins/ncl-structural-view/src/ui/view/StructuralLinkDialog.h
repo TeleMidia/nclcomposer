@@ -77,6 +77,7 @@ public:
   void setConditionParams(const QMap<QString, QString> &params);
 
   QString getConditionInterface();
+  void setConditionInterface(const QString &name);
   QMap<QString, QString> getConditonInterfaces();
   void addConditionInterface(const QString &uid, const QString &name, const QString &icon);
   void removeConditionInterface(const QString& name);
@@ -88,6 +89,7 @@ public:
   void setActionParams(const QMap<QString, QString> &params);
 
   QString getActionInterface();
+  void setActionInterface(const QString &name);
   QMap<QString, QString> getActionInterfaces();
   void addActionInterface(const QString &uid, const QString &name, const QString &icon);
   void removeActionInterface(const QString& name);
@@ -118,6 +120,7 @@ private:
   void setParams(QTableView* widget, const QMap<QString, QString> &params);
 
   QString getInterface(const QComboBox* widget);
+  void setInterface(QComboBox* widget, const QString &name);
   QMap<QString, QString> getInterfaces(const QComboBox* widget);
   void addInterface(QComboBox* widget, const QString &uid, const QString &name, const QString &icon);
   void removeInterface(QComboBox* widget, const QString &name);

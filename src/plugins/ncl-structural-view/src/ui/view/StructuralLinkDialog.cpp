@@ -259,7 +259,12 @@ void StructuralLinkDialog::setConditionParams(const QMap<QString, QString> &para
 
 QString StructuralLinkDialog::getConditionInterface()
 {
-  return _form.cbConditionInterface->currentText();
+  return getInterface(_form.cbConditionInterface);
+}
+
+void StructuralLinkDialog::setConditionInterface(const QString &name)
+{
+  setInterface(_form.cbConditionInterface, name);
 }
 
 QMap<QString, QString> StructuralLinkDialog::getConditonInterfaces()
@@ -299,12 +304,17 @@ void StructuralLinkDialog::setActionParams(const QMap<QString, QString> &params)
 
 QString StructuralLinkDialog::getActionInterface()
 {
-  return _form.cbActionInterface->currentText();
+  return getInterface(_form.cbActionInterface);
+}
+
+void StructuralLinkDialog::setActionInterface(const QString &name)
+{
+  setInterface(_form.cbActionInterface, name);
 }
 
 QMap<QString, QString> StructuralLinkDialog::getActionInterfaces()
 {
-  return getInterfaces(_form.cbConditionInterface);
+  return getInterfaces(_form.cbActionInterface);
 }
 
 void StructuralLinkDialog::addActionInterface(const QString &uid, const QString &name, const QString &icon)
@@ -739,6 +749,11 @@ QMap<QString, QString> StructuralLinkDialog::getParams(QTableView* widget)
 QString StructuralLinkDialog::getInterface(const QComboBox* widget)
 {
   return widget->currentData().toString();
+}
+
+void StructuralLinkDialog::setInterface(QComboBox* widget, const QString &name)
+{
+  widget->setCurrentText(name);
 }
 
 QMap<QString, QString> StructuralLinkDialog::getInterfaces(const QComboBox* widget)
