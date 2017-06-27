@@ -78,7 +78,7 @@ public:
 
   QString getConditionInterface();
   QMap<QString, QString> getConditonInterfaces();
-  void addConditionInterface(const QString &uid, const QString &name, const QIcon &icon);
+  void addConditionInterface(const QString &uid, const QString &name, const QString &icon);
   void removeConditionInterface(const QString& name);
 
   QString getAction();
@@ -89,7 +89,7 @@ public:
 
   QString getActionInterface();
   QMap<QString, QString> getActionInterfaces();
-  void addActionInterface(const QString &uid, const QString &name, const QIcon &icon);
+  void addActionInterface(const QString &uid, const QString &name, const QString &icon);
   void removeActionInterface(const QString& name);
 
   void setMode(const QString &connector = "",
@@ -119,7 +119,7 @@ private:
 
   QString getInterface(const QComboBox* widget);
   QMap<QString, QString> getInterfaces(const QComboBox* widget);
-  void addInterface(QComboBox* widget, const QString &uid, const QString &name, const QIcon &icon);
+  void addInterface(QComboBox* widget, const QString &uid, const QString &name, const QString &icon);
   void removeInterface(QComboBox* widget, const QString &name);
 
 private:

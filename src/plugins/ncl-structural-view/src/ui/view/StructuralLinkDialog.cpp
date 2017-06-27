@@ -267,7 +267,7 @@ QMap<QString, QString> StructuralLinkDialog::getConditonInterfaces()
   return getInterfaces(_form.cbConditionInterface);
 }
 
-void StructuralLinkDialog::addConditionInterface(const QString &uid, const QString &name, const QIcon &icon)
+void StructuralLinkDialog::addConditionInterface(const QString &uid, const QString &name, const QString &icon)
 {
   addInterface(_form.cbConditionInterface, uid, name, icon);
 }
@@ -307,7 +307,7 @@ QMap<QString, QString> StructuralLinkDialog::getActionInterfaces()
   return getInterfaces(_form.cbConditionInterface);
 }
 
-void StructuralLinkDialog::addActionInterface(const QString &uid, const QString &name, const QIcon &icon)
+void StructuralLinkDialog::addActionInterface(const QString &uid, const QString &name, const QString &icon)
 {
   addInterface(_form.cbActionInterface, uid, name, icon);
 }
@@ -323,7 +323,10 @@ void StructuralLinkDialog::setBase(const QMap<QString, QVector<QString> > &condi
 {
   // Cleaning data...
   _form.cbConditionInterface->clear();
+  _form.cbConditionInterface->addItem("");
+
   _form.cbActionInterface->clear();
+  _form.cbActionInterface->addItem("");
 
   // Setting data...
   _conditions = conditions;
@@ -567,11 +570,6 @@ void StructuralLinkDialog::changeContent(const QString &connector)
     _form.cbCondition->addItem(tr("Not available"));
   }
 
-  if (!_form.cbConditionInterface->count())
-  {
-    _form.cbConditionInterface->addItem(tr("Not available"));
-  }
-
   // Updating 'Action'...
   _form.cbAction->clear();
 
@@ -596,11 +594,6 @@ void StructuralLinkDialog::changeContent(const QString &connector)
   if (!_form.cbAction->count())
   {
     _form.cbAction->addItem(tr("Not available"));
-  }
-
-  if (!_form.cbActionInterface->count())
-  {
-    _form.cbActionInterface->addItem(tr("Not available"));
   }
 
   int ncol = 2;
@@ -760,9 +753,9 @@ QMap<QString, QString> StructuralLinkDialog::getInterfaces(const QComboBox* widg
   return interfaces;
 }
 
-void StructuralLinkDialog::addInterface(QComboBox* widget, const QString &uid, const QString &name, const QIcon &icon)
+void StructuralLinkDialog::addInterface(QComboBox* widget, const QString &uid, const QString &name, const QString &icon)
 {
-  widget->addItem(icon, name, uid);
+  widget->addItem(QIcon(icon), name, uid);
 }
 
 void StructuralLinkDialog::removeInterface(QComboBox* widget, const QString &name)
