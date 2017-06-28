@@ -17,58 +17,60 @@
  */
 
 #include "Validator.h"
+#include "../message/message.h"
 #include "semanticvalidation.h"
 #include "structuralvalidation.h"
-#include "../message/message.h"
 #include <QDebug>
 #include <set>
 
-vector<pair<void *, string> >Validator::validate(Model &model,
-                                          const string &messagesLanguage = "en")
+vector<pair<void *, string> >
+Validator::validate (Model &model, const string &messagesLanguage = "en")
 {
   vector<pair<void *, string> > msgs;
 
-  set<virtualId> markeds = model.markedElements(),
-      affecteds = model.affectedElements(),
-      errorInLastPass = model.elementsWithErrorInLastPass();
+  set<virtualId> markeds = model.markedElements (),
+                 affecteds = model.affectedElements (),
+                 errorInLastPass = model.elementsWithErrorInLastPass ();
 
   Message messageFactory (messagesLanguage);
-  set<virtualId>::iterator vIds = errorInLastPass.begin();
+  set<virtualId>::iterator vIds = errorInLastPass.begin ();
 
-  model.clearElementsWithErrorInLastPass();
+  model.clearElementsWithErrorInLastPass ();
 
-  for (ModelElement *el = NULL; vIds != errorInLastPass.end(); ++vIds)
+  for (ModelElement *el = NULL; vIds != errorInLastPass.end (); ++vIds)
   {
-    el = model.element(*vIds);
+    el = model.element (*vIds);
     if (el)
     {
       StructuralValidation::structuralValidation (*el, model, msgs,
                                                   messageFactory);
-      SemanticValidation::semanticValidation (*el, model, msgs, messageFactory);
+      SemanticValidation::semanticValidation (*el, model, msgs,
+                                              messageFactory);
     }
   }
 
-  vIds = markeds.begin();
-  for (ModelElement *el = NULL; vIds != markeds.end(); ++vIds)
+  vIds = markeds.begin ();
+  for (ModelElement *el = NULL; vIds != markeds.end (); ++vIds)
   {
-    el = model.element(*vIds);
+    el = model.element (*vIds);
 
     if (el)
     {
       StructuralValidation::structuralValidation (*el, model, msgs,
                                                   messageFactory);
-      SemanticValidation::semanticValidation (*el, model, msgs, messageFactory);
+      SemanticValidation::semanticValidation (*el, model, msgs,
+                                              messageFactory);
     }
   }
-  vIds = affecteds.begin();
+  vIds = affecteds.begin ();
 
-  for (ModelElement *el = NULL ; vIds != affecteds.end(); ++vIds)
+  for (ModelElement *el = NULL; vIds != affecteds.end (); ++vIds)
   {
-    el = model.element(*vIds);
+    el = model.element (*vIds);
 
     if (el)
-      SemanticValidation::semanticValidation (*el, model, msgs, messageFactory);
+      SemanticValidation::semanticValidation (*el, model, msgs,
+                                              messageFactory);
   }
   return msgs;
 }
-

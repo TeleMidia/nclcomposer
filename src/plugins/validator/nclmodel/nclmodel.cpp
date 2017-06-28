@@ -20,59 +20,63 @@
 #include <QDebug>
 
 /***********************ModelElement's definition*****************************/
-ModelElement::ModelElement(virtualId parentId)
-{
-  _parentId = parentId;
-}
+ModelElement::ModelElement (virtualId parentId) { _parentId = parentId; }
 
-ModelElement::~ModelElement (){}
+ModelElement::~ModelElement () {}
 
-void ModelElement::addAttribute(string name, string value)
+void
+ModelElement::addAttribute (string name, string value)
 {
   Attribute attr (name, value);
   _attributes.push_back (attr);
 }
 
-void ModelElement::addAttribute(Attribute &attr)
+void
+ModelElement::addAttribute (Attribute &attr)
 {
   _attributes.push_back (attr);
-
 }
 
-void ModelElement::setAttributes(vector <Attribute> &attributes)
+void
+ModelElement::setAttributes (vector<Attribute> &attributes)
 {
   _attributes = attributes;
 }
 
-void ModelElement::setElementName(string name)
+void
+ModelElement::setElementName (string name)
 {
-  _elementName.assign(name);
+  _elementName.assign (name);
 }
 
-void ModelElement::setParent(virtualId parent)
+void
+ModelElement::setParent (virtualId parent)
 {
   _parentId = parent;
 }
 
-void ModelElement::addChild(virtualId childId)
+void
+ModelElement::addChild (virtualId childId)
 {
-  _children.push_back(childId);
+  _children.push_back (childId);
 }
 
-bool ModelElement::removeReference(virtualId id)
+bool
+ModelElement::removeReference (virtualId id)
 {
-  for (size_t i=0; i < _referencesToMyself.size(); i++)
+  for (size_t i = 0; i < _referencesToMyself.size (); i++)
     if (_referencesToMyself[i] == id)
     {
-      _referencesToMyself.erase(_referencesToMyself.begin() + i);
+      _referencesToMyself.erase (_referencesToMyself.begin () + i);
       return true;
     }
   return false;
 }
 
-void ModelElement::removeChild(virtualId childId)
+void
+ModelElement::removeChild (virtualId childId)
 {
-  for (size_t i=0; i < _children.size(); i++)
+  for (size_t i = 0; i < _children.size (); i++)
     if (childId == _children[i])
     {
       _children.erase (_children.begin () + i);
@@ -80,124 +84,125 @@ void ModelElement::removeChild(virtualId childId)
     }
 }
 
-Attribute ModelElement::attribute(string attribute) const
+Attribute
+ModelElement::attribute (string attribute) const
 {
   Attribute attr ("", "");
-  for (size_t i = 0; i < _attributes.size(); i++)
-    if (_attributes[i].name() == attribute)
+  for (size_t i = 0; i < _attributes.size (); i++)
+    if (_attributes[i].name () == attribute)
       attr = _attributes[i];
   return attr;
 }
 
 /***********************Model's definition*****************************/
-Model::Model()
-{
-  _seed = 1;
-}
+Model::Model () { _seed = 1; }
 
-Model::~Model(){}
+Model::~Model () {}
 
-virtualId Model::randomId ()
+virtualId
+Model::randomId ()
 {
-  string s("vId");
+  string s ("vId");
   stringstream oss;
-  oss << s.c_str() << _seed ++;
+  oss << s.c_str () << _seed++;
   return oss.str ();
 }
 
-void Model::setElementId (virtualId id, ModelElement & element)
+void
+Model::setElementId (virtualId id, ModelElement &element)
 {
   if (&element)
     element._id = id;
 }
 
-
-bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes)
+bool
+Model::editElement (virtualId &id, vector<Attribute> &newAttributes)
 {
-  ModelElement *elementEdited = this->element(id);
+  ModelElement *elementEdited = this->element (id);
   if (elementEdited)
   {
-    vector<Attribute> oldAttributes = elementEdited->attributes();
+    vector<Attribute> oldAttributes = elementEdited->attributes ();
     string oldId = "";
     string newId = "";
 
-    for (size_t i = 0; i < elementEdited->references().size(); i++)
-      _affectedEllements.insert(elementEdited->references().at(i));
+    for (size_t i = 0; i < elementEdited->references ().size (); i++)
+      _affectedEllements.insert (elementEdited->references ().at (i));
 
-    _markedElements.insert(id);
+    _markedElements.insert (id);
 
-    for (size_t i=0; i < oldAttributes.size(); i++)
+    for (size_t i = 0; i < oldAttributes.size (); i++)
     {
       Attribute oldAttribute = oldAttributes[i];
 
-      if (oldAttribute.name() == "id" || oldAttribute.name() == "alias")
-        oldId = oldAttribute.value();
+      if (oldAttribute.name () == "id" || oldAttribute.name () == "alias")
+        oldId = oldAttribute.value ();
 
-      if(Langstruct::isAttributeReferenceDependent(elementEdited->elementName(),
-                                                   oldAttribute.name()))
+      if (Langstruct::isAttributeReferenceDependent (
+              elementEdited->elementName (), oldAttribute.name ()))
       {
-        vector <ModelElement *> references = elementsByIdentifier(
-              oldAttribute.value());
+        vector<ModelElement *> references
+            = elementsByIdentifier (oldAttribute.value ());
 
-        if (references.size() > 0)
-          for (size_t j = 0; j < references.size(); j++)
+        if (references.size () > 0)
+          for (size_t j = 0; j < references.size (); j++)
           {
             ModelElement *ref = references[j];
-            ref->removeReference(id);
+            ref->removeReference (id);
           }
         else
         {
-          multimap<string, virtualId>::iterator it =
-              _elementsNotYetInserted.find(oldAttribute.value());
+          multimap<string, virtualId>::iterator it
+              = _elementsNotYetInserted.find (oldAttribute.value ());
 
-          if (it != _elementsNotYetInserted.end())
+          if (it != _elementsNotYetInserted.end ())
           {
             do
             {
               if ((*it).second == id)
               {
-                _elementsNotYetInserted.erase(it);
+                _elementsNotYetInserted.erase (it);
                 break;
               }
               it++;
-            }
-            while (it != _elementsNotYetInserted.upper_bound(
-                     oldAttribute.value()));
+            } while (it
+                     != _elementsNotYetInserted.upper_bound (
+                            oldAttribute.value ()));
           }
         }
       }
     }
 
-
-    for (size_t i=0; i < newAttributes.size(); i++)
+    for (size_t i = 0; i < newAttributes.size (); i++)
     {
       Attribute newAttribute = newAttributes[i];
 
-      if ((newAttribute.name() == "id" || newAttribute.name() == "alias")
-          && newAttribute.value() != oldId)
+      if ((newAttribute.name () == "id" || newAttribute.name () == "alias")
+          && newAttribute.value () != oldId)
       {
-        elementEdited->_referencesToMyself.clear();
-        newId = newAttribute.value();
+        elementEdited->_referencesToMyself.clear ();
+        newId = newAttribute.value ();
 
-        for (map<virtualId, ModelElement>::iterator it = _modelElements.begin();
-             it != _modelElements.end(); it++)
+        for (map<virtualId, ModelElement>::iterator it
+             = _modelElements.begin ();
+             it != _modelElements.end (); it++)
         {
           ModelElement *el = &(it->second);
 
-          if (el == elementEdited) continue;
+          if (el == elementEdited)
+            continue;
 
           if (el)
           {
-            vector<Attribute> elAttr = el->attributes();
+            vector<Attribute> elAttr = el->attributes ();
 
-            for (size_t j =0; j < elAttr.size(); j++)
+            for (size_t j = 0; j < elAttr.size (); j++)
             {
-              if (Langstruct::isAttributeReferenceDependent(el->elementName(),
-                                                            elAttr[j].name()))
+              if (Langstruct::isAttributeReferenceDependent (
+                      el->elementName (), elAttr[j].name ()))
               {
-                if (elAttr[j].value() == newId)
+                if (elAttr[j].value () == newId)
                 {
-                  elementEdited->addReference(el->id());
+                  elementEdited->addReference (el->id ());
                 }
               }
             }
@@ -206,61 +211,58 @@ bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes)
       }
     }
 
-    multimap <string, virtualId>::iterator it = _idToElement.find(oldId);
-    if (it != _idToElement.end())
+    multimap<string, virtualId>::iterator it = _idToElement.find (oldId);
+    if (it != _idToElement.end ())
     {
       do
       {
-        if ((*it).second == elementEdited->id())
+        if ((*it).second == elementEdited->id ())
         {
-          _idToElement.erase(it);
+          _idToElement.erase (it);
           break;
         }
-        it ++;
-      }
-      while (it != _idToElement.upper_bound(oldId));
+        it++;
+      } while (it != _idToElement.upper_bound (oldId));
     }
 
-
-    it = _elementsNotYetInserted.find(newId);
-    if (it != _elementsNotYetInserted.end())
+    it = _elementsNotYetInserted.find (newId);
+    if (it != _elementsNotYetInserted.end ())
     {
       do
       {
-        elementEdited->addReference((*it).second);
-        it ++;
-      }
-      while (it != _elementsNotYetInserted.upper_bound(newId));
+        elementEdited->addReference ((*it).second);
+        it++;
+      } while (it != _elementsNotYetInserted.upper_bound (newId));
     }
 
-    _elementsNotYetInserted.erase(newId);
+    _elementsNotYetInserted.erase (newId);
 
-    elementEdited->setAttributes(newAttributes);
+    elementEdited->setAttributes (newAttributes);
     string dumb = "";
-    adjustReference(elementEdited->elementName(), *elementEdited, dumb);
+    adjustReference (elementEdited->elementName (), *elementEdited, dumb);
 
-    if (elementEdited->elementName() == "simpleAction" ||
-        elementEdited->elementName() == "simpleCondition" ||
-        elementEdited->elementName() == "compoundAction" ||
-        elementEdited->elementName() == "compoundCondition" ||
-        elementEdited->elementName() == "assessmentStatement" ||
-        elementEdited->elementName() == "attributeAssessment" ||
-        elementEdited->elementName() == "connectorParam" ||
-        elementEdited->elementName() == "compoundStatement" ||
-        elementEdited->elementName() == "valueAssessment")
+    if (elementEdited->elementName () == "simpleAction"
+        || elementEdited->elementName () == "simpleCondition"
+        || elementEdited->elementName () == "compoundAction"
+        || elementEdited->elementName () == "compoundCondition"
+        || elementEdited->elementName () == "assessmentStatement"
+        || elementEdited->elementName () == "attributeAssessment"
+        || elementEdited->elementName () == "connectorParam"
+        || elementEdited->elementName () == "compoundStatement"
+        || elementEdited->elementName () == "valueAssessment")
     {
-      ModelElement *parent = this->element(elementEdited->parent());
+      ModelElement *parent = this->element (elementEdited->parent ());
       while (parent)
       {
-        if (parent->elementName() == "causalConnector")
+        if (parent->elementName () == "causalConnector")
         {
-          _markedElements.insert(parent->id());
-          for (size_t i = 0; i < parent->references().size(); i++)
-            _affectedEllements.insert(parent->references().at(i));
+          _markedElements.insert (parent->id ());
+          for (size_t i = 0; i < parent->references ().size (); i++)
+            _affectedEllements.insert (parent->references ().at (i));
 
           break;
         }
-        parent = this->element(parent->parent());
+        parent = this->element (parent->parent ());
       }
     }
 
@@ -269,91 +271,92 @@ bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes)
   return false;
 }
 
-bool Model::removeElement(virtualId &id)
+bool
+Model::removeElement (virtualId &id)
 {
-  if (_modelElements.count(id))
+  if (_modelElements.count (id))
   {
-    ModelElement * element = this->element(id);
-    ModelElement * parent = this->element(element->parent());
+    ModelElement *element = this->element (id);
+    ModelElement *parent = this->element (element->parent ());
 
     if (parent)
     {
-      parent->removeChild(id);
+      parent->removeChild (id);
 
-      if (element->elementName() == "simpleCondition" ||
-          element->elementName() == "simpleAction" ||
-          element->elementName() == "attributeAssessment")
+      if (element->elementName () == "simpleCondition"
+          || element->elementName () == "simpleAction"
+          || element->elementName () == "attributeAssessment")
       {
         while (parent)
         {
-          if (parent->elementName() == "causalConnector")
+          if (parent->elementName () == "causalConnector")
           {
-            _markedElements.insert(parent->id());
+            _markedElements.insert (parent->id ());
             break;
           }
-          parent = this->element(parent->parent());
+          parent = this->element (parent->parent ());
         }
       }
-      else if (element->elementName() == "bind")
-        _markedElements.insert(parent->id());
+      else if (element->elementName () == "bind")
+        _markedElements.insert (parent->id ());
 
-
-      _markedElements.insert(parent->id());
+      _markedElements.insert (parent->id ());
     }
 
-    for (size_t i = 0; i < element->references().size(); i++)
-      _affectedEllements.insert(element->references().at(i));
+    for (size_t i = 0; i < element->references ().size (); i++)
+      _affectedEllements.insert (element->references ().at (i));
 
-    vector<Attribute> attrs = element->attributes();
-    for (size_t i = 0; i < attrs.size(); i++)
+    vector<Attribute> attrs = element->attributes ();
+    for (size_t i = 0; i < attrs.size (); i++)
     {
       Attribute attribute = attrs[i];
 
-      if (attribute.name() == "id" || attribute.name() == "alias")
+      if (attribute.name () == "id" || attribute.name () == "alias")
       {
-        multimap<string, virtualId>::iterator it =
-            _idToElement.find(attribute.value());
+        multimap<string, virtualId>::iterator it
+            = _idToElement.find (attribute.value ());
 
-        if (it != _idToElement.end())
-          _idToElement.erase(it);
+        if (it != _idToElement.end ())
+          _idToElement.erase (it);
       }
 
-      if (Langstruct::isAttributeReferenceDependent(element->elementName(),
-                                                    attribute.name()))
+      if (Langstruct::isAttributeReferenceDependent (element->elementName (),
+                                                     attribute.name ()))
       {
-        vector <ModelElement *> els = elementsByIdentifier(attribute.value());
-        for (size_t j = 0; j<els.size(); j++)
+        vector<ModelElement *> els = elementsByIdentifier (attribute.value ());
+        for (size_t j = 0; j < els.size (); j++)
         {
-          ModelElement * e = els[j];
-          e->removeReference(id);
+          ModelElement *e = els[j];
+          e->removeReference (id);
         }
       }
     }
 
-    for (size_t i = 0; i < element->children().size(); i++)
+    for (size_t i = 0; i < element->children ().size (); i++)
     {
-      ModelElement *child = this->element(element->children()[i]);
-      child->setParent(element->parent());
+      ModelElement *child = this->element (element->children ()[i]);
+      child->setParent (element->parent ());
     }
 
-    _markedElements.erase(id);
-    _modelElements.erase(id);
+    _markedElements.erase (id);
+    _modelElements.erase (id);
 
-    _nonIncrementalMarkedElements.erase(id);
+    _nonIncrementalMarkedElements.erase (id);
 
     return true;
   }
   return false;
 }
 
-set <virtualId> Model::elementsWithErrorInLastPass()
+set<virtualId>
+Model::elementsWithErrorInLastPass ()
 {
-  for (set<virtualId>::iterator it = _elementsWithErrorInLastPass.begin();
-       it != _elementsWithErrorInLastPass.end(); )
+  for (set<virtualId>::iterator it = _elementsWithErrorInLastPass.begin ();
+       it != _elementsWithErrorInLastPass.end ();)
   {
-    if (_markedElements.count(*it))
+    if (_markedElements.count (*it))
     {
-      _elementsWithErrorInLastPass.erase(it++);
+      _elementsWithErrorInLastPass.erase (it++);
     }
     else
     {
@@ -364,9 +367,10 @@ set <virtualId> Model::elementsWithErrorInLastPass()
   return _elementsWithErrorInLastPass;
 }
 
-ModelElement * Model::element(const virtualId & id)
+ModelElement *
+Model::element (const virtualId &id)
 {
-  if (_modelElements.count(id))
+  if (_modelElements.count (id))
   {
     return &_modelElements[id];
   }
@@ -376,128 +380,131 @@ ModelElement * Model::element(const virtualId & id)
   }
 }
 
-void Model::print()
+void
+Model::print ()
 {
 }
 
 //***************************Novos métodos********************************
 
-virtualId Model::addElement(string elementName, vector <Attribute> attributes)
+virtualId
+Model::addElement (string elementName, vector<Attribute> attributes)
 {
   if (elementName != "")
   {
-    virtualId id = randomId();
+    virtualId id = randomId ();
 
-    while (_modelElements.count(id))
+    while (_modelElements.count (id))
       id.append ("" + 0);
 
     ModelElement newElement;
-    setElementId(id, newElement); //insere o id do elemento
+    setElementId (id, newElement); // insere o id do elemento
 
-    newElement.setElementName(elementName);
-    newElement.setAttributes(attributes);
-    newElement.setParent("");
-    newElement.setScope("");
+    newElement.setElementName (elementName);
+    newElement.setAttributes (attributes);
+    newElement.setParent ("");
+    newElement.setScope ("");
 
     if (elementName == "ncl")
-      newElement.setScope(newElement.id());
+      newElement.setScope (newElement.id ());
 
     string attributeIdentifier = "";
-    adjustReference(elementName, newElement, attributeIdentifier);
+    adjustReference (elementName, newElement, attributeIdentifier);
 
-    multimap <string, virtualId>::iterator it =
-        _elementsNotYetInserted.find(attributeIdentifier);
+    multimap<string, virtualId>::iterator it
+        = _elementsNotYetInserted.find (attributeIdentifier);
 
-    if (it != _elementsNotYetInserted.end())
-    { //se alguÃ©m tiver feito referÃªncia a esse elemento antes dele ser
-      //inserido coloca-se tal elemento na lista dos elementos que referenciam
+    if (it != _elementsNotYetInserted.end ())
+    { // se alguÃ©m tiver feito referÃªncia a esse elemento antes dele ser
+      // inserido coloca-se tal elemento na lista dos elementos que referenciam
       do
       {
-        newElement.addReference((*it).second);
-        it ++;
-      }
-      while (it != _elementsNotYetInserted.upper_bound(attributeIdentifier));
+        newElement.addReference ((*it).second);
+        it++;
+      } while (it
+               != _elementsNotYetInserted.upper_bound (attributeIdentifier));
 
-      _elementsNotYetInserted.erase(attributeIdentifier);
+      _elementsNotYetInserted.erase (attributeIdentifier);
     }
 
-    _modelElements[newElement.id()] = newElement;
-    _nonIncrementalMarkedElements.insert(newElement.id());
+    _modelElements[newElement.id ()] = newElement;
+    _nonIncrementalMarkedElements.insert (newElement.id ());
 
-    _markedElements.insert(newElement.id());
+    _markedElements.insert (newElement.id ());
 
-    return newElement.id();
+    return newElement.id ();
   }
   return "";
-
 }
 
-void Model::adjustReference(string elementName, ModelElement & newElement,
-                            string & attributeIdentifier)
+void
+Model::adjustReference (string elementName, ModelElement &newElement,
+                        string &attributeIdentifier)
 {
-  if (elementName == "bind" || elementName == "bindParam" ||
-      elementName == "linkParam")
+  if (elementName == "bind" || elementName == "bindParam"
+      || elementName == "linkParam")
   {
 
     if (elementName == "bind")
     {
-      Attribute attrComponent = newElement.attribute("component");
-      Attribute attrInterface = newElement.attribute("interface");
+      Attribute attrComponent = newElement.attribute ("component");
+      Attribute attrInterface = newElement.attribute ("interface");
 
-      if (attrComponent.name() != "")
+      if (attrComponent.name () != "")
       {
-        //podem ter mais de um elemento com o mesmo id
-        vector <ModelElement *> el =elementsByIdentifier(attrComponent.value());
-        if (el.size() == 0)
+        // podem ter mais de um elemento com o mesmo id
+        vector<ModelElement *> el
+            = elementsByIdentifier (attrComponent.value ());
+        if (el.size () == 0)
         {
-          _elementsNotYetInserted.insert(pair <string,virtualId>
-                                         (attrComponent.value(),
-                                          newElement.id()));
-          if (attrInterface.name() != "")
-            _elementsNotYetInserted.insert(pair <string,virtualId> (attrComponent.value() + "/" + attrInterface.value(),
-                                                                    newElement.id()));
+          _elementsNotYetInserted.insert (pair<string, virtualId> (
+              attrComponent.value (), newElement.id ()));
+          if (attrInterface.name () != "")
+            _elementsNotYetInserted.insert (pair<string, virtualId> (
+                attrComponent.value () + "/" + attrInterface.value (),
+                newElement.id ()));
         }
         else
         {
-          for (size_t i = 0; i < el.size(); i++)
+          for (size_t i = 0; i < el.size (); i++)
           {
-            ModelElement * e = el[i];
-            e->addReference(newElement.id());
+            ModelElement *e = el[i];
+            e->addReference (newElement.id ());
 
-            if (attrInterface.name() == "") continue;
+            if (attrInterface.name () == "")
+              continue;
 
-            vector <virtualId> children = e->children();
+            vector<virtualId> children = e->children ();
 
-            for (size_t j = 0; j < children.size(); j++)
+            for (size_t j = 0; j < children.size (); j++)
             {
-              ModelElement *child = this->element(children[j]);
+              ModelElement *child = this->element (children[j]);
 
-              if (!child) continue;
+              if (!child)
+                continue;
               Attribute attribute ("", "");
 
-              if (e->elementName() == "media")
+              if (e->elementName () == "media")
               {
-                if (child->elementName() == "property")
-                  attribute = child->attribute("name");
-                else if (child->elementName() == "area")
-                  attribute = child->attribute("id");
-
+                if (child->elementName () == "property")
+                  attribute = child->attribute ("name");
+                else if (child->elementName () == "area")
+                  attribute = child->attribute ("id");
               }
-              else if (e->elementName() == "context")
+              else if (e->elementName () == "context")
               {
-                if (child->elementName() == "port")
-                  attribute = child->attribute("id");
-                else if (child->elementName() == "property")
-                  attribute = child->attribute("name");
+                if (child->elementName () == "port")
+                  attribute = child->attribute ("id");
+                else if (child->elementName () == "property")
+                  attribute = child->attribute ("name");
               }
-              else if (e->elementName() == "switch" &&
-                       child->elementName() == "switchPort")
-                attribute = child->attribute("id");
+              else if (e->elementName () == "switch"
+                       && child->elementName () == "switchPort")
+                attribute = child->attribute ("id");
 
-
-              if (attribute.name() != "" &&
-                  attribute.value() == attrInterface.value())
-                child->addReference(newElement.id());
+              if (attribute.name () != ""
+                  && attribute.value () == attrInterface.value ())
+                child->addReference (newElement.id ());
             }
           }
         }
@@ -506,175 +513,173 @@ void Model::adjustReference(string elementName, ModelElement & newElement,
   }
   else
   {
-    vector <Attribute> attributes = newElement.attributes();
-    for (size_t i = 0; i < attributes.size(); i++)
+    vector<Attribute> attributes = newElement.attributes ();
+    for (size_t i = 0; i < attributes.size (); i++)
     {
-      if (attributes[i].name() == "id" || attributes[i].name() == "alias")
+      if (attributes[i].name () == "id" || attributes[i].name () == "alias")
       {
-        //se tiver id, coloca no mapa de id's
-        _idToElement.insert(pair <string, virtualId> (attributes[i].value(),
-                                                      newElement.id()));
-        attributeIdentifier = attributes[i].value();
+        // se tiver id, coloca no mapa de id's
+        _idToElement.insert (pair<string, virtualId> (attributes[i].value (),
+                                                      newElement.id ()));
+        attributeIdentifier = attributes[i].value ();
       }
 
-      //se o atributo faz referÃªncia a outro elemento
-      if (Langstruct::isAttributeReferenceDependent(elementName,
-                                                    attributes[i].name()))
+      // se o atributo faz referÃªncia a outro elemento
+      if (Langstruct::isAttributeReferenceDependent (elementName,
+                                                     attributes[i].name ()))
       {
-        vector <ModelElement *> elements;
-        string attributeValue = attributes[i].value();
+        vector<ModelElement *> elements;
+        string attributeValue = attributes[i].value ();
         string toInsert = attributeValue;
 
-        size_t index = attributeValue.find("#");
-        if ( index == string::npos)
+        size_t index = attributeValue.find ("#");
+        if (index == string::npos)
         {
-          elements = elementsByIdentifier(attributeValue);
+          elements = elementsByIdentifier (attributeValue);
         }
         else
         {
-          string alias = attributeValue.substr(0, index);
+          string alias = attributeValue.substr (0, index);
           toInsert = alias;
-          elements = elementsByIdentifier(alias);
+          elements = elementsByIdentifier (alias);
         }
 
-        if (elements.size() == 0)
+        if (elements.size () == 0)
         {
-          _elementsNotYetInserted.insert(pair <string, virtualId> (
-                                           toInsert, newElement.id()));
+          _elementsNotYetInserted.insert (
+              pair<string, virtualId> (toInsert, newElement.id ()));
         }
         else
         {
-          for (size_t i = 0; i < elements.size(); i++)
+          for (size_t i = 0; i < elements.size (); i++)
           {
-            elements[i]->_referencesToMyself.push_back(newElement.id());
+            elements[i]->_referencesToMyself.push_back (newElement.id ());
           }
         }
       }
     }
   }
-
 }
 
-set <virtualId> Model::affectedElements()
+set<virtualId>
+Model::affectedElements ()
 {
-  set <virtualId>::iterator it = _markedElements.begin();
+  set<virtualId>::iterator it = _markedElements.begin ();
 
-  for ( ; it != _markedElements.end(); it++)
+  for (; it != _markedElements.end (); it++)
   {
     ModelElement *e = element (*it);
     if (e)
-      for (size_t i = 0; i < e->references().size(); i++)
-        _affectedEllements.insert(e->references()[i]);
+      for (size_t i = 0; i < e->references ().size (); i++)
+        _affectedEllements.insert (e->references ()[i]);
   }
 
-  for (set<virtualId>::iterator it = _markedElements.begin();
-       it != _markedElements.end(); it++)
-    _affectedEllements.erase(*it);
+  for (set<virtualId>::iterator it = _markedElements.begin ();
+       it != _markedElements.end (); it++)
+    _affectedEllements.erase (*it);
 
   //    std::cout <<"affectedElements: " << _affectedEllements.size() << endl;
   return _affectedEllements;
 }
 
-vector <ModelElement *>  Model::elementsByIdentifier(string identifier)
+vector<ModelElement *>
+Model::elementsByIdentifier (string identifier)
 {
-  vector <ModelElement *> elements;
+  vector<ModelElement *> elements;
 
-  size_t index = int (identifier.find("#"));
+  size_t index = int(identifier.find ("#"));
 
-  //se não tiver alias
+  // se não tiver alias
   if (index == string::npos)
   {
-    multimap <string, virtualId>::iterator it = _idToElement.find(identifier);
-    if (it != _idToElement.end())
+    multimap<string, virtualId>::iterator it = _idToElement.find (identifier);
+    if (it != _idToElement.end ())
     {
       do
       {
         ModelElement *e = this->element ((*it).second);
         if (e)
-          elements.push_back(e);
-        it ++;
-      }
-      while (it != _idToElement.upper_bound(identifier));
+          elements.push_back (e);
+        it++;
+      } while (it != _idToElement.upper_bound (identifier));
     }
   }
   else
   {
-    string alias = identifier.substr(0, index);
-    string id =  identifier.substr(index + 1);
+    string alias = identifier.substr (0, index);
+    string id = identifier.substr (index + 1);
     ModelElement *baseImported = 0;
 
     multimap<string, virtualId>::iterator it;
-    it = _idToElement.find(alias);
+    it = _idToElement.find (alias);
 
-    if (it == _idToElement.end())
-      return elements; // no elements associated with key, so return immediately
-    baseImported = this->element(it->second);
+    if (it == _idToElement.end ())
+      return elements; // no elements associated with key, so return
+                       // immediately
+    baseImported = this->element (it->second);
 
     if (baseImported)
     {
-      string path = baseImported->attribute("documentURI").value();
+      string path = baseImported->attribute ("documentURI").value ();
 
       ModelElement elementFound;
-      QXmlContentHandler* docHandler = new TextualParser(&elementFound, id);
+      QXmlContentHandler *docHandler = new TextualParser (&elementFound, id);
 
-      findElementInImportedFile(path, docHandler);
+      findElementInImportedFile (path, docHandler);
 
-      if (elementFound.elementName() != "" )
+      if (elementFound.elementName () != "")
       {
-        _importedElements.push_back(elementFound);
-        elements.push_back(& _importedElements.back());
+        _importedElements.push_back (elementFound);
+        elements.push_back (&_importedElements.back ());
       }
-
     }
-
   }
   return elements;
 }
 
-vector <ModelElement *> Model::elementsByName(string elementName)
+vector<ModelElement *>
+Model::elementsByName (string elementName)
 {
-  vector <ModelElement *> elements;
+  vector<ModelElement *> elements;
 
-  map <virtualId, ModelElement>::iterator it = _modelElements.begin();
-  for ( ; it != _modelElements.end(); ++it)
+  map<virtualId, ModelElement>::iterator it = _modelElements.begin ();
+  for (; it != _modelElements.end (); ++it)
   {
     ModelElement *el = &((*it).second);
-    if (el && el->elementName() == elementName)
-      elements.push_back(el);
+    if (el && el->elementName () == elementName)
+      elements.push_back (el);
   }
 
   return elements;
 }
 
-
-void Model::findElementInImportedFile(string fileName,
-                                      QXmlContentHandler *docHandler)
+void
+Model::findElementInImportedFile (string fileName,
+                                  QXmlContentHandler *docHandler)
 {
-  QFile ifile (QString::fromStdString(fileName));
+  QFile ifile (QString::fromStdString (fileName));
   //    ifstream ifile (fileName.c_str());
-  if (!ifile.exists())
+  if (!ifile.exists ())
   {
     fileName = _relativePath + fileName;
 
-    QFile ifile2 (QString::fromStdString(fileName));
+    QFile ifile2 (QString::fromStdString (fileName));
     //        ifstream ifile2 (fileName.c_str());
-    if (!ifile2.exists())
+    if (!ifile2.exists ())
       return;
 
-    ifile.setFileName(QString::fromStdString(fileName));
-
+    ifile.setFileName (QString::fromStdString (fileName));
   }
 
   //    fprintf(stderr, "\n\n%s %s\n\n", fileName.c_str(), idToFind.c_str());
   //    fprintf (stderr, "\n%s\n\n", fileName.c_str());
 
-
   //    ModelElement el;
 
   QXmlSimpleReader reader;
-  reader.setContentHandler(docHandler);
+  reader.setContentHandler (docHandler);
 
-  reader.parse(QXmlInputSource (&ifile));
+  reader.parse (QXmlInputSource (&ifile));
 
   //    try {
   //        XMLPlatformUtils::Initialize();
@@ -711,111 +716,113 @@ void Model::findElementInImportedFile(string fileName,
   //    XMLPlatformUtils::Terminate();
 }
 
-vector <ModelElement *> Model::elementsByPropertyName(string component,
-                                                      string propertyName)
+vector<ModelElement *>
+Model::elementsByPropertyName (string component, string propertyName)
 {
-  //    fprintf (stderr, "\n\n%s %s\n\n", component.c_str(), propertyName.c_str());
-  multimap <string, virtualId>::iterator it = _idToElement.find(component);
-  vector <ModelElement *> elements;
-  if (it != _idToElement.end())
+  //    fprintf (stderr, "\n\n%s %s\n\n", component.c_str(),
+  //    propertyName.c_str());
+  multimap<string, virtualId>::iterator it = _idToElement.find (component);
+  vector<ModelElement *> elements;
+  if (it != _idToElement.end ())
   {
     do
     {
       ModelElement *e = this->element ((*it).second);
       if (e)
       {
-        vector <virtualId> children = e->children();
-        for (size_t i = 0; i < children.size(); i++)
+        vector<virtualId> children = e->children ();
+        for (size_t i = 0; i < children.size (); i++)
         {
-          ModelElement *child =  this->element(children[i]);
-          if (!child || child->elementName() != "property") continue;
+          ModelElement *child = this->element (children[i]);
+          if (!child || child->elementName () != "property")
+            continue;
 
-          Attribute attribute = child->attribute("name");
-          if (attribute.value() == propertyName)
-            elements.push_back(child);
+          Attribute attribute = child->attribute ("name");
+          if (attribute.value () == propertyName)
+            elements.push_back (child);
         }
 
-        Attribute refer = e->attribute("refer");
+        Attribute refer = e->attribute ("refer");
 
-        if (refer.value() != "")
+        if (refer.value () != "")
         {
-          multimap <string, virtualId>::iterator it2 =
-              _idToElement.find(refer.value());
+          multimap<string, virtualId>::iterator it2
+              = _idToElement.find (refer.value ());
 
-          if(it2 != _idToElement.end())
+          if (it2 != _idToElement.end ())
           {
             do
             {
-              ModelElement *eRefer = this->element((*it2).second);
-              printf("%p\n", eRefer);
+              ModelElement *eRefer = this->element ((*it2).second);
+              printf ("%p\n", eRefer);
 
               if (eRefer)
               {
-                children = eRefer->children();
-                for (size_t i = 0; i < children.size(); i++)
+                children = eRefer->children ();
+                for (size_t i = 0; i < children.size (); i++)
                 {
-                  ModelElement *child =  this->element(children[i]);
-                  if (!child || child->elementName() != "property") continue;
+                  ModelElement *child = this->element (children[i]);
+                  if (!child || child->elementName () != "property")
+                    continue;
 
-                  Attribute attribute = child->attribute("name");
-                  if (attribute.value() == propertyName)
-                    elements.push_back(child);
+                  Attribute attribute = child->attribute ("name");
+                  if (attribute.value () == propertyName)
+                    elements.push_back (child);
                 }
               }
               it2++;
-            }
-            while (it2 != _idToElement.upper_bound(refer.value()));
+            } while (it2 != _idToElement.upper_bound (refer.value ()));
           }
         }
       }
-      it ++;
-    }
-    while (it != _idToElement.upper_bound(component));
+      it++;
+    } while (it != _idToElement.upper_bound (component));
   }
 
   return elements;
 }
 
-void Model::parseConnectorChild (ModelElement *child, map <string,
-                                 pair <int, int> > &roles)
+void
+Model::parseConnectorChild (ModelElement *child,
+                            map<string, pair<int, int> > &roles)
 {
   if (!child)
     return;
 
-  if (child->elementName() == "simpleAction" ||
-      child->elementName() == "simpleCondition" ||
-      child->elementName() == "attributeAssessment")
+  if (child->elementName () == "simpleAction"
+      || child->elementName () == "simpleCondition"
+      || child->elementName () == "attributeAssessment")
   {
-    string role = child->attribute("role").value();
+    string role = child->attribute ("role").value ();
 
     if (role != "")
     {
       stringstream ss;
 
-      Attribute minAttr = child->attribute("min");
-      Attribute maxAttr = child->attribute("max");
+      Attribute minAttr = child->attribute ("min");
+      Attribute maxAttr = child->attribute ("max");
 
       int min = 1;
       int max = 1;
 
-      if (minAttr.value() != "")
+      if (minAttr.value () != "")
       {
-        ss << minAttr.value().c_str();
+        ss << minAttr.value ().c_str ();
         ss >> min;
 
         if (!ss)
           min = 1;
-        ss.clear();
+        ss.clear ();
       }
-      if (maxAttr.value() != "")
+      if (maxAttr.value () != "")
       {
-        if (maxAttr.value() == "unbounded")
+        if (maxAttr.value () == "unbounded")
         {
-          max = (int) numeric_limits <int>::max ();
+          max = (int)numeric_limits<int>::max ();
         }
         else
         {
-          ss << maxAttr.value().c_str();
+          ss << maxAttr.value ().c_str ();
           ss >> max;
 
           if (!ss)
@@ -827,34 +834,35 @@ void Model::parseConnectorChild (ModelElement *child, map <string,
   }
 }
 
-
-void Model::parseAllConnectorChildren (ModelElement *connector,
-                                       ModelElement *element,
-                                       map <string, pair <int, int> > &roles)
+void
+Model::parseAllConnectorChildren (ModelElement *connector,
+                                  ModelElement *element,
+                                  map<string, pair<int, int> > &roles)
 {
-  vector<virtualId> children = element->children();
-  for (size_t i = 0; i < children.size(); i++)
+  vector<virtualId> children = element->children ();
+  for (size_t i = 0; i < children.size (); i++)
   {
-    ModelElement *child = this->element(children[i]);
+    ModelElement *child = this->element (children[i]);
     if (child)
     {
-      parseConnectorChild(child, roles);
+      parseConnectorChild (child, roles);
 
-      parseAllConnectorChildren(connector, child, roles);
+      parseAllConnectorChildren (connector, child, roles);
     }
   }
 }
 
-map<string, pair<int, int> > Model::getConnectorSetRoles (string identifier)
+map<string, pair<int, int> >
+Model::getConnectorSetRoles (string identifier)
 {
-  map <string, pair <int, int> > roles;
-  size_t index = identifier.find("#");
+  map<string, pair<int, int> > roles;
+  size_t index = identifier.find ("#");
 
   if (index == string::npos)
   {
-    vector <ModelElement *> els = elementsByIdentifier(identifier);
+    vector<ModelElement *> els = elementsByIdentifier (identifier);
 
-    if (els.size() == 0)
+    if (els.size () == 0)
     {
       map<string, pair<int, int> > temp;
       return (temp);
@@ -862,44 +870,44 @@ map<string, pair<int, int> > Model::getConnectorSetRoles (string identifier)
 
     ModelElement *connector = els[0];
 
-    parseAllConnectorChildren(connector, connector, roles);
+    parseAllConnectorChildren (connector, connector, roles);
   }
   else
   {
-    string alias = identifier.substr(0, index);
-    string id =  identifier.substr(index + 1);
+    string alias = identifier.substr (0, index);
+    string id = identifier.substr (index + 1);
     ModelElement *baseImported = 0;
 
     multimap<string, virtualId>::iterator it;
-    it = _idToElement.find(alias);
+    it = _idToElement.find (alias);
 
-    if (it == _idToElement.end())
+    if (it == _idToElement.end ())
       return roles; // no elements associated with key, so return immediately
 
-    baseImported = this->element(it->second);
+    baseImported = this->element (it->second);
 
     if (baseImported)
     {
-      string path = baseImported->attribute("documentURI").value();
-      QXmlContentHandler* docHandler = new ConnectorParser (this, id);
+      string path = baseImported->attribute ("documentURI").value ();
+      QXmlContentHandler *docHandler = new ConnectorParser (this, id);
 
-
-      findElementInImportedFile(path, docHandler);
-      ConnectorParser *connParser = dynamic_cast<ConnectorParser *>(docHandler);
+      findElementInImportedFile (path, docHandler);
+      ConnectorParser *connParser
+          = dynamic_cast<ConnectorParser *> (docHandler);
       roles = connParser->getRolesMap ();
     }
   }
   return roles;
 }
 
-
-virtualId Model::addChild(virtualId parentId, string elementName,
-                          vector <Attribute> attributes)
+virtualId
+Model::addChild (virtualId parentId, string elementName,
+                 vector<Attribute> attributes)
 {
-  virtualId childId = addElement(elementName, attributes);
+  virtualId childId = addElement (elementName, attributes);
   if (childId != "")
   {
-    ModelElement *parentElement = element(parentId);
+    ModelElement *parentElement = element (parentId);
     ModelElement *childElement = element (childId);
 
     addChild (parentElement, childElement);
@@ -908,7 +916,8 @@ virtualId Model::addChild(virtualId parentId, string elementName,
   return childId;
 }
 
-void Model::addChild (virtualId parent, virtualId child)
+void
+Model::addChild (virtualId parent, virtualId child)
 {
   ModelElement *parentElement = element (parent);
   ModelElement *childElement = element (child);
@@ -917,105 +926,106 @@ void Model::addChild (virtualId parent, virtualId child)
     addChild (parentElement, childElement);
 }
 
-void Model::addChild(ModelElement *parent, ModelElement *child)
+void
+Model::addChild (ModelElement *parent, ModelElement *child)
 {
-  parent->addChild(child->id());
-  child->setParent(parent->id());
+  parent->addChild (child->id ());
+  child->setParent (parent->id ());
 
-  if (parent->elementName() == "causalConnector")
-    _markedElements.insert (parent->id());
-  else if (parent->elementName() == "simpleAction" ||
-           parent->elementName() == "simpleCondition" ||
-           parent->elementName() == "compoundAction" ||
-           parent->elementName() == "compoundCondition" ||
-           parent->elementName() == "assessmentStatement" ||
-           parent->elementName() == "attributeAssessment" ||
-           parent->elementName() == "connectorParam" ||
-           parent->elementName() == "compoundStatement" ||
-           parent->elementName() == "valueAssessment")
+  if (parent->elementName () == "causalConnector")
+    _markedElements.insert (parent->id ());
+  else if (parent->elementName () == "simpleAction"
+           || parent->elementName () == "simpleCondition"
+           || parent->elementName () == "compoundAction"
+           || parent->elementName () == "compoundCondition"
+           || parent->elementName () == "assessmentStatement"
+           || parent->elementName () == "attributeAssessment"
+           || parent->elementName () == "connectorParam"
+           || parent->elementName () == "compoundStatement"
+           || parent->elementName () == "valueAssessment")
   {
-    _markedElements.erase(parent->id());
+    _markedElements.erase (parent->id ());
 
-    ModelElement *element = this->element(parent->parent());
+    ModelElement *element = this->element (parent->parent ());
 
-    while (element && element->elementName() != "causalConnector")
+    while (element && element->elementName () != "causalConnector")
     {
-      _markedElements.erase (element->id());
-      element = this->element(element->parent());
+      _markedElements.erase (element->id ());
+      element = this->element (element->parent ());
     }
-    if (element && element->elementName() == "causalConnector")
-      _markedElements.insert(element->id());
-
+    if (element && element->elementName () == "causalConnector")
+      _markedElements.insert (element->id ());
   }
-  if (parent->elementName() == "link")
-    _markedElements.insert(parent->id());
-  else if (parent->elementName() == "bind")
+  if (parent->elementName () == "link")
+    _markedElements.insert (parent->id ());
+  else if (parent->elementName () == "bind")
   {
-    ModelElement *element = this->element(parent->parent());
+    ModelElement *element = this->element (parent->parent ());
 
-    while (element && element->elementName() != "link")
+    while (element && element->elementName () != "link")
     {
-      _markedElements.erase (element->id());
-      element = this->element(element->parent());
+      _markedElements.erase (element->id ());
+      element = this->element (element->parent ());
     }
   }
 
-  if (child->elementName() == "property" || child->elementName() == "area" ||
-      child->elementName() == "switchPort" || child->elementName() == "port")
+  if (child->elementName () == "property" || child->elementName () == "area"
+      || child->elementName () == "switchPort"
+      || child->elementName () == "port")
   {
-    Attribute parentIdAttribute = parent->attribute("id");
-    if (parentIdAttribute.name() != "")
+    Attribute parentIdAttribute = parent->attribute ("id");
+    if (parentIdAttribute.name () != "")
     {
-      string toFind = parentIdAttribute.value() + "/";
+      string toFind = parentIdAttribute.value () + "/";
 
-      Attribute childIdAttribute = child->attribute("id");
-      if (childIdAttribute.name() == "")
-        childIdAttribute = child->attribute("name");
+      Attribute childIdAttribute = child->attribute ("id");
+      if (childIdAttribute.name () == "")
+        childIdAttribute = child->attribute ("name");
 
-      if (childIdAttribute.name() != "")
-        toFind+= childIdAttribute.value();
+      if (childIdAttribute.name () != "")
+        toFind += childIdAttribute.value ();
 
-      multimap <string, virtualId>::iterator it =
-          _elementsNotYetInserted.find(toFind);
+      multimap<string, virtualId>::iterator it
+          = _elementsNotYetInserted.find (toFind);
 
-      if (it != _elementsNotYetInserted.end())
+      if (it != _elementsNotYetInserted.end ())
       {
         do
         {
-          child->addReference((*it).second);
-          it ++;
-        }
-        while (it != _elementsNotYetInserted.upper_bound(toFind));
+          child->addReference ((*it).second);
+          it++;
+        } while (it != _elementsNotYetInserted.upper_bound (toFind));
 
-        _elementsNotYetInserted.erase(toFind);
+        _elementsNotYetInserted.erase (toFind);
       }
     }
   }
 
-  adjustScope(parent->id(), child->id());
+  adjustScope (parent->id (), child->id ());
 }
 
-void Model::adjustScope (virtualId parentId, virtualId childId)
+void
+Model::adjustScope (virtualId parentId, virtualId childId)
 {
   ModelElement *parentElement = element (parentId);
   ModelElement *childElement = element (childId);
 
   try
   {
-    if (Langstruct::defineScope(parentElement->elementName()))
-      childElement->setScope(parentId);
+    if (Langstruct::defineScope (parentElement->elementName ()))
+      childElement->setScope (parentId);
     else
-      childElement->setScope(parentElement->scope());
+      childElement->setScope (parentElement->scope ());
 
-    vector <virtualId> children = childElement->children();
+    vector<virtualId> children = childElement->children ();
     //		cout << children.size () << endl;
-    for (size_t i = 0; i < children.size(); ++i)
+    for (size_t i = 0; i < children.size (); ++i)
     {
-      ModelElement * e = element(children[i]);
+      ModelElement *e = element (children[i]);
       if (e)
       {
-        if (e->scope() != "")
-          adjustScope(childId, e->id());
+        if (e->scope () != "")
+          adjustScope (childId, e->id ());
       }
     }
   }
@@ -1025,12 +1035,13 @@ void Model::adjustScope (virtualId parentId, virtualId childId)
   }
 }
 
-void Model::clear()
+void
+Model::clear ()
 {
-  _modelElements.clear();
-  _markedElements.clear();
-  _affectedEllements.clear();
-  _elementsWithErrorInLastPass.clear();
-  _idToElement.clear();
-  _elementsNotYetInserted.clear();
+  _modelElements.clear ();
+  _markedElements.clear ();
+  _affectedEllements.clear ();
+  _elementsWithErrorInLastPass.clear ();
+  _idToElement.clear ();
+  _elementsNotYetInserted.clear ();
 }

@@ -19,12 +19,12 @@
 #ifndef TEXTUALPARSER_H
 #define TEXTUALPARSER_H
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <QXmlDefaultHandler>
-#include <QString>
 #include "nclmodel.h"
+#include <QString>
+#include <QXmlDefaultHandler>
+#include <iostream>
+#include <string>
+#include <vector>
 
 class ModelElement;
 
@@ -33,11 +33,14 @@ using namespace std;
 class TextualParser : public QXmlDefaultHandler
 {
 public:
-  TextualParser (ModelElement *element, string toFind) { _element = element;
-                                                         _idToFind = toFind; }
+  TextualParser (ModelElement *element, string toFind)
+  {
+    _element = element;
+    _idToFind = toFind;
+  }
 
-  bool startElement(const QString &, const QString &, const QString &,
-                    const QXmlAttributes &);
+  bool startElement (const QString &, const QString &, const QString &,
+                     const QXmlAttributes &);
 
 private:
   ModelElement *_element;

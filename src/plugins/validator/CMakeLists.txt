@@ -10,8 +10,10 @@ configure_file(validator-plugin.json.in validator-plugin.json)
 find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 
 set(VALIDATOR_SOURCES
+  NCLComposerAdapter.cpp
   ValidatorPlugin.cpp
   ValidatorFactory.cpp
+  ValidatorTreewidgetItem.cpp
   langstruct/langstruct.cpp
   langstruct/components/ReferenceStructure.cpp
   langstruct/components/ElementStructure.cpp
@@ -19,15 +21,15 @@ set(VALIDATOR_SOURCES
   message/message.cpp
   nclmodel/nclmodel.cpp
   validation/Validator.cpp
-  composerncladapter.cpp
   validation/semanticvalidation.cpp
   validation/structuralvalidation.cpp
-  validatortreewidgetitem.cpp
   nclmodel/textualparser.cpp
   nclmodel/connectorparser.cpp
 
+  NCLComposerAdapter.h
   ValidatorPlugin.h
   ValidatorFactory.h
+  ValidatorTreewidgetItem.h
   definitions/definitions.h
   langstruct/langstruct.h
   langstruct/components/ReferenceStructure.h
@@ -36,10 +38,8 @@ set(VALIDATOR_SOURCES
   message/message.h
   nclmodel/nclmodel.h
   validation/Validator.h
-  composerncladapter.h
   validation/semanticvalidation.h
   validation/structuralvalidation.h
-  validatortreewidgetitem.h
   nclmodel/textualparser.h
   nclmodel/connectorparser.h
   

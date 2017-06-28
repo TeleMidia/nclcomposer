@@ -18,32 +18,30 @@
 
 #include "textualparser.h"
 
-bool TextualParser::startElement(const QString &, const QString &,
-                                 const QString & qName,
-                                 const QXmlAttributes & atts )
+bool
+TextualParser::startElement (const QString &, const QString &,
+                             const QString &qName, const QXmlAttributes &atts)
 {
   bool flag = false;
 
-  vector <Attribute> att;
-  for (int i = 0; i < atts.count(); i++)
+  vector<Attribute> att;
+  for (int i = 0; i < atts.count (); i++)
   {
-    string name (atts.qName(i).toStdString());
-    string value(atts.value(i).toStdString());
+    string name (atts.qName (i).toStdString ());
+    string value (atts.value (i).toStdString ());
 
-    att.push_back(Attribute (name, value));
+    att.push_back (Attribute (name, value));
 
     if (name == "id" && value == _idToFind)
     {
       flag = true;
     }
-
   }
 
   if (flag)
   {
-    _element->setAttributes(att);
-    _element->setElementName(qName.toStdString());
+    _element->setAttributes (att);
+    _element->setElementName (qName.toStdString ());
   }
   return true;
 }
-

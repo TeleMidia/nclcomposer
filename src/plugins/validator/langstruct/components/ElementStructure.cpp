@@ -18,33 +18,33 @@
 
 #include "ElementStructure.h"
 
-ElementStructure::ElementStructure() {}
+ElementStructure::ElementStructure () {}
 
 /*
  *
  */
-ElementStructure::ElementStructure(string _name, bool _defineScope)
+ElementStructure::ElementStructure (string _name, bool _defineScope)
 {
   name = _name;
   defineScope = _defineScope;
 }
 
-
-ElementStructure::~ElementStructure() {}
+ElementStructure::~ElementStructure () {}
 
 /*
  * Add an attribute to element
  */
-void ElementStructure::addAtt (string attName, bool required)
+void
+ElementStructure::addAtt (string attName, bool required)
 {
   atts[attName] = required;
 }
 
-
 /*
  * Add a parent to element
  */
-void ElementStructure::addParent (string _parent, char _cardinality)
+void
+ElementStructure::addParent (string _parent, char _cardinality)
 {
   parents[_parent] = _cardinality;
 }
@@ -52,7 +52,8 @@ void ElementStructure::addParent (string _parent, char _cardinality)
 /*
  * Get element name
  */
-string ElementStructure::getName() const
+string
+ElementStructure::getName () const
 {
   return name;
 }
@@ -60,14 +61,16 @@ string ElementStructure::getName() const
 /*
  * Get element parents
  */
-map<string, char> ElementStructure::getParents() const
+map<string, char>
+ElementStructure::getParents () const
 {
   return parents;
 }
 
 /*
  */
-char ElementStructure::getCardinality(string _parent)
+char
+ElementStructure::getCardinality (string _parent)
 {
   return parents[_parent];
 }
@@ -75,7 +78,8 @@ char ElementStructure::getCardinality(string _parent)
 /*
  *
  */
-map<string, bool> ElementStructure::getAtts() const
+map<string, bool>
+ElementStructure::getAtts () const
 {
   return atts;
 }
@@ -83,7 +87,8 @@ map<string, bool> ElementStructure::getAtts() const
 /*
  *
  */
-bool ElementStructure::isScopeDefined() const
+bool
+ElementStructure::isScopeDefined () const
 {
   return defineScope;
 }

@@ -16,24 +16,35 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "validatortreewidgetitem.h"
+#ifndef VALIDATORTREEWIDGETITEM_H
+#define VALIDATORTREEWIDGETITEM_H
 
-ValidatorTreeWidgetItem::ValidatorTreeWidgetItem(QTreeWidget *view,
-                                                 Entity *entity,
-                                                 QString message) :
-  QTreeWidgetItem(view)
+#include <QTreeWidgetItem>
+#include <model/Entity.h>
+
+using namespace cpr::core;
+
+class ValidatorTreeWidgetItem : public QTreeWidgetItem
 {
-  if (entity)
+public:
+  explicit ValidatorTreeWidgetItem (QTreeWidget *view, Entity *entity,
+                                    QString message);
+  Entity *
+  entity () const
   {
-    _entity = entity;
-    _message = message;
-
-    setText(1, entity->getType());
-    setText(2, message);
-
-    setToolTip(1, entity->getType());
-    setToolTip(2, message);
+    return _entity;
   }
-}
+  QString
+  message () const
+  {
+    return _message;
+  }
 
+signals:
 
+private:
+  Entity *_entity;
+  QString _message;
+};
+
+#endif // VALIDATORTREEWIDGETITEM_H

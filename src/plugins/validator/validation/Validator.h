@@ -21,20 +21,19 @@
 
 #include <list>
 
-#include "../nclmodel/nclmodel.h"
 #include "../langstruct/langstruct.h"
 #include "../message/message.h"
-#include <util/ComposerSettings.h>
+#include "../nclmodel/nclmodel.h"
 #include <QDebug>
+#include <util/ComposerSettings.h>
 
 using namespace cpr::core;
 
 class Validator
 {
 public:
-  static vector<pair<void *, string> > validate (Model &,
-                                                const string &messagesLanguage);
+  static vector<pair<void *, string> >
+  validate (Model &, const string &messagesLanguage);
 };
-
 
 #endif /* VALIDATOR_H_ */

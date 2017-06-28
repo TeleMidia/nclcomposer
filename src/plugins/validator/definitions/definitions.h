@@ -23,7 +23,6 @@
 
 using namespace std;
 
-
 /**
  * Utilizado internamente pelo modelo e pelo validador
  */
@@ -35,17 +34,34 @@ typedef string virtualId;
 class Attribute
 {
 public:
-  inline explicit Attribute () {};
-  inline explicit Attribute (string name, string value) {
+  inline explicit Attribute (){};
+  inline explicit Attribute (string name, string value)
+  {
     _name = name;
     _value = value;
   }
 
-  inline string name () const { return _name; }
-  inline string value () const { return _value; }
+  inline string
+  name () const
+  {
+    return _name;
+  }
+  inline string
+  value () const
+  {
+    return _value;
+  }
 
-  inline void setName (string name) { _name = name; }
-  inline void setValue (string value) { _value = value; }
+  inline void
+  setName (string name)
+  {
+    _name = name;
+  }
+  inline void
+  setValue (string value)
+  {
+    _value = value;
+  }
 
 private:
   string _name;

@@ -18,24 +18,20 @@
 
 #include "ValidatorFactory.h"
 
+ValidatorFactory::ValidatorFactory (QWidget *parent) : QObject (parent) {}
 
-ValidatorFactory::ValidatorFactory(QWidget *parent)
-  : QObject(parent)
+ValidatorFactory::~ValidatorFactory () {}
+
+IPlugin *
+ValidatorFactory::createPluginInstance ()
 {
+  return new ValidatorPlugin ();
 }
 
-ValidatorFactory::~ValidatorFactory()
+void
+ValidatorFactory::releasePluginInstance (IPlugin *plugin)
 {
-}
-
-IPlugin * ValidatorFactory::createPluginInstance()
-{
-  return new ValidatorPlugin();
-}
-
-void ValidatorFactory::releasePluginInstance(IPlugin *plugin)
-{
-  ValidatorPlugin *validator = qobject_cast <ValidatorPlugin *> (plugin);
+  ValidatorPlugin *validator = qobject_cast<ValidatorPlugin *> (plugin);
 
   if (validator)
   {
@@ -44,10 +40,10 @@ void ValidatorFactory::releasePluginInstance(IPlugin *plugin)
   }
 }
 
-
-QList <LanguageType> ValidatorFactory::getSupportedLanguages()
+QList<LanguageType>
+ValidatorFactory::getSupportedLanguages ()
 {
-  QList <LanguageType> list;
-  list.append(NCL);
+  QList<LanguageType> list;
+  list.append (NCL);
   return list;
 }

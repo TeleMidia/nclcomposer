@@ -18,52 +18,53 @@
 
 #include "ReferenceStructure.h"
 
-
-ReferenceStructure::ReferenceStructure(string _from, string _fromAtt,
-																			 string _to, string _toAtt,
-																			 string _perspective,
-																			 string _perspectiveAtt)
+ReferenceStructure::ReferenceStructure (string _from, string _fromAtt,
+                                        string _to, string _toAtt,
+                                        string _perspective,
+                                        string _perspectiveAtt)
 {
-	from = _from;
-	fromAtt = _fromAtt;
-	to = _to;
-	toAtt = _toAtt;
-	perspective = _perspective;
-	perspectiveAtt = _perspectiveAtt;
+  from = _from;
+  fromAtt = _fromAtt;
+  to = _to;
+  toAtt = _toAtt;
+  perspective = _perspective;
+  perspectiveAtt = _perspectiveAtt;
 }
 
-
-string ReferenceStructure::getFrom() const
+string
+ReferenceStructure::getFrom () const
 {
-	return from;
+  return from;
 }
 
-string ReferenceStructure::getFromAtt() const
+string
+ReferenceStructure::getFromAtt () const
 {
-	return fromAtt;
+  return fromAtt;
 }
 
-
-string ReferenceStructure::getTo() const
+string
+ReferenceStructure::getTo () const
 {
-	return to;
+  return to;
 }
 
-string ReferenceStructure::getToAtt() const
+string
+ReferenceStructure::getToAtt () const
 {
-	return toAtt;
+  return toAtt;
 }
 
-
-string ReferenceStructure::getPerspective() const
+string
+ReferenceStructure::getPerspective () const
 {
-	return perspective;
+  return perspective;
 }
 
-
-string ReferenceStructure::getPerspectiveAtt() const
+string
+ReferenceStructure::getPerspectiveAtt () const
 {
-	return perspectiveAtt;
+  return perspectiveAtt;
 }
 
-ReferenceStructure::~ReferenceStructure() {}
+ReferenceStructure::~ReferenceStructure () {}

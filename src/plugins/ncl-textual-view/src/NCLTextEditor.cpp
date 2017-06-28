@@ -126,9 +126,9 @@ NCLTextEditor::initParameters ()
   _fillingAttributeIndicator = indicatorDefine (RoundBoxIndicator, 2);
 
   // qCDebug (CPR_PLUGIN_TEXTUAL) << error_marker << " " << error_indicator;
-  //  setWhitespaceVisibility(QsciScintilla::WsVisible);
-  //  setEdgeMode(QsciScintilla::EdgeLine);
-  //  setEdgeColumn(80);
+  // setWhitespaceVisibility(QsciScintilla::WsVisible);
+  // setEdgeMode(QsciScintilla::EdgeLine);
+  // setEdgeColumn(80);
 
   Preferences::getInstance ()->save ();
 }

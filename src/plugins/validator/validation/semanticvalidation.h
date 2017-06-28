@@ -19,12 +19,11 @@
 #ifndef SEMANTICVALIDATION_H
 #define SEMANTICVALIDATION_H
 
-
-#include "../nclmodel/nclmodel.h"
 #include "../message/message.h"
+#include "../nclmodel/nclmodel.h"
+#include <QDebug>
 #include <cstdio>
 #include <limits>
-#include <QDebug>
 #include <sstream>
 
 class SemanticValidation

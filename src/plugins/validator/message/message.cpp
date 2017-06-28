@@ -25,19 +25,19 @@ Message::Message (string language)
   //	ifstream messageFile;
 
   //	messageFile.open(fileName.c_str(), ifstream::in);
-  QFile messageFile (QString::fromStdString(fileName));
-  if (!messageFile.exists())
-    messageFile.setFileName(":/config/en_messages.txt");
+  QFile messageFile (QString::fromStdString (fileName));
+  if (!messageFile.exists ())
+    messageFile.setFileName (":/config/en_messages.txt");
 
-  messageFile.open(QIODevice::ReadOnly | QIODevice::Text);
+  messageFile.open (QIODevice::ReadOnly | QIODevice::Text);
 
   std::string line;
-  while (!messageFile.atEnd())
+  while (!messageFile.atEnd ())
   {
-    line = QString (messageFile.readLine()).toStdString();
+    line = QString (messageFile.readLine ()).toStdString ();
 
     uint i;
-    for (i = 0; i < line.size(); i++)
+    for (i = 0; i < line.size (); i++)
     {
       if (line[i] != ' ')
         break;
@@ -58,44 +58,42 @@ Message::Message (string language)
     while (s >> str)
       message += str + " ";
 
-    if (message.size())
+    if (message.size ())
     {
-      _messages [index] = message;
+      _messages[index] = message;
       //			cout << message << endl;
     }
   }
 
-  messageFile.close();
+  messageFile.close ();
 }
 
-string Message::createMessage( int messageId,
-                               size_t num_args,
-                               const char * first,
-                               ... )
+string
+Message::createMessage (int messageId, size_t num_args, const char *first, ...)
 {
 
-	va_list argList;
-	const char * str = first;
-	vector <string> args;
+  va_list argList;
+  const char *str = first;
+  vector<string> args;
 
-    va_start(argList, first);
+  va_start (argList, first);
 
-    for (size_t i = 0; i < num_args; i++)
-	{
-		args.push_back(str);
-        str = va_arg(argList, const char *);
-	}
-	va_end(argList);
+  for (size_t i = 0; i < num_args; i++)
+  {
+    args.push_back (str);
+    str = va_arg (argList, const char *);
+  }
+  va_end (argList);
 
-	if (_messages.count(messageId))
-	{
-		string message = _messages[messageId];
+  if (_messages.count (messageId))
+  {
+    string message = _messages[messageId];
 
-        for (size_t i = 0; i < args.size(); i++)
-			message.replace (message.find("%s"), 2, args[i]);
+    for (size_t i = 0; i < args.size (); i++)
+      message.replace (message.find ("%s"), 2, args[i]);
 
-		return message;
-	}
+    return message;
+  }
 
-	return "";
+  return "";
 }
