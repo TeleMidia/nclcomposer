@@ -128,7 +128,7 @@ NCLTextualViewPlugin::getWidget ()
 void
 NCLTextualViewPlugin::updateFromModel ()
 {
-  //  qCDebug (CPR_PLUGIN_TEXTUAL) << "NCLTextualViewPlugin::updateFromModel";
+  // qDebug (CPR_PLUGIN_TEXTUAL) << "NCLTextualViewPlugin::updateFromModel";
   incrementalUpdateFromModel ();
 
   updateErrorMessages ();
