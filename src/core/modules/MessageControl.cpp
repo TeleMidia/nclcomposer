@@ -279,10 +279,10 @@ MessageControl::addComment (const QString &content, const QString &parentId)
   Comment *comment = nullptr;
   try
   {
-    comment = new Comment (content, _project->getDomDocument ());
-    _qUndoStack->push (new AddCommentCmd (_project, comment, parentId));
+    comment = new Comment (content, _project->getDomDocument (), _project->getEntityById(parentId));
+//    _qUndoStack->push (new AddCommentCmd (_project, comment, parentId));
 
-    sendCommentAddedMessageToPlugins (senderId, comment);
+    sendCommentMessageToPlugins (Message::COMMENT_ADDED, senderId, comment);
   }
   catch (exception &e)
   {
@@ -481,16 +481,15 @@ MessageControl::sendMessageToPlugins (Message message, const QString &senderId,
 }
 
 void
-MessageControl::sendCommentAddedMessageToPlugins (const QString &senderId,
-                                                  Comment *comment)
+MessageControl::sendCommentMessageToPlugins (Message message,
+                                             const QString &senderId,
+                                             Comment *comment)
 {
   QList<IPlugin *>::iterator it;
   QList<IPlugin *> instances
       = PluginControl::getInstance ()->getPluginInstances (this->_project);
 
-  QString slotName ("onCommentAdded(QString,QString)"); // Normalized Slot
   IPlugin *pluginMsgSrc = nullptr;
-
   for (it = instances.begin (); it != instances.end (); ++it)
   {
     IPlugin *inst = *it;
@@ -503,13 +502,23 @@ MessageControl::sendCommentAddedMessageToPlugins (const QString &senderId,
       continue;
     }
 
-    inst->onCommentAdded (senderId, comment);
+    switch (message)
+    {
+      case Message::COMMENT_ADDED:
+        inst->onCommentAdded (senderId, comment);
+        break;
+    }
   }
 
   // \fixme: Now I call for the plugin that asked the message.
   if (pluginMsgSrc != nullptr)
   {
-    pluginMsgSrc->onCommentAdded (senderId, comment);
+      switch (message)
+      {
+        case Message::COMMENT_ADDED:
+          pluginMsgSrc->onCommentAdded (senderId, comment);
+          break;
+      }
   }
 }
 bool

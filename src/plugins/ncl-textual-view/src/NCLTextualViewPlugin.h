@@ -80,6 +80,13 @@ public slots:
    * \param
    */
   void onEntityAdded (const QString &pluginID, Entity *);
+  /*!
+   * \brief This function is part of the IPlugin API.
+   *
+   * \param pluginID
+   * \param
+   */
+  void onCommentAdded (const QString &pluginID, Comment *);
 
   /*!
    * \brief This function is part of the IPlugin API.

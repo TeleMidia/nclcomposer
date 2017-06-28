@@ -188,6 +188,7 @@ OutlineViewPlugin::elementAddedByUser (QString type, QString parentId,
 
   qWarning () << "OutlineViewPlugin::elementAddedByUser calling addEntity";
   emit addEntity (type, parentId, atts);
+  emit addComment ("This is a comment ", parentId);
 }
 
 bool

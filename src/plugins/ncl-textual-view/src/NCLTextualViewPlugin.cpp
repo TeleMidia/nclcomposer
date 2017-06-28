@@ -105,7 +105,6 @@ NCLTextualViewPlugin::init ()
     _endEntityOffset[listEnd[i]] = listEnd[i + 1].toInt ();
   }
 
-  // qCDebug (CPR_PLUGIN_TEXTUAL) << i << listStart.size() << listEnd.size();
   if (i != listStart.size () || i != listEnd.size ())
   {
     qCDebug (CPR_PLUGIN_TEXTUAL) << "The data saved in the file is corrupted."
@@ -191,8 +190,8 @@ NCLTextualViewPlugin::nonIncrementalUpdateFromModel ()
 
       if (!first) // ignore the project root
       {
-        //      current->appendChild(el);
-        //      onEntityAdded("xxx", entity);
+        // current->appendChild(el);
+        // onEntityAdded("xxx", entity);
       }
       else
       {
@@ -224,7 +223,6 @@ void
 NCLTextualViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
 {
   // Return if this is my call to onEntityAdded
-  // qCDebug (CPR_PLUGIN_TEXTUAL) << " isSyncing= " << isSyncing;
   if (pluginID == getPluginInstanceID ())
   {
     _currentEntity = entity;
@@ -247,7 +245,6 @@ NCLTextualViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
       {
         openStartEndTag ((Entity *)entity->getParent ());
         hasOpennedTag = true;
-        //        printEntitiesOffset();
       }
 
       insertAtOffset = _endEntityOffset[entity->getParentUniqueId ()];
@@ -286,8 +283,63 @@ NCLTextualViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
         << "NCLTextEditor::onEntityAdded Trying to insert a media in a "
            "position greater than the text size. It will be ignored!"
         << insertAtOffset;
+}
 
-  //  printEntitiesOffset();
+void
+NCLTextualViewPlugin::onCommentAdded (const QString &pluginID, Comment *comment)
+{
+  qCWarning (CPR_PLUGIN_TEXTUAL) << "Comment added " << comment->get ();
+
+  QString line = "<!-- " + comment->get () + " -->";
+  int insertAtOffset = PROLOG.size ();
+  bool hasOpennedTag = false;
+
+  // get the line number where the new element must be inserted
+  if (comment->getParentUniqueId () != nullptr
+      && ((Entity *)comment->getParent ())->getType () != "project")
+  {
+    // Test if exists before access from operator[] because if doesn't exist
+    // this operator will create a new (and we don't want this!).
+    if (_endEntityOffset.count (comment->getParentUniqueId ()))
+    {
+      if (isStartEndTag ((Entity *)comment->getParent ()))
+      {
+        openStartEndTag ((Entity *)comment->getParent ());
+        hasOpennedTag = true;
+      }
+
+      insertAtOffset = _endEntityOffset[comment->getParentUniqueId ()];
+    }
+  }
+
+  int startEntitySize = line.size ();
+  if (insertAtOffset >= 0
+      && insertAtOffset <= _nclTextEditor->text ().length ())
+  {
+    _nclTextEditor->insertAtPos (line, insertAtOffset);
+
+    // update all previous offset numbers (when necessary)
+    updateEntitiesOffset (insertAtOffset, line.size ());
+
+    _startEntityOffset[comment->getUniqueId ()] = insertAtOffset;
+    _endEntityOffset[comment->getUniqueId ()]
+        = insertAtOffset + startEntitySize - 2;
+
+    _window->getTextEditor ()->SendScintilla (QsciScintilla::SCI_SETFOCUS,
+                                              true);
+
+    if (hasOpennedTag) // Add a new tab to the new inserted element.
+      fixIdentation (insertAtOffset, true);
+    else // keep the previous tabulation
+      fixIdentation (insertAtOffset, false);
+
+//    _currentEntity = entity;
+  }
+  else
+    qCWarning (CPR_PLUGIN_TEXTUAL)
+        << "NCLTextEditor::onEntityAdded Trying to insert a media in a "
+           "position greater than the text size. It will be ignored!"
+        << insertAtOffset;
 }
 
 void
@@ -351,7 +403,6 @@ NCLTextualViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
 
       previous_length += 1;
 
-      // qCDebug (CPR_PLUGIN_TEXTUAL) << previous_length;
       // store the current identation (this must keep equal even with the
       // modifications)
       /* int lineident = window->getTextEditor()

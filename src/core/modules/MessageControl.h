@@ -173,8 +173,8 @@ private:
    * \param pluginInstanceId
    * \param entity
    */
-  void sendCommentAddedMessageToPlugins (const QString &senderId,
-                                         Comment *entity);
+  void sendCommentMessageToPlugins (Message message, const QString &senderId,
+                                    Comment *comment);
   /*!
    * \brief TODO
    */
