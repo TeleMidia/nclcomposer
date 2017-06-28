@@ -20,7 +20,7 @@
 
 CPR_CORE_BEGIN_NAMESPACE
 
-EditCommand::EditCommand (Project *project, Entity *entity,
+EditEntityCmd::EditEntityCmd (Project *project, Entity *entity,
                           QMap<QString, QString> newAttrs,
                           QUndoCommand *parent)
     : QUndoCommand (parent)
@@ -35,18 +35,18 @@ EditCommand::EditCommand (Project *project, Entity *entity,
 }
 
 void
-EditCommand::undo ()
+EditEntityCmd::undo ()
 {
   _msgControl->anonymousChangeEntity (this->_uniqueId, this->_attrs);
 }
 
 void
-EditCommand::redo ()
+EditEntityCmd::redo ()
 {
   _msgControl->anonymousChangeEntity (this->_uniqueId, this->_newAttrs);
 }
 
-RemoveCommand::RemoveCommand (Project *project, Entity *entity,
+RemoveEntityCmd::RemoveEntityCmd (Project *project, Entity *entity,
                               QUndoCommand *parent)
 {
   Q_UNUSED (parent)
@@ -61,12 +61,12 @@ RemoveCommand::RemoveCommand (Project *project, Entity *entity,
 }
 
 void
-RemoveCommand::undo ()
+RemoveEntityCmd::undo ()
 {
   _msgControl->anonymousAddEntity (this->_entity, _parentUniqueId);
 
   // I have to do this because the core is responsible to Remove the entity.
-  this->_entity = _entity->cloneEntity ();
+  this->_entity = _entity->clone ();
 
   _first = false;
 
@@ -74,10 +74,10 @@ RemoveCommand::undo ()
 }
 
 void
-RemoveCommand::redo ()
+RemoveEntityCmd::redo ()
 {
   // I have to do this because the core is responsible to Remove the entity.
-  Entity *entityTmp = this->_entity->cloneEntity ();
+  Entity *entityTmp = this->_entity->clone ();
   if (_first)
     _project->removeEntity (this->_entity, false);
   else
@@ -86,7 +86,7 @@ RemoveCommand::redo ()
   this->_entity = entityTmp;
 }
 
-AddCommand::AddCommand (Project *project, Entity *entity,
+AddEntityCmd::AddEntityCmd (Project *project, Entity *entity,
                         QString parentUniqueId, QUndoCommand *parent)
 {
   Q_UNUSED (parent)
@@ -101,9 +101,9 @@ AddCommand::AddCommand (Project *project, Entity *entity,
 }
 
 void
-AddCommand::undo ()
+AddEntityCmd::undo ()
 {
-  this->_entity = this->_entity->cloneEntity ();
+  this->_entity = this->_entity->clone ();
 
   _msgControl->anonymousRemoveEntity (this->_entity->getUniqueId ());
 
@@ -111,10 +111,10 @@ AddCommand::undo ()
 }
 
 void
-AddCommand::redo ()
+AddEntityCmd::redo ()
 {
   // I have to do this because the core is responsible to Remove the entity.
-  Entity *entityTmp = this->_entity->cloneEntity ();
+  Entity *entityTmp = this->_entity->clone ();
   // TODO - calll validator to check
   if (_first)
     _project->addEntity (this->_entity, _parentUniqueId);
@@ -122,6 +122,42 @@ AddCommand::redo ()
     _msgControl->anonymousAddEntity (this->_entity, _parentUniqueId);
 
   this->_entity = entityTmp;
+}
+
+AddCommentCmd::AddCommentCmd (Project *project, Comment *comment,
+                              QString parentUniqueId, QUndoCommand *parent)
+{
+  Q_UNUSED (parent)
+
+  this->_parentUniqueId = parentUniqueId;
+  this->_comment = comment;
+  this->_project = project;
+
+  _first = true;
+
+  _msgControl = PluginControl::getInstance ()->getMessageControl (project);
+}
+
+void
+AddCommentCmd::undo ()
+{
+//  this->_entity = this->_entity->cloneEntity ();
+//  _msgControl->anonymousRemoveEntity (this->_entity->getUniqueId ());
+//  _first = false;
+}
+
+void
+AddCommentCmd::redo ()
+{
+//  // I have to do this because the core is responsible to Remove the entity.
+//  Entity *entityTmp = this->_entity->cloneEntity ();
+//  // TODO - calll validator to check
+//  if (_first)
+//    _project->addEntity (this->_comment, _parentUniqueId);
+//  else
+//    _msgControl->anonymousAddEntity (this->_comment, _parentUniqueId);
+
+//  this->_entity = entityTmp;
 }
 
 CPR_CORE_END_NAMESPACE

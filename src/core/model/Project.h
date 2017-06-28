@@ -34,8 +34,8 @@ class MessageControl;
 class ProjectControl;
 class ProjectReader;
 
-class EditCommand;
-class AddCommand;
+class EditEntityCmd;
+class AddEntityCmd;
 class DeleteCommand;
 
 /*!
@@ -52,9 +52,9 @@ class COMPOSERCORESHARED_EXPORT Project : public Entity
   friend class ProjectControl;
   friend class ProjectReader;
 
-  friend class EditCommand;
-  friend class AddCommand;
-  friend class RemoveCommand;
+  friend class EditEntityCmd;
+  friend class AddEntityCmd;
+  friend class RemoveEntityCmd;
 
 public:
   /*!

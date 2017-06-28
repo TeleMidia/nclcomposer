@@ -131,21 +131,17 @@ QList<Entity *>
 Node::getEntityChildren () const
 {
   QList<Entity *> children;
-  for (auto i = _children.begin(); i != _children.end(); ++i)
+  for (auto i = _children.begin (); i != _children.end (); ++i)
   {
-    Entity *ent = dynamic_cast <Entity *>(*i);
+    Entity *ent = dynamic_cast<Entity *> (*i);
     if (ent)
-      children.append(ent);
+      children.append (ent);
   }
   return children;
 }
 
 // Entity
-Entity::Entity (QDomDocument &doc, Entity *parent) :
-  Node (doc, parent)
-{
-
-}
+Entity::Entity (QDomDocument &doc, Entity *parent) : Node (doc, parent) {}
 
 Entity::Entity (const QMap<QString, QString> &atts, QDomDocument &doc,
                 Entity *parent)
@@ -175,19 +171,16 @@ Entity::Entity (const QString &uniqueId, const QString &type,
   this->setType (type);
 }
 
-Entity::~Entity ()
-{
-
-}
+Entity::~Entity () {}
 
 void
-Entity::setAttribute (const QString &name, const QString &value)
+Entity::setAttr (const QString &name, const QString &value)
 {
   _domNode.toElement ().setAttribute (name, value);
 }
 
 void
-Entity::setAtrributes (const QMap<QString, QString> &newatts)
+Entity::setAtrrs (const QMap<QString, QString> &newatts)
 {
   foreach (const QString &att, newatts.keys ())
     _domNode.toElement ().setAttribute (att, newatts[att]);
@@ -232,8 +225,8 @@ Entity::getType () const
 }
 
 //! Prints the Entity and its children
-//void
-//Entity::print ()
+// void
+// Entity::print ()
 //{
 //  for (int i = 0; i < _children.size (); i++)
 //  {
@@ -282,10 +275,10 @@ Entity::toString (int ntab, bool writeuid)
 }
 
 Entity *
-Entity::cloneEntity ()
+Entity::clone ()
 {
   return new Entity (getUniqueId (), getType (), getAttributes (), this->_doc,
-                     (Entity*) this->_parent);
+                     (Entity *)this->_parent);
 }
 
 CPR_CORE_END_NAMESPACE

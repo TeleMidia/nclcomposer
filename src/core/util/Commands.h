@@ -25,11 +25,11 @@ CPR_CORE_BEGIN_NAMESPACE
  * \ingroup core
  * \brief An internal command of Composer Core to edit an Entity.
  */
-class EditCommand : public QUndoCommand
+class EditEntityCmd : public QUndoCommand
 {
 public:
-  EditCommand (Project *_project, Entity *entity,
-               QMap<QString, QString> _newAttrs, QUndoCommand *parent = 0);
+  EditEntityCmd (Project *project, Entity *entity,
+                 QMap<QString, QString> newAttrs, QUndoCommand *parent = 0);
 
   void undo ();
   void redo ();
@@ -44,10 +44,10 @@ private:
 /*!
  * \brief An internal command of Composer Core to remove an Entity.
  */
-class RemoveCommand : public QUndoCommand
+class RemoveEntityCmd : public QUndoCommand
 {
 public:
-  RemoveCommand (Project *project, Entity *entity, QUndoCommand *parent = 0);
+  RemoveEntityCmd (Project *project, Entity *entity, QUndoCommand *parent = 0);
 
   void undo ();
   void redo ();
@@ -63,11 +63,11 @@ private:
 /*!
  * \brief An internal command of Composer Coreto add an Entity.
  */
-class AddCommand : public QUndoCommand
+class AddEntityCmd : public QUndoCommand
 {
 public:
-  AddCommand (Project *_project, Entity *_entity, QString _parentUniqueId,
-              QUndoCommand *parent = 0);
+  AddEntityCmd (Project *_project, Entity *_entity, QString _parentUniqueId,
+                QUndoCommand *parent = 0);
 
   void undo ();
   void redo ();
@@ -75,6 +75,26 @@ public:
 private:
   Project *_project;
   Entity *_entity;
+  QString _parentUniqueId;
+  MessageControl *_msgControl;
+  bool _first;
+};
+
+/*!
+ * \brief An internal command of Composer Coreto add an Entity.
+ */
+class AddCommentCmd : public QUndoCommand
+{
+public:
+  AddCommentCmd (Project *_project, Comment *comment, QString parentUniqueId,
+                 QUndoCommand *parent = 0);
+
+  void undo ();
+  void redo ();
+
+private:
+  Project *_project;
+  Comment *_comment;
   QString _parentUniqueId;
   MessageControl *_msgControl;
   bool _first;

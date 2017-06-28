@@ -115,7 +115,7 @@ ProjectControl::launchProject (const QString &location)
 
   if (project != nullptr)
   {
-    project->setAtrributes (atts);
+    project->setAtrrs (atts);
     // The project was readed without a problem.
     project->setLocation (location);
     project->setProjectType (type);
@@ -173,7 +173,7 @@ ProjectControl::importFromDocument (const QString &docLocation,
 
   ProjectReader pr;
   Project *project = pr.readFile (projLocation);
-  project->setAtrributes (atts);
+  project->setAtrrs (atts);
 
   if (project != nullptr)
   {
@@ -255,7 +255,7 @@ ProjectControl::moveProject (const QString &location, const QString &dest,
     QString documentId = dest;
     documentId = documentId.remove (0, location.lastIndexOf ("/") + 1);
     atts["id"] = documentId;
-    project->setAtrributes (atts);
+    project->setAtrrs (atts);
   }
   else
     qCWarning (CPR_CORE) << "Could not copy the current project from  "

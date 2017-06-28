@@ -32,6 +32,13 @@ using namespace cpr::core;
 
 CPR_CORE_BEGIN_NAMESPACE
 
+enum class Message
+{
+  ENTITY_ADDED,
+  ENTITY_REMOVED,
+  ENTITY_CHANGED,
+  COMMENT_ADDED
+};
 /*!
  * \ingroup core
  * \brief Manages the messages sent from plugins to NCL Composer Core and
@@ -55,51 +62,40 @@ public:
 
 public slots:
   /*!
-     \brief
-
-     \param type
-     \param parentEntityId
-     \param atts
-     \param force
-    */
-  void onAddEntity (const QString &type, const QString &parentEntityId,
-                    const QMap<QString, QString> &atts);
+   * \brief addEntity
+   * \param type
+   * \param parentEntityId
+   * \param atts
+   */
+  void addEntity (const QString &type, const QString &parentEntityId,
+                  const QMap<QString, QString> &atts);
   /*!
-     \brief
-
-     \param type
-     \param parentEntityId
-     \param atts
-     \param force
-    */
-  void onAddContent (const QString &entity_content, const QString &parentId,
-                     Data::Format format);
+   * \brief addContent
+   * \param entity_content
+   * \param parentId
+   * \param format
+   */
+  void addContent (const QString &entity_content, const QString &parentId,
+                   Data::Format format);
   /*!
-     \brief
-
-     \param type
-     \param parentEntityId
-     \param atts
-     \param force
-    */
-  void onAddComment (const QString &comment, const QString &parentId);
+   * \brief addComment
+   * \param comment
+   * \param parentId
+   */
+  void addComment (const QString &comment, const QString &parentId);
 
   /*!
-     \brief
-
-     \param entity
-     \param atts
-     \param force
-    */
-  void onEditEntity (Entity *entity, const QMap<QString, QString> &atts);
+   * \brief editEntity
+   * \param entity
+   * \param atts
+   */
+  void editEntity (Entity *entity, const QMap<QString, QString> &atts);
 
   /*!
-     \brief
-
-     \param
-     \param force
-    */
-  void onRemoveEntity (Entity *entity);
+   * \brief removeEntity
+   * \param entity
+   */
+  void removeEntity (Entity *entity);
 
   /*!
    * \brief TODO
@@ -136,21 +132,22 @@ public slots:
   /*!
    * \brief This message is here, mainly for test purposes.
    *
-   * It allows anyone send a removeEntityMessage, even if it is not a plugin.
+   * It allows anyone to send a removeEntityMessage, even if it is not a
+   * plugin.
    */
   void anonymousRemoveEntity (const QString &entityUniqueId,
                               bool notifyPlugins = true);
   /*!
    * \brief This message is here, mainly for test purposes.
    *
-   * It allows anyone send a addEntityMessage, even if it is not a plugin.
+   * It allows anyone to send a addEntityMessage, even if it is not a plugin.
    */
   void anonymousUpdateFromModel ();
 
   /*!
    * \brief This message is here, mainly for test purposes.
    *
-   * It allows anyone send an addEntityMessage, even if it is not a plugin.
+   * It allows anyone to send an addEntityMessage, even if it is not a plugin.
    */
   void anonymousChangeEntity (const QString &entityId,
                               const QMap<QString, QString> &atts,
@@ -159,30 +156,25 @@ public slots:
   void undo ();
   void redo ();
 
-signals:
-  void entityAdded (const QString &, Entity *);
-
 private:
   Project *_project; /*!< TODO */
   QMap<QString, QStringList> _listenEntities;
   QUndoStack *_qUndoStack;
 
   /*!
-   * \brief TODO
+   * \brief sendEntityAddedMessageToPlugins
+   * \param pluginInstanceId
+   * \param entity
    */
-  void sendEntityAddedMessageToPlugins (const QString &pluginInstanceId,
-                                        Entity *entity);
+  void sendMessageToPlugins (Message message, const QString &senderId,
+                             Entity *entity);
   /*!
-   * \brief TODO
+   * \brief sendCommentAddedMessageToPlugins
+   * \param pluginInstanceId
+   * \param entity
    */
-  void sendEntityChangedMessageToPlugins (const QString &pluginInstanceId,
-                                          Entity *entity);
-  /*!
-   * \brief TODO
-   */
-  void sendEntityRemovedMessageToPlugins (const QString &pluginInstanceId,
-                                          Entity *entity);
-
+  void sendCommentAddedMessageToPlugins (const QString &senderId,
+                                         Comment *entity);
   /*!
    * \brief TODO
    */

@@ -33,10 +33,9 @@ class ProjectReader;
 
 class Project;
 class Entity;
-class EditCommand;
-class AddCommand;
-class RemoveCommand;
-
+class EditEntityCmd;
+class AddEntityCmd;
+class RemoveEntityCmd;
 
 /*!
  * \ingroup core
@@ -52,15 +51,28 @@ class COMPOSERCORESHARED_EXPORT Node : public QObject
   friend class MessageControl;
   friend class ProjectReader;
 
-  friend class EditCommand;
-  friend class AddCommand;
-  friend class RemoveCommand;
+  friend class EditEntityCmd;
+  friend class AddEntityCmd;
+  friend class RemoveEntityCmd;
 
 public:
+  /*!
+   * \brief getUniqueId
+   * \return the unique id of the node.
+   */
   QString getUniqueId () const;
 
+  /*!
+   * \brief getParent
+   * \return the node parent of the node.  Returns nullptr if the node has no
+   *  parent.
+   */
   Node *getParent () const;
 
+  /*!
+   * \brief getParentUniqueId
+   * \return the parent unique id.
+   */
   QString getParentUniqueId () const;
 
   /*!
@@ -77,6 +89,10 @@ public:
    */
   QList<Node *> getChildren () const;
 
+  /*!
+   * \brief getEntityChildren
+   * \return only the list of entity children (ignoring the comments).
+   */
   QList<Entity *> getEntityChildren () const;
 
   /*!
@@ -164,9 +180,9 @@ class COMPOSERCORESHARED_EXPORT Entity : public Node
   friend class MessageControl;
   friend class ProjectReader;
 
-  friend class EditCommand;
-  friend class AddCommand;
-  friend class RemoveCommand;
+  friend class EditEntityCmd;
+  friend class AddEntityCmd;
+  friend class RemoveEntityCmd;
 
 public:
   /*!
@@ -195,7 +211,6 @@ public:
 
   QString getType () const;
 
-
   /*!
    * \brief Converts the current Entity to an XML String.
    *
@@ -208,7 +223,7 @@ public:
    *
    * All the content of the entity will be cloned, including its uniqueId.
    */
-  Entity *cloneEntity ();
+  Entity *clone ();
 
 protected:
   /*!
@@ -250,7 +265,7 @@ protected:
    * \param name - The name of the attribute to be set
    * \param value - The value this attribute is going to be set
    */
-  void setAttribute (const QString &name, const QString &value);
+  void setAttr (const QString &name, const QString &value);
 
   /*!
    * \brief Set the attributes of the current entity to the value passed as
@@ -258,7 +273,7 @@ protected:
    *
    * \param newAtts the new value of entity's attributes.
    */
-  void setAtrributes (const QMap<QString, QString> &newatts);
+  void setAtrrs (const QMap<QString, QString> &newatts);
 
   /*!
    * \brief Set the entity's type to the value passed as parameter.
@@ -270,7 +285,56 @@ protected:
   /*!
    * \brief
    */
-//  void print ();
+  //  void print ();
+};
+
+/*!
+ * \ingroup core
+ * \brief TODO.
+ */
+class COMPOSERCORESHARED_EXPORT Comment : public Node
+{
+  Q_OBJECT
+
+  friend class Project;
+  friend class MessageControl;
+  friend class ProjectReader;
+
+  friend class EditEntityCmd;
+  friend class AddEntityCmd;
+  friend class RemoveEntityCmd;
+
+public:
+  QString
+  get ()
+  {
+    return this->_content;
+  }
+
+  virtual QString
+  toString (int ntabs, bool writeuid) override
+  {
+    Q_UNUSED (ntabs);
+    Q_UNUSED (writeuid);
+    return QString ("<!--\n") + this->_content + QString ("\n -->");
+  }
+
+protected:
+  explicit Comment (const QString &content, QDomDocument &doc,
+                    Node *parent = 0)
+      : Node (doc, parent)
+  {
+    this->_content = content;
+  }
+
+  void
+  set (const QString &content)
+  {
+    this->_content = content;
+  }
+
+private:
+  QString _content;
 };
 
 CPR_CORE_END_NAMESPACE

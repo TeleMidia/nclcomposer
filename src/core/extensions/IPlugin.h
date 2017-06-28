@@ -176,6 +176,17 @@ public slots:
   }
 
   /*!
+   * \brief This is called by the core when a new Comment is added.
+   *
+   * This call is invoked by the core when a new Comment is added in the model.
+   */
+  virtual void onCommentAdded (const QString &pluginID, Comment *entity) /*= 0*/
+  {
+    Q_UNUSED (pluginID);
+    Q_UNUSED (entity);
+  }
+
+  /*!
    * \brief Called by the core when an Entity is changed.
    *
    * \param pluginID the plugin instance id that first called the changes to

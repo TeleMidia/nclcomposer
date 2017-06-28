@@ -227,31 +227,31 @@ PluginControl::launchNewPlugin (IPlugin *plugin, MessageControl *mControl)
   connect (plugin,
            &IPlugin::addEntity,
            mControl,
-           &MessageControl::onAddEntity,
+           &MessageControl::addEntity,
            Qt::DirectConnection);
 
   connect (plugin,
            &IPlugin::addContent,
            mControl,
-           &MessageControl::onAddContent,
+           &MessageControl::addContent,
            Qt::DirectConnection);
 
   connect (plugin,
            &IPlugin::addComment,
            mControl,
-           &MessageControl::onAddComment,
+           &MessageControl::addComment,
            Qt::DirectConnection);
 
   connect (plugin,
            &IPlugin::setAttributes,
            mControl,
-           &MessageControl::onEditEntity,
+           &MessageControl::editEntity,
            Qt::DirectConnection);
 
   connect (plugin,
            &IPlugin::removeEntity,
            mControl,
-           &MessageControl::onRemoveEntity,
+           &MessageControl::removeEntity,
            Qt::DirectConnection);
 
   connect (plugin,
