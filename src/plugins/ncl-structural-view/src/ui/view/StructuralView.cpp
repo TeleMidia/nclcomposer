@@ -7,6 +7,7 @@
 #include <QUuid>
 #include <QFileDialog>
 #include <QMimeData>
+#include <QClipboard>
 
 #include "StructuralUtil.h"
 
@@ -2319,58 +2320,72 @@ void StructuralView::performDelete()
 
 void StructuralView::performSnapshot()
 {
-  QString location =
-      QFileDialog::getSaveFileName(NULL,
-                                   tr("Save snapshot..."),
-                                   QDir::homePath(),
-                                   tr("Images (*.png)"));
+  qreal top = _scene->height();
+  qreal left = _scene->width();
+  qreal bottom = 0.0;
+  qreal right = 0.0;
 
-  if (!location.isEmpty())
+  foreach (StructuralEntity* entity, _entities.values())
   {
-    qreal top = _scene->height();
-    qreal left = _scene->width();
-    qreal bottom = 0.0;
-    qreal right = 0.0;
-
-    foreach (StructuralEntity* entity, _entities.values())
+    if (entity->getStructuralParent() == NULL)
     {
-      if (entity->getStructuralParent() == NULL)
-      {
-        if (entity->getTop() < top)
-          top = entity->getTop();
+      if (entity->getTop() < top)
+        top = entity->getTop();
 
-        if (entity->getLeft() < left)
-          left = entity->getLeft();
+      if (entity->getLeft() < left)
+        left = entity->getLeft();
 
-        if (entity->getLeft() + entity->getWidth() > right)
-          right = entity->getLeft() + entity->getWidth();
+      if (entity->getLeft() + entity->getWidth() > right)
+        right = entity->getLeft() + entity->getWidth();
 
-        if (entity->getTop() + entity->getHeight() > bottom)
-          bottom = entity->getTop() + entity->getHeight();
-      }
+      if (entity->getTop() + entity->getHeight() > bottom)
+        bottom = entity->getTop() + entity->getHeight();
     }
+  }
 
-    StructuralEntity* selected = NULL;
+  StructuralEntity* selected = NULL;
 
-    if (_entities.contains(_selected))
-      selected = _entities.value(_selected);
+  if (_entities.contains(_selected))
+    selected = _entities.value(_selected);
 
-    if (selected != NULL)
-      selected->setSelected(false);
+  if (selected != NULL)
+    selected->setSelected(false);
 
-    QImage image = QImage(right-left+50, bottom-top+50, QImage::Format_ARGB32_Premultiplied);
+  QImage image = QImage(right-left+50, bottom-top+50, QImage::Format_ARGB32_Premultiplied);
+  image.fill(Qt::white);
 
-    QPainter painter(&image);
-    _scene->render(&painter, QRect(), QRect(left-25, top-25, right-left+50, bottom-top+50));
-    painter.end();
+  QPainter painter(&image);
+  _scene->render(&painter,QRect(),QRect(left-25, top-25, right-left+50, bottom-top+50));
+  painter.end();
 
-    if (!location.endsWith(".png"))
-      location += ".png";
+  QMessageBox::StandardButton reply
+      = QMessageBox::question(this,
+                              "Copy to clipboard?",
+                              "Would you like to copy to clipboard?",
+                               QMessageBox::Cancel|QMessageBox::No|QMessageBox::Yes);
 
-    image.save(location, "png");
+  if (reply == QMessageBox::Yes)
+  {
+    QApplication::clipboard()->setImage(image, QClipboard::Clipboard);
+  }
+  else if (reply == QMessageBox::No)
+  {
+    QString location =
+        QFileDialog::getSaveFileName(NULL,
+                                     tr("Save snapshot..."),
+                                     QDir::homePath(),
+                                     tr("Images (*.png)"));
 
-    if (selected != NULL)
-      selected->setSelected(true);
+    if (!location.isEmpty())
+    {
+      if (!location.endsWith(".png"))
+        location += ".png";
+
+      image.save(location, "png");
+
+      if (selected != NULL)
+        selected->setSelected(true);
+    }
   }
 }
 
