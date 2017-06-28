@@ -19,13 +19,13 @@
 #ifndef MESSAGE_H_
 #define MESSAGE_H_
 
-#include <string.h>
-#include <sstream>
-#include <iostream>
-#include <QFile>
 #include <QDir>
+#include <QFile>
+#include <iostream>
 #include <map>
+#include <sstream>
 #include <stdarg.h>
+#include <string.h>
 #include <vector>
 
 using namespace std;
@@ -33,13 +33,12 @@ using namespace std;
 class Message
 {
 public:
-  Message (string language="en");
+  Message (string language = "en");
   string createMessage (int, size_t, const char *, ...);
 
 private:
   string _language;
-  map <int, string> _messages;
+  map<int, string> _messages;
 };
-
 
 #endif /* MESSAGE_H_ */

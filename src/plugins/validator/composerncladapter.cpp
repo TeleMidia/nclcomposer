@@ -18,95 +18,96 @@
 
 #include "composerncladapter.h"
 
-ComposerNCLAdapter::ComposerNCLAdapter()
+ComposerNCLAdapter::ComposerNCLAdapter ()
 {
   GlobalSettings settings;
-  settings.beginGroup("languages");
-  language = settings.value("currentLanguage",QString("en")).toString();
-  settings.endGroup();
+  settings.beginGroup ("languages");
+  language = settings.value ("currentLanguage", QString ("en")).toString ();
+  settings.endGroup ();
 }
 
-void ComposerNCLAdapter::addElement(Entity *entity)
+void
+ComposerNCLAdapter::addElement (Entity *entity)
 {
   Q_ASSERT (entity != nullptr);
 
-  std::vector <Attribute> attributes = createVectorAttribute(entity);
-  Entity *parent = static_cast<Entity *> (entity->getParent());
+  std::vector<Attribute> attributes = createVectorAttribute (entity);
+  Entity *parent = static_cast<Entity *> (entity->getParent ());
 
-  if (parent
-      && !idToVirtualId.count(parent->getUniqueId())
-      && parent->getType() != "document")
+  if (parent && !idToVirtualId.count (parent->getUniqueId ())
+      && parent->getType () != "document")
   {
-    addElement(parent);
+    addElement (parent);
   }
 
-  virtualId virtualId =
-      nclModel.addElement(entity->getType().toStdString(), attributes);
+  virtualId virtualId
+      = nclModel.addElement (entity->getType ().toStdString (), attributes);
 
   if (virtualId != "")
-    idToVirtualId.insert(entity->getUniqueId(), virtualId);
+    idToVirtualId.insert (entity->getUniqueId (), virtualId);
 
-  if (parent
-      && parent->getType() != "document")
+  if (parent && parent->getType () != "document")
   {
-    nclModel.addChild(idToVirtualId[entity->getParentUniqueId()], virtualId);
+    nclModel.addChild (idToVirtualId[entity->getParentUniqueId ()], virtualId);
   }
 
-  ModelElement *el = nclModel.element(virtualId);
+  ModelElement *el = nclModel.element (virtualId);
   if (el)
   {
-    el->setData(entity);
+    el->setData (entity);
   }
 }
 
-void ComposerNCLAdapter::changeElement(Entity * entity)
-{  
-  virtualId virtualId = idToVirtualId[entity->getUniqueId()];
+void
+ComposerNCLAdapter::changeElement (Entity *entity)
+{
+  virtualId virtualId = idToVirtualId[entity->getUniqueId ()];
 
   if (virtualId == "")
     return;
 
-  std::vector <Attribute> attributes =
-      createVectorAttribute(entity);
+  std::vector<Attribute> attributes = createVectorAttribute (entity);
 
-  nclModel.editElement(virtualId, attributes);
+  nclModel.editElement (virtualId, attributes);
 }
 
-void ComposerNCLAdapter::removeElement(QString entityID)
-{  
-  virtualId virtualId = idToVirtualId [entityID];
+void
+ComposerNCLAdapter::removeElement (QString entityID)
+{
+  virtualId virtualId = idToVirtualId[entityID];
 
   if (virtualId != "")
   {
-    nclModel.removeElement(virtualId);
+    nclModel.removeElement (virtualId);
   }
 }
 
-std::vector <std::pair<void *, std::string> > ComposerNCLAdapter::validate()
+std::vector<std::pair<void *, std::string> >
+ComposerNCLAdapter::validate ()
 {
-  std::vector<std::pair<void *, std::string> > msgs =
-      Validator::validate(nclModel, language.toStdString());
+  std::vector<std::pair<void *, std::string> > msgs
+      = Validator::validate (nclModel, language.toStdString ());
 
-  nclModel.clearMarkedElements();
+  nclModel.clearMarkedElements ();
 
   return msgs;
 }
 
-std::vector <Attribute>
-ComposerNCLAdapter::createVectorAttribute(Entity * entity)
+std::vector<Attribute>
+ComposerNCLAdapter::createVectorAttribute (Entity *entity)
 {
-  QMap <QString, QString> attrs = entity->getAttributes();
+  QMap<QString, QString> attrs = entity->getAttributes ();
 
-  std::vector <Attribute> attributes;
+  std::vector<Attribute> attributes;
 
-  foreach (const QString &key, attrs.keys())
+  foreach (const QString &key, attrs.keys ())
   {
     QString name = key;
     QString value = attrs[key];
 
-    Attribute attr (name.toStdString(), value.toStdString());
+    Attribute attr (name.toStdString (), value.toStdString ());
 
-    attributes.push_back(attr);
+    attributes.push_back (attr);
   }
 
   return attributes;

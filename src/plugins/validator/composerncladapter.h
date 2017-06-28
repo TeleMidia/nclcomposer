@@ -20,45 +20,48 @@
 #define COMPOSERNCLADAPTER_H
 
 #include "message/message.h"
+#include "message/message.h"
 #include "nclmodel/nclmodel.h"
 #include "validation/Validator.h"
-#include "message/message.h"
-#include <model/Entity.h>
 #include <QDebug>
 #include <QMap>
-#include <vector>
+#include <model/Entity.h>
 #include <string>
+#include <vector>
 
 using namespace cpr::core;
 
 class ComposerNCLAdapter
 {
 public:
-  ComposerNCLAdapter();
+  ComposerNCLAdapter ();
 
   void addElement (Entity *);
   void removeElement (QString);
   void changeElement (Entity *);
 
-  inline Model &getModel ()
+  inline Model &
+  getModel ()
   {
     return nclModel;
   }
-  inline void clearModel ()
+  inline void
+  clearModel ()
   {
-    nclModel.clear();
+    nclModel.clear ();
   }
-  inline void setRelativePath (QString path)
+  inline void
+  setRelativePath (QString path)
   {
-    nclModel.setRelativePath(path.toStdString());
+    nclModel.setRelativePath (path.toStdString ());
   }
 
-  std::vector <std::pair<void *, std::string> > validate ();
+  std::vector<std::pair<void *, std::string> > validate ();
 
 private:
   std::vector<Attribute> createVectorAttribute (Entity *);
   Model nclModel;
-  QMap <QString, virtualId> idToVirtualId;
+  QMap<QString, virtualId> idToVirtualId;
   QString language;
 };
 

@@ -19,30 +19,28 @@
 #ifndef VALIDATORPLUGIN_H
 #define VALIDATORPLUGIN_H
 
-#include <extensions/IPlugin.h>
-#include <QWidget>
-#include <QVector>
-#include <QHBoxLayout>
-#include "validatortreewidgetitem.h"
+#include "composerncladapter.h"
 #include "nclmodel/nclmodel.h"
 #include "validation/Validator.h"
-#include "composerncladapter.h"
+#include "validatortreewidgetitem.h"
+#include <QHBoxLayout>
+#include <QVector>
+#include <QWidget>
+#include <extensions/IPlugin.h>
 
 #include <QSize>
 
 using namespace cpr::core;
 
-class ValidatorTreeWidget :
-    public QTreeWidget
+class ValidatorTreeWidget : public QTreeWidget
 {
 public:
-  ValidatorTreeWidget(QWidget *parent=0) : QTreeWidget(parent)
-  {
-  }
+  ValidatorTreeWidget (QWidget *parent = 0) : QTreeWidget (parent) {}
 
-  QSize sizeHint () const
+  QSize
+  sizeHint () const
   {
-    return QSize(900, 200);
+    return QSize (900, 200);
   }
 };
 
@@ -50,41 +48,45 @@ class ValidatorPlugin : public IPlugin
 {
   Q_OBJECT
 public:
-  ValidatorPlugin();
+  ValidatorPlugin ();
 
-  QWidget* getWidget() { return table; }
-  bool saveSubsession() {return true;}
-  void init();
+  QWidget *
+  getWidget ()
+  {
+    return table;
+  }
+  bool
+  saveSubsession ()
+  {
+    return true;
+  }
+  void init ();
 
 public slots:
-  void onEntityAdded(const QString &pluginID, Entity *);
-  void onEntityChanged(const QString &pluginID, Entity *);
-  void onEntityRemoved(const QString &pluginID, const QString &entityID);
+  void onEntityAdded (const QString &pluginID, Entity *);
+  void onEntityChanged (const QString &pluginID, Entity *);
+  void onEntityRemoved (const QString &pluginID, const QString &entityID);
 
-  void errorMessage(const QString &error);
+  void errorMessage (const QString &error);
 
   void itemSelected (QTreeWidgetItem *);
   void itemDoubleClickedSelected (QTreeWidgetItem *);
 
-  //Composer Messages
+  // Composer Messages
   void clearValidationMessages (QString, void *);
   void validationError (QString, void *);
   void validationErrorSelected (QString, void *);
   void askAllValidationMessages (QString, void *);
 
-
 private:
-  void updateModel(Entity *);
+  void updateModel (Entity *);
   void updateMessages (std::vector<pair<void *, string> >);
 
+  QVector<pair<QString, QString> > pairsMessages;
 
-  QVector <pair<QString, QString> > pairsMessages;
-
-  QWidget* window;
+  QWidget *window;
   ValidatorTreeWidget *table;
   ComposerNCLAdapter adapter;
-
 };
-
 
 #endif // VALIDATORPLUGIN_H

@@ -19,31 +19,36 @@
 #ifndef PLUGINVALIDATOR_H
 #define PLUGINVALIDATOR_H
 
-#include <QWidget>
-#include <validation/Validator.h>
-#include <extensions/IPluginFactory.h>
 #include "ValidatorPlugin.h"
+#include <QWidget>
+#include <extensions/IPluginFactory.h>
+#include <validation/Validator.h>
 
 using namespace cpr::core;
 
-class ValidatorFactory :
-        public QObject, public IPluginFactory
+class ValidatorFactory : public QObject, public IPluginFactory
 {
   Q_OBJECT
-  Q_INTERFACES(IPluginFactory)
-  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "validator-plugin.json")
+  Q_INTERFACES (IPluginFactory)
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "validator-plugin.json")
 
 public:
-  ValidatorFactory(QWidget *parent = 0);
-  ~ValidatorFactory();
+  ValidatorFactory (QWidget *parent = 0);
+  ~ValidatorFactory ();
 
-  IPlugin* createPluginInstance();
-  void releasePluginInstance(IPlugin *);
-  QList<LanguageType> getSupportedLanguages();
-  QString id() const {return "br.ufma.deinf.laws.validator";}
-  QIcon icon() const {return QIcon ();}
+  IPlugin *createPluginInstance ();
+  void releasePluginInstance (IPlugin *);
+  QList<LanguageType> getSupportedLanguages ();
+  QString
+  id () const
+  {
+    return "br.ufma.deinf.laws.validator";
+  }
+  QIcon
+  icon () const
+  {
+    return QIcon ();
+  }
 };
-
-
 
 #endif // PLUGINVALIDATOR_H

@@ -34,16 +34,15 @@ private:
   string perspectiveAtt;
 
 public:
-  ReferenceStructure(string, string, string, string, string, string);
-  virtual ~ReferenceStructure();
+  ReferenceStructure (string, string, string, string, string, string);
+  virtual ~ReferenceStructure ();
 
-  string getFrom() const;
-  string getFromAtt() const;
-  string getTo() const;
-  string getToAtt() const;
-  string getPerspective() const;
-  string getPerspectiveAtt() const;
+  string getFrom () const;
+  string getFromAtt () const;
+  string getTo () const;
+  string getToAtt () const;
+  string getPerspective () const;
+  string getPerspectiveAtt () const;
 };
-
 
 #endif /* REFERENCESTRUCTURE_H_ */

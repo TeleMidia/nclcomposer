@@ -18,43 +18,38 @@
 
 #include "AttributeStructure.h"
 
-AttributeStructure::AttributeStructure() {}
+AttributeStructure::AttributeStructure () {}
 
+AttributeStructure::AttributeStructure (const string &_name) { name = _name; }
 
-AttributeStructure::AttributeStructure(const string &_name)
-{
-  name = _name;
-}
+AttributeStructure::~AttributeStructure () {}
 
-
-AttributeStructure::~AttributeStructure() {}
-
-
-void AttributeStructure::addElement(const string &_parent, bool _required)
+void
+AttributeStructure::addElement (const string &_parent, bool _required)
 {
   elements[_parent] = _required;
 }
 
-
-void AttributeStructure::addRegex (const string &regex, const string &element)
+void
+AttributeStructure::addRegex (const string &regex, const string &element)
 {
   datatypes[element] = regex;
 }
 
-
-string AttributeStructure::getName() const
+string
+AttributeStructure::getName () const
 {
   return name;
 }
 
-map<string,bool> AttributeStructure::getElements() const
+map<string, bool>
+AttributeStructure::getElements () const
 {
   return elements;
 }
 
-string AttributeStructure::getDatatype(const string &element) const
+string
+AttributeStructure::getDatatype (const string &element) const
 {
   return datatypes.at (element);
 }
-
-

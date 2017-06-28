@@ -19,10 +19,9 @@
 #ifndef ELEMENT_H_
 #define ELEMENT_H_
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
-
 
 using namespace std;
 
@@ -30,27 +29,25 @@ class ElementStructure
 {
 private:
   string name;
-  map<string, /*required*/bool> atts;
-  map</*parent.name*/string, /*this cardinality*/char> parents;
+  map<string, /*required*/ bool> atts;
+  map</*parent.name*/ string, /*this cardinality*/ char> parents;
   bool defineScope;
 
 public:
-  ElementStructure();
-  ElementStructure(string, bool);
+  ElementStructure ();
+  ElementStructure (string, bool);
 
-  void addAtt(string _name, bool _required);
-  void addParent(string _parent, char _cardinality);
+  void addAtt (string _name, bool _required);
+  void addParent (string _parent, char _cardinality);
 
-  string getName() const;
+  string getName () const;
   map<string, char> getParents () const;
-  char getCardinality(string _parent);
-  map<string, bool> getAtts() const;
+  char getCardinality (string _parent);
+  map<string, bool> getAtts () const;
 
   bool isScopeDefined () const;
 
-  virtual ~ElementStructure();
+  virtual ~ElementStructure ();
 };
-
-
 
 #endif /* ELEMENT_H_ */

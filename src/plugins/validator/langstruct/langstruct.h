@@ -19,15 +19,14 @@
 #ifndef LANGSTRUCT_H_
 #define LANGSTRUCT_H_
 
-#include <string>
-#include <vector>
 #include <map>
 #include <set>
+#include <string>
+#include <vector>
 
-#include "components/ElementStructure.h"
 #include "components/AttributeStructure.h"
+#include "components/ElementStructure.h"
 #include "components/ReferenceStructure.h"
-
 
 using namespace std;
 
@@ -38,7 +37,8 @@ public:
   static bool existElement (const string &);
   static bool existAttribute (const string &, const string &);
   static bool existParent (const string &, const string &);
-  static bool isValidAttribute (const string &, const string &, const string &);
+  static bool isValidAttribute (const string &, const string &,
+                                const string &);
   static bool isElementReferenceDependent (const string &);
   static bool isElementReferenced (const string &);
   static bool isAttributeReferenceDependent (const string &element,
@@ -55,9 +55,8 @@ public:
   static const ReferenceStructure *getReference (const string &elFrom,
                                                  const string &elFromAtt,
                                                  const string &elTo);
-  static const vector <ReferenceStructure> getReferences (const string &elFrom,
-                                                          const string
-                                                          &elFromAtt);
+  static const vector<ReferenceStructure>
+  getReferences (const string &elFrom, const string &elFromAtt);
 
 private:
   static map<string, ElementStructure> _elements;
@@ -65,6 +64,5 @@ private:
   static map<string, ReferenceStructure> _references;
   static map<string, string> _datatypes;
 };
-
 
 #endif /* LANGSTRUCT_H_ */

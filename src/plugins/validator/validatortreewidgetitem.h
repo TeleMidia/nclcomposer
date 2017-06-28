@@ -27,18 +27,24 @@ using namespace cpr::core;
 class ValidatorTreeWidgetItem : public QTreeWidgetItem
 {
 public:
-  explicit ValidatorTreeWidgetItem(QTreeWidget *view, Entity * entity,
-                                   QString message);
-  Entity * entity () const { return _entity; }
-  QString message () const { return _message; }
+  explicit ValidatorTreeWidgetItem (QTreeWidget *view, Entity *entity,
+                                    QString message);
+  Entity *
+  entity () const
+  {
+    return _entity;
+  }
+  QString
+  message () const
+  {
+    return _message;
+  }
 
 signals:
 
-
 private:
-  Entity * _entity;
+  Entity *_entity;
   QString _message;
-
 };
 
 #endif // VALIDATORTREEWIDGETITEM_H
