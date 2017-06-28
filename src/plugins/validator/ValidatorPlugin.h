@@ -19,10 +19,10 @@
 #ifndef VALIDATORPLUGIN_H
 #define VALIDATORPLUGIN_H
 
-#include "composerncladapter.h"
+#include "NCLComposerAdapter.h"
 #include "nclmodel/nclmodel.h"
 #include "validation/Validator.h"
-#include "validatortreewidgetitem.h"
+#include "ValidatorTreewidgetItem.h"
 #include <QHBoxLayout>
 #include <QVector>
 #include <QWidget>

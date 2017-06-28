@@ -16,7 +16,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "composerncladapter.h"
+#include "NCLComposerAdapter.h"
 
 ComposerNCLAdapter::ComposerNCLAdapter ()
 {

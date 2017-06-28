@@ -16,7 +16,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "validatortreewidgetitem.h"
+#include "ValidatorTreewidgetItem.h"
 
 ValidatorTreeWidgetItem::ValidatorTreeWidgetItem (QTreeWidget *view,
                                                   Entity *entity,
