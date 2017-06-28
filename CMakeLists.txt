@@ -66,7 +66,7 @@ add_subdirectory(src/plugins/gingagui-all/run-view)
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
   set (top_srcdir ${CMAKE_SOURCE_DIR})
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doc/Doxyfile.in
                  ${CMAKE_CURRENT_BINARY_DIR}/doc/Doxyfile @ONLY)
   add_custom_target(doc
     ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/doc/Doxyfile
