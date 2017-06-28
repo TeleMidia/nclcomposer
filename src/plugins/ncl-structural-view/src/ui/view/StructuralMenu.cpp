@@ -294,11 +294,14 @@ void StructuralMenu::createMenus()
     _insertMenu->addAction(_bodyAction);
   }
 
-  _insertMenu->addSeparator();
-  _insertMenu->addAction(_areaAction);
-  _insertMenu->addAction(_propertyAction);
-  _insertMenu->addAction(_portAction);
-  _insertMenu->addAction(_switchPortAction);
+  if (STR_DEFAULT_WITH_INTERFACES)
+  {
+    _insertMenu->addSeparator();
+    _insertMenu->addAction(_areaAction);
+    _insertMenu->addAction(_propertyAction);
+    _insertMenu->addAction(_portAction);
+    _insertMenu->addAction(_switchPortAction);
+  }
 
   addAction(_helpAction);
   addSeparator();

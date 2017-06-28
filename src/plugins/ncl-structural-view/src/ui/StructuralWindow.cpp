@@ -242,13 +242,18 @@ void StructuralWindow::createToolbar()
   _insertToolbar->addAction(_switchAction);
 
   if (STR_DEFAULT_WITH_BODY)
+  {
     _insertToolbar->addAction(_bodyAction);
+  }
 
-  _insertToolbar->addSeparator();
-  _insertToolbar->addAction(_areaAction);
-  _insertToolbar->addAction(_propertyAction);
-  _insertToolbar->addAction(_portAction);
-  _insertToolbar->addAction(_switchportAction);
+  if (STR_DEFAULT_WITH_INTERFACES)
+  {
+    _insertToolbar->addSeparator();
+    _insertToolbar->addAction(_areaAction);
+    _insertToolbar->addAction(_propertyAction);
+    _insertToolbar->addAction(_portAction);
+    _insertToolbar->addAction(_switchportAction);
+  }
 
 #ifdef Q_WS_MACX
   setUnifiedTitleAndToolBarOnMac(true);
