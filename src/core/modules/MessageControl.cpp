@@ -167,8 +167,6 @@ MessageControl::addEntity (const QString &type, const QString &parentEntityId,
       parser->onEntityAddError (e.what ());
 
     delete ent;
-    ent = nullptr;
-
     return;
   }
 }

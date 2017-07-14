@@ -36,6 +36,7 @@ ProjectReader::readFile (const QString &location)
 
   QByteArray data = file.readAll ();
   QString content (qUncompress (data));
+//  QString content (data);
   /* READING MODEL */
   QString startCpModelStr = "#COMPOSER_MODEL#\n";
   QString endCpModelStr = "\n#END_COMPOSER_MODEL#";

@@ -200,13 +200,11 @@ protected:
    */
   bool removeEntity (Entity *entity, bool appendChild) throw (EntityNotFound);
 
-  using Entity::toString;
-
   /*!
    * \brief Transforms the current project to a string. This string will
    *        contain the internal model and the specific plugins data.
    */
-  QString toString ();
+  QString toString (int ntabs = 0, bool writeuid = false) override;
 
   /*!
    * \brief This slot must be called when there are some data (on the plugin

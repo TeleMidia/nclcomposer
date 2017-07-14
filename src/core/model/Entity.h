@@ -100,7 +100,7 @@ public:
    *
    * \param ntabs the number of tabs to be inserted before the current entity.
    */
-  virtual QString toString (int ntabs, bool writeuid) = 0;
+  virtual QString toString (int ntabs = 0, bool writeuid = false) = 0;
 
 protected:
   QDomDocument _doc;

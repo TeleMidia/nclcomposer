@@ -141,7 +141,14 @@ Node::getEntityChildren () const
 }
 
 // Entity
-Entity::Entity (QDomDocument &doc, Entity *parent) : Node (doc, parent) {}
+Entity::Entity (QDomDocument &doc, Entity *parent) : Node (doc, parent)
+{
+  this->_doc = doc;
+  _domNode = _domNode = doc.createElement ("empty");
+
+  this->_parent = parent;
+  this->setType ("empty");
+}
 
 Entity::Entity (const QMap<QString, QString> &atts, QDomDocument &doc,
                 Entity *parent)
@@ -154,6 +161,7 @@ Entity::Entity (const QMap<QString, QString> &atts, QDomDocument &doc,
     _domNode.toElement ().setAttribute (att, atts[att]);
 
   this->_parent = parent;
+  this->setType ("empty");
 }
 
 Entity::Entity (const QString &uniqueId, const QString &type,
@@ -253,6 +261,7 @@ Entity::toString (int ntab, bool writeuid)
     out += atts.value (attr);
     out += "\"";
   }
+
   if (writeuid)
   {
     out += " uniqueEntityId=\"";
@@ -266,8 +275,10 @@ Entity::toString (int ntab, bool writeuid)
     Node *child = _children.at (i);
     out += child->toString (ntab + 1, writeuid);
   }
+
   for (int i = 0; i < ntab; i++)
     out += "\t";
+
   out += "</";
   out += getType ();
   out += ">\n";

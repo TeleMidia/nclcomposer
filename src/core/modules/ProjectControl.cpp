@@ -77,15 +77,6 @@ ProjectControl::launchProject (const QString &location)
 
   if (type == NONE)
   {
-    //\todo TEST ON WINDOWS
-    // QProcess spaw;
-    // QStringList args;
-    // args.append(location);
-    //#ifdef Q_WS_MAC
-    //  spaw.startDetached("/usr/bin/open", args);
-    //#else
-    //  spaw.startDetached("/usr/bin/gnome-open", args);
-    //#endif
     return false;
   }
 
@@ -121,9 +112,10 @@ ProjectControl::launchProject (const QString &location)
     project->setProjectType (type);
 
     PluginControl::getInstance ()->launchProject (project);
+
     _openProjects[location] = project;
-    connect (project, SIGNAL (dirtyProject (bool)), this,
-             SLOT (projectIsDirty (bool)));
+    connect (project, SIGNAL (dirtyProject (bool)),
+             this, SLOT (projectIsDirty (bool)));
   }
   else
     qCDebug (CPR_CORE) << tr ("Project could not be open!");
@@ -231,7 +223,7 @@ ProjectControl::saveProject (const QString &location)
   }
 
   QString content = project->toString ();
-  fout.write (qCompress (content.toLatin1 (), content.size ()));
+  fout.write (content.toLatin1 ());
   fout.close ();
   project->setDirty (false);
 }
@@ -285,6 +277,7 @@ ProjectControl::saveTemporaryProject (const QString &location)
 
   QString content = project->toString ();
   fout.write (qCompress (content.toLatin1 (), content.size ()));
+//  fout.write (content.toLatin1 ());
   fout.close ();
   //  project->setDirty(false);
 }

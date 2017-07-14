@@ -21,7 +21,10 @@
 
 CPR_CORE_BEGIN_NAMESPACE
 
-Project::Project (QDomDocument &doc) : Entity (doc) { init (); }
+Project::Project (QDomDocument &doc) : Entity (doc)
+{
+  init ();
+}
 
 Project::Project (const QMap<QString, QString> &atts, QDomDocument &doc)
     : Entity (atts, doc)
@@ -179,8 +182,11 @@ Project::removeEntity (Entity *entity, bool appendChild) throw (EntityNotFound)
 
 /** \todo Returns a string to be saved in hard disk. */
 QString
-Project::toString ()
+Project::toString (int ntabs, bool writeuid)
 {
+  Q_UNUSED (ntabs);
+  Q_UNUSED (writeuid);
+
   QString result = "";
   result += "#COMPOSER_PROJECT name=\"" + this->_projectName
             + "\" version=\"0.1\"#\n";
@@ -195,6 +201,7 @@ Project::toString ()
     result += _pluginData[key];
     result += "\n#END_COMPOSER_PLUGIN_DATA#\n";
   }
+
   return result;
 }
 
