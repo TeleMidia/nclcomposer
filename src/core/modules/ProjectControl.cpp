@@ -223,7 +223,8 @@ ProjectControl::saveProject (const QString &location)
   }
 
   QString content = project->toString ();
-  fout.write (content.toLatin1 ());
+  fout.write (qCompress (content.toLatin1 (), content.size ()));
+//  fout.write (content.toLatin1 ());
   fout.close ();
   project->setDirty (false);
 }
