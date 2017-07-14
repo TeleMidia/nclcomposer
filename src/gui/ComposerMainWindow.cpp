@@ -66,8 +66,8 @@ ComposerMainWindow::ComposerMainWindow (QWidget *parent)
 }
 
 /*!
- * \brief You should call this method to initialize the NCL Composer Main
- *        Window and show the SplashScreen.
+ * \brief You should call this method to initialize the NCL Composer MainWindow
+ * and show the SplashScreen.
  *
  * \param app QApplication instance
  */

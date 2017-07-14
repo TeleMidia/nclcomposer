@@ -126,6 +126,13 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_Name</tabstop>
+  <tabstop>lineEdit_CreateIn</tabstop>
+  <tabstop>pushButton_Browser</tabstop>
+  <tabstop>checkBox_ImportConnectorBase</tabstop>
+  <tabstop>checkBox_AddDefaultRegion</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

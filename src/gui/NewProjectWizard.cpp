@@ -29,6 +29,8 @@ NewProjectWizard::NewProjectWizard (QWidget *parent)
   connect (ui->pushButton_Browser, SIGNAL (pressed ()), this,
            SLOT (browseDir ()));
 
+  ui->lineEdit_Name->setFocus();
+
   ui->lineEdit_CreateIn->setText (QDir::homePath ());
 }
 
