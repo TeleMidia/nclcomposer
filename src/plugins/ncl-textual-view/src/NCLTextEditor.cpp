@@ -49,25 +49,48 @@ NCLTextEditor::~NCLTextEditor () {}
 void
 NCLTextEditor::initParameters ()
 {
+  Preferences::getInstance ()->registerPreference (
+      "cpr.textual.bgCaretLine",
+      new Preference ("bgCaretLine", "#B9D3EE", "Textual"));
+  Preferences::getInstance ()->registerPreference (
+      "cpr.textual.bgMarginColor",
+      new Preference ("bgMarginColor", "#ffffff", "Textual"));
+  Preferences::getInstance ()->registerPreference (
+      "cpr.textual.marginForeColor",
+      new Preference ("marginForeColor", "#B9D3EE", "Textual"));
+  Preferences::getInstance ()->registerPreference (
+      "cpr.textual.marginBackColor",
+      new Preference ("marginBackColor", "FFFFFF", "Textual"));
+  Preferences::getInstance ()->registerPreference (
+      "cpr.textual.prefFontSize",
+      new Preference ("prefFontSize", "10", "Textual"));
+
+  Preferences::getInstance ()->restore ();
+    Preference *bgCaretLine
+        = Preferences::getInstance ()->getValue ("cpr.textual.bgCaretLine");
+    Preference *bgMarginColor
+        = Preferences::getInstance ()->getValue ("cpr.textual.bgMarginColor");
+    Preference *marginForeColor
+        = Preferences::getInstance ()->getValue ("cpr.textual.marginForeColor");
+    Preference *marginBackColor
+        = Preferences::getInstance ()->getValue ("cpr.textual.marginBackColor");
+    Preference *prefFontSize
+        = Preferences::getInstance ()->getValue ("cpr.textual.prefFontSize");
+
   _tabBehavior = TAB_BEHAVIOR_DEFAULT;
 
   setAutoIndent (true);
   setFolding (QsciScintilla::CircledTreeFoldStyle);
-  setFoldMarginColors (PREF_FOLD_MARGIN_FORE_COLOR,
-                       PREF_FOLD_MARGIN_BACK_COLOR);
-
-  Preferences::getInstance ()->registerPreference (
-      "cpr.textual.bgCaretLine",
-      new Preference ("bgCaretLine", "#B9D3EE", "Textual"));
-
-  Preferences::getInstance ()->restore ();
-  Preference *bgCaretLine
-      = Preferences::getInstance ()->getValue ("cpr.textual.bgCaretLine");
+  /*setFoldMarginColors (PREF_FOLD_MARGIN_FORE_COLOR,
+                         PREF_FOLD_MARGIN_BACK_COLOR);*/
+  setFoldMarginColors (marginForeColor->value().toString(),
+                         marginBackColor->value().toString());
 
   setMarginLineNumbers (1, true);
 
   setMarginWidth (1, 25);
-  setMarginsBackgroundColor (MARGINS_BACKGROUND_COLOR);
+  //setMarginsBackgroundColor (MARGINS_BACKGROUND_COLOR);
+  setMarginsBackgroundColor (QColor(bgMarginColor->value().toString()));
 
   setCaretWidth (20);
   setCaretLineBackgroundColor (QColor ("#e6fff0"));
@@ -113,7 +136,8 @@ NCLTextEditor::initParameters ()
 
   QFont font;
   font.setFamily (QString::fromUtf8 (PREF_FONT_FAMILY));
-  font.setPointSize (PREF_FONT_SIZE);
+  //font.setPointSize (PREF_FONT_SIZE);
+  font.setPointSize (prefFontSize->value().toInt());
   setFont (font);
   setCaretLineBackgroundColor (QColor (bgCaretLine->value ().toString ()));
 

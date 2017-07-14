@@ -39,6 +39,7 @@ set(UI_SOURCES
   NewProjectWizard.ui
   FileChooser.ui
   QSimpleUpdater/src/Downloader.ui
+  PreferencesEditor.ui
 )
 
 QT5_WRAP_UI(UI_GENERATED_HEADERS
@@ -78,6 +79,8 @@ add_executable(nclcomposer ${GUI_TYPE}
   QSimpleUpdater/src/QSimpleUpdater.cpp
   QSimpleUpdater/include/QSimpleUpdater.h
   QSimpleUpdater/src/Updater.cpp  
+
+  PreferencesEditor.cpp
 
   ${UI_GENERATED_HEADERS}
   gui.qrc

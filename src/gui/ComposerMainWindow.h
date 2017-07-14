@@ -63,6 +63,7 @@ using namespace cpr::core;
 #include "PerspectiveManager.h"
 #include "PreferencesDialog.h"
 #include "WelcomeWidget.h"
+#include "PreferencesEditor.h"
 using namespace cpr::gui;
 
 #include <qtoolwindowmanager.h>
@@ -120,6 +121,7 @@ private:
   QTimer *_autoSaveTimer; // auto save timer
 
   QSimpleUpdater *_updater;
+  PreferencesEditor *_preferencesEditor;
 #if WITH_WIZARD
   QProcess wizardProcess;
   QProcess talProcess;
@@ -266,6 +268,7 @@ public slots:
 
 private slots:
   void checkForUpdates ();
+  void on_action_Preferences_2_triggered();
 };
 
 CPR_GUI_END_NAMESPACE

@@ -339,6 +339,7 @@ ComposerMainWindow::initGUI ()
   _preferencesDialog = new PreferencesDialog (this);
   _perspectiveManager = new PerspectiveManager (this);
   _aboutPluginsDialog = new AboutPluginsDialog (this);
+  _preferencesEditor = new PreferencesEditor (0);
 
   // UNDO/REDO
   // connect(ui->action_Undo, SIGNAL(triggered()), this, SLOT(undo()));
@@ -1856,3 +1857,8 @@ ComposerMainWindow::addPluginWidget (IPluginFactory *fac, IPlugin *plugin,
     ShortcutsDialog dialog (this);
     dialog.exec ();
   }
+
+void cpr::gui::ComposerMainWindow::on_action_Preferences_2_triggered()
+{
+  _preferencesEditor->show(); //TEST
+}
