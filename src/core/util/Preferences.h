@@ -57,6 +57,12 @@ public:
   {
     return _category;
   }
+
+  QString
+  key ()
+  {
+    return "cpr."+_category.toLower()+"."+_name;
+  }
 };
 
 /*!
