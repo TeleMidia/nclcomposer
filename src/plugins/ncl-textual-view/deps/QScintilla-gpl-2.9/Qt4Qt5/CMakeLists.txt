@@ -5,6 +5,10 @@ set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
 set (CMAKE_INCLUDE_CURRENT_DIR ON)
 
+if (UNIX)
+  add_definitions(-w) # Disable QScintilla build warnings.
+endif ()
+
 find_package (Qt5Core REQUIRED)
 find_package (Qt5PrintSupport REQUIRED)
 find_package (Qt5Widgets REQUIRED)
