@@ -8,6 +8,8 @@
   <a href='http://ncl-composer-manual.readthedocs.io/en/latest/?badge=latest'>
     <img src='https://readthedocs.org/projects/ncl-composer-manual/badge/?version=latest' alt='Documentation Status' />
   </a>
+  <a href='https://build.snapcraft.io/user/TeleMidia/nclcomposer'>
+    <img src='https://build.snapcraft.io/badge/TeleMidia/nclcomposer.svg' alt='Snap Status' />
 </p>
 
 # NCL Composer
