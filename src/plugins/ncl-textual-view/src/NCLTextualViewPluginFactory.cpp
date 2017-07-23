@@ -18,9 +18,27 @@
 #include "NCLTextualViewPluginFactory.h"
 #include "ui_TextualPluginPreferencesWidget.h"
 
+#include "util/Preferences.h"
+
 NCLTextualViewPluginFactory::NCLTextualViewPluginFactory ()
 {
   _prefPageWidget = nullptr;
+
+  Preferences::getInstance ()->registerPreference (
+      "cpr.textual.bgCaretLine",
+      new Preference ("bgCaretLine", "#B9D3EE", "Textual"));
+  Preferences::getInstance ()->registerPreference (
+      "cpr.textual.bgMarginColor",
+      new Preference ("bgMarginColor", "#ffffff", "Textual"));
+  Preferences::getInstance ()->registerPreference (
+      "cpr.textual.marginForeColor",
+      new Preference ("marginForeColor", "#B9D3EE", "Textual"));
+  Preferences::getInstance ()->registerPreference (
+      "cpr.textual.marginBackColor",
+      new Preference ("marginBackColor", "FFFFFF", "Textual"));
+  Preferences::getInstance ()->registerPreference (
+      "cpr.textual.prefFontSize",
+      new Preference ("prefFontSize", "10", "Textual"));
 }
 
 IPlugin *
