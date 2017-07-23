@@ -22,15 +22,18 @@ PreferencesEditor::~PreferencesEditor()
 
 void PreferencesEditor::show()
 {
-  tableFillFromIni();
+  loadPreferences();
   QWidget::show();
 }
 
-void PreferencesEditor::tableFillFromIni()
+void PreferencesEditor::loadPreferences()
 {
   int i = 0;
   QStringList categories = Preferences::getInstance()->categories();
   QString category,key;
+
+  while (ui->tableParameters->rowCount())
+    ui->tableParameters->removeRow(0);
 
   while(!categories.isEmpty())
   {

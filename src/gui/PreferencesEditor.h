@@ -22,7 +22,7 @@ private slots:
 
 private:
   Ui::PreferencesEditor *ui;
-  void tableFillFromIni();
+  void loadPreferences();
 };
 
 #endif // PREFERENCESEDITOR_H
