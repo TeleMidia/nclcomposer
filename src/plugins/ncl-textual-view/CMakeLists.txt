@@ -37,7 +37,7 @@ set (NCL_TEXTUAL_VIEW_SOURCES
 )
 
 qt5_wrap_ui(UI_GENERATED_HEADERS
-  ui/TextualPluginPreferencesWidget.ui
+  src/TextualPluginPreferencesWidget.ui
   src/SearchBox.ui
 )
 
@@ -50,7 +50,7 @@ target_compile_definitions(ncl_textual_view
   PRIVATE QSCINTILLA_DLL
 )
 
-add_subdirectory(deps/QScintilla-gpl-2.9/Qt4Qt5)
+add_subdirectory(deps/QScintilla_gpl-2.10.1/Qt4Qt5)
 
 target_include_directories(ncl_textual_view PRIVATE
   src
