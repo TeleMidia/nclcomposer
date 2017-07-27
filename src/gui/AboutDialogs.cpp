@@ -106,6 +106,8 @@ AboutPluginsDialog::AboutPluginsDialog (QWidget *parent) : QDialog (parent)
 void
 AboutPluginsDialog::loadPlugins ()
 {
+  _treeWidgetPlugins->clear();
+
   QList<ILanguageProfile *> langList
       = LanguageControl::getInstance ()->getLoadedProfiles ();
   QList<IPluginFactory *> pList
