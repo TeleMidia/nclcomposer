@@ -84,5 +84,11 @@ void PreferencesEditor::loadPreferences()
 
 void PreferencesEditor::saveChanges()
 {
-
+  int rowcount = ui->tableParameters->rowCount();
+  for(int i=0; i < rowcount; i++)
+  {
+    Preferences::getInstance()->setValue(ui->tableParameters->item(i,0)->text(),
+                                         ui->tableParameters->item(i,1)->text());
+  }
+  Preferences::getInstance()->save();
 }
