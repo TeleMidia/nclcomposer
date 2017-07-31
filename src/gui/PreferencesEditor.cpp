@@ -8,11 +8,11 @@
 using namespace cpr::core;
 
 PreferencesEditor::PreferencesEditor(QWidget *parent) :
-  QWidget(parent),
+  QDialog (parent),
   ui(new Ui::PreferencesEditor)
 {
   ui->setupUi(this);
-  connect(ui->saveButton,SIGNAL(clicked()),this,SLOT(saveChanges()));
+  connect(ui->saveButton, SIGNAL(clicked()), this, SLOT(saveChanges()));
 }
 
 PreferencesEditor::~PreferencesEditor()

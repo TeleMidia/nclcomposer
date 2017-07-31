@@ -2,12 +2,13 @@
 #define PREFERENCESEDITOR_H
 
 #include <QWidget>
+#include <QDialog>
 
 namespace Ui {
   class PreferencesEditor;
 }
 
-class PreferencesEditor : public QWidget
+class PreferencesEditor : public QDialog
 {
   Q_OBJECT
 
