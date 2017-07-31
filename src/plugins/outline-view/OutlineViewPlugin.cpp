@@ -66,9 +66,6 @@ OutlineViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
   if (_isSyncingFromTextual)
     return;
 
-  qDebug () << "OutlineViewPlugin::onEntityAdded(" << pluginID << entity
-            << endl;
-
   QTreeWidgetItem *item;
   QMap<QString, QString> attrs;
   QMap<QString, QString>::iterator begin, end, it;

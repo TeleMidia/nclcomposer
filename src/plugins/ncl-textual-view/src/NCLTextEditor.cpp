@@ -59,7 +59,7 @@ NCLTextEditor::initParameters ()
     Preference *marginBackColor
         = Preferences::getInstance ()->getValue ("cpr.textual.marginBackColor");
     Preference *prefFontSize
-        = Preferences::getInstance ()->getValue ("cpr.textual.prefFontSize");
+        = Preferences::getInstance ()->getValue ("cpr.textual.fontSize");
 
   _tabBehavior = TAB_BEHAVIOR_DEFAULT;
 
@@ -113,16 +113,17 @@ NCLTextEditor::initParameters ()
     */
 
   _nclLexer = new QsciLexerNCL (0);
+  QFont font;
+  font.setFamily (QString::fromUtf8 (PREF_FONT_FAMILY));
+  qWarning () << "######" << prefFontSize->value().toInt() << endl;
+  font.setPointSize (prefFontSize->value().toInt());
+  _nclLexer->setDefaultFont (font);
+
   setLexer (_nclLexer);
 
   // APIS
   _apis = new QsciNCLAPIs (lexer ());
 
-  QFont font;
-  font.setFamily (QString::fromUtf8 (PREF_FONT_FAMILY));
-  //font.setPointSize (PREF_FONT_SIZE);
-  font.setPointSize (prefFontSize->value().toInt());
-  setFont (font);
   setCaretLineBackgroundColor (QColor (bgCaretLine->value ().toString ()));
 
   // connect(this, SIGNAL(marginClicked(int,int,Qt::KeyboardModifiers)), this,

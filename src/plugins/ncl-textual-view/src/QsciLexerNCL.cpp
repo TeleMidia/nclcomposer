@@ -127,16 +127,16 @@ QsciLexerNCL::defaultEolFill (int style) const
 QFont
 QsciLexerNCL::defaultFont (int style) const
 {
-  QFont f;
+  QFont f = _defaultFont;
   switch (style)
   {
     case Default:
     case Entity:
     case CDATA:
 #if defined(Q_OS_WIN)
-      f = QFont ("Times New Roman", 10);
+      f = QFont ("Times New Roman");
 #else
-      f = QFont ("Monospace", 10);
+      f = QFont ("Monospace");
 #endif
       break;
 
@@ -148,11 +148,10 @@ QsciLexerNCL::defaultFont (int style) const
       break;
 
     default:
-      f = QFont ("Monospace", 10);
-      // f = QsciLexerHTML::defaultFont(style);
+      f = QFont ("Monospace");
   }
 
-  // f.setPointSize(8);
+  f.setPointSize(_defaultFont.pointSize());
 
   return f;
 }
@@ -233,6 +232,13 @@ bool
 QsciLexerNCL::scriptsStyled () const
 {
   return _scripts;
+}
+
+// Return true if scripts are styled.
+void
+QsciLexerNCL::setDefaultFont(const QFont &f)
+{
+  this->_defaultFont = f;
 }
 
 // Set if scripts are styled.

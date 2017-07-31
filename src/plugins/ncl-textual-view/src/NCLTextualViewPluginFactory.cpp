@@ -37,8 +37,8 @@ NCLTextualViewPluginFactory::NCLTextualViewPluginFactory ()
       "cpr.textual.marginBackColor",
       new Preference ("marginBackColor", "FFFFFF", "Textual"));
   Preferences::getInstance ()->registerPreference (
-      "cpr.textual.prefFontSize",
-      new Preference ("prefFontSize", "10", "Textual"));
+      "cpr.textual.fontSize",
+      new Preference ("fontSize", "10", "Textual"));
 }
 
 IPlugin *

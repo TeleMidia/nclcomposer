@@ -76,6 +76,8 @@ public:
   //! \sa setScriptsStyled()
   bool scriptsStyled () const;
 
+  void setDefaultFont (const QFont &f);
+
 protected:
   //! The lexer's properties are read from the settings \a qs.  \a prefix
   //! (which has a trailing '/') should be used as a prefix to the key of
@@ -91,6 +93,7 @@ protected:
 
 private:
   bool _scripts;
+  QFont _defaultFont;
 
   void setScriptsProp ();
 
