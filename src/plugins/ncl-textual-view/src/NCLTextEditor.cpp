@@ -115,7 +115,6 @@ NCLTextEditor::initParameters ()
   _nclLexer = new QsciLexerNCL (0);
   QFont font;
   font.setFamily (QString::fromUtf8 (PREF_FONT_FAMILY));
-  qWarning () << "######" << prefFontSize->value().toInt() << endl;
   font.setPointSize (prefFontSize->value().toInt());
   _nclLexer->setDefaultFont (font);
 

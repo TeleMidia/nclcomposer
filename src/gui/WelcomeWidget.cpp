@@ -274,10 +274,6 @@ WelcomeWidget::parseXml ()
     {
       if (xmlReader.name () == "item")
       {
-        //                qCDebug(CPR_GUI)() << "#########" << currentTitle
-        //                         << currentLink << currentDate <<
-        //                         currentDesc << n_items;
-
         ui->listWidget_NCLClub->addItem (currentTitle);
         description.push_back (currentDesc);
 

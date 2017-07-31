@@ -60,11 +60,6 @@ DebugConsolePlugin::onEntityAdded (const QString &pluginID, Entity *entity)
   QString line = "PLUGIN (" + pluginID + ") added the Entity ("
                  + entity->getType () + " - " + entity->getUniqueId () + ")";
   list->insertItem (0, new QListWidgetItem (line));
-  // qCWarning(Debug) << "########### " << line;
-  /* if(list->count())
-    list->item(0)->setText(line);
-  else
-    list->addItem(new QListWidgetItem(line));*/
 }
 
 void
