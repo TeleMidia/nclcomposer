@@ -141,23 +141,23 @@ AddCommentCmd::AddCommentCmd (Project *project, Comment *comment,
 void
 AddCommentCmd::undo ()
 {
-//  this->_entity = this->_entity->cloneEntity ();
-//  _msgControl->anonymousRemoveEntity (this->_entity->getUniqueId ());
-//  _first = false;
+  this->_comment = this->_comment->cloneComment ();
+//  _msgControl->anonymousRemoveComment (this->_entity->getUniqueId ());
+  _first = false;
 }
 
 void
 AddCommentCmd::redo ()
 {
-//  // I have to do this because the core is responsible to Remove the entity.
-//  Entity *entityTmp = this->_entity->cloneEntity ();
-//  // TODO - calll validator to check
-//  if (_first)
-//    _project->addEntity (this->_comment, _parentUniqueId);
-//  else
-//    _msgControl->anonymousAddEntity (this->_comment, _parentUniqueId);
+  // I have to do this because the core is responsible for deleting the entity.
+  Comment *commentTmp = this->_comment->cloneComment ();
 
-//  this->_entity = entityTmp;
+  if (_first)
+    _project->addComment (this->_comment, _parentUniqueId);
+  else
+    _msgControl->anonymousAddComment (this->_comment, _parentUniqueId);
+
+  this->_comment = commentTmp;
 }
 
 CPR_CORE_END_NAMESPACE

@@ -311,6 +311,12 @@ public:
     return this->_content;
   }
 
+  Comment *
+  cloneComment ()
+  {
+    return new Comment (this->_content, this->_doc, this->_parent);
+  }
+
   virtual QString
   toString (int ntabs, bool writeuid) override
   {

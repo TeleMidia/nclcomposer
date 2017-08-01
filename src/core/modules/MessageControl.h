@@ -130,6 +130,12 @@ public slots:
                            bool notifyPlugins = true);
 
   /*!
+   * \brief TODO.
+   */
+  void anonymousAddComment (Comment *comment, const QString &parentEntityId,
+                             bool notifyPlugins = true);
+
+  /*!
    * \brief This message is here, mainly for test purposes.
    *
    * It allows anyone to send a removeEntityMessage, even if it is not a

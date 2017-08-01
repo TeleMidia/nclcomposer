@@ -85,6 +85,8 @@ private:
  */
 class AddCommentCmd : public QUndoCommand
 {
+  friend class Project;
+
 public:
   AddCommentCmd (Project *_project, Comment *comment, QString parentUniqueId,
                  QUndoCommand *parent = 0);

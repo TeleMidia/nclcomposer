@@ -84,6 +84,19 @@ MessageControl::anonymousAddEntity (Entity *entity,
 }
 
 void
+MessageControl::anonymousAddComment (Comment *comment,
+                                     const QString &parentEntityId,
+                                     bool notifyPlugins)
+{
+  // \todo call validator to check
+  _project->addComment (comment, parentEntityId);
+
+  // send message to All PLUGINS interested in this message.
+  if (notifyPlugins)
+    sendCommentMessageToPlugins (Message::COMMENT_ADDED, "", comment);
+}
+
+void
 MessageControl::anonymousRemoveEntity (const QString &entityUniqueId,
                                        bool notifyPlugins)
 {
@@ -278,7 +291,7 @@ MessageControl::addComment (const QString &content, const QString &parentId)
   try
   {
     comment = new Comment (content, _project->getDomDocument (), _project->getEntityById(parentId));
-//    _qUndoStack->push (new AddCommentCmd (_project, comment, parentId));
+    _qUndoStack->push (new AddCommentCmd (_project, comment, parentId));
 
     sendCommentMessageToPlugins (Message::COMMENT_ADDED, senderId, comment);
   }

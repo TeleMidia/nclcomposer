@@ -46,14 +46,14 @@ Project::init ()
   dirty = false;
 
   this->dirty = false;
-  this->_entities[this->getUniqueId ()] = this;
+  this->_nodes[this->getUniqueId ()] = this;
 
   _lockEntities = new QMutex ();
 }
 
 Project::~Project ()
 {
-  _entities.clear ();
+  _nodes.clear ();
   delete _lockEntities;
 }
 
@@ -73,21 +73,23 @@ Entity *
 Project::getEntityById (const QString &id)
 {
   QMutexLocker locker (_lockEntities);
-  return _entities.contains (id) ? _entities[id] : nullptr;
+  Node *node = _nodes.contains (id) ? _nodes[id] : nullptr;
+
+  return dynamic_cast <Entity *> (node);
 }
 
 QList<Entity *>
 Project::getEntitiesbyType (const QString &type)
 {
   QMutexLocker locker (_lockEntities);
-  QMapIterator<QString, Entity *> it (_entities);
+  QMapIterator<QString, Node *> it (_nodes);
   QList<Entity *> listRet;
 
   while (it.hasNext ())
   {
     it.next ();
-    Entity *ent = it.value ();
-    if (ent->getType () == type)
+    Entity *ent = dynamic_cast <Entity *> (it.value());
+    if (ent && ent->getType () == type)
       listRet.append (ent);
   }
   return listRet;
@@ -113,21 +115,49 @@ Project::addEntity (Entity *entity,
   assert (entity != nullptr);
 
   QMutexLocker locker (_lockEntities);
-  if (!_entities.contains (parentId))
+  if (!_nodes.contains (parentId))
   {
     throw ParentNotFound (entity->getType (), entity->getType (), parentId);
     return false;
   }
 
-  if (_entities.contains (entity->getUniqueId ()))
+  if (_nodes.contains (entity->getUniqueId ()))
   {
     throw EntityNotFound (entity->getType (), entity->getUniqueId ());
     return false;
   }
 
-  Entity *parent = _entities[parentId];
+  Node *parent = _nodes[parentId];
   parent->addChild (entity);
-  _entities[entity->getUniqueId ()] = entity;
+  _nodes[entity->getUniqueId ()] = entity;
+
+  setDirty (true);
+  return true;
+}
+
+bool
+Project::addComment (Comment *comment,
+                     const QString &parentId) throw (EntityNotFound,
+                                                    ParentNotFound)
+{
+  assert (comment != nullptr);
+
+  QMutexLocker locker (_lockEntities);
+  if (!_nodes.contains (parentId))
+  {
+    throw ParentNotFound ("comment", "comment", parentId);
+    return false;
+  }
+
+  if (_nodes.contains (comment->getUniqueId ()))
+  {
+    throw EntityNotFound ("comment", comment->getUniqueId ());
+    return false;
+  }
+
+  Node *parent = _nodes[parentId];
+  parent->addChild (comment);
+  _nodes[comment->getUniqueId ()] = comment;
 
   setDirty (true);
   return true;
@@ -141,7 +171,7 @@ Project::removeEntity (Entity *entity, bool appendChild) throw (EntityNotFound)
   assert (entity != nullptr);
 
   QMutexLocker locker (_lockEntities);
-  if (_entities.contains (entity->getUniqueId ()))
+  if (_nodes.contains (entity->getUniqueId ()))
   {
     Node *parent = entity->getParent ();
     if (parent)
@@ -153,7 +183,7 @@ Project::removeEntity (Entity *entity, bool appendChild) throw (EntityNotFound)
       {
         Node *currentEntity = stack.top ();
         stack.pop ();
-        _entities.remove (currentEntity->getUniqueId ());
+        _nodes.remove (currentEntity->getUniqueId ());
 
         QList <Node *> children = currentEntity->getChildren ();
         for (auto i = children.begin(); i != children.end (); ++i)
@@ -260,15 +290,15 @@ QList<Entity *>
 Project::getEntityByAttrId (const QString &id)
 {
   QMutexLocker locker (_lockEntities);
-  QMapIterator<QString, Entity *> it (_entities);
+  QMapIterator<QString, Node *> it (_nodes);
   QList<Entity *> listRet;
   qCDebug (CPR_CORE) << "Project::getEntitiesbyType " << _domNode.toElement ().tagName ();
 
   while (it.hasNext ())
   {
     it.next ();
-    Entity *ent = it.value ();
-    if (ent->hasAttribute ("id") && ent->getAttribute ("id") == id)
+    Entity *ent = dynamic_cast <Entity *> (it.value ());
+    if (ent && ent->hasAttribute ("id") && ent->getAttribute ("id") == id)
       listRet.append (ent);
   }
   return listRet;

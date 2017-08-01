@@ -34,9 +34,11 @@ class MessageControl;
 class ProjectControl;
 class ProjectReader;
 
-class EditEntityCmd;
 class AddEntityCmd;
+class EditEntityCmd;
 class DeleteCommand;
+
+class AddCommentCmd;
 
 /*!
  * \ingroup core
@@ -55,6 +57,8 @@ class COMPOSERCORESHARED_EXPORT Project : public Entity
   friend class EditEntityCmd;
   friend class AddEntityCmd;
   friend class RemoveEntityCmd;
+
+  friend class AddCommentCmd;
 
 public:
   /*!
@@ -181,6 +185,10 @@ protected:
                   Entity *entity_before) throw (EntityNotFound,
                                                 ParentNotFound);
 
+  bool addComment (Comment *comment,
+                   const QString &parentId) throw (EntityNotFound,
+                                                   ParentNotFound);
+
   /*!
    * \brief Sets specific plugin data to project file.
    *
@@ -222,7 +230,7 @@ protected:
 private:
   QMutex *_lockEntities;                 /*!< TODO */
   QMutex _lockLocation;                  /*!< TODO */
-  QMap<QString, Entity *> _entities;     /*!< TODO */
+  QMap<QString, Node*> _nodes;     /*!< TODO */
   QMap<QString, QByteArray> _pluginData; /*!< TODO */
 
   QString _projectLocation;  /*!< TODO */

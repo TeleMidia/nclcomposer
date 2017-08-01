@@ -95,9 +95,6 @@ ProjectControl::launchProject (const QString &location)
 
   QMap<QString, QString> atts;
   QString documentId = location;
-  // documentId = documentId.remove(0,
-  //                                location.lastIndexOf(QDir::separator())+1
-  //                                );
   documentId = documentId.remove (0, location.lastIndexOf ("/") + 1);
   atts["id"] = documentId;
 
