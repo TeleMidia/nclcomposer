@@ -127,9 +127,7 @@ NCLTextualViewPlugin::getWidget ()
 void
 NCLTextualViewPlugin::updateFromModel ()
 {
-  // qDebug (CPR_PLUGIN_TEXTUAL) << "NCLTextualViewPlugin::updateFromModel";
   incrementalUpdateFromModel ();
-
   updateErrorMessages ();
 }
 
@@ -143,23 +141,42 @@ NCLTextualViewPlugin::incrementalUpdateFromModel ()
 
   if (project->getEntityChildren ().size ())
   {
-    Entity *entity = project;
-    QList<Entity *> entities;
-    entities.push_back (entity);
+    QList<Node *> nodes;
+    nodes.push_back (project);
+
     bool first = true;
-    while (entities.size ())
+    while (nodes.size ())
     {
-      entity = entities.front ();
-      entities.pop_front ();
+      Node *node = nodes.front ();
+      nodes.pop_front ();
+
+      Entity *ent = dynamic_cast <Entity *> (node);
+      Comment *comment = dynamic_cast <Comment *> (node);
 
       if (!first) // ignore the project root
-        onEntityAdded ("xxx", entity);
+      {
+        if (ent)
+          onEntityAdded ("xxx", ent);
+        else if (comment)
+        {
+          onCommentAdded("xxx", comment);
+        }
+        else
+          qCWarning (CPR_PLUGIN_TEXTUAL()) << "Trying to add an unknown node.";
+      }
       else
         first = false;
 
-      foreach (Entity *child, entity->getEntityChildren ())
+      if (ent)
       {
-        entities.push_back (child);
+        foreach (Node *child, ent->getChildren ())
+        {
+          Comment *comment = dynamic_cast <Comment *> (child);
+
+          if (comment)
+            qWarning () << "There is a comment " << comment->get ();
+          nodes.push_back (child);
+        }
       }
     }
   }
@@ -290,7 +307,8 @@ NCLTextualViewPlugin::onCommentAdded (const QString &pluginID, Comment *comment)
 {
   qCWarning (CPR_PLUGIN_TEXTUAL) << "Comment added " << comment->get ();
 
-  QString line = "<!-- " + comment->get () + " -->";
+  QString line = "<!--" + comment->get () + "-->\n";
+
   int insertAtOffset = PROLOG.size ();
   bool hasOpennedTag = false;
 
@@ -655,42 +673,58 @@ NCLTextualViewPlugin::nonIncrementalUpdateCoreModel ()
   QString parentUId = project->getUniqueId ();
   parentUids.push_back (parentUId);
 
-  QList<QDomElement> nodes;
-  QDomElement current = _xmlDoc.firstChildElement ();
-  nodes.push_back (current);
+  QList<QDomNode> nodes;
+  QDomElement current_el = _xmlDoc.firstChildElement ();
+  nodes.push_back (current_el);
 
   while (!nodes.empty ())
   {
-    current = nodes.front ();
+    QDomNode current = nodes.front ();
     nodes.pop_front ();
+
     parentUId = parentUids.front ();
     parentUids.pop_front ();
 
-    if (current.tagName () == "ncl" && !current.hasAttribute ("id"))
+    if (current.isComment ())
     {
-      current.setAttribute ("id", "myNCLDocID");
+      qCWarning (CPR_PLUGIN_TEXTUAL()) << "Adding a comment " << current.toComment().data();
+
+      emit addComment (current.toComment().data(), parentUId);
     }
-
-    // Process the node
-    QMap<QString, QString> atts;
-
-    QDomNamedNodeMap attributes = current.attributes ();
-    for (uint i = 0; i < attributes.length (); i++)
+    else if (current.isElement ())
     {
-      QDomAttr item = attributes.item (i).toAttr ();
-      atts[item.name ()] = item.value ();
-    }
+      current_el = current.toElement ();
 
-    // Send the addEntity to the core plugin
-    emit addEntity (current.tagName (), parentUId, atts);
-    parentUId = _currentEntity->getUniqueId ();
+      if (current_el.tagName () == "ncl" && !current_el.hasAttribute ("id"))
+      {
+        current_el.setAttribute ("id", "myNCLDocID");
+      }
 
-    QDomElement child = current.firstChildElement ();
-    while (!child.isNull ())
-    {
-      nodes.push_back (child);
-      parentUids.push_back (parentUId);
-      child = child.nextSiblingElement ();
+      // Process the node
+      QMap<QString, QString> atts;
+
+      QDomNamedNodeMap attributes = current_el.attributes ();
+      for (uint i = 0; i < attributes.length (); i++)
+      {
+        QDomAttr item = attributes.item (i).toAttr ();
+        atts[item.name ()] = item.value ();
+      }
+
+      // Send the addEntity to the core plugin
+      emit addEntity (current_el.tagName (), parentUId, atts);
+      parentUId = _currentEntity->getUniqueId ();
+
+      QDomNode child = current_el.firstChild ();
+      while (!child.isNull ())
+      {
+        if (child.isElement () || child.isComment ())
+        {
+          nodes.push_back (child);
+          parentUids.push_back (parentUId);
+        }
+
+        child = child.nextSibling ();
+      }
     }
   }
 }
