@@ -117,11 +117,11 @@ ProjectReader::startElement (const QString &namespaceURI,
   QMap<QString, QString> atts;
   QString uniqueId = "";
 
-  Entity *parentEntity = nullptr;
+  Node *parentNode = nullptr;
   if (qName != "document")
   {
     _lockStack.lock ();
-    parentEntity = _elementStack.top ();
+    parentNode = _elementStack.top ();
     _lockStack.unlock ();
   }
 
@@ -133,24 +133,34 @@ ProjectReader::startElement (const QString &namespaceURI,
       uniqueId = attributes.value (i);
   }
 
-  Entity *entity = nullptr;
-  if (qName != "document" && parentEntity != nullptr)
+  Node *node = nullptr;
+  if (qName != "document" && parentNode != nullptr)
   {
     if (uniqueId == "")
       qCDebug (CPR_CORE) << "trying to add an entity whithout an uniqueId";
+    else if (qName == "cpr_comment")
+    {
+      Comment *comment = new Comment (uniqueId, atts["content"],
+                                      _project->getDomDocument (), _project);
+      _project->addComment (comment, parentNode->getUniqueId ());
+      node = comment;
+    }
     else
     {
-      entity = new Entity (uniqueId, qName, atts, _project->getDomDocument (),
-                           _project);
-      _project->addEntity (entity, parentEntity->getUniqueId ());
+      Entity *entity = new Entity (uniqueId, qName, atts,
+                                   _project->getDomDocument (),
+                                   _project);
+      _project->addEntity (entity, parentNode->getUniqueId ());
+      node = entity;
     }
   }
   else
-    entity = _project;
+    node = _project;
 
   _lockStack.lock ();
-  _elementStack.push (entity);
+  _elementStack.push (node);
   _lockStack.unlock ();
+
   return true;
 }
 

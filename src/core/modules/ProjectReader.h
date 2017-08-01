@@ -61,7 +61,7 @@ private:
   Project *_project;
   QMutex _lockStack;
   QWaitCondition _sync;
-  QStack<Entity *> _elementStack;
+  QStack<Node *> _elementStack;
 
   bool parseModelString (const QString &str);
 };

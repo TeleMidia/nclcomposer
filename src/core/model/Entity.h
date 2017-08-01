@@ -320,12 +320,33 @@ public:
   virtual QString
   toString (int ntabs, bool writeuid) override
   {
-    Q_UNUSED (ntabs);
-    Q_UNUSED (writeuid);
-    return QString ("<!--\n") + this->_content + QString ("\n -->");
+    QString out = "";
+    for (int i = 0; i < ntabs; i++)
+      out += "\t";
+
+    out += "<cpr_comment";
+    if (writeuid)
+    {
+      out += " uniqueEntityId=\"";
+      out += getUniqueId ();
+      out += "\"";
+    }
+
+    out += " content=\"";
+    out += this->_content;
+    out += "\"/>\n";
+
+    return out;
   }
 
 protected:
+  explicit Comment (QString &uid, const QString &content, QDomDocument &doc,
+                    Node *parent = 0)
+      : Node (uid, doc, parent)
+  {
+    this->_content = content;
+  }
+
   explicit Comment (const QString &content, QDomDocument &doc,
                     Node *parent = 0)
       : Node (doc, parent)
