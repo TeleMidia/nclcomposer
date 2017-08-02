@@ -198,6 +198,7 @@ private:
   QAction* _re1280x720;
   QAction* _re1920x1080;
   QAction* _re320x400;
+  QAction* _recustom;
 
   QActionGroup* _screensizeGroup;
   QActionGroup* _regionActionGroup;

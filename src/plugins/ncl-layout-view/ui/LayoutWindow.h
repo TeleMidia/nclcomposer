@@ -77,6 +77,8 @@ private slots:
 private:
   Ui::QnlyMainWindow *ui;
   LayoutView *view;
+
+  void loadPreferences();
 };
 
 #endif // QNLYMAINWINDOW_H

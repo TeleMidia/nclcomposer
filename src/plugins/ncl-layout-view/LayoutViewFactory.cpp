@@ -16,10 +16,15 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "LayoutViewFactory.h"
+#include <util/Preferences.h>
 
 NCLLayoutViewFactory::NCLLayoutViewFactory(QObject* parent)
 {
   setParent(parent);
+
+  Preferences::getInstance ()->registerPreference (
+      "cpr.layout.resolutions",
+      new Preference ("resolutions", "640x480,800x600,1024x768,854x480,1280x720,1920x1080,320x400", "Layout"));
 }
 
 NCLLayoutViewFactory::~NCLLayoutViewFactory()

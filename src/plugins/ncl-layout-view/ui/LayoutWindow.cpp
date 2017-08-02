@@ -8,6 +8,9 @@
 #include "LayoutRegionBase.h"
 #include "LayoutRegion.h"
 
+#include <util/Preferences.h>
+using namespace cpr::core;
+
 LayoutWindow::LayoutWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::QnlyMainWindow)
@@ -18,6 +21,8 @@ LayoutWindow::LayoutWindow(QWidget *parent) :
   ui->toolBar_regionBases->addWidget(ui->regionBaseComboBox);
   ui->toolBar_regionBases->addWidget(new QLabel(tr("Resolution:"), this));
   ui->toolBar_regionBases->addWidget(ui->resolutionComboBox);
+
+  loadPreferences();
 }
 
 LayoutWindow::~LayoutWindow()
@@ -57,6 +62,20 @@ void LayoutWindow::setQnlyView(LayoutView *view)
           SIGNAL(activated(int)),
           this,
           SLOT(comboBoxChangedCurrentRegionBase(int)));
+}
+
+void LayoutWindow::loadPreferences()
+{
+  Preferences::getInstance ()->restore ();
+  Preference *resolutions
+      = Preferences::getInstance ()->getValue ("cpr.layout.resolutions");
+
+  QStringList reslist = resolutions->value().toString().split(',');
+  while(!reslist.isEmpty())
+  {
+    QString res = reslist.takeFirst();
+    ui->resolutionComboBox->addItem(res);
+  }
 }
 
 void LayoutWindow::addRegion()

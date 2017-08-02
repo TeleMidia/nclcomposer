@@ -50,46 +50,11 @@
      </rect>
     </property>
     <property name="currentText">
-     <string>640x480</string>
+     <string/>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>-1</number>
     </property>
-    <item>
-     <property name="text">
-      <string>640x480</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>800x600</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>1024x768</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>854x480</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>1280x720</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>1920x1080</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>320x400</string>
-     </property>
-    </item>
    </widget>
   </widget>
   <widget class="QToolBar" name="toolBar_edit">

@@ -465,6 +465,11 @@ void LayoutRegionBase::LayoutRegionBase::createActions()
   _re320x400->setCheckable(true);
   _re320x400->setChecked(false);
 
+  _recustom = new QAction(this);
+  _recustom->setText(tr("Custom"));
+  _recustom->setCheckable(false);
+  _recustom->setChecked(false);
+
   // hide action
   _hideAction = new QAction(this);
   _hideAction->setText(tr("Hide"));
@@ -504,6 +509,7 @@ void LayoutRegionBase::LayoutRegionBase::createActions()
   _screensizeGroup->addAction(_re1280x720);
   _screensizeGroup->addAction(_re1920x1080);
   _screensizeGroup->addAction(_re320x400);
+  _screensizeGroup->addAction(_recustom);
 }
 
 void LayoutRegionBase::createMenus()
@@ -553,6 +559,7 @@ void LayoutRegionBase::createMenus()
   _screensizeMenu->addAction(_re1280x720);
   _screensizeMenu->addAction(_re1920x1080);
   _screensizeMenu->addAction(_re320x400);
+  _screensizeMenu->addAction(_recustom);
 
   // context menu
   _contextMenu = new QMenu();
@@ -1020,6 +1027,8 @@ void LayoutRegionBase::changeResolution(int w, int h)
 
   _grid->setRect(0, 0, w, h);
 
+  _recustom->setCheckable(false);
+
   foreach(LayoutRegion* r, _regions.values())
     r->adjust();
 
@@ -1039,6 +1048,11 @@ void LayoutRegionBase::changeResolution(int w, int h)
     _re1920x1080->setChecked(true);
   else if(_re320x400->data().toSize() == size)
     _re320x400->setChecked(true);
+  else
+  {
+    _recustom->setCheckable(true);
+    _recustom->setChecked(true);
+  }
 }
 
 void LayoutRegionBase::performExport()
