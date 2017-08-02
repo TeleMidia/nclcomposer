@@ -400,12 +400,8 @@ NCLTreeWidget::removeItem (QString itemId)
     }
     else
     {
-      //            TODO:
-      //            this->clear();
       int index = indexOfTopLevelItem (item);
       QTreeWidgetItem *item = takeTopLevelItem (index);
-      qDebug () << "index=" << index << "item=" << item;
-      //              delete item;
     }
   }
   repaint ();
