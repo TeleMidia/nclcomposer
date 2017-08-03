@@ -284,7 +284,26 @@ PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
   foreach (const QString &attr, getAttributes (tagname))
   {
     QString datatype = structure->getAttributeDatatype (tagname, attr);
-    suggestions << structure->getDatatypeDefaultSuggestions (datatype);
+    QStringList attr_suggestions =
+        structure->getDatatypeDefaultSuggestions (datatype);
+
+    vector <AttributeReferences *> references
+        = structure->getReferences(tagname, attr);
+
+    for (AttributeReferences *ref : references)
+    {
+       QString ref_tagname = ref->getRefElement();
+       QString ref_attr = ref->getRefAttribute();
+
+       QList<Entity *> entities = this->project->getEntitiesbyType(ref_tagname);
+       foreach (Entity *ent, entities)
+       {
+         if (ent->hasAttribute(ref_attr))
+           attr_suggestions << ent->getAttribute(ref_attr);
+       }
+    }
+
+    suggestions << attr_suggestions;
   }
 
   return suggestions;
