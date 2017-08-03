@@ -22,9 +22,15 @@ NCLLayoutViewFactory::NCLLayoutViewFactory(QObject* parent)
 {
   setParent(parent);
 
+  QStringList default_resolutions (
+    {"640x480", "800x600", "1024x768", // 4x3
+     "854x480", "1280x720", "1920x1080", // 16x9
+     "320x400"} // other
+  );
+
   Preferences::getInstance ()->registerPreference (
       "cpr.layout.resolutions",
-      new Preference ("resolutions", "640x480,800x600,1024x768,854x480,1280x720,1920x1080,320x400", "Layout"));
+      new Preference ("resolutions", default_resolutions, "Layout"));
 }
 
 NCLLayoutViewFactory::~NCLLayoutViewFactory()

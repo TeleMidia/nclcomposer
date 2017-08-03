@@ -70,7 +70,7 @@ void LayoutWindow::loadPreferences()
   Preference *resolutions
       = Preferences::getInstance ()->getValue ("cpr.layout.resolutions");
 
-  QStringList reslist = resolutions->value().toString().split(',');
+  QStringList reslist = resolutions->value().toStringList();
   while(!reslist.isEmpty())
   {
     QString res = reslist.takeFirst();

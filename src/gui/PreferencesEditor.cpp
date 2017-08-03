@@ -51,23 +51,32 @@ void PreferencesEditor::loadPreferences()
       ui->tableParameters->setItem(i, 0, item);
       item = new QTableWidgetItem();
 
-      if(Preferences::getInstance()->getValue(key)->value().toBool())
-      {
-        item->setText(Preferences::getInstance()->getValue(key)->value().toString());
-      }
+      QVariant value = Preferences::getInstance()->getValue(key)->value();
+
+      if (value.type() == QVariant::StringList)
+        item->setText(value.toStringList().join(", "));
+      else
+        item->setText(value.toString());
+
       ui->tableParameters->setItem(i, 1, item);
-      i++;
+      ++i;
     }
   }
 }
 
 void PreferencesEditor::saveChanges()
 {
-  int rowcount = ui->tableParameters->rowCount();
-  for(int i=0; i < rowcount; i++)
+  for(int i = 0; i < ui->tableParameters->rowCount(); i++)
   {
-    Preferences::getInstance()->setValue(ui->tableParameters->item(i,0)->text(),
-                                         ui->tableParameters->item(i,1)->text());
+    QString key = ui->tableParameters->item(i, 0)->text();
+    QVariant value = Preferences::getInstance()->getValue(key)->value();
+    QString new_value= ui->tableParameters->item(i, 1)->text();
+
+    if (value.type () == QVariant::StringList)
+      Preferences::getInstance()->setValue(key, new_value.replace(" ", "").split(","));
+    else
+      Preferences::getInstance()->setValue(key, new_value);
   }
+
   Preferences::getInstance()->save();
 }
