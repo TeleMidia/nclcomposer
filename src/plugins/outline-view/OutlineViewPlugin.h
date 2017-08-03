@@ -21,6 +21,7 @@
 #include <QObject>
 
 #include "NCLTreeWidget.h"
+#include "OutlineViewPlugin_global.h"
 #include <extensions/IPlugin.h>
 using namespace cpr::core;
 

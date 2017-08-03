@@ -10,6 +10,7 @@ find_package(Qt5 REQUIRED COMPONENTS Widgets)
 set(OUTLINE_VIEW_SOURCES
   NCLTreeWidget.h
   NCLParser.h
+  OutlineViewPlugin_global.h
   OutlineViewPlugin.h
   OutlineViewFactory.h
 

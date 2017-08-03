@@ -19,6 +19,8 @@
 
 #include "modules/LanguageControl.h"
 
+Q_LOGGING_CATEGORY (CPR_PLUGIN_OUTLINE, "cpr.plugin.outline")
+
 OutlineViewPlugin::OutlineViewPlugin ()
     : _window (new NCLTreeWidget (0)), _windowBuffering (new NCLTreeWidget (0))
 {
@@ -183,7 +185,6 @@ OutlineViewPlugin::elementAddedByUser (QString type, QString parentId,
   if (parentId == "")
     parentId = project->getUniqueId ();
 
-  qWarning () << "OutlineViewPlugin::elementAddedByUser calling addEntity";
   emit addEntity (type, parentId, atts);
   emit addComment ("This is a comment ", parentId);
 }
@@ -328,8 +329,9 @@ OutlineViewPlugin::changeSelectedEntity (QString pluginID, void *param)
     if (item != nullptr)
       _window->setCurrentItem (item, 0);
     else
-      qWarning () << "The OutlineViewPlugin receive a message to select an"
-                  << " Entity that it doesn't know.";
+      qCWarning (CPR_PLUGIN_OUTLINE)
+          << "The OutlineViewPlugin receive a message to select an"
+          << " Entity that it doesn't know.";
   }
 }
 
