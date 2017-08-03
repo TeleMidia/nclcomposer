@@ -134,18 +134,18 @@ PropertiesViewPlugin::updateCurrentEntity (QString errorMessage)
   else
     name = "Unknown";
 
-  if (tagname != _window->getTagname ())
-  {
+//  if (tagname != _window->getTagname ())
+//  {
     _window->setTagname (tagname,
                          name,
                          getAttributes (tagname),
                          getAttributesDatatype (tagname),
                          getAttributeSuggestions (tagname));
-  }
-  else if (_window->getCurrentName () != name)
-  {
-    _window->setCurrentName (name);
-  }
+//  }
+//  else if (_window->getCurrentName () != name)
+//  {
+//    _window->setCurrentName (name);
+//  }
 
   _window->setErrorMessage (errorMessage);
 
@@ -295,11 +295,14 @@ PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
        QString ref_tagname = ref->getRefElement();
        QString ref_attr = ref->getRefAttribute();
 
-       QList<Entity *> entities = this->project->getEntitiesbyType(ref_tagname);
+       QList<Entity *> entities = this->project->getEntitiesbyType (ref_tagname);
        foreach (Entity *ent, entities)
        {
-         if (ent->hasAttribute(ref_attr))
-           attr_suggestions << ent->getAttribute(ref_attr);
+         if (ent != _currentEntity)
+         {
+           if (ent->hasAttribute(ref_attr))
+             attr_suggestions << ent->getAttribute(ref_attr);
+         }
        }
     }
 
