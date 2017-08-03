@@ -15,7 +15,7 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "PropertyEditor.h"
+#include "PropertiesEditor.h"
 
 #include <deque>
 
@@ -32,7 +32,7 @@
 #include "NCLStructure.h"
 using namespace cpr::nclprofile;
 
-PropertyEditor::PropertyEditor (QWidget *parent) : QWidget (parent)
+PropertiesEditor::PropertiesEditor (QWidget *parent) : QWidget (parent)
 {
   _ui = new Ui::PropertyEditorWidget ();
   _ui->setupUi (this);
@@ -41,8 +41,8 @@ PropertyEditor::PropertyEditor (QWidget *parent) : QWidget (parent)
   _ui->tableWidget->setItemDelegate (delegate);
   delegate->setTableWidget (_ui->tableWidget);
 
-  connect (_ui->tableWidget, SIGNAL (itemChanged (QTableWidgetItem *)), this,
-           SLOT (updateWithItemChanges (QTableWidgetItem *)),
+  connect (_ui->tableWidget, SIGNAL (itemChanged (QTableWidgetItem *)),
+           this, SLOT (updateWithItemChanges (QTableWidgetItem *)),
            Qt::DirectConnection);
 
   connect (_ui->filterLineEdit, SIGNAL (filterTextChanged (const QString &)),
@@ -63,10 +63,14 @@ PropertyEditor::PropertyEditor (QWidget *parent) : QWidget (parent)
 #endif
 }
 
-PropertyEditor::~PropertyEditor () {}
+PropertiesEditor::~PropertiesEditor () {}
 
 void
-PropertyEditor::setTagname (const QString &tagname, const QString &name)
+PropertiesEditor::setTagname (const QString &tagname,
+                            const QString &name,
+                            const QStringList &attrs,
+                            const QStringList &attrs_datatype,
+                            const QList<QStringList> &attrs_suggestions)
 {
   this->_currentTagname = tagname;
   ComboBoxDelegate *delegate
@@ -76,54 +80,45 @@ PropertyEditor::setTagname (const QString &tagname, const QString &name)
     delegate->setCurrentTagname (tagname);
 
   // Clear previous items
-  _propertyToLine.clear ();
-  _propertyToValue.clear ();
-  _orderedProperties.clear ();
-  _propertySuggestions.clear();
+  _attrs.clear();
+  _attrDatatype.clear();
+  _attr2Line.clear ();
+  _attrValue.clear ();
+  _attrValueSuggestions.clear();
 
   while (_ui->tableWidget->rowCount ())
     _ui->tableWidget->removeRow (0);
 
   setCurrentName (name);
 
-  // add the new ones
-  NCLStructure *structure = NCLStructure::getInstance ();
-  deque<QString> *attrs = structure->getAttributesOrdered (_currentTagname);
-
-  if (attrs != nullptr)
+  int i = 0;
+  foreach (const QString &a, attrs)
   {
-    int i;
-    deque<QString>::iterator it;
+    _attrValue[a] = "";
+    _attrs.push_back (a);
 
-    for (i = 0, it = attrs->begin (); it != attrs->end (); ++it, i++)
+    if (attrs_suggestions.size())
     {
-      QString currentAttr = (*it);
-      _propertyToValue[currentAttr] = "";
-      _orderedProperties.push_back (currentAttr);
-
-      // \todo References
-      QString datatype =
-          structure->getAttributeDatatype (_currentTagname, currentAttr);
-
-      QStringList suggestions
-          = structure->getDatatypeDefaultSuggestions (datatype);
-
-      setAttributeSuggestions(currentAttr, suggestions);
+      setAttributeSuggestions(a, attrs_suggestions.at(i));
     }
+
+    i++;
   }
+
+  _attrDatatype = attrs_datatype;
 
   filterProperties (this->_currentFilterString);
 }
 
 void
-PropertyEditor::setCurrentName (const QString &name)
+PropertiesEditor::setCurrentName (const QString &name)
 {
   this->_currentName = name;
   _ui->label->setText (_currentTagname + ":" + _currentName);
 }
 
 void
-PropertyEditor::setErrorMessage (const QString &errorMessage)
+PropertiesEditor::setErrorMessage (const QString &errorMessage)
 {
   if (!errorMessage.isEmpty ())
     _ui->label_ErrorMessage->setText (" (" + errorMessage + ")");
@@ -141,17 +136,15 @@ PropertyEditor::setErrorMessage (const QString &errorMessage)
 }
 
 void
-PropertyEditor::setAttributeValue (const QString &property, const QString &value)
+PropertiesEditor::setAttributeValue (const QString &property, const QString &value)
 {
   // Set the attibute just if this property is a valid property of the current
-  // tagname.
-  // Also, if propertyToLine does not contains property it is not been showed
-  // by
-  // the filter.
-  if (_propertyToValue.contains (property)
-      && _propertyToLine.contains (property))
+  // tagname. Also, if propertyToLine does not contains property it is not
+  // been showed by the filter.
+  if (_attrValue.contains (property)
+      && _attr2Line.contains (property))
   {
-    int line = _propertyToLine.value (property);
+    int line = _attr2Line.value (property);
 
     QTableWidgetItem *item = _ui->tableWidget->item (line, 1);
     if (item)
@@ -161,36 +154,36 @@ PropertyEditor::setAttributeValue (const QString &property, const QString &value
       {
         _internalPropertyChange = true;
         item->setText (value);
-        _propertyToValue[property] = value;
+        _attrValue[property] = value;
       }
     }
   }
 }
 
 void
-PropertyEditor::setAttributeSuggestions (const QString &property,
+PropertiesEditor::setAttributeSuggestions (const QString &property,
                                          const QStringList &suggestions)
 {
-  _propertySuggestions[property] = suggestions;
+  _attrValueSuggestions[property] = suggestions;
 }
 
 QStringList
-PropertyEditor::getAttributeSuggestions (const QString &property)
+PropertiesEditor::getAttributeSuggestions (const QString &property)
 {
-  if (_propertySuggestions.contains(property))
-    return _propertySuggestions[property];
+  if (_attrValueSuggestions.contains(property))
+    return _attrValueSuggestions[property];
   else
     return QStringList ();
 }
 
 QString
-PropertyEditor::getAttributeDatatype (const QString &attr)
+PropertiesEditor::getAttributeDatatype (const QString &attr)
 {
   return NCLStructure::getInstance ()->getAttributeDatatype (_currentTagname, attr);
 }
 
 void
-PropertyEditor::updateWithItemChanges (QTableWidgetItem *item)
+PropertiesEditor::updateWithItemChanges (QTableWidgetItem *item)
 {
   int row = _ui->tableWidget->row (item);
   int column = _ui->tableWidget->column (item);
@@ -219,36 +212,30 @@ PropertyEditor::updateWithItemChanges (QTableWidgetItem *item)
     value = item->text ();
   }
 
-  _propertyToValue[name] = value; // update internal map
+  _attrValue[name] = value; // update internal map
   emit propertyChanged (name, value);
 }
 
 void
-PropertyEditor::filterProperties (const QString &text)
+PropertiesEditor::filterProperties (const QString &text)
 {
   this->_currentFilterString = text;
   while (_ui->tableWidget->rowCount ())
     _ui->tableWidget->removeRow (0);
 
-  _propertyToLine.clear ();
+  _attr2Line.clear ();
 
 #if WITH_TREEVIEW
   while (attributesRootItem->rowCount ())
     attributesRootItem->removeRow (0);
 #endif
 
-  QString attr;
-  deque<QString>::iterator it;
-
-  for (it = _orderedProperties.begin (); it != _orderedProperties.end (); ++it)
-  // foreach( attr, propertyToValue.keys() )
+  foreach(const QString &attr, _attrs)
   {
-    attr = *it;
     if (attr.toLower ().startsWith (text.toLower ()))
     {
       QTableWidgetItem *item = new QTableWidgetItem (attr);
-      QTableWidgetItem *itemValue
-          = new QTableWidgetItem (_propertyToValue[attr]);
+      QTableWidgetItem *itemValue = new QTableWidgetItem (_attrValue[attr]);
 
 #if WITH_TREEVIEW
       QList<QStandardItem *> property;
@@ -260,7 +247,7 @@ PropertyEditor::filterProperties (const QString &text)
       _ui->tableWidget->insertRow (_ui->tableWidget->rowCount ());
       _internalPropertyChange = true;
       _ui->tableWidget->setItem (_ui->tableWidget->rowCount () - 1, 0, item);
-      _propertyToLine.insert (attr, _ui->tableWidget->rowCount () - 1);
+      _attr2Line.insert (attr, _ui->tableWidget->rowCount () - 1);
 
       _internalPropertyChange = true;
       _ui->tableWidget->setItem (_ui->tableWidget->rowCount () - 1, 1,

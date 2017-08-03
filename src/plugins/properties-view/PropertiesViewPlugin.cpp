@@ -22,7 +22,7 @@
 
 PropertiesViewPlugin::PropertiesViewPlugin ()
 {
-  _window = new PropertyEditor (0);
+  _window = new PropertiesEditor (0);
   project = nullptr;
   _currentEntity = nullptr;
 
@@ -116,7 +116,12 @@ PropertiesViewPlugin::changeSelectedEntity (QString pluginID, void *param)
 
   if (_currentEntity != nullptr)
   {
-    _window->setTagname (_currentEntity->getType (), "");
+    QString tagname = _currentEntity->getType ();
+    _window->setTagname (tagname,
+                         "",
+                         getAttributes(tagname),
+                         getAttributesDatatype(tagname),
+                         getAttributeSuggestions(tagname));
     updateCurrentEntity ();
   }
 
@@ -126,6 +131,7 @@ PropertiesViewPlugin::changeSelectedEntity (QString pluginID, void *param)
 void
 PropertiesViewPlugin::updateCurrentEntity (QString errorMessage)
 {
+  QString tagname = _currentEntity->getType ();
   QString name;
   if (_currentEntity->hasAttribute ("id"))
     name = _currentEntity->getAttribute ("id");
@@ -134,10 +140,18 @@ PropertiesViewPlugin::updateCurrentEntity (QString errorMessage)
   else
     name = "Unknown";
 
-  if (_currentEntity->getType () != _window->getTagname ())
-    _window->setTagname (_currentEntity->getType (), name);
+  if (tagname != _window->getTagname ())
+  {
+    _window->setTagname (tagname,
+                         name,
+                         getAttributes(tagname),
+                         getAttributesDatatype(tagname),
+                         getAttributeSuggestions(tagname));
+  }
   else if (_window->getCurrentName () != name)
+  {
     _window->setCurrentName (name);
+  }
 
   _window->setErrorMessage (errorMessage);
 
@@ -232,4 +246,52 @@ PropertiesViewPlugin::validationError (QString pluginID, void *param)
     if (_currentEntity == project->getEntityById (uid))
       updateCurrentEntity (p->second);
   }
+}
+
+QStringList
+PropertiesViewPlugin::getAttributes (const QString &tagname)
+{
+  QStringList attrs_list;
+  NCLStructure *structure = NCLStructure::getInstance ();
+  deque<QString> *attrs = structure->getAttributesOrdered (tagname);
+
+  if (attrs != nullptr)
+  {
+    for (auto it = attrs->begin (); it != attrs->end (); ++it)
+    {
+      attrs_list << *(it);
+    }
+  }
+
+  return attrs_list;
+}
+
+QStringList
+PropertiesViewPlugin::getAttributesDatatype (const QString &tagname)
+{
+  QStringList datatypes;
+
+  NCLStructure *structure = NCLStructure::getInstance ();
+  foreach (const QString &attr, getAttributes (tagname))
+  {
+    datatypes << structure->getAttributeDatatype (tagname, attr);
+  }
+
+  return datatypes;
+}
+
+QList<QStringList>
+PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
+{
+  QList<QStringList> suggestions;
+  NCLStructure *structure = NCLStructure::getInstance ();
+
+  // \todo References
+  foreach (const QString &attr, getAttributes (tagname))
+  {
+    QString datatype = structure->getAttributeDatatype (tagname, attr);
+    suggestions << structure->getDatatypeDefaultSuggestions (datatype);
+  }
+
+  return suggestions;
 }

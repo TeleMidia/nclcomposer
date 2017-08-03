@@ -11,14 +11,14 @@ find_package(Qt5 REQUIRED COMPONENTS Widgets)
 set(PROPERTIES_VIEW_SOURCES
   PropertiesViewFactory.cpp
   PropertiesViewPlugin.cpp
-  PropertyEditor.cpp
+  PropertiesEditor.cpp
   QLineEditFilter.cpp
   LineEditWithButton.cpp
   PropertyButton.cpp
 
   PropertiesViewFactory.h
   PropertiesView_global.h
-  PropertyEditor.h
+  PropertiesEditor.h
   PropertiesViewPlugin.h
   QLineEditFilter.h
   LineEditWithButton.h

@@ -47,7 +47,7 @@ class ComboBoxDelegate;
             (also called attributes) of any entity.
 
 */
-class PropertyEditor : public QWidget
+class PropertiesEditor : public QWidget
 {
   Q_OBJECT
 
@@ -57,12 +57,12 @@ public:
    *
    * \param parent The QObject parent.
    */
-  explicit PropertyEditor (QWidget *parent = 0);
+  explicit PropertiesEditor (QWidget *parent = 0);
 
   /*!
    * \brief Destructor.
    */
-  virtual ~PropertyEditor ();
+  virtual ~PropertiesEditor ();
   /*!
    * \brief Set the current tagname and update the available properties
    *  according to that tagname.
@@ -72,7 +72,11 @@ public:
    *
    * \param tagname The current tagname.
    */
-  void setTagname (const QString &tagname, const QString &name);
+  void setTagname (const QString &tagname,
+                   const QString &name,
+                   const QStringList &attrs = QStringList (),
+                   const QStringList &attrs_datatype = QStringList (),
+                   const QList<QStringList> &attrs_suggestions = QList<QStringList> ());
 
   /*!
    * \brief Get the current tagname.
@@ -141,11 +145,13 @@ private slots:
   void filterProperties (const QString &);
 
 private:
-  Ui::PropertyEditorWidget *_ui; /*!< TODO */
-  deque<QString> _orderedProperties;
-  QMap<QString, int> _propertyToLine;      /*!< TODO */
-  QMap<QString, QString> _propertyToValue; /*!< TODO */
-  QMap<QString, QStringList> _propertySuggestions;
+  Ui::PropertyEditorWidget *_ui;
+  QStringList _attrs;
+  QStringList _attrDatatype;
+  QMap<QString, QStringList> _attrValueSuggestions;
+
+  QMap<QString, int> _attr2Line;
+  QMap<QString, QString> _attrValue;
 
   bool _internalPropertyChange;
 
@@ -164,7 +170,7 @@ class ComboBoxDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  ComboBoxDelegate (PropertyEditor *propEditor, QWidget *parent = 0) :
+  ComboBoxDelegate (PropertiesEditor *propEditor, QWidget *parent = 0) :
     QStyledItemDelegate (parent)
   {
     this->_propEditor = propEditor;
@@ -268,7 +274,7 @@ public:
   }
 
 private:
-  PropertyEditor *_propEditor;
+  PropertiesEditor *_propEditor;
   QString _currentTagname;
   QTableWidget *_tableWidget;
 

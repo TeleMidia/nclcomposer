@@ -27,7 +27,7 @@
 #include <extensions/IPlugin.h>
 using namespace cpr::core;
 
-#include "PropertyEditor.h"
+#include "PropertiesEditor.h"
 
 /*!
  * \brief PropertiesViewPlugin is a Composer plugin that shows and enable the
@@ -145,10 +145,14 @@ private slots:
 
 private:
   QListWidget *_list;      /*! TODO */
-  PropertyEditor *_window; /*! TODO */
+  PropertiesEditor *_window; /*! TODO */
   Entity *_currentEntity;  /*! \todo Change pointer reference to
                                     the currentEntityId */
   QString _currentEntityId;
+
+  QStringList getAttributes (const QString &tagname);
+  QStringList getAttributesDatatype (const QString &tagname);
+  QList<QStringList> getAttributeSuggestions (const QString &tagname);
 };
 
 #endif // PROPERTIESVIEWPLUGIN_H
