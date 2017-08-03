@@ -190,6 +190,16 @@ Entity::setAttr (const QString &name, const QString &value)
 void
 Entity::setAtrrs (const QMap<QString, QString> &newatts)
 {
+  // clear previous attributes
+  QStringList oldAttrs;
+  QDomNamedNodeMap domAttrs = _domNode.toElement ().attributes ();
+  for (int i = 0; i < domAttrs.length (); i++)
+    oldAttrs << domAttrs.item (i).toAttr ().name();
+
+  foreach (const QString &att, oldAttrs)
+    _domNode.toElement().removeAttribute(att);
+
+  // set new attributes
   foreach (const QString &att, newatts.keys ())
     _domNode.toElement ().setAttribute (att, newatts[att]);
 }
