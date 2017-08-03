@@ -67,10 +67,10 @@ PropertiesEditor::~PropertiesEditor () {}
 
 void
 PropertiesEditor::setTagname (const QString &tagname,
-                            const QString &name,
-                            const QStringList &attrs,
-                            const QStringList &attrs_datatype,
-                            const QList<QStringList> &attrs_suggestions)
+                              const QString &name,
+                              const QStringList &attrs,
+                              const QStringList &attrs_datatype,
+                              const QList<QStringList> &attrs_suggestions)
 {
   this->_currentTagname = tagname;
   ComboBoxDelegate *delegate
@@ -136,13 +136,13 @@ PropertiesEditor::setErrorMessage (const QString &errorMessage)
 }
 
 void
-PropertiesEditor::setAttributeValue (const QString &property, const QString &value)
+PropertiesEditor::setAttributeValue (const QString &property,
+                                     const QString &value)
 {
   // Set the attibute just if this property is a valid property of the current
   // tagname. Also, if propertyToLine does not contains property it is not
   // been showed by the filter.
-  if (_attrValue.contains (property)
-      && _attr2Line.contains (property))
+  if (_attr2Line.contains (property))
   {
     int line = _attr2Line.value (property);
 
@@ -162,7 +162,7 @@ PropertiesEditor::setAttributeValue (const QString &property, const QString &val
 
 void
 PropertiesEditor::setAttributeSuggestions (const QString &property,
-                                         const QStringList &suggestions)
+                                           const QStringList &suggestions)
 {
   _attrValueSuggestions[property] = suggestions;
 }
@@ -230,9 +230,10 @@ PropertiesEditor::filterProperties (const QString &text)
     attributesRootItem->removeRow (0);
 #endif
 
-  foreach(const QString &attr, _attrs)
+  foreach (const QString &attr, _attrs)
   {
-    if (attr.toLower ().startsWith (text.toLower ()))
+    if (text == ""
+        || attr.toLower ().startsWith (text.toLower ()))
     {
       QTableWidgetItem *item = new QTableWidgetItem (attr);
       QTableWidgetItem *itemValue = new QTableWidgetItem (_attrValue[attr]);

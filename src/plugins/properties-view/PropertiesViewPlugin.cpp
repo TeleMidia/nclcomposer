@@ -26,8 +26,8 @@ PropertiesViewPlugin::PropertiesViewPlugin ()
   project = nullptr;
   _currentEntity = nullptr;
 
-  connect (_window, SIGNAL (propertyChanged (QString, QString)), this,
-           SLOT (updateCurrentEntityAttr (QString, QString)));
+  connect (_window, SIGNAL (propertyChanged (QString, QString)),
+           this, SLOT (updateCurrentEntityAttr (QString, QString)));
 }
 
 PropertiesViewPlugin::~PropertiesViewPlugin ()
@@ -116,12 +116,6 @@ PropertiesViewPlugin::changeSelectedEntity (QString pluginID, void *param)
 
   if (_currentEntity != nullptr)
   {
-    QString tagname = _currentEntity->getType ();
-    _window->setTagname (tagname,
-                         "",
-                         getAttributes(tagname),
-                         getAttributesDatatype(tagname),
-                         getAttributeSuggestions(tagname));
     updateCurrentEntity ();
   }
 
@@ -144,9 +138,9 @@ PropertiesViewPlugin::updateCurrentEntity (QString errorMessage)
   {
     _window->setTagname (tagname,
                          name,
-                         getAttributes(tagname),
-                         getAttributesDatatype(tagname),
-                         getAttributeSuggestions(tagname));
+                         getAttributes (tagname),
+                         getAttributesDatatype (tagname),
+                         getAttributeSuggestions (tagname));
   }
   else if (_window->getCurrentName () != name)
   {
@@ -156,7 +150,7 @@ PropertiesViewPlugin::updateCurrentEntity (QString errorMessage)
   _window->setErrorMessage (errorMessage);
 
   QMap<QString, QString> attrs = _currentEntity->getAttributes ();
-  foreach (const QString &key, attrs)
+  foreach (const QString &key, attrs.keys())
   {
     _window->setAttributeValue (key, attrs[key]);
   }
