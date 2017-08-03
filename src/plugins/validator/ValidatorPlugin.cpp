@@ -22,9 +22,7 @@ ValidatorPlugin::ValidatorPlugin ()
   table = new ValidatorTreeWidget ();
   table->setColumnCount (3);
   QStringList headers;
-  headers << ""
-          << "Elemento"
-          << "Mensagem";
+  headers << "" << tr("Elemento") << tr("Mensagem");
   table->setHeaderLabels (headers);
   table->setColumnWidth (0, 40);
 
@@ -83,7 +81,6 @@ ValidatorPlugin::updateMessages (std::vector<pair<void *, string> > msgs)
     Entity *entity = (Entity *)msgs[i].first;
     if (entity != NULL)
     {
-      qDebug () << entity->getUniqueId ();
       messages.insert (
           make_pair (entity, QString::fromStdString (msgs[i].second)));
     }

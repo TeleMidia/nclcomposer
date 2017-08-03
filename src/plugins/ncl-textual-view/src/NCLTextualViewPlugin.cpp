@@ -171,10 +171,6 @@ NCLTextualViewPlugin::incrementalUpdateFromModel ()
       {
         foreach (Node *child, ent->getChildren ())
         {
-          Comment *comment = dynamic_cast <Comment *> (child);
-
-          if (comment)
-            qWarning () << "There is a comment " << comment->get ();
           nodes.push_back (child);
         }
       }

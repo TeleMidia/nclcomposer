@@ -388,7 +388,8 @@ void LayoutView::performPaste()
         selectedRegionUId = _selectedRegionBase->getUid();
     }
   }
-  qDebug (CPR_PLUGIN_LAYOUT) << "Perform paste inside: " << selectedRegionUId;
+
+  qCDebug (CPR_PLUGIN_LAYOUT) << "Perform paste inside: " << selectedRegionUId;
 
   QString selectedRegionBaseUId = "";
   if(_selectedRegionBase != NULL)
@@ -516,7 +517,7 @@ void LayoutView::removeRegion( LayoutRegion* region,
 {
   if (region != NULL && regionBase != NULL)
   {
-    qDebug (CPR_PLUGIN_LAYOUT) << "Region Removed!";
+    qCDebug (CPR_PLUGIN_LAYOUT) << "Region Removed!";
 
     foreach(QGraphicsItem* item, region->childItems())
     {
@@ -568,7 +569,7 @@ void LayoutView::addRegionBase( LayoutRegionBase* regionBase,
 {
   if (regionBase != NULL)
   {
-    qDebug (CPR_PLUGIN_LAYOUT) << "LayoutRegionBase Added!";
+    qCDebug (CPR_PLUGIN_LAYOUT) << "LayoutRegionBase Added!";
 
     if (attributes.contains("id"))
       regionBase->setId(attributes["id"]);
