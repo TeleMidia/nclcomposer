@@ -40,12 +40,135 @@ using namespace cpr::nclprofile;
 #include "QLineEditFilter.h"
 #include "ui_PropertyEditorWidget.h"
 
+class ComboBoxDelegate;
+
+/*!
+ \brief PropertyEditor is a Widget that allows to edit individual properties
+            (also called attributes) of any entity.
+
+*/
+class PropertyEditor : public QWidget
+{
+  Q_OBJECT
+
+public:
+  /*!
+   * \brief Constructor.
+   *
+   * \param parent The QObject parent.
+   */
+  explicit PropertyEditor (QWidget *parent = 0);
+
+  /*!
+   * \brief Destructor.
+   */
+  virtual ~PropertyEditor ();
+  /*!
+   * \brief Set the current tagname and update the available properties
+   *  according to that tagname.
+   *
+   * The available properties are loaded from the configuration file of the
+   * current language.
+   *
+   * \param tagname The current tagname.
+   */
+  void setTagname (const QString &tagname, const QString &name);
+
+  /*!
+   * \brief Get the current tagname.
+   */
+  QString
+  getTagname ()
+  {
+    return this->_currentTagname;
+  }
+
+  /*!
+   * \brief Set the current name (id, name, ...) of the selected entity.
+   */
+  void setCurrentName (const QString &name);
+
+  /*!
+   * \brief Set the current error message (and change the color of the text) if
+   *  the errorMessage is not empty.
+   */
+  void setErrorMessage (const QString &errorMessage);
+
+  /*!
+   * \brief Get the current name.
+   */
+  QString
+  getCurrentName ()
+  {
+    return this->_currentName;
+  }
+
+  /*!
+   * \brief Set a value of an attribute.
+   *
+   * \param property Which property must be changed.
+   * \param value The new Value of the property.
+   */
+  void setAttributeValue (const QString &property, const QString &value);
+
+  void setAttributeSuggestions (const QString &prop, const QStringList &suggestions);
+
+  QStringList getAttributeSuggestions (const QString &prop);
+  QString getAttributeDatatype (const QString &prop);
+
+  QSize
+  sizeHint () const
+  {
+    return QSize (250, 400);
+  }
+
+signals:
+  void propertyChanged (QString property, QString value);
+
+private slots:
+  /*!
+   * \brief This SLOT must be called when the user changes the value of an
+   * item.
+   *
+   * The changes will then be sent to NCL Composer core.
+   */
+  void updateWithItemChanges (QTableWidgetItem *item);
+
+  /*!
+   * \brief This SLOT allows filter the current properties that are been
+   * showed.
+   */
+  void filterProperties (const QString &);
+
+private:
+  Ui::PropertyEditorWidget *_ui; /*!< TODO */
+  deque<QString> _orderedProperties;
+  QMap<QString, int> _propertyToLine;      /*!< TODO */
+  QMap<QString, QString> _propertyToValue; /*!< TODO */
+  QMap<QString, QStringList> _propertySuggestions;
+
+  bool _internalPropertyChange;
+
+  QString _currentTagname, _currentName;
+  QString _currentFilterString;
+
+#if WITH_TREEVIEW
+  QStandardItemModel *standardModel;
+  QStandardItem *attributesRootItem, *propertiesRootItem;
+#endif
+};
+
+
 class ComboBoxDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 
 public:
-  ComboBoxDelegate (QWidget *parent = 0) : QStyledItemDelegate (parent) {}
+  ComboBoxDelegate (PropertyEditor *propEditor, QWidget *parent = 0) :
+    QStyledItemDelegate (parent)
+  {
+    this->_propEditor = propEditor;
+  }
 
   QWidget *
   createEditor (QWidget *parent, const QStyleOptionViewItem &option,
@@ -55,18 +178,15 @@ public:
 
     if (index.column () == 1)
     {
-      // \todo References
-      NCLStructure *structure = NCLStructure::getInstance ();
-      QString datatype = structure->getAttributeDatatype (
-          currentTagname, tableWidget->item (index.row (), 0)->text ());
+      QString attr = _tableWidget->item (index.row (), 0)->text();
+      QString datatype = _propEditor->getAttributeDatatype (attr);
+      QStringList suggestions = _propEditor->getAttributeSuggestions(attr);
 
-      QStringList defaultSuggestions
-          = structure->getDatatypeDefaultSuggestions (datatype);
-      if (defaultSuggestions.size ())
+      if (suggestions.size ())
       {
         QComboBox *comboEdit = new QComboBox (parent);
         comboEdit->setEditable (true);
-        comboEdit->addItems (defaultSuggestions);
+        comboEdit->addItems (suggestions);
         comboEdit->setStyleSheet ("padding: 0,0,0,0;");
 
         return comboEdit;
@@ -138,18 +258,19 @@ public:
   void
   setCurrentTagname (const QString &tagname)
   {
-    this->currentTagname = tagname;
+    this->_currentTagname = tagname;
   }
 
   void
   setTableWidget (QTableWidget *tableWidget)
   {
-    this->tableWidget = tableWidget;
+    this->_tableWidget = tableWidget;
   }
 
 private:
-  QString currentTagname;
-  QTableWidget *tableWidget;
+  PropertyEditor *_propEditor;
+  QString _currentTagname;
+  QTableWidget *_tableWidget;
 
 private slots:
   void
@@ -159,116 +280,6 @@ private slots:
     // emit commitData(editor);
     // emit closeEditor(editor);
   }
-};
-
-/*!
- \brief PropertyEditor is a Widget that allows to edit individual properties
-            (also called attributes) of any entity.
-
-*/
-class PropertyEditor : public QWidget
-{
-  Q_OBJECT
-
-public:
-  /*!
-   * \brief Constructor.
-   *
-   * \param parent The QObject parent.
-   */
-  explicit PropertyEditor (QWidget *parent = 0);
-
-  /*!
-   * \brief Destructor.
-   */
-  virtual ~PropertyEditor ();
-  /*!
-   * \brief Set the current tagname and update the available properties
-   *  according to that tagname.
-   *
-   * The available properties are loaded from the configuration file of the
-   * current language.
-   *
-   * \param tagname The current tagname.
-   */
-  void setTagname (QString tagname, QString name);
-
-  /*!
-   * \brief Get the current tagname.
-   */
-  QString
-  getTagname ()
-  {
-    return this->_currentTagname;
-  }
-
-  /*!
-   * \brief Set the current name (id, name, ...) of the selected entity.
-   */
-  void setCurrentName (QString name);
-
-  /*!
-   * \brief Set the current error message (and change the color of the text) if
-   *  the errorMessage is not empty.
-   */
-  void setErrorMessage (QString errorMessage);
-
-  /*!
-   * \brief Get the current name.
-   */
-  QString
-  getCurrentName ()
-  {
-    return this->_currentName;
-  }
-
-  /*!
-   * \brief Set a value of an attribute.
-   *
-   * \param property Which property must be changed.
-   * \param value The new Value of the property.
-   */
-  void setAttributeValue (QString property, QString value);
-
-  QSize
-  sizeHint () const
-  {
-    return QSize (250, 400);
-  }
-
-signals:
-  void propertyChanged (QString property, QString value);
-
-private slots:
-  /*!
-   * \brief This SLOT must be called when the user changes the value of an
-   * item.
-   *
-   * The changes will then be sent to NCL Composer core.
-   */
-  void updateWithItemChanges (QTableWidgetItem *item);
-
-  /*!
-   * \brief This SLOT allows filter the current properties that are been
-   * showed.
-   */
-  void filterProperties (const QString &);
-
-private:
-  Ui::PropertyEditorWidget *_ui; /*!< TODO */
-  deque<QString> _orderedProperties;
-  QMap<QString, int> _propertyToLine;      /*!< TODO */
-  QMap<QString, QString> _propertyToValue; /*!< TODO */
-
-  bool _internalPropertyChange;
-
-  QString _currentTagname, _currentName;
-  QString _currentFilterString;
-
-#if WITH_TREEVIEW
-  QStandardItemModel *standardModel;
-  QStandardItem *attributesRootItem, *propertiesRootItem;
-#endif
 };
 
 #endif // PROPERTYEDITOR_H
