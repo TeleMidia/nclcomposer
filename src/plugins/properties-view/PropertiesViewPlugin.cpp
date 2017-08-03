@@ -61,6 +61,9 @@ PropertiesViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
 {
   Q_UNUSED (pluginID)
 
+  if (pluginID == this->getPluginInstanceID())
+    return;
+
   if (entity != nullptr && _currentEntity != nullptr)
   {
     if (entity->getUniqueId () == _currentEntity->getUniqueId ())
@@ -134,18 +137,11 @@ PropertiesViewPlugin::updateCurrentEntity (QString errorMessage)
   else
     name = "Unknown";
 
-//  if (tagname != _window->getTagname ())
-//  {
-    _window->setTagname (tagname,
-                         name,
-                         getAttributes (tagname),
-                         getAttributesDatatype (tagname),
-                         getAttributeSuggestions (tagname));
-//  }
-//  else if (_window->getCurrentName () != name)
-//  {
-//    _window->setCurrentName (name);
-//  }
+  _window->setTagname (tagname,
+                       name,
+                       getAttributes (tagname),
+                       getAttributesDatatype (tagname),
+                       getAttributeSuggestions (tagname));
 
   _window->setErrorMessage (errorMessage);
 
@@ -169,55 +165,27 @@ PropertiesViewPlugin::updateCurrentEntityAttr (QString attr, QString value)
     }
     else
     {
-      QMap<QString, QString> attrs;
-      QMap<QString, QString> entityAttrs = _currentEntity->getAttributes ();
+      QMap<QString, QString> attrs = _currentEntity->getAttributes ();
+      attrs[attr] = value;
 
-      foreach (const QString &key, entityAttrs.keys ())
+      if (value.isNull() || value.isEmpty() || value == "")
       {
-        if (key == attr)
-        {
-          if (!value.isNull () && !value.isEmpty ())
-          {
-            if (NCLStructure::getInstance ()->getAttributeDatatype (
-                    _currentEntity->getType (), attr)
-                == "URI")
-            {
-              try
-              {
-                value = Utilities::relativePath (project->getLocation (),
-                                                 value, true);
-              }
-              catch (...)
-              {
-                qDebug () << "Do not changing to a relative path";
-              }
-            }
-            attrs.insert (attr, value);
-          }
-        }
-        else
-          attrs.insert (key, entityAttrs[key]);
+        attrs.remove(attr);
       }
-
-      if (!attrs.contains (attr))
+      else
       {
-        if (!value.isNull () && !value.isEmpty () && value != "")
+        try
         {
           if (NCLStructure::getInstance ()->getAttributeDatatype (
-                  _currentEntity->getType (), attr)
-              == "URI")
+                _currentEntity->getType (), attr) == "URI")
           {
-            try
-            {
-              value = Utilities::relativePath (project->getLocation (), value,
-                                               true);
-            }
-            catch (...)
-            {
-              qDebug () << "Do not changing to a relative path";
-            }
+            attrs[attr] = Utilities::relativePath (project->getLocation (),
+                                                 value, true);
           }
-          attrs.insert (attr, value);
+        }
+        catch(...)
+        {
+          qDebug () << "Do not changing to a relative path";
         }
       }
 

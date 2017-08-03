@@ -140,7 +140,7 @@ PropertiesEditor::setAttributeValue (const QString &property,
                                      const QString &value)
 {
   // Set the attibute just if this property is a valid property of the current
-  // tagname. Also, if propertyToLine does not contains property it is not
+  // tagname.  Also, if propertyToLine does not contains property it is not
   // been showed by the filter.
   if (_attr2Line.contains (property))
   {
@@ -232,8 +232,7 @@ PropertiesEditor::filterProperties (const QString &text)
 
   foreach (const QString &attr, _attrs)
   {
-    if (text == ""
-        || attr.toLower ().startsWith (text.toLower ()))
+    if (attr.toLower ().startsWith (text.toLower ()))
     {
       QTableWidgetItem *item = new QTableWidgetItem (attr);
       QTableWidgetItem *itemValue = new QTableWidgetItem (_attrValue[attr]);
