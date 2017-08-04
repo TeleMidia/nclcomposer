@@ -527,7 +527,7 @@ void StructuralViewPlugin::clean()
   _mapViewToCore.clear();
 }
 
-void StructuralViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
+void StructuralViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
 {
   if(_synching)
     return;
@@ -545,12 +545,12 @@ void StructuralViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
   }
 }
 
-void StructuralViewPlugin::errorMessage(QString error)
+void StructuralViewPlugin::errorMessage(const QString &error)
 {
 
 }
 
-void StructuralViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
+void StructuralViewPlugin::onEntityChanged(const QString &pluginID, Entity *entity)
 {
   if(_synching)
     return;
@@ -562,7 +562,7 @@ void StructuralViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
   _waiting = false;
 }
 
-void StructuralViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
+void StructuralViewPlugin::onEntityRemoved(const QString &pluginID, QString entityID)
 {
   if(_synching)
     return;
@@ -573,7 +573,7 @@ void StructuralViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
   }
 }
 
-void StructuralViewPlugin::changeSelectedEntity(QString pluginID, void* param)
+void StructuralViewPlugin::changeSelectedEntity(const QString &pluginID, void* param)
 {
   if(_synching)
     return;
