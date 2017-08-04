@@ -605,6 +605,7 @@ QVector<StructuralEntity*> StructuralUtil::getUpNeighbors(StructuralEntity* enti
 
 bool StructuralUtil::isCondition(StructuralRole role)
 {
+
   return (role == Structural::onBegin ||
           role == Structural::onBeginAttribution ||
           role == Structural::onEnd ||
@@ -618,7 +619,8 @@ bool StructuralUtil::isCondition(StructuralRole role)
 
 bool StructuralUtil::isCondition(const QString &role)
 {
-  return isCondition(_mapStringToRole[role]);
+  return (_mapStringToRole.count(role) ?
+               isCondition(_mapStringToRole[role]) : false);
 }
 
 bool StructuralUtil::isAction(StructuralRole role)

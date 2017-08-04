@@ -1281,33 +1281,37 @@ void StructuralViewPlugin::adjustConnectors()
 
         connId = e->getAttribute("id");
 
-        foreach (Entity* ec, e->getEntityChildren()) {
-          if (ec->getType() == "simpleCondition") {
-            connConditions.append(ec->getAttribute("role"));
-          }
+        QStack<Entity*> next;
 
-          if (ec->getType() == "simpleAction") {
-            connActions.append(ec->getAttribute("role"));
-          }
+        foreach (Entity* ec, e->getEntityChildren())
+          next.push(ec);
 
-          if (ec->getType() == "connectorParam") {
-            connParams.append(ec->getAttribute("name"));
-          }
+        while(!next.isEmpty())
+        {
+          Entity* current = next.pop();
 
-          if (ec->getType() == "compoundCondition") {
-            foreach (Entity* ecc, ec->getEntityChildren()) {
-              if (ecc->getType() == "simpleCondition") {
-                connConditions.append(ecc->getAttribute("role"));
-              }
-            }
-          }
+          if (current->getType() == "simpleCondition")
+            if (current->hasAttribute("role"))
+              connConditions.append(current->getAttribute("role"));
 
-          if (ec->getType() == "compoundAction") {
-            foreach (Entity* ecc, ec->getEntityChildren()) {
-              if (ecc->getType() == "simpleAction") {
-                connActions .append(ecc->getAttribute("role"));
-              }
-            }
+          if (current->getType() == "attributeAssessment")
+            if (current->hasAttribute("role"))
+              connConditions.append(current->getAttribute("role"));
+
+          if (current->getType() == "simpleAction")
+            if (current->hasAttribute("role"))
+              connActions.append(current->getAttribute("role"));
+
+          if (current->getType() == "connectorParam")
+            if (current->hasAttribute("name"))
+              connParams.append(current->getAttribute("name"));
+
+          if (current->getType() == "compoundCondition" ||
+              current->getType() == "compoundAction" ||
+              current->getType() == "assessmentStatement")
+          {
+            foreach (Entity* ec, current->getEntityChildren())
+              next.push(ec);
           }
         }
 
@@ -1369,50 +1373,39 @@ void StructuralViewPlugin::adjustConnectors()
                     connId = importAlias+"#"+connId;
 
                     QDomNodeList bcc = bc.item(i).childNodes();
-                    for (unsigned int j = 0; j < bcc.length(); j++){
-                      if (bcc.item(j).nodeName() == "simpleCondition"){
-                        if (bcc.item(j).attributes().namedItem("role").isNull())
-                          break;
 
-                        connConditions.append(bcc.item(j).attributes().namedItem("role").nodeValue());
-                      }
+                    QStack<QDomNode> next;
 
-                      if (bcc.item(j).nodeName() == "simpleAction"){
-                        if (bcc.item(j).attributes().namedItem("role").isNull())
-                          break;
+                    for (unsigned int j = 0; j < bcc.length(); j++)
+                      next.push(bcc.item(j));
 
-                        connActions.append(bcc.item(j).attributes().namedItem("role").nodeValue());
-                      }
+                    while(!next.isEmpty())
+                    {
+                      QDomNode current = next.pop();
 
-                      if (bcc.item(j).nodeName() == "connectorParam"){
-                        if (bcc.item(j).attributes().namedItem("name").isNull())
-                          break;
+                      if (current.nodeName() == "simpleCondition")
+                        if (!current.attributes().namedItem("role").isNull())
+                          connConditions.append(current.attributes().namedItem("role").nodeValue());
 
-                        connParams.append(bcc.item(j).attributes().namedItem("name").nodeValue());
-                      }
+                      if (current.nodeName() == "attributeAssessment")
+                        if (!current.attributes().namedItem("role").isNull())
+                          connConditions.append(current.attributes().namedItem("role").nodeValue());
 
-                      if (bcc.item(j).nodeName() == "compoundCondition"){
-                        QDomNodeList bccc = bcc.item(j).childNodes();
-                        for (unsigned int k = 0; k < bccc.length(); k++){
-                          if (bccc.item(k).nodeName() == "simpleCondition"){
-                            if (bccc.item(k).attributes().namedItem("role").isNull())
-                              break;
+                      if (current.nodeName() == "simpleAction")
+                        if (!current.attributes().namedItem("role").isNull())
+                          connActions.append(current.attributes().namedItem("role").nodeValue());
 
-                            connConditions.append(bccc.item(k).attributes().namedItem("role").nodeValue());
-                          }
-                        }
-                      }
+                      if (current.nodeName() == "connectorParam")
+                        if (!current.attributes().namedItem("name").isNull())
+                          connActions.append(current.attributes().namedItem("name").nodeValue());
 
-                      if (bcc.item(j).nodeName() == "compoundAction"){
-                        QDomNodeList bccc = bcc.item(j).childNodes();
-                        for (unsigned int k = 0; k < bccc.length(); k++){
-                          if (bccc.item(k).nodeName() == "simpleAction"){
-                            if (bccc.item(k).attributes().namedItem("role").isNull())
-                              break;
-
-                            connActions.append(bccc.item(k).attributes().namedItem("role").nodeValue());
-                          }
-                        }
+                      if (current.nodeName() == "compoundCondition" ||
+                          current.nodeName() == "compoundAction" ||
+                          current.nodeName() == "assessmentStatement")
+                      {
+                        QDomNodeList nc = current.childNodes();
+                        for (unsigned int j = 0; j < nc.length(); j++)
+                          next.push(nc.item(j));
                       }
                     }
 

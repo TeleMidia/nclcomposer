@@ -158,7 +158,7 @@ private:
   void createEntity(StructuralType type, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void createDocument(StructuralEntity* entity, QDomDocument* document, QDomElement parent);
   void createLink(StructuralEntity* tail, StructuralEntity* head);
-  void createBind(StructuralEntity* tail, StructuralEntity* head, StructuralRole role = Structural::NoRole, const QString &code = "");
+  void createBind(StructuralEntity* tail, StructuralEntity* head, const QString &role = "", const QString &code = "");
   void createReference(StructuralEntity* tail, StructuralEntity* head);
 
   QString getNewId(StructuralEntity *entity);

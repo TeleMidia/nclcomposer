@@ -1986,19 +1986,15 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
 
         if (_entities.contains(uid))
         {
-
-          StructuralRole condition = StructuralUtil::translateStringToRole(_dialog->getCondition());
-          StructuralRole action = StructuralUtil::translateStringToRole(_dialog->getAction());
-
-          createBind(tail,_entities.value(uid),condition,settings.value(STR_SETTING_CODE));
-          createBind(_entities.value(uid),head,action,settings.value(STR_SETTING_CODE));
+          createBind(tail,_entities.value(uid),_dialog->getCondition(),settings.value(STR_SETTING_CODE));
+          createBind(_entities.value(uid),head,_dialog->getAction(),settings.value(STR_SETTING_CODE));
         }
       }
     }
   }
 }
 
-void StructuralView:: createBind(StructuralEntity* tail, StructuralEntity* head, StructuralRole role, const QString &code)
+void StructuralView:: createBind(StructuralEntity* tail, StructuralEntity* head, const QString &role, const QString &code)
 {
   StructuralEntity* parentTail = tail->getStructuralParent();
   StructuralEntity* parentHead = head->getStructuralParent();
@@ -2029,8 +2025,8 @@ void StructuralView:: createBind(StructuralEntity* tail, StructuralEntity* head,
       properties[STR_PROPERTY_EDGE_TAIL] = tail->getStructuralUid();
       properties[STR_PROPERTY_EDGE_HEAD] = head->getStructuralUid();
 
-      properties[STR_PROPERTY_BIND_ROLE] = StructuralUtil::translateRoleToString(role);
-      properties[STR_PROPERTY_ENTITY_ID] = StructuralUtil::translateRoleToString(role);
+      properties[STR_PROPERTY_BIND_ROLE] = role;
+      properties[STR_PROPERTY_ENTITY_ID] = role;
 
       StructuralEntity* entityLink = NULL;
       StructuralEntity* entityNonLink = NULL;
@@ -2042,7 +2038,7 @@ void StructuralView:: createBind(StructuralEntity* tail, StructuralEntity* head,
         entityNonLink = head;
         parentNonLink = parentHead;
 
-        if (role == Structural::NoRole)
+        if (role.isEmpty())
         {
           emit requestedUpdate();
 
@@ -2087,10 +2083,8 @@ void StructuralView:: createBind(StructuralEntity* tail, StructuralEntity* head,
               }
             }
 
-            QString role = _dialog->getAction();
-
-            properties[STR_PROPERTY_BIND_ROLE] = role;
-            properties[STR_PROPERTY_ENTITY_ID] = role;
+            properties[STR_PROPERTY_BIND_ROLE] = _dialog->getAction();;
+            properties[STR_PROPERTY_ENTITY_ID] = _dialog->getAction();;
           }
           else
           {
@@ -2118,7 +2112,7 @@ void StructuralView:: createBind(StructuralEntity* tail, StructuralEntity* head,
         entityNonLink = tail;
         parentNonLink = parentTail;
 
-        if (role == Structural::NoRole)
+        if (role.isEmpty())
         {
           emit requestedUpdate();
 
@@ -2163,10 +2157,8 @@ void StructuralView:: createBind(StructuralEntity* tail, StructuralEntity* head,
               }
             }
 
-            QString role = _dialog->getCondition();
-
-            properties[STR_PROPERTY_BIND_ROLE] = role;
-            properties[STR_PROPERTY_ENTITY_ID] = role;
+            properties[STR_PROPERTY_BIND_ROLE] = _dialog->getCondition();
+            properties[STR_PROPERTY_ENTITY_ID] = _dialog->getCondition();
           }
           else
           {
