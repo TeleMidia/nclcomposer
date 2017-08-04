@@ -19,6 +19,9 @@
 
 #include "LayoutViewPlugin_global.h"
 
+#include <util/Preferences.h>
+using namespace cpr::core;
+
 LayoutRegionBase::LayoutRegionBase( QObject* parent, QMenu* switchMenu )
   : QGraphicsScene(parent)
 {
@@ -430,45 +433,27 @@ void LayoutRegionBase::LayoutRegionBase::createActions()
   _sendbackAction->setEnabled(false);
   _sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
 
-  _re640x480 = new QAction(this);
-  _re640x480->setText(tr("640x480 (4:3)"));
-  _re640x480->setCheckable(true);
-  _re640x480->setChecked(false);
+  //resolutions
+  Preferences::getInstance ()->restore ();
+  Preference *resolutions
+      = Preferences::getInstance ()->getValue ("cpr.layout.resolutions");
 
-  _re800x600 = new QAction(this);
-  _re800x600->setText(tr("800x600 (4:3)"));
-  _re800x600->setCheckable(true);
-  _re800x600->setChecked(false);
+  QStringList reslist = resolutions->value().toStringList();
+  while(!reslist.isEmpty())
+  {
+    QStringList wh = reslist.first().split("x");
+    QAction* res = new QAction(this);
+    res->setText(reslist.takeFirst());
+    res->setCheckable(true);
+    res->setChecked(false);
+    res->setData(QSize(QVariant(wh[0]).toInt(), QVariant(wh[1]).toInt()));
+    connect(res, SIGNAL(triggered()), SLOT(performChangeResolution()));
+    //should it initialize with the other connectors?
 
-  _re1024x768 = new QAction(this);
-  _re1024x768->setText(tr("1024x768 (4:3)"));
-  _re1024x768->setCheckable(true);
-  _re1024x768->setChecked(false);
+    _resolutions.append(res);
+  }
+  _resolutions.first()->setChecked(true);
 
-  _re854x480 = new QAction(this);
-  _re854x480->setText(tr("854x480 (16:9)"));
-  _re854x480->setCheckable(true);
-  _re854x480->setChecked(true);
-
-  _re1280x720 = new QAction(this);
-  _re1280x720->setText(tr("1280x720 (16:9)"));
-  _re1280x720->setCheckable(true);
-  _re1280x720->setChecked(false);
-
-  _re1920x1080 = new QAction(this);
-  _re1920x1080->setText(tr("1920x1080 (16:9)"));
-  _re1920x1080->setCheckable(true);
-  _re1920x1080->setChecked(false);
-
-  _re320x400 = new QAction(this);
-  _re320x400->setText(tr("320x400 (4:5)"));
-  _re320x400->setCheckable(true);
-  _re320x400->setChecked(false);
-
-  _recustom = new QAction(this);
-  _recustom->setText(tr("Custom"));
-  _recustom->setCheckable(false);
-  _recustom->setChecked(false);
 
   // hide action
   _hideAction = new QAction(this);
@@ -502,14 +487,10 @@ void LayoutRegionBase::LayoutRegionBase::createActions()
   _screensizeGroup  = new QActionGroup(this);
   _screensizeGroup->setExclusive(true);
 
-  _screensizeGroup->addAction(_re640x480);
-  _screensizeGroup->addAction(_re800x600);
-  _screensizeGroup->addAction(_re1024x768);
-  _screensizeGroup->addAction(_re854x480);
-  _screensizeGroup->addAction(_re1280x720);
-  _screensizeGroup->addAction(_re1920x1080);
-  _screensizeGroup->addAction(_re320x400);
-  _screensizeGroup->addAction(_recustom);
+  for(int i=0; i<_resolutions.size(); i++)
+  {
+    _screensizeGroup->addAction(_resolutions.at(i));
+  }
 }
 
 void LayoutRegionBase::createMenus()
@@ -552,14 +533,10 @@ void LayoutRegionBase::createMenus()
 
   _screensizeMenu->setEnabled(true);
 
-  _screensizeMenu->addAction(_re640x480);
-  _screensizeMenu->addAction(_re800x600);
-  _screensizeMenu->addAction(_re1024x768);
-  _screensizeMenu->addAction(_re854x480);
-  _screensizeMenu->addAction(_re1280x720);
-  _screensizeMenu->addAction(_re1920x1080);
-  _screensizeMenu->addAction(_re320x400);
-  _screensizeMenu->addAction(_recustom);
+  for(int i=0; i<_resolutions.size(); i++)
+  {
+    _screensizeMenu->addAction(_resolutions.at(i));
+  }
 
   // context menu
   _contextMenu = new QMenu();
@@ -604,27 +581,6 @@ void LayoutRegionBase::createConnections()
 
   connect(_deleteAction, SIGNAL(triggered()),
           SLOT(performDelete()));
-
-  _re640x480->setData(QSize(640, 480));
-  connect(_re640x480, SIGNAL(triggered()), SLOT(performChangeResolution()));
-
-  _re800x600->setData(QSize(800, 600));
-  connect(_re800x600, SIGNAL(triggered()), SLOT(performChangeResolution()));
-
-  _re1024x768->setData(QSize(1024, 768));
-  connect(_re1024x768, SIGNAL(triggered()), SLOT(performChangeResolution()));
-
-  _re854x480->setData(QSize(854, 480));
-  connect(_re854x480, SIGNAL(triggered()), SLOT(performChangeResolution()));
-
-  _re1280x720->setData(QSize(1280, 720));
-  connect(_re1280x720, SIGNAL(triggered()), SLOT(performChangeResolution()));
-
-  _re1920x1080->setData(QSize(1920, 1080));
-  connect(_re1920x1080, SIGNAL(triggered()), SLOT(performChangeResolution()));
-
-  _re320x400->setData(QSize(320, 400));
-  connect(_re320x400, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
   connect(_exportAction, SIGNAL(triggered()), SLOT(performExport()));
 
@@ -1027,32 +983,16 @@ void LayoutRegionBase::changeResolution(int w, int h)
 
   _grid->setRect(0, 0, w, h);
 
-  _recustom->setCheckable(false);
-
   foreach(LayoutRegion* r, _regions.values())
     r->adjust();
 
-  // TODO: This should be based on an array or a map!
   QSize size(w, h);
-  if(_re640x480->data().toSize() == size)
-    _re640x480->setChecked(true);
-  else if(_re800x600->data().toSize() == size)
-    _re800x600->setChecked(true);
-  else if(_re1024x768->data().toSize() == size)
-    _re1024x768->setChecked(true);
-  else if(_re854x480->data().toSize() == size)
-    _re854x480->setChecked(true);
-  else if(_re1280x720->data().toSize() == size)
-    _re1280x720->setChecked(true);
-  else if(_re1920x1080->data().toSize() == size)
-    _re1920x1080->setChecked(true);
-  else if(_re320x400->data().toSize() == size)
-    _re320x400->setChecked(true);
-  else
+  for (int i=0;i<_resolutions.size();i++)
   {
-    _recustom->setCheckable(true);
-    _recustom->setChecked(true);
+    if(_resolutions.at(i)->data().toSize() == size)
+      _resolutions.at(i)->setChecked(true);
   }
+
 }
 
 void LayoutRegionBase::performExport()

@@ -190,15 +190,7 @@ private:
   QAction* _safeAreaAction;
   QAction* _action;
 
-  /*! \todo This could be an array (and the user could also add its own size) */
-  QAction* _re640x480;
-  QAction* _re800x600;
-  QAction* _re1024x768;
-  QAction* _re854x480;
-  QAction* _re1280x720;
-  QAction* _re1920x1080;
-  QAction* _re320x400;
-  QAction* _recustom;
+  QList<QAction*> _resolutions;
 
   QActionGroup* _screensizeGroup;
   QActionGroup* _regionActionGroup;
