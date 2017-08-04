@@ -707,6 +707,18 @@ void StructuralView::insert( QString uid, QString parent,
       if (settings[STR_SETTING_NOTIFY] == STR_VALUE_TRUE) {
         emit inserted(uid, parent, e->getStructuralProperties(), settings);
       }
+
+      if (!STR_DEFAULT_WITH_INTERFACES)
+      {
+        // Since interfaces are hidden, no update related with that entities
+        // are notified. However, the structural view create a new id when this property
+        // is empty, then the change must be explicit notified for the hidden entities
+        // (interface in this case).
+        emit changed(uid,
+                     e->getStructuralProperties(),
+                     e->getStructuralProperties(), // this param is not used in this case
+                     StructuralUtil::createSettings(false,false));
+      }
     }
   }
 }
