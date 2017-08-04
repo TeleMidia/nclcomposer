@@ -1285,12 +1285,12 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
               isVisible = false;
           }
 
-          if (!STR_DEFAULT_WITH_BODY &&
-              !STR_DEFAULT_WITH_FLOATING_INTERFACES)
-          {
-            if (tail->isHidden())
-              isVisible = false;
-          }
+//          if (!STR_DEFAULT_WITH_BODY &&
+//              !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+//          {
+//            if (tail->isHidden())
+//              isVisible = false;
+//          }
         }
         else
         {
