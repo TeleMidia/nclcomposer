@@ -35,6 +35,7 @@ NCLTextEditor::NCLTextEditor (QWidget *parent) : QsciScintilla (parent)
   _apis = nullptr;
   _textWithoutUserInter = "";
   _focusInIgnoringCurrentText = false;
+  _emitFocusOut = true;
 
   initParameters ();
   setAcceptDrops (true);
@@ -520,7 +521,8 @@ NCLTextEditor::focusOutEvent (QFocusEvent *event)
 {
   clearFillingAttributeIndicator ();
 
-  emit focusLosted (event);
+  if (_emitFocusOut)
+    emit focusLosted (event);
 }
 
 void
@@ -814,6 +816,12 @@ NCLTextEditor::elementsByTagname (const QString &tagname,
   }
 
   return ret;
+}
+
+void
+NCLTextEditor::setEmitFocusOut (bool v)
+{
+  this->_emitFocusOut = v;
 }
 
 /*

@@ -77,6 +77,8 @@ public:
   void userFillingPreviousAttribute (int pos);
   void updateVisualFillingAttributeField (int line, int index, int &begin,
                                           int &end);
+
+  void setEmitFocusOut (bool v);
   void keepFocused ();
   QString textWithoutUserInteraction ();
   void setTextWithoutUserInteraction (const QString &text);
@@ -134,6 +136,7 @@ private:
 
   TAB_BEHAVIOR _tabBehavior;
   bool _focusInIgnoringCurrentText;
+  bool _emitFocusOut;
   QString _textWithoutUserInter;
 
   void initParameters ();

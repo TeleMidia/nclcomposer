@@ -79,9 +79,6 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
     QStringList current_attrs;
 
     getAttributesTyped (pos, current_attrs);
-    // for (int i = 0; i < current_attrs.size(); i++)
-    //  qCDebug (CPR_PLUGIN_TEXTUAL) << "Already typed: " <<
-    //  current_attrs.at(i);
 
     if (tagname != "")
     {
@@ -117,9 +114,6 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
         = _nclStructure->getAttributeDatatype (tagname, attribute);
     NCLTextEditor *nclEditor = ((NCLTextEditor *)lexer ()->editor ());
 
-    // qCDebug (CPR_PLUGIN_TEXTUAL) << tagname << ":" << attribute << " ->
-    // datatype=" << datatype;
-
     QStringList defaultSuggestion
         = _nclStructure->getDatatypeDefaultSuggestions (datatype);
 
@@ -130,10 +124,14 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
 
     if (datatype == "URI")
     {
+
+      nclEditor->setEmitFocusOut(false);
       QString filename
-          = QFileDialog::getOpenFileName (nclEditor, tr ("Select file"),
+          = QFileDialog::getOpenFileName (nclEditor,
+                                          tr ("Select file"),
                                           // nclEditor->getDocumentUrl()
                                           Utilities::getLastFileDialogPath ());
+      nclEditor->setEmitFocusOut(true);
 
       if (!filename.isEmpty () && !filename.isNull ())
       {
@@ -147,7 +145,9 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
         catch (...)
         {
         }
+
         nclEditor->removeSelectedText ();
+
         // Removes an empty space automatically inserted by fillingAttributes.
         if (nclEditor->SendScintilla (QsciScintilla::SCI_GETCHARAT, pos)
             == ' ')
@@ -163,17 +163,11 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
     if (references.size ()) // the attribute should be a reference to other
     // attribute
     {
-      //      NCLTextEditor *nclEditor = ((NCLTextEditor *)lexer()->editor());
       if (nclEditor->parseDocument ()) // parse our current document (and the
-      // included ones).
+                                       // included ones).
       {
         for (unsigned int i = 0; i < references.size (); i++)
         {
-          // qCDebug (CPR_PLUGIN_TEXTUAL) << "Should refer to " <<
-          // references[i]->getRefElement()
-          //         << "." << references[i]->getRefAttribute()
-          //         << "in the scope: " << references[i]->getScope();
-
           QList<QDomElement> elements;
 
           // If we have an ANY_SCOPE, it doesn't need any special treatment.

@@ -48,8 +48,8 @@ NCLTextualViewPlugin::NCLTextualViewPlugin ()
 
   _isSyncing = false;
 
-  connect (_nclTextEditor, SIGNAL (focusLosted (QFocusEvent *)), this,
-           SLOT (manageFocusLost (QFocusEvent *)));
+  connect (_nclTextEditor, SIGNAL (focusLosted (QFocusEvent *)),
+           this, SLOT (manageFocusLost (QFocusEvent *)));
 
   connect (_nclTextEditor, SIGNAL (textChanged ()), this,
            SIGNAL (setCurrentProjectAsDirty ()));
@@ -1030,7 +1030,6 @@ NCLTextualViewPlugin::manageFocusLost (QFocusEvent *event)
   Q_UNUSED (event)
 
 #ifndef NCLEDITOR_STANDALONE
-
   // When AutoComplete list gets the focus, the QApplication::focusWidget
   // has a nullptr value. This is an QScintilla issues.
   // When the focus goes to AutoComplete list we don't want to synchronize with
@@ -1039,7 +1038,8 @@ NCLTextualViewPlugin::manageFocusLost (QFocusEvent *event)
   // qCDebug (CPR_PLUGIN_TEXTUAL) << nclTextEditor <<
   // QApplication::focusWidget();
   if (_nclTextEditor->textWithoutUserInteraction () != _nclTextEditor->text ()
-      && !_isSyncing && (QApplication::focusWidget () != nullptr))
+      && !_isSyncing
+      && (QApplication::focusWidget () != nullptr))
   {
     /*int ret = QMessageBox::question(_window,
                                     tr("Textual View synchronization"),
