@@ -241,14 +241,6 @@ PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
   QList<QStringList> suggestions;
   NCLStructure *structure = NCLStructure::getInstance ();
 
-  // Get the scope of current entity
-  Entity *currentEntityScope = dynamic_cast<Entity *>(_currentEntity->getParent());
-  while (currentEntityScope->getParent()
-         && !structure->defineScope (currentEntityScope->getType()))
-  {
-    currentEntityScope = dynamic_cast <Entity *> (currentEntityScope->getParent());
-  }
-
   // \todo References
   foreach (const QString &attr, getAttributes (tagname))
   {
@@ -257,7 +249,7 @@ PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
     QStringList attr_suggestions =
         structure->getDatatypeDefaultSuggestions (datatype);
 
-    // then, we get the values that are references to other elements on the
+    // then, we get the values that are references to other elements in the
     // document
     vector <AttributeReferences *> references
         = structure->getReferences(tagname, attr);
@@ -268,28 +260,68 @@ PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
        QString ref_attr = ref->getRefAttribute();
        AttributeReferences::REFERENCE_SCOPE scope = ref->getScope ();
 
+       // Find the scope we should search the entity
+       Entity *entityTargetScope = nullptr;
+       if (scope == AttributeReferences::ANY_SCOPE)
+       {
+         // do nothing
+       }
+       else if (scope == AttributeReferences::SAME_SCOPE)
+       {
+         // Get the scope of the current entity
+         entityTargetScope = dynamic_cast<Entity *>(_currentEntity->getParent());
+         while (entityTargetScope->getParent()
+                && !structure->defineScope (entityTargetScope->getType()))
+         {
+           entityTargetScope = dynamic_cast <Entity *> (entityTargetScope->getParent());
+         }
+       }
+       else if (scope == AttributeReferences::USERDEFINED_SCOPE)
+       {
+         QString attr_scope;
+         QString userDefinedScope = ref->getUserDefinedScope ();
+
+         QString idEntityScope = "";
+         if (userDefinedScope.startsWith ("$THIS"))
+         {
+           attr_scope = userDefinedScope.mid (6);
+           idEntityScope = _currentEntity->getAttribute (attr_scope);
+         }
+         else if (userDefinedScope.startsWith ("$PARENT"))
+         {
+           attr_scope = userDefinedScope.mid (8);
+           idEntityScope = static_cast <Entity *> (_currentEntity->getParent())->getAttribute(attr_scope);
+         }
+         else if (userDefinedScope.startsWith ("$GRANDPARENT"))
+         {
+           attr_scope = userDefinedScope.mid (13);
+           idEntityScope = static_cast <Entity *> (_currentEntity->getParent()->getParent())->getAttribute(attr_scope);
+         }
+
+         QList <Entity *> ents = project->getEntityByAttrId (idEntityScope);
+         if (ents.size())
+          entityTargetScope = ents.at(0);
+       }
+
+       // Now, search for the entities in the required scope
        QList<Entity *> entities = this->project->getEntitiesbyType (ref_tagname);
        foreach (Entity *ent, entities)
        {
          if (ent != _currentEntity)
          {
-           if (scope == AttributeReferences::ANY_SCOPE)
+           Entity *parent_scope = dynamic_cast <Entity *> (ent->getParent());
+           while (parent_scope->getParent()
+                  && !structure->defineScope (parent_scope->getType()))
            {
-             if (ent->hasAttribute(ref_attr))
-               attr_suggestions << ent->getAttribute(ref_attr);
+             parent_scope = dynamic_cast <Entity *> (parent_scope->getParent());
            }
-           else if (scope == AttributeReferences::SAME_SCOPE)
-           {
-             Entity *parent_scope = dynamic_cast <Entity *> (ent->getParent());
-             while (parent_scope->getParent()
-                    && !structure->defineScope (parent_scope->getType()))
-             {
-               parent_scope = dynamic_cast <Entity *> (parent_scope->getParent());
-             }
 
-             if (parent_scope != nullptr
-                 && parent_scope == currentEntityScope
-                 && ent->hasAttribute(ref_attr))
+           if (ent->hasAttribute(ref_attr))
+           {
+             if ((scope == AttributeReferences::ANY_SCOPE) // ANY_SCOPE
+                 || (parent_scope != nullptr
+                     && parent_scope == entityTargetScope) )
+
                attr_suggestions << ent->getAttribute(ref_attr);
            }
          }
