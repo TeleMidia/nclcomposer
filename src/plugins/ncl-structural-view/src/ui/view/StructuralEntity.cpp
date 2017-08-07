@@ -200,8 +200,8 @@ void StructuralEntity::setStructuralProperties(const QMap<QString, QString> &pro
   if (!_restrictions.isEmpty()) {
     QMap<QString, QString> previous = _properties;
 
-    foreach (QString key, previous.keys()) {
-      foreach (QString restriction, _restrictions) {
+    foreach (const QString &key, previous.keys()) {
+      foreach (const QString &restriction, _restrictions) {
         if (key.contains(restriction))
           if (!properties.contains(key))
             _properties.remove(key);
@@ -209,7 +209,7 @@ void StructuralEntity::setStructuralProperties(const QMap<QString, QString> &pro
     }
   }
 
-  foreach (QString name, properties.keys())
+  foreach (const QString &name, properties.keys())
     _properties[name] = properties.value(name);
 
   adjust(true);
@@ -1003,7 +1003,7 @@ void StructuralEntity::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
   if (_moveable && _moving)
   {
-    move(event);
+    move (event);
   }
   else if (_resizable && _resizing)
   {

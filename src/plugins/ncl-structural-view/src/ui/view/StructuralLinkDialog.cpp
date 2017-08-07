@@ -561,7 +561,7 @@ void StructuralLinkDialog::changeContent(const QString &connector)
       _mode == EditCondition ||
       _mode == CreateLink)
   {
-    foreach (QString condition, _conditions.value(connector))
+    foreach (const QString &condition, _conditions.value(connector))
     {
       QString icon = ":/icon/bind-unknow-condition";
 
@@ -587,7 +587,7 @@ void StructuralLinkDialog::changeContent(const QString &connector)
       _mode == EditAction ||
       _mode == CreateLink)
   {
-    foreach (QString action, _actions.value(connector))
+    foreach (const QString &action, _actions.value(connector))
     {
       QString icon = ":/icon/bind-unknow-action";
 
@@ -658,7 +658,7 @@ void StructuralLinkDialog::changeContent(const QString &connector)
 
   int i = 0;
 
-  foreach(QString name, _params.value(connector))
+  foreach (const QString &name, _params.value(connector))
   {
     QStandardItem* linkItem = new QStandardItem(name);
     linkItem->setEditable(false);

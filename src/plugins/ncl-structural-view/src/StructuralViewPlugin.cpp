@@ -109,7 +109,7 @@ bool StructuralViewPlugin::saveSubsession()
   data.append(_window->getView()->save());
 
   data.append("-- EXTRA DATA");
-  foreach(QString key, _mapCoreToView.keys())
+  foreach (const QString &key, _mapCoreToView.keys())
   {
     data.append(key+"="+_mapCoreToView[key]+":");
   }
@@ -335,7 +335,7 @@ void StructuralViewPlugin::updateFromModel()
             }
           }
 
-          foreach (QString key, e->getStructuralProperties().keys())
+          foreach (const QString &key, e->getStructuralProperties().keys())
           {
             if (key.contains(STR_PROPERTY_BINDPARAM_NAME) ||
                 key.contains(STR_PROPERTY_BINDPARAM_VALUE))
@@ -348,7 +348,7 @@ void StructuralViewPlugin::updateFromModel()
       }
       else if (e->getStructuralType() == Structural::Link)
       {
-        foreach (QString key, e->getStructuralProperties().keys())
+        foreach (const QString &key, e->getStructuralProperties().keys())
         {
           if (key.contains(STR_PROPERTY_LINKPARAM_NAME) ||
               key.contains(STR_PROPERTY_LINKPARAM_VALUE))
@@ -454,7 +454,7 @@ void StructuralViewPlugin::updateFromModel()
       s.push(c);
   }
 
-  foreach (QString key, _window->getView()->getEntities().keys())
+  foreach (const QString &key, _window->getView()->getEntities().keys())
   {
     if (_window->getView()->hasEntity(key))
     {
@@ -605,7 +605,7 @@ void StructuralViewPlugin::insertInView(Entity* entity, bool undo)
     QMap<QString, QString> translations = StructuralUtil::createCoreTranslations(type);
 
     if (!translations.isEmpty()) {
-      foreach (QString key, translations.keys())
+      foreach (const QString &key, translations.keys())
         if (!entity->getAttribute(key).isEmpty())
           properties.insert(translations.value(key),entity->getAttribute(key));
 
@@ -756,7 +756,7 @@ void StructuralViewPlugin::changeInView(Entity* entity)
 
     QMap<QString, QString> translations = StructuralUtil::createCoreTranslations(type);
 
-    foreach (QString key, translations.keys()) {
+    foreach (const QString &key, translations.keys()) {
       if (!entity->getAttribute(key).isEmpty())
         properties.insert(translations.value(key), entity->getAttribute(key));
     }
@@ -947,7 +947,7 @@ void StructuralViewPlugin::insertInCore(QString uid, QString parent, QMap<QStrin
 
     QMap<QString, QString> translations = StructuralUtil::createPluginTranslations(type);
 
-    foreach (QString key, translations.keys()) {
+    foreach (const QString &key, translations.keys()) {
       if (!properties.value(key).isEmpty())
         attributes.insert(translations.value(key), properties.value(key));
     }
@@ -976,7 +976,7 @@ void StructuralViewPlugin::insertInCore(QString uid, QString parent, QMap<QStrin
         value = QString(STR_PROPERTY_BINDPARAM_VALUE);
       }
 
-      foreach (QString key, properties.keys()) {
+      foreach (const QString &key, properties.keys()) {
         if (key.contains(name)){
           QString pUid = key.right(key.length() - key.lastIndexOf(':') - 1);
 
@@ -1024,7 +1024,7 @@ void StructuralViewPlugin::changeInCore(QString uid, QMap<QString, QString> prop
 
     QMap<QString, QString> translations = StructuralUtil::createPluginTranslations(type);
 
-    foreach (QString key, translations.keys()) {
+    foreach (const QString &key, translations.keys()) {
       if (!properties.value(key).isEmpty())
         attributes.insert(translations.value(key), properties.value(key));
     }
@@ -1122,7 +1122,7 @@ void StructuralViewPlugin::changeInCore(QString uid, QMap<QString, QString> prop
         }
       }
 
-      foreach (QString key, properties.keys()) {
+      foreach (const QString &key, properties.keys()) {
         if (key.contains(name)){
           QString pUid = key.right(key.length() - key.lastIndexOf(':') - 1);
 
@@ -1169,7 +1169,7 @@ void StructuralViewPlugin::changeInCore(QString uid, QMap<QString, QString> prop
         }
       }
 
-      foreach (QString pUid, paramUids)
+      foreach (const QString &pUid, paramUids)
         emit removeEntity(getProject()->getEntityById(pUid));
     }
 

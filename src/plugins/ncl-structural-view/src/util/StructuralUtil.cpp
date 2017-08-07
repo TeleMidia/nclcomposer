@@ -181,7 +181,7 @@ QMap<QString,QString> StructuralUtil::createPluginTranslations(StructuralType ty
   QMap<QString, QString> translations;
 
   QMap<QString, QString> inverted = createCoreTranslations(type);
-  foreach (QString key, inverted.keys())
+  foreach (const QString &key, inverted.keys())
     translations[inverted.value(key)] = key;
 
   return translations;
