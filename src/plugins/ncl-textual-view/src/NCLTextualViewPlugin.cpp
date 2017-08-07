@@ -365,10 +365,6 @@ NCLTextualViewPlugin::errorMessage (const QString &error)
 void
 NCLTextualViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
 {
-  qCDebug (CPR_PLUGIN_TEXTUAL)
-      << "PLUGIN (" + pluginID + ") changed the Entity (" + entity->getType ()
-             + " - " + entity->getUniqueId () + ")";
-
   // Return if this is my call to onEntityAdded
   if (pluginID == getPluginInstanceID () && !_isSyncing)
     return;
