@@ -186,7 +186,6 @@ OutlineViewPlugin::elementAddedByUser (QString type, QString parentId,
     parentId = project->getUniqueId ();
 
   emit addEntity (type, parentId, atts);
-  emit addComment ("This is a comment ", parentId);
 }
 
 bool
