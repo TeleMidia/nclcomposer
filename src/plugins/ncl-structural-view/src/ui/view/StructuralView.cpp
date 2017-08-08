@@ -962,28 +962,30 @@ StructuralView::remove (QString uid, QMap<QString, QString> settings)
             }
             else
             {
-              // In case of 'Structural::Reference' edge, just change
-              // 'Structural::Port' properties.
-              //
-              // Note:
-              // The 'tail' of a 'Structural::Reference' edge
-              // is always a 'Structural::Port' entity.
-              QMap<QString, QString> previous
-                  = edge->getTail ()->getStructuralProperties ();
-              QMap<QString, QString> properties
-                  = edge->getTail ()->getStructuralProperties ();
-              ;
+              if (STR_DEFAULT_WITH_INTERFACES)
+              {
+                // In case of 'Structural::Reference' edge, just change
+                // 'Structural::Port' properties.
+                //
+                // Note:
+                // The 'tail' of a 'Structural::Reference' edge
+                // is always a 'Structural::Port' entity.
+                QMap<QString, QString> previous
+                    = edge->getTail ()->getStructuralProperties ();
+                QMap<QString, QString> properties
+                    = edge->getTail ()->getStructuralProperties ();
 
-              properties[STR_PROPERTY_REFERENCE_COMPONENT_ID] = "";
-              properties[STR_PROPERTY_REFERENCE_COMPONENT_UID] = "";
-              properties[STR_PROPERTY_REFERENCE_INTERFACE_ID] = "";
-              properties[STR_PROPERTY_REFERENCE_INTERFACE_UID] = "";
+                properties[STR_PROPERTY_REFERENCE_COMPONENT_ID] = "";
+                properties[STR_PROPERTY_REFERENCE_COMPONENT_UID] = "";
+                properties[STR_PROPERTY_REFERENCE_INTERFACE_ID] = "";
+                properties[STR_PROPERTY_REFERENCE_INTERFACE_UID] = "";
 
-              change (edge->getTail ()->getStructuralUid (), properties,
-                      previous,
-                      StructuralUtil::createSettings (
-                          STR_VALUE_TRUE, settings.value (STR_SETTING_NOTIFY),
-                          settings.value (STR_SETTING_CODE)));
+                change (edge->getTail ()->getStructuralUid (), properties,
+                        previous,
+                        StructuralUtil::createSettings (
+                            STR_VALUE_TRUE, settings.value (STR_SETTING_NOTIFY),
+                            settings.value (STR_SETTING_CODE)));
+              }
             }
           }
         }
