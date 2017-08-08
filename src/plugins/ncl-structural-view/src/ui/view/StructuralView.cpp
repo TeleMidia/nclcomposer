@@ -1804,7 +1804,7 @@ StructuralView::performAutostart ()
     if (properties.contains (STR_PROPERTY_ENTITY_AUTOSTART))
     {
       if (properties[STR_PROPERTY_ENTITY_AUTOSTART] == STR_VALUE_TRUE)
-        //        properties.remove(STR_PROPERTY_ENTITY_AUTOSTART);
+        // properties.remove(STR_PROPERTY_ENTITY_AUTOSTART);
         properties[STR_PROPERTY_ENTITY_AUTOSTART] = STR_VALUE_FALSE;
       else
         properties[STR_PROPERTY_ENTITY_AUTOSTART] = STR_VALUE_TRUE;

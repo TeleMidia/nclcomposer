@@ -206,21 +206,21 @@ StructuralUtil::createPluginTranslations (StructuralType type)
   return translations;
 }
 
-std::map<Structural::StructuralCategory, QString>
+std::map<Structural::Category, QString>
     StructuralUtil::_mapCategoryToString
-    = StructuralMap<Structural::StructuralCategory, QString> (
+    = StructuralMap<Structural::Category, QString> (
         Structural::Node, "node") (Structural::Edge,
                                    "edge") (Structural::Interface, "interface")
 
         (Structural::NoCategory, "");
 
-std::map<QString, Structural::StructuralCategory>
+std::map<QString, Structural::Category>
     StructuralUtil::_mapStringToCategory
-    = invert<QString, Structural::StructuralCategory> (
+    = invert<QString, Structural::Category> (
         StructuralUtil::_mapCategoryToString);
 
 QString
-StructuralUtil::translateCategoryToString (StructualCategory category)
+StructuralUtil::translateCategoryToString (StructuralCategory category)
 {
   if (_mapCategoryToString.count (category))
     return _mapCategoryToString[category];
@@ -228,7 +228,7 @@ StructuralUtil::translateCategoryToString (StructualCategory category)
     return "";
 }
 
-StructualCategory
+StructuralCategory
 StructuralUtil::translateStringToCategory (const QString &category)
 {
   if (_mapStringToCategory.count (category))
@@ -237,8 +237,8 @@ StructuralUtil::translateStringToCategory (const QString &category)
     return Structural::NoCategory;
 }
 
-std::map<Structural::StructuralType, QString> StructuralUtil::_mapTypeToString
-    = StructuralMap<Structural::StructuralType, QString> (
+std::map<Structural::Type, QString> StructuralUtil::_mapTypeToString
+    = StructuralMap<Structural::Type, QString> (
         Structural::Media, "media") (Structural::Body, "body") (
         Structural::Context, "context") (Structural::Switch, "switch") (
         Structural::Port, "port") (Structural::SwitchPort, "switchPort") (
@@ -248,8 +248,8 @@ std::map<Structural::StructuralType, QString> StructuralUtil::_mapTypeToString
 
         (Structural::NoType, "");
 
-std::map<QString, Structural::StructuralType> StructuralUtil::_mapStringToType
-    = invert<QString, Structural::StructuralType> (
+std::map<QString, Structural::Type> StructuralUtil::_mapStringToType
+    = invert<QString, Structural::Type> (
         StructuralUtil::_mapTypeToString);
 
 QString
@@ -270,8 +270,8 @@ StructuralUtil::translateStringToType (const QString &type)
     return Structural::NoType;
 }
 
-std::map<Structural::StructuralRole, QString> StructuralUtil::_mapRoleToString
-    = StructuralMap<Structural::StructuralRole, QString> (Structural::onBegin,
+std::map<Structural::Role, QString> StructuralUtil::_mapRoleToString
+    = StructuralMap<Structural::Role, QString> (Structural::onBegin,
                                                           "onBegin") (
         Structural::onEnd, "onEnd") (Structural::onSelection, "onSelection") (
         Structural::onResume, "onResume") (Structural::onPause, "onPause") (
@@ -286,8 +286,8 @@ std::map<Structural::StructuralRole, QString> StructuralUtil::_mapRoleToString
 
             (Structural::NoRole, "");
 
-std::map<QString, Structural::StructuralRole> StructuralUtil::_mapStringToRole
-    = invert<QString, Structural::StructuralRole> (
+std::map<QString, Structural::Role> StructuralUtil::_mapStringToRole
+    = invert<QString, Structural::Role> (
         StructuralUtil::_mapRoleToString);
 
 QString
@@ -308,9 +308,9 @@ StructuralUtil::translateStringToRole (const QString &role)
     return Structural::NoRole;
 }
 
-std::map<Structural::StructuralMimeType, QString>
+std::map<Structural::MimeType, QString>
     StructuralUtil::_mapMimeTypeToString
-    = StructuralMap<Structural::StructuralMimeType, QString> (
+    = StructuralMap<Structural::MimeType, QString> (
         Structural::Text, "text") (Structural::Image, "image") (
         Structural::Audio, "audio") (Structural::Video, "video") (
         Structural::HTML, "html") (Structural::NCL, "ncl") (
@@ -319,9 +319,9 @@ std::map<Structural::StructuralMimeType, QString>
 
         (Structural::NoMimeType, "");
 
-std::map<QString, Structural::StructuralMimeType>
+std::map<QString, Structural::MimeType>
     StructuralUtil::_mapStringToMimeType
-    = invert<QString, Structural::StructuralMimeType> (
+    = invert<QString, Structural::MimeType> (
         StructuralUtil::_mapMimeTypeToString);
 
 QString
@@ -342,8 +342,8 @@ StructuralUtil::translateStringToMimeType (const QString &mimetype)
     return Structural::NoMimeType;
 }
 
-std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesIcon
-    = StructuralMap<Structural::StructuralType, QString> (
+std::map<Structural::Type, QString> StructuralUtil::_entitiesIcon
+    = StructuralMap<Structural::Type, QString> (
         Structural::Media, ":/icon/media") (Structural::Body, ":/icon/body") (
         Structural::Context, ":/icon/context") (Structural::Switch,
                                                 ":/icon/switch") (
@@ -365,8 +365,8 @@ StructuralUtil::getIcon (StructuralType type)
     return "";
 }
 
-std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesColor
-    = StructuralMap<Structural::StructuralType, QString> (
+std::map<Structural::Type, QString> StructuralUtil::_entitiesColor
+    = StructuralMap<Structural::Type, QString> (
         Structural::Media, "") (Structural::Body, "#EEEEEE") (
         Structural::Context, "#F4E4CC") (Structural::Switch, "#C6E2FF") (
         Structural::Port, "") (Structural::SwitchPort, "") (
@@ -385,8 +385,8 @@ StructuralUtil::getColor (StructuralType type)
     return "";
 }
 
-std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesPrefix
-    = StructuralMap<Structural::StructuralType, QString> (
+std::map<Structural::Type, QString> StructuralUtil::_entitiesPrefix
+    = StructuralMap<Structural::Type, QString> (
         Structural::Media, "m") (Structural::Body, "b") (
         Structural::Context, "ctx") (Structural::Switch, "swt") (
         Structural::Port, "p") (Structural::SwitchPort, "swtp") (
@@ -449,9 +449,9 @@ StructuralUtil::getTooltip (StructuralType type, const QString &title,
   return tooltip;
 }
 
-std::map<Structural::StructuralMimeType, QString>
+std::map<Structural::MimeType, QString>
     StructuralUtil::_mimetypesIcon
-    = StructuralMap<Structural::StructuralMimeType, QString> (
+    = StructuralMap<Structural::MimeType, QString> (
         Structural::Text, ":/icon/media-text") (
         Structural::Image, ":/icon/media-image") (Structural::Audio,
                                                   ":/icon/media-audio") (
@@ -510,9 +510,9 @@ StructuralUtil::getMimeTypeTooltip (StructuralMimeType mimetype,
   return tooltip;
 }
 
-std::map<QString, Structural::StructuralMimeType>
+std::map<QString, Structural::MimeType>
     StructuralUtil::_mimetypesExtension
-    = StructuralMap<QString, Structural::StructuralMimeType> (
+    = StructuralMap<QString, Structural::MimeType> (
         "txt", Structural::Text) ("png", Structural::Image) (
         "jpg", Structural::Image) ("jpeg", Structural::Image) (
         "gif", Structural::Image) ("mp3", Structural::Audio) (
@@ -523,7 +523,7 @@ std::map<QString, Structural::StructuralMimeType>
         "htm", Structural::HTML) ("html", Structural::HTML) (
         "ncl", Structural::NCL) ("lua", Structural::NCLua);
 
-Structural::StructuralMimeType
+Structural::MimeType
 StructuralUtil::getMimeTypeByExtension (const QString &extension)
 {
   if (_mimetypesExtension.count (extension))
@@ -532,8 +532,8 @@ StructuralUtil::getMimeTypeByExtension (const QString &extension)
     return Structural::NoMimeType;
 }
 
-std::map<Structural::StructuralRole, QString> StructuralUtil::_rolesIcon
-    = StructuralMap<Structural::StructuralRole, QString> (
+std::map<Structural::Role, QString> StructuralUtil::_rolesIcon
+    = StructuralMap<Structural::Role, QString> (
         Structural::onBegin, ":/icon/bind-onbegin") (
         Structural::onEnd, ":/icon/bind-onend") (Structural::onSelection,
                                                  ":/icon/bind-onselection") (
