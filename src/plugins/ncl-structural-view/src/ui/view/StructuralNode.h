@@ -6,13 +6,13 @@
 class StructuralNode : public StructuralEntity
 {
 public:
-  StructuralNode(StructuralEntity* parent = 0);
-  virtual ~StructuralNode();
+  StructuralNode (StructuralEntity *parent = 0);
+  virtual ~StructuralNode ();
 
-  virtual void adjust(bool collision = false,  bool recursion = true);
+  virtual void adjust (bool collision = false, bool recursion = true);
 
 protected:
-  virtual void inside();
+  virtual void inside ();
 };
 
 #endif // STRUCTURALNODE_H

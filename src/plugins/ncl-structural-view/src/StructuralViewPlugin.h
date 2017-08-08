@@ -23,60 +23,64 @@
 #include <extensions/IPlugin.h>
 using namespace cpr::core;
 
-#include "StructuralWindow.h"
-#include "StructuralView.h"
 #include "StructuralScene.h"
+#include "StructuralView.h"
+#include "StructuralWindow.h"
 
 class StructuralViewPlugin : public IPlugin
 {
   Q_OBJECT
 
 public:
-  StructuralViewPlugin(QObject* parent = 0);
-  virtual ~StructuralViewPlugin();
+  StructuralViewPlugin (QObject *parent = 0);
+  virtual ~StructuralViewPlugin ();
 
-  virtual void init();
-  virtual QWidget* getWidget();
-  virtual bool saveSubsession();
+  virtual void init ();
+  virtual QWidget *getWidget ();
+  virtual bool saveSubsession ();
 
 public slots:
-  virtual void updateFromModel();
+  virtual void updateFromModel ();
 
-  virtual void onEntityAdded(const QString &pluginID, Entity *entity);
-  virtual void onEntityChanged(const QString &pluginID, Entity *entity);
-  virtual void onEntityRemoved(const QString &pluginID, QString entityID);
-  virtual void changeSelectedEntity(const QString &pluginID, void* entityUID);
+  virtual void onEntityAdded (const QString &pluginID, Entity *entity);
+  virtual void onEntityChanged (const QString &pluginID, Entity *entity);
+  virtual void onEntityRemoved (const QString &pluginID, QString entityID);
+  virtual void changeSelectedEntity (const QString &pluginID, void *entityUID);
 
-  virtual void errorMessage(const QString &error);
-  void clearValidationMessages(QString pluginID, void *param);
-  void validationError(QString pluginID, void *param);
+  virtual void errorMessage (const QString &error);
+  void clearValidationMessages (QString pluginID, void *param);
+  void validationError (QString pluginID, void *param);
 
-  void insertInView(Entity* entity, bool undo = true);
-  void removeInView(Entity* entity, bool undo = true);
-  void changeInView(Entity* entity);
-  void selectInView(Entity* entity);
+  void insertInView (Entity *entity, bool undo = true);
+  void removeInView (Entity *entity, bool undo = true);
+  void changeInView (Entity *entity);
+  void selectInView (Entity *entity);
 
-  void insertInCore (QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
-  void removeInCore(QString uid, QMap<QString, QString> settings);
-  void changeInCore(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
-  void selectInCore(QString uid, QMap<QString, QString> settings);
+  void insertInCore (QString uid, QString parent,
+                     QMap<QString, QString> properties,
+                     QMap<QString, QString> settings);
+  void removeInCore (QString uid, QMap<QString, QString> settings);
+  void changeInCore (QString uid, QMap<QString, QString> properties,
+                     QMap<QString, QString> previous,
+                     QMap<QString, QString> settings);
+  void selectInCore (QString uid, QMap<QString, QString> settings);
 
-  void adjustConnectors();
+  void adjustConnectors ();
 
-  void textualStartSync(QString, void*); /* from textual plugin */
-  void textualFinishSync(QString, void*); /* from textual plugin */
+  void textualStartSync (QString, void *);  /* from textual plugin */
+  void textualFinishSync (QString, void *); /* from textual plugin */
 
 private:
-  void createWidgets();
-  void createConnections();
+  void createWidgets ();
+  void createConnections ();
 
-  QString getUidById(const QString &id);
-  QString getUidById(const QString &id, Entity* entity);
-  QString getUidByName(const QString &name, Entity* entity);
+  QString getUidById (const QString &id);
+  QString getUidById (const QString &id, Entity *entity);
+  QString getUidByName (const QString &name, Entity *entity);
 
-  void setReferences(QMap<QString, QString> &properties);
+  void setReferences (QMap<QString, QString> &properties);
 
-  void clean();
+  void clean ();
 
 private:
   bool _synching;
@@ -85,10 +89,10 @@ private:
   QString _notified;
   QString _selected;
 
-  StructuralWindow* _window;
+  StructuralWindow *_window;
 
-  QMap <QString, QString> _mapCoreToView;
-  QMap <QString, QString> _mapViewToCore;
+  QMap<QString, QString> _mapCoreToView;
+  QMap<QString, QString> _mapViewToCore;
 };
 
 #endif // STRUCTUALVIEWPLUGIN_H

@@ -2,69 +2,80 @@
 
 #include <QUuid>
 
-#include "StructuralView.h"
 #include "StructuralEdge.h"
+#include "StructuralView.h"
 
-QString StructuralUtil::createUid()
+QString
+StructuralUtil::createUid ()
 {
-  return QUuid::createUuid().toString();
+  return QUuid::createUuid ().toString ();
 }
 
-QMap<QString,QString> StructuralUtil::createProperties(qreal top, qreal left)
+QMap<QString, QString>
+StructuralUtil::createProperties (qreal top, qreal left)
 {
-  QMap<QString,QString> properties;
+  QMap<QString, QString> properties;
 
-  properties[STR_PROPERTY_ENTITY_TOP] = QString::number(top);
-  properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(left);
+  properties[STR_PROPERTY_ENTITY_TOP] = QString::number (top);
+  properties[STR_PROPERTY_ENTITY_LEFT] = QString::number (left);
 
   return properties;
 }
 
-QMap<QString,QString> StructuralUtil::createProperties(qreal top, qreal left, qreal width, qreal height)
+QMap<QString, QString>
+StructuralUtil::createProperties (qreal top, qreal left, qreal width,
+                                  qreal height)
 {
-  QMap<QString,QString> properties;
+  QMap<QString, QString> properties;
 
-  properties[STR_PROPERTY_ENTITY_TOP] = QString::number(top);
-  properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(left);
-  properties[STR_PROPERTY_ENTITY_WIDTH] = QString::number(width);
-  properties[STR_PROPERTY_ENTITY_HEIGHT] = QString::number(height);
+  properties[STR_PROPERTY_ENTITY_TOP] = QString::number (top);
+  properties[STR_PROPERTY_ENTITY_LEFT] = QString::number (left);
+  properties[STR_PROPERTY_ENTITY_WIDTH] = QString::number (width);
+  properties[STR_PROPERTY_ENTITY_HEIGHT] = QString::number (height);
 
   return properties;
 }
 
-QMap<QString,QString> StructuralUtil::createSettings()
+QMap<QString, QString>
+StructuralUtil::createSettings ()
 {
-  return createSettings(true, true);
+  return createSettings (true, true);
 }
 
-QMap<QString,QString> StructuralUtil::createSettings(bool undo, bool notify)
+QMap<QString, QString>
+StructuralUtil::createSettings (bool undo, bool notify)
 {
-  return createSettings((undo ? STR_VALUE_TRUE : STR_VALUE_FALSE), (notify ? STR_VALUE_TRUE : STR_VALUE_FALSE), createUid());
+  return createSettings ((undo ? STR_VALUE_TRUE : STR_VALUE_FALSE),
+                         (notify ? STR_VALUE_TRUE : STR_VALUE_FALSE),
+                         createUid ());
 }
 
-QMap<QString,QString> StructuralUtil::createSettings(const QString &undo, const QString &notify, const QString &code)
+QMap<QString, QString>
+StructuralUtil::createSettings (const QString &undo, const QString &notify,
+                                const QString &code)
 {
-  QMap<QString,QString> settings;
+  QMap<QString, QString> settings;
 
-  if (undo.isEmpty())
-    settings.insert(STR_SETTING_UNDO, STR_VALUE_TRUE);
+  if (undo.isEmpty ())
+    settings.insert (STR_SETTING_UNDO, STR_VALUE_TRUE);
   else
-    settings.insert(STR_SETTING_UNDO, undo);
+    settings.insert (STR_SETTING_UNDO, undo);
 
-  if (notify.isEmpty())
-    settings.insert(STR_SETTING_NOTIFY,STR_VALUE_TRUE);
+  if (notify.isEmpty ())
+    settings.insert (STR_SETTING_NOTIFY, STR_VALUE_TRUE);
   else
-    settings.insert(STR_SETTING_NOTIFY, notify);
+    settings.insert (STR_SETTING_NOTIFY, notify);
 
-  if (code.isEmpty())
-    settings.insert(STR_SETTING_CODE, createUid());
+  if (code.isEmpty ())
+    settings.insert (STR_SETTING_CODE, createUid ());
   else
-    settings.insert(STR_SETTING_CODE, code);
+    settings.insert (STR_SETTING_CODE, code);
 
   return settings;
 }
 
-QMap<QString,QString> StructuralUtil::createCoreTranslations(StructuralType type)
+QMap<QString, QString>
+StructuralUtil::createCoreTranslations (StructuralType type)
 {
   QMap<QString, QString> translations;
 
@@ -101,8 +112,10 @@ QMap<QString,QString> StructuralUtil::createCoreTranslations(StructuralType type
     case Structural::Port:
     {
       translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
-      translations[NCL_ATTRIBUTE_COMPONENT] = STR_PROPERTY_REFERENCE_COMPONENT_ID;
-      translations[NCL_ATTRIBUTE_INTERFACE] = STR_PROPERTY_REFERENCE_INTERFACE_ID;
+      translations[NCL_ATTRIBUTE_COMPONENT]
+          = STR_PROPERTY_REFERENCE_COMPONENT_ID;
+      translations[NCL_ATTRIBUTE_INTERFACE]
+          = STR_PROPERTY_REFERENCE_INTERFACE_ID;
 
       break;
     }
@@ -144,7 +157,8 @@ QMap<QString,QString> StructuralUtil::createCoreTranslations(StructuralType type
     case Structural::Link:
     {
       translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
-      translations[NCL_ATTRIBUTE_XCONNECTOR] = STR_PROPERTY_REFERENCE_XCONNECTOR_ID;
+      translations[NCL_ATTRIBUTE_XCONNECTOR]
+          = STR_PROPERTY_REFERENCE_XCONNECTOR_ID;
 
       break;
     }
@@ -152,9 +166,12 @@ QMap<QString,QString> StructuralUtil::createCoreTranslations(StructuralType type
     case Structural::Bind:
     {
       translations[NCL_ATTRIBUTE_ROLE] = STR_PROPERTY_ENTITY_ID;
-      translations[NCL_ATTRIBUTE_XCONNECTOR] = STR_PROPERTY_REFERENCE_XCONNECTOR_ID;
-      translations[NCL_ATTRIBUTE_COMPONENT] = STR_PROPERTY_REFERENCE_COMPONENT_ID;
-      translations[NCL_ATTRIBUTE_INTERFACE] = STR_PROPERTY_REFERENCE_INTERFACE_ID;
+      translations[NCL_ATTRIBUTE_XCONNECTOR]
+          = STR_PROPERTY_REFERENCE_XCONNECTOR_ID;
+      translations[NCL_ATTRIBUTE_COMPONENT]
+          = STR_PROPERTY_REFERENCE_COMPONENT_ID;
+      translations[NCL_ATTRIBUTE_INTERFACE]
+          = STR_PROPERTY_REFERENCE_INTERFACE_ID;
       translations[NCL_ATTRIBUTE_DESCRIPTOR] = NCL_ATTRIBUTE_DESCRIPTOR;
 
       break;
@@ -162,262 +179,256 @@ QMap<QString,QString> StructuralUtil::createCoreTranslations(StructuralType type
 
     case Structural::Mapping:
     {
-      translations[NCL_ATTRIBUTE_COMPONENT] = STR_PROPERTY_REFERENCE_COMPONENT_ID;
-      translations[NCL_ATTRIBUTE_INTERFACE] = STR_PROPERTY_REFERENCE_INTERFACE_ID;
+      translations[NCL_ATTRIBUTE_COMPONENT]
+          = STR_PROPERTY_REFERENCE_COMPONENT_ID;
+      translations[NCL_ATTRIBUTE_INTERFACE]
+          = STR_PROPERTY_REFERENCE_INTERFACE_ID;
 
       break;
     }
 
     default:
       break;
-
   }
 
   return translations;
 }
 
-QMap<QString,QString> StructuralUtil::createPluginTranslations(StructuralType type)
+QMap<QString, QString>
+StructuralUtil::createPluginTranslations (StructuralType type)
 {
   QMap<QString, QString> translations;
 
-  QMap<QString, QString> inverted = createCoreTranslations(type);
-  foreach (const QString &key, inverted.keys())
-    translations[inverted.value(key)] = key;
+  QMap<QString, QString> inverted = createCoreTranslations (type);
+  foreach (const QString &key, inverted.keys ())
+    translations[inverted.value (key)] = key;
 
   return translations;
 }
 
-std::map<Structural::StructuralCategory, QString> StructuralUtil::_mapCategoryToString =
-    StructuralMap<Structural::StructuralCategory, QString>
-(Structural::Node, "node")
-(Structural::Edge, "edge")
-(Structural::Interface, "interface")
+std::map<Structural::StructuralCategory, QString>
+    StructuralUtil::_mapCategoryToString
+    = StructuralMap<Structural::StructuralCategory, QString> (
+        Structural::Node, "node") (Structural::Edge,
+                                   "edge") (Structural::Interface, "interface")
 
-(Structural::NoCategory, "");
+        (Structural::NoCategory, "");
 
-std::map<QString, Structural::StructuralCategory> StructuralUtil::_mapStringToCategory =
-    invert<QString, Structural::StructuralCategory> (StructuralUtil::_mapCategoryToString);
+std::map<QString, Structural::StructuralCategory>
+    StructuralUtil::_mapStringToCategory
+    = invert<QString, Structural::StructuralCategory> (
+        StructuralUtil::_mapCategoryToString);
 
-QString StructuralUtil::translateCategoryToString(StructualCategory category)
+QString
+StructuralUtil::translateCategoryToString (StructualCategory category)
 {
-  if (_mapCategoryToString.count(category))
+  if (_mapCategoryToString.count (category))
     return _mapCategoryToString[category];
   else
     return "";
 }
 
-StructualCategory StructuralUtil::translateStringToCategory(const QString &category)
+StructualCategory
+StructuralUtil::translateStringToCategory (const QString &category)
 {
-  if (_mapStringToCategory.count(category))
+  if (_mapStringToCategory.count (category))
     return _mapStringToCategory[category];
   else
     return Structural::NoCategory;
 }
 
-std::map<Structural::StructuralType, QString> StructuralUtil::_mapTypeToString =
-    StructuralMap<Structural::StructuralType, QString>
-(Structural::Media, "media")
-(Structural::Body, "body")
-(Structural::Context, "context")
-(Structural::Switch, "switch")
-(Structural::Port, "port")
-(Structural::SwitchPort, "switchPort")
-(Structural::Area, "area")
-(Structural::Property, "property")
-(Structural::Link, "link")
-(Structural::Bind, "bind")
-(Structural::Reference, "reference")
-(Structural::Mapping, "mapping")
+std::map<Structural::StructuralType, QString> StructuralUtil::_mapTypeToString
+    = StructuralMap<Structural::StructuralType, QString> (
+        Structural::Media, "media") (Structural::Body, "body") (
+        Structural::Context, "context") (Structural::Switch, "switch") (
+        Structural::Port, "port") (Structural::SwitchPort, "switchPort") (
+        Structural::Area, "area") (Structural::Property, "property") (
+        Structural::Link, "link") (Structural::Bind, "bind") (
+        Structural::Reference, "reference") (Structural::Mapping, "mapping")
 
-(Structural::NoType, "");
+        (Structural::NoType, "");
 
-std::map<QString, Structural::StructuralType> StructuralUtil::_mapStringToType =
-    invert<QString, Structural::StructuralType>(StructuralUtil::_mapTypeToString);
+std::map<QString, Structural::StructuralType> StructuralUtil::_mapStringToType
+    = invert<QString, Structural::StructuralType> (
+        StructuralUtil::_mapTypeToString);
 
-QString StructuralUtil::translateTypeToString(StructuralType type)
+QString
+StructuralUtil::translateTypeToString (StructuralType type)
 {
-  if (_mapTypeToString.count(type))
+  if (_mapTypeToString.count (type))
     return _mapTypeToString[type];
   else
     return "";
 }
 
-StructuralType StructuralUtil::translateStringToType(const QString &type)
+StructuralType
+StructuralUtil::translateStringToType (const QString &type)
 {
-  if (_mapStringToType.count(type))
+  if (_mapStringToType.count (type))
     return _mapStringToType[type];
   else
     return Structural::NoType;
 }
 
-std::map<Structural::StructuralRole, QString> StructuralUtil::_mapRoleToString =
-    StructuralMap<Structural::StructuralRole, QString>
-(Structural::onBegin, "onBegin")
-(Structural::onEnd, "onEnd")
-(Structural::onSelection, "onSelection")
-(Structural::onResume, "onResume")
-(Structural::onPause, "onPause")
-(Structural::onBeginAttribution, "onBeginAttribution")
-(Structural::onEndAttribution, "onEndAttribution")
-(Structural::onPauseAttribution, "onPauseAttribution")
-(Structural::onResumeAttribution, "onResumeAttribution")
+std::map<Structural::StructuralRole, QString> StructuralUtil::_mapRoleToString
+    = StructuralMap<Structural::StructuralRole, QString> (Structural::onBegin,
+                                                          "onBegin") (
+        Structural::onEnd, "onEnd") (Structural::onSelection, "onSelection") (
+        Structural::onResume, "onResume") (Structural::onPause, "onPause") (
+        Structural::onBeginAttribution, "onBeginAttribution") (
+        Structural::onEndAttribution, "onEndAttribution") (
+        Structural::onPauseAttribution, "onPauseAttribution") (
+        Structural::onResumeAttribution, "onResumeAttribution")
 
-(Structural::Start, "start")
-(Structural::Stop, "stop")
-(Structural::Resume, "resume")
-(Structural::Pause, "pause")
-(Structural::Set, "set")
+        (Structural::Start, "start") (Structural::Stop, "stop") (
+            Structural::Resume, "resume") (Structural::Pause,
+                                           "pause") (Structural::Set, "set")
 
-(Structural::NoRole, "");
+            (Structural::NoRole, "");
 
-std::map<QString, Structural::StructuralRole> StructuralUtil::_mapStringToRole =
-    invert<QString, Structural::StructuralRole> (StructuralUtil::_mapRoleToString);
+std::map<QString, Structural::StructuralRole> StructuralUtil::_mapStringToRole
+    = invert<QString, Structural::StructuralRole> (
+        StructuralUtil::_mapRoleToString);
 
-QString StructuralUtil::translateRoleToString(StructuralRole role)
+QString
+StructuralUtil::translateRoleToString (StructuralRole role)
 {
-  if(_mapRoleToString.count(role))
+  if (_mapRoleToString.count (role))
     return _mapRoleToString[role];
   else
     return "";
 }
 
-StructuralRole StructuralUtil::translateStringToRole(const QString &role)
+StructuralRole
+StructuralUtil::translateStringToRole (const QString &role)
 {
-  if(_mapStringToRole.count(role))
+  if (_mapStringToRole.count (role))
     return _mapStringToRole[role];
   else
     return Structural::NoRole;
 }
 
-std::map<Structural::StructuralMimeType, QString> StructuralUtil::_mapMimeTypeToString =
-    StructuralMap<Structural::StructuralMimeType, QString >
-(Structural::Text, "text")
-(Structural::Image, "image")
-(Structural::Audio, "audio")
-(Structural::Video, "video")
-(Structural::HTML, "html")
-(Structural::NCL, "ncl")
-(Structural::NCLua, "nclua")
-(Structural::Settings, "settings")
-(Structural::Time, "time")
+std::map<Structural::StructuralMimeType, QString>
+    StructuralUtil::_mapMimeTypeToString
+    = StructuralMap<Structural::StructuralMimeType, QString> (
+        Structural::Text, "text") (Structural::Image, "image") (
+        Structural::Audio, "audio") (Structural::Video, "video") (
+        Structural::HTML, "html") (Structural::NCL, "ncl") (
+        Structural::NCLua, "nclua") (Structural::Settings,
+                                     "settings") (Structural::Time, "time")
 
+        (Structural::NoMimeType, "");
 
-(Structural::NoMimeType, "");
+std::map<QString, Structural::StructuralMimeType>
+    StructuralUtil::_mapStringToMimeType
+    = invert<QString, Structural::StructuralMimeType> (
+        StructuralUtil::_mapMimeTypeToString);
 
-std::map<QString, Structural::StructuralMimeType> StructuralUtil::_mapStringToMimeType =
-    invert<QString, Structural::StructuralMimeType> (StructuralUtil::_mapMimeTypeToString);
-
-QString StructuralUtil::translateMimeTypeToString(StructuralMimeType mimetype)
+QString
+StructuralUtil::translateMimeTypeToString (StructuralMimeType mimetype)
 {
-  if(_mapMimeTypeToString.count(mimetype))
+  if (_mapMimeTypeToString.count (mimetype))
     return _mapMimeTypeToString[mimetype];
   else
     return "media";
 }
 
-StructuralMimeType StructuralUtil::translateStringToMimeType(const QString &mimetype)
+StructuralMimeType
+StructuralUtil::translateStringToMimeType (const QString &mimetype)
 {
-  if(_mapStringToMimeType.count(mimetype))
+  if (_mapStringToMimeType.count (mimetype))
     return _mapStringToMimeType[mimetype];
   else
     return Structural::NoMimeType;
 }
 
-std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesIcon =
-    StructuralMap<Structural::StructuralType, QString >
-(Structural::Media, ":/icon/media")
-(Structural::Body, ":/icon/body")
-(Structural::Context, ":/icon/context")
-(Structural::Switch, ":/icon/switch")
-(Structural::Port, ":/icon/port-mini")
-(Structural::SwitchPort, ":/icon/switchport-mini")
-(Structural::Area, ":/icon/area-mini")
-(Structural::Property, ":/icon/property-mini")
-(Structural::Link, "")
-(Structural::Bind, "")
-(Structural::Reference, "")
-(Structural::Mapping, "")
+std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesIcon
+    = StructuralMap<Structural::StructuralType, QString> (
+        Structural::Media, ":/icon/media") (Structural::Body, ":/icon/body") (
+        Structural::Context, ":/icon/context") (Structural::Switch,
+                                                ":/icon/switch") (
+        Structural::Port, ":/icon/port-mini") (Structural::SwitchPort,
+                                               ":/icon/switchport-mini") (
+        Structural::Area, ":/icon/area-mini") (
+        Structural::Property, ":/icon/property-mini") (Structural::Link, "") (
+        Structural::Bind, "") (Structural::Reference, "") (Structural::Mapping,
+                                                           "")
 
-(Structural::NoType, "");
+        (Structural::NoType, "");
 
-QString StructuralUtil::getIcon(StructuralType type)
+QString
+StructuralUtil::getIcon (StructuralType type)
 {
-  if(_entitiesIcon.count(type))
+  if (_entitiesIcon.count (type))
     return _entitiesIcon[type];
   else
     return "";
 }
 
-std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesColor =
-    StructuralMap<Structural::StructuralType, QString >
-(Structural::Media, "")
-(Structural::Body, "#EEEEEE")
-(Structural::Context, "#F4E4CC")
-(Structural::Switch, "#C6E2FF")
-(Structural::Port, "")
-(Structural::SwitchPort, "")
-(Structural::Area, "")
-(Structural::Property, "")
-(Structural::Link, "#000000")
-(Structural::Bind, "#000000")
-(Structural::Reference, "#000000")
-(Structural::Mapping, "#5C0099")
+std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesColor
+    = StructuralMap<Structural::StructuralType, QString> (
+        Structural::Media, "") (Structural::Body, "#EEEEEE") (
+        Structural::Context, "#F4E4CC") (Structural::Switch, "#C6E2FF") (
+        Structural::Port, "") (Structural::SwitchPort, "") (
+        Structural::Area, "") (Structural::Property, "") (
+        Structural::Link, "#000000") (Structural::Bind, "#000000") (
+        Structural::Reference, "#000000") (Structural::Mapping, "#5C0099")
 
-(Structural::NoType, "");
+        (Structural::NoType, "");
 
-QString StructuralUtil::getColor(StructuralType type)
+QString
+StructuralUtil::getColor (StructuralType type)
 {
-  if(_entitiesColor.count(type))
+  if (_entitiesColor.count (type))
     return _entitiesColor[type];
   else
     return "";
 }
 
-std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesPrefix =
-    StructuralMap<Structural::StructuralType, QString >
-(Structural::Media, "m")
-(Structural::Body, "b")
-(Structural::Context, "ctx")
-(Structural::Switch, "swt")
-(Structural::Port, "p")
-(Structural::SwitchPort, "swtp")
-(Structural::Area, "a")
-(Structural::Property, "p")
-(Structural::Link, "l")
-(Structural::Bind, "")
-(Structural::Reference, "")
-(Structural::Mapping, "")
+std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesPrefix
+    = StructuralMap<Structural::StructuralType, QString> (
+        Structural::Media, "m") (Structural::Body, "b") (
+        Structural::Context, "ctx") (Structural::Switch, "swt") (
+        Structural::Port, "p") (Structural::SwitchPort, "swtp") (
+        Structural::Area, "a") (Structural::Property, "p") (
+        Structural::Link, "l") (Structural::Bind, "") (
+        Structural::Reference, "") (Structural::Mapping, "")
 
-(Structural::NoType, "e");
+        (Structural::NoType, "e");
 
-QString StructuralUtil::getPrefix(StructuralType type)
+QString
+StructuralUtil::getPrefix (StructuralType type)
 {
-  if(_entitiesPrefix.count(type))
+  if (_entitiesPrefix.count (type))
     return _entitiesPrefix[type];
   else
     return "e";
 }
 
-QString StructuralUtil::getTooltip(StructuralType type, const QString &title, const QString &info, const QString &warning, const QString &error, const QString &extra)
+QString
+StructuralUtil::getTooltip (StructuralType type, const QString &title,
+                            const QString &info, const QString &warning,
+                            const QString &error, const QString &extra)
 {
   QString tooltip;
 
   // Adding type
-  tooltip += translateTypeToString(type);
+  tooltip += translateTypeToString (type);
   tooltip += " ";
 
   // Adding title
-  if (!title.isEmpty())
-    tooltip += "("+title+")";
+  if (!title.isEmpty ())
+    tooltip += "(" + title + ")";
   else
     tooltip += "(?)";
 
   tooltip += " ";
 
   // Adding extra
-  if (type == Structural::Link){
-    if (!extra.isEmpty())
-      tooltip += ": "+extra;
+  if (type == Structural::Link)
+  {
+    if (!extra.isEmpty ())
+      tooltip += ": " + extra;
     else
       tooltip += ": Unknow";
 
@@ -425,52 +436,58 @@ QString StructuralUtil::getTooltip(StructuralType type, const QString &title, co
   }
 
   // Adding messages
-  if (!error.isEmpty())
-    tooltip += "- Error: "+error;
-  else if (!warning.isEmpty())
-    tooltip += "- Warning: "+warning;
-  else if (!info.isEmpty())
-    tooltip += "- Info: "+info;
+  if (!error.isEmpty ())
+    tooltip += "- Error: " + error;
+  else if (!warning.isEmpty ())
+    tooltip += "- Warning: " + warning;
+  else if (!info.isEmpty ())
+    tooltip += "- Info: " + info;
 
   // Formating
-  tooltip[0] = tooltip[0].toUpper();
+  tooltip[0] = tooltip[0].toUpper ();
 
   return tooltip;
 }
 
-std::map<Structural::StructuralMimeType, QString> StructuralUtil::_mimetypesIcon =
-    StructuralMap<Structural::StructuralMimeType, QString >
-(Structural::Text, ":/icon/media-text")
-(Structural::Image, ":/icon/media-image")
-(Structural::Audio, ":/icon/media-audio")
-(Structural::Video, ":/icon/media-video")
-(Structural::HTML, ":/icon/media-text-html")
-(Structural::NCL, ":/icon/media-ncl")
-(Structural::NCLua, ":/icon/media-nclua")
-(Structural::Settings, ":/icon/media-settings")
-(Structural::Time, ":/icon/media-time")
+std::map<Structural::StructuralMimeType, QString>
+    StructuralUtil::_mimetypesIcon
+    = StructuralMap<Structural::StructuralMimeType, QString> (
+        Structural::Text, ":/icon/media-text") (
+        Structural::Image, ":/icon/media-image") (Structural::Audio,
+                                                  ":/icon/media-audio") (
+        Structural::Video, ":/icon/media-video") (Structural::HTML,
+                                                  ":/icon/media-text-html") (
+        Structural::NCL, ":/icon/media-ncl") (Structural::NCLua,
+                                              ":/icon/media-nclua") (
+        Structural::Settings, ":/icon/media-settings") (Structural::Time,
+                                                        ":/icon/media-time")
 
-(Structural::NoMimeType, ":/icon/media");
+        (Structural::NoMimeType, ":/icon/media");
 
-QString StructuralUtil::getMimeTypeIcon(StructuralMimeType type)
+QString
+StructuralUtil::getMimeTypeIcon (StructuralMimeType type)
 {
-  if(_mimetypesIcon.count(type))
+  if (_mimetypesIcon.count (type))
     return _mimetypesIcon[type];
   else
     return ":/icon/media";
 }
 
-QString StructuralUtil::getMimeTypeTooltip(StructuralMimeType mimetype, const QString &title, const QString &info, const QString &warning, const QString &error, const QString &extra)
+QString
+StructuralUtil::getMimeTypeTooltip (StructuralMimeType mimetype,
+                                    const QString &title, const QString &info,
+                                    const QString &warning,
+                                    const QString &error, const QString &extra)
 {
   QString tooltip;
 
   // Adding type
-  tooltip += translateMimeTypeToString(mimetype);
+  tooltip += translateMimeTypeToString (mimetype);
   tooltip += " ";
 
   // Adding title
-  if (!title.isEmpty())
-    tooltip += "("+title+")";
+  if (!title.isEmpty ())
+    tooltip += "(" + title + ")";
   else
     tooltip += "(?)";
 
@@ -480,94 +497,90 @@ QString StructuralUtil::getMimeTypeTooltip(StructuralMimeType mimetype, const QS
   // nothing...
 
   // Adding messages
-  if (!error.isEmpty())
-    tooltip += "- Error: "+error;
-  else if (!warning.isEmpty())
-    tooltip += "- Warning: "+warning;
-  else if (!info.isEmpty())
-    tooltip += "- Info: "+info;
+  if (!error.isEmpty ())
+    tooltip += "- Error: " + error;
+  else if (!warning.isEmpty ())
+    tooltip += "- Warning: " + warning;
+  else if (!info.isEmpty ())
+    tooltip += "- Info: " + info;
 
   // Formating
-  tooltip[0] = tooltip[0].toUpper();
+  tooltip[0] = tooltip[0].toUpper ();
 
   return tooltip;
 }
 
-std::map<QString, Structural::StructuralMimeType> StructuralUtil::_mimetypesExtension =
-    StructuralMap <QString, Structural::StructuralMimeType>
-("txt", Structural::Text)
-("png", Structural::Image)
-("jpg", Structural::Image)
-("jpeg", Structural::Image)
-("gif", Structural::Image)
-("mp3", Structural::Audio)
-("wav", Structural::Audio)
-("mp4", Structural::Video)
-("mpeg4", Structural::Video)
-("mpeg", Structural::Video)
-("mpg", Structural::Video)
-("mov", Structural::Video)
-("avi", Structural::Video)
-("mkv", Structural::Video)
-("htm", Structural::HTML)
-("html", Structural::HTML)
-("ncl", Structural::NCL)
-("lua", Structural::NCLua);
+std::map<QString, Structural::StructuralMimeType>
+    StructuralUtil::_mimetypesExtension
+    = StructuralMap<QString, Structural::StructuralMimeType> (
+        "txt", Structural::Text) ("png", Structural::Image) (
+        "jpg", Structural::Image) ("jpeg", Structural::Image) (
+        "gif", Structural::Image) ("mp3", Structural::Audio) (
+        "wav", Structural::Audio) ("mp4", Structural::Video) (
+        "mpeg4", Structural::Video) ("mpeg", Structural::Video) (
+        "mpg", Structural::Video) ("mov", Structural::Video) (
+        "avi", Structural::Video) ("mkv", Structural::Video) (
+        "htm", Structural::HTML) ("html", Structural::HTML) (
+        "ncl", Structural::NCL) ("lua", Structural::NCLua);
 
-Structural::StructuralMimeType StructuralUtil::getMimeTypeByExtension(const QString &extension)
+Structural::StructuralMimeType
+StructuralUtil::getMimeTypeByExtension (const QString &extension)
 {
-  if(_mimetypesExtension.count(extension))
+  if (_mimetypesExtension.count (extension))
     return _mimetypesExtension[extension];
   else
     return Structural::NoMimeType;
 }
 
-std::map<Structural::StructuralRole, QString> StructuralUtil::_rolesIcon =
-    StructuralMap<Structural::StructuralRole, QString>
-(Structural::onBegin, ":/icon/bind-onbegin")
-(Structural::onEnd, ":/icon/bind-onend")
-(Structural::onSelection, ":/icon/bind-onselection")
-(Structural::onResume, ":/icon/bind-onresume")
-(Structural::onPause, ":/icon/bind-onpause")
-(Structural::onBeginAttribution, "")
-(Structural::onEndAttribution, "")
-(Structural::onPauseAttribution, "")
-(Structural::onResumeAttribution, "")
+std::map<Structural::StructuralRole, QString> StructuralUtil::_rolesIcon
+    = StructuralMap<Structural::StructuralRole, QString> (
+        Structural::onBegin, ":/icon/bind-onbegin") (
+        Structural::onEnd, ":/icon/bind-onend") (Structural::onSelection,
+                                                 ":/icon/bind-onselection") (
+        Structural::onResume, ":/icon/bind-onresume") (Structural::onPause,
+                                                       ":/icon/bind-onpause") (
+        Structural::onBeginAttribution,
+        "") (Structural::onEndAttribution,
+             "") (Structural::onPauseAttribution,
+                  "") (Structural::onResumeAttribution, "")
 
-(Structural::Start, ":/icon/bind-start")
-(Structural::Stop, ":/icon/bind-stop")
-(Structural::Resume, ":/icon/bind-resume")
-(Structural::Pause, ":/icon/bind-pause")
-(Structural::Set, ":/icon/bind-set")
+        (Structural::Start, ":/icon/bind-start") (
+            Structural::Stop, ":/icon/bind-stop") (Structural::Resume,
+                                                   ":/icon/bind-resume") (
+            Structural::Pause, ":/icon/bind-pause") (Structural::Set,
+                                                     ":/icon/bind-set")
 
-(Structural::NoRole, "");
+            (Structural::NoRole, "");
 
-QString StructuralUtil::getIcon(StructuralRole role)
+QString
+StructuralUtil::getIcon (StructuralRole role)
 {
-  if(_rolesIcon.count(role))
+  if (_rolesIcon.count (role))
     return _rolesIcon[role];
   else
     return "";
 }
 
-QVector<StructuralEntity*> StructuralUtil::getNeighbors(StructuralEntity* entity)
+QVector<StructuralEntity *>
+StructuralUtil::getNeighbors (StructuralEntity *entity)
 {
-  QVector<StructuralEntity*> neighbors;
+  QVector<StructuralEntity *> neighbors;
 
-  StructuralEntity* parent = entity->getStructuralParent();
+  StructuralEntity *parent = entity->getStructuralParent ();
 
   if (parent != NULL)
   {
-    neighbors = parent->getStructuralEntities();
+    neighbors = parent->getStructuralEntities ();
   }
   else if (!STR_DEFAULT_WITH_BODY)
   {
-    if (entity->scene() != NULL)
+    if (entity->scene () != NULL)
     {
-      StructuralView* view = (StructuralView*) entity->scene()->views().at(1);
+      StructuralView *view
+          = (StructuralView *)entity->scene ()->views ().at (1);
 
-      foreach (StructuralEntity* current, view->getEntities().values())
-        if (current->getStructuralParent() == NULL && current != entity)
+      foreach (StructuralEntity *current, view->getEntities ().values ())
+        if (current->getStructuralParent () == NULL && current != entity)
           neighbors += current;
     }
   }
@@ -575,26 +588,28 @@ QVector<StructuralEntity*> StructuralUtil::getNeighbors(StructuralEntity* entity
   return neighbors;
 }
 
-QVector<StructuralEntity*> StructuralUtil::getUpNeighbors(StructuralEntity* entity)
+QVector<StructuralEntity *>
+StructuralUtil::getUpNeighbors (StructuralEntity *entity)
 {
-  QVector<StructuralEntity*> neighbors;
+  QVector<StructuralEntity *> neighbors;
 
-  StructuralEntity* parent = entity->getStructuralParent();
+  StructuralEntity *parent = entity->getStructuralParent ();
 
   if (parent != NULL)
   {
-    if (parent->getStructuralParent() != NULL)
+    if (parent->getStructuralParent () != NULL)
     {
-      neighbors += parent->getStructuralParent()->getStructuralEntities();
+      neighbors += parent->getStructuralParent ()->getStructuralEntities ();
     }
     else if (!STR_DEFAULT_WITH_BODY)
     {
-      if (entity->scene() != NULL)
+      if (entity->scene () != NULL)
       {
-        StructuralView* view = (StructuralView*) entity->scene()->views().at(1);
+        StructuralView *view
+            = (StructuralView *)entity->scene ()->views ().at (1);
 
-        foreach (StructuralEntity* current, view->getEntities().values())
-          if (current->getStructuralParent() == NULL && current != entity)
+        foreach (StructuralEntity *current, view->getEntities ().values ())
+          if (current->getStructuralParent () == NULL && current != entity)
             neighbors += current;
       }
     }
@@ -603,68 +618,75 @@ QVector<StructuralEntity*> StructuralUtil::getUpNeighbors(StructuralEntity* enti
   return neighbors;
 }
 
-bool StructuralUtil::isCondition(StructuralRole role)
+bool
+StructuralUtil::isCondition (StructuralRole role)
 {
 
-  return (role == Structural::onBegin ||
-          role == Structural::onBeginAttribution ||
-          role == Structural::onEnd ||
-          role == Structural::onEndAttribution ||
-          role == Structural::onPause ||
-          role == Structural::onPauseAttribution ||
-          role == Structural::onResume ||
-          role == Structural::onResumeAttribution ||
-          role == Structural::onSelection);
+  return (role == Structural::onBegin || role == Structural::onBeginAttribution
+          || role == Structural::onEnd || role == Structural::onEndAttribution
+          || role == Structural::onPause
+          || role == Structural::onPauseAttribution
+          || role == Structural::onResume
+          || role == Structural::onResumeAttribution
+          || role == Structural::onSelection);
 }
 
-bool StructuralUtil::isCondition(const QString &role)
+bool
+StructuralUtil::isCondition (const QString &role)
 {
-  return (_mapStringToRole.count(role) ?
-               isCondition(_mapStringToRole[role]) : false);
+  return (_mapStringToRole.count (role) ? isCondition (_mapStringToRole[role])
+                                        : false);
 }
 
-bool StructuralUtil::isAction(StructuralRole role)
+bool
+StructuralUtil::isAction (StructuralRole role)
 {
-  return (role != Structural::NoRole && !isCondition(role));
+  return (role != Structural::NoRole && !isCondition (role));
 }
 
-bool StructuralUtil::isAction(const QString &role)
+bool
+StructuralUtil::isAction (const QString &role)
 {
-  return isAction(_mapStringToRole[role]);
+  return isAction (_mapStringToRole[role]);
 }
 
-void StructuralUtil::adjustEdges(StructuralEntity* entity)
+void
+StructuralUtil::adjustEdges (StructuralEntity *entity)
 {
-  QVector<StructuralEntity*> relatives;
-  relatives += getNeighbors(entity);
-  relatives += getUpNeighbors(entity);
+  QVector<StructuralEntity *> relatives;
+  relatives += getNeighbors (entity);
+  relatives += getUpNeighbors (entity);
 
-  foreach (StructuralEntity* relative, relatives)
+  foreach (StructuralEntity *relative, relatives)
   {
-    if (relative->getStructuralCategory() == Structural::Edge)
+    if (relative->getStructuralCategory () == Structural::Edge)
     {
-      StructuralEdge *edge = (StructuralEdge*) relative;
+      StructuralEdge *edge = (StructuralEdge *)relative;
 
-      if (edge->getTail() == entity || edge->getHead() == entity)
-        edge->adjust(true);
+      if (edge->getTail () == entity || edge->getHead () == entity)
+        edge->adjust (true);
     }
   }
 }
 
-QString StructuralUtil::formatId(const QString &id)
+QString
+StructuralUtil::formatId (const QString &id)
 {
-  QString normalized = id.normalized(QString::NormalizationForm_KD);
-  normalized.remove(QRegExp("[^a-zA-Z_-\.\\s]"));
+  QString normalized = id.normalized (QString::NormalizationForm_KD);
+  normalized.remove (QRegExp ("[^a-zA-Z_-\.\\s]"));
 
-  if(normalized.at(0).isDigit())
+  if (normalized.at (0).isDigit ())
     normalized = "_" + normalized;
 
   return normalized;
 }
 
-bool StructuralUtil::validateKinship(StructuralType entityType, StructuralType parentType)
+bool
+StructuralUtil::validateKinship (StructuralType entityType,
+                                 StructuralType parentType)
 {
-  switch (entityType) {
+  switch (entityType)
+  {
     case Structural::Body:
     {
       return false;
@@ -679,7 +701,8 @@ bool StructuralUtil::validateKinship(StructuralType entityType, StructuralType p
     case Structural::Bind:
     case Structural::Reference:
     {
-      switch (parentType) {
+      switch (parentType)
+      {
         case Structural::Body:
         case Structural::Switch:
         case Structural::Context:
@@ -689,7 +712,7 @@ bool StructuralUtil::validateKinship(StructuralType entityType, StructuralType p
 
         default:
         {
-          return false;          
+          return false;
         }
       }
       break;
@@ -698,7 +721,8 @@ bool StructuralUtil::validateKinship(StructuralType entityType, StructuralType p
     case Structural::SwitchPort:
     case Structural::Mapping:
     {
-      switch (parentType) {
+      switch (parentType)
+      {
         case Structural::Switch:
         {
           return true;
@@ -706,7 +730,7 @@ bool StructuralUtil::validateKinship(StructuralType entityType, StructuralType p
 
         default:
         {
-          return false;          
+          return false;
         }
       }
       break;
@@ -723,7 +747,7 @@ bool StructuralUtil::validateKinship(StructuralType entityType, StructuralType p
 
         default:
         {
-          return false;          
+          return false;
         }
       }
       break;

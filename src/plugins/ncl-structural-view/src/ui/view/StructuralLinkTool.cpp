@@ -1,22 +1,22 @@
 #include "StructuralLinkTool.h"
 
-StructuralLinkTool::StructuralLinkTool(StructuralEntity* parent)
-  : StructuralEdge(parent)
+StructuralLinkTool::StructuralLinkTool (StructuralEntity *parent)
+    : StructuralEdge (parent)
 {
-  setzIndex(1000);
+  setzIndex (1000);
 }
 
-StructuralLinkTool::~StructuralLinkTool()
-{
+StructuralLinkTool::~StructuralLinkTool () {}
 
-}
-
-QLineF StructuralLinkTool::getLine() const
+QLineF
+StructuralLinkTool::getLine () const
 {
   return _line;
 }
 
-void StructuralLinkTool::setLine(const QLineF &line)
+void
+StructuralLinkTool::setLine (const QLineF &line)
 {
-  _line = line; adjustBox(line);
+  _line = line;
+  adjustBox (line);
 }

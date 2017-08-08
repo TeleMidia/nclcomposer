@@ -18,28 +18,31 @@
 
 #include "StructuralViewFactory.h"
 
-StructuralViewFactory::StructuralViewFactory(QObject* parent)
-  : QObject(parent)
+StructuralViewFactory::StructuralViewFactory (QObject *parent)
+    : QObject (parent)
 {
   // Nothing todo.
 }
 
-StructuralViewFactory::~StructuralViewFactory()
+StructuralViewFactory::~StructuralViewFactory ()
 {
   // Nothing todo.
 }
 
-IPlugin* StructuralViewFactory::createPluginInstance()
+IPlugin *
+StructuralViewFactory::createPluginInstance ()
 {
-  return new StructuralViewPlugin();
+  return new StructuralViewPlugin ();
 }
 
-void StructuralViewFactory::releasePluginInstance(IPlugin* plugin)
+void
+StructuralViewFactory::releasePluginInstance (IPlugin *plugin)
 {
-  delete(plugin);
+  delete (plugin);
 }
 
-QString StructuralViewFactory::id() const
+QString
+StructuralViewFactory::id () const
 {
   return "br.puc-rio.telemidia.composer.structural";
 }

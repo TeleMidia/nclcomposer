@@ -6,16 +6,16 @@
 class StructuralContent : public StructuralNode
 {
 public:
-  StructuralContent(StructuralEntity* parent = 0);
-  virtual ~StructuralContent();
+  StructuralContent (StructuralEntity *parent = 0);
+  virtual ~StructuralContent ();
 
-  StructuralMimeType getMimeType() const;
-  void setMimeType(StructuralMimeType mimetype);
+  StructuralMimeType getMimeType () const;
+  void setMimeType (StructuralMimeType mimetype);
 
-  virtual void adjust(bool collision = false,  bool recursion = true);
+  virtual void adjust (bool collision = false, bool recursion = true);
 
 protected:
-  virtual void draw(QPainter* painter);
+  virtual void draw (QPainter *painter);
 
 private:
   StructuralMimeType _mimetype;

@@ -6,11 +6,13 @@
 class Remove : public Command
 {
 public:
-  Remove(const QString &uid, const QString &parent, const QMap<QString, QString> &properties, const QMap<QString, QString> &settings);
-  virtual ~Remove();
+  Remove (const QString &uid, const QString &parent,
+          const QMap<QString, QString> &properties,
+          const QMap<QString, QString> &settings);
+  virtual ~Remove ();
 
-  virtual void undo();
-  virtual void redo();
+  virtual void undo ();
+  virtual void redo ();
 
 private:
   QString _uid;

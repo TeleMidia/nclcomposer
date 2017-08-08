@@ -22,15 +22,20 @@
 #define STR_PROPERTY_ENTITY_WIDTH ":structural:property:entity:width"
 #define STR_PROPERTY_ENTITY_HEIGHT ":structural:property:entity:height"
 #define STR_PROPERTY_ENTITY_ZINDEX ":structural:property:entity:zindex"
-#define STR_PROPERTY_ENTITY_UNCOLLAPSED_TOP ":structural:property:entity:uncollaped:top"
-#define STR_PROPERTY_ENTITY_UNCOLLAPSED_LEFT ":structural:property:entity:uncollaped:left"
-#define STR_PROPERTY_ENTITY_UNCOLLAPSED_WIDTH ":structural:property:entity:uncollaped:width"
-#define STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT ":structural:property:entity:uncollaped:height"
+#define STR_PROPERTY_ENTITY_UNCOLLAPSED_TOP                                   \
+  ":structural:property:entity:uncollaped:top"
+#define STR_PROPERTY_ENTITY_UNCOLLAPSED_LEFT                                  \
+  ":structural:property:entity:uncollaped:left"
+#define STR_PROPERTY_ENTITY_UNCOLLAPSED_WIDTH                                 \
+  ":structural:property:entity:uncollaped:width"
+#define STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT                                \
+  ":structural:property:entity:uncollaped:height"
 
 #define STR_PROPERTY_ENTITY_AUTOSTART ":structural:property:entity:autostart"
 #define STR_PROPERTY_ENTITY_HIDDEN ":structural:property:entity:hidden"
 #define STR_PROPERTY_ENTITY_REFERENCE ":structural:property:entity:reference"
-#define STR_PROPERTY_ENTITY_UNCOLLAPSED ":structural:property:entity:uncollapsed"
+#define STR_PROPERTY_ENTITY_UNCOLLAPSED                                       \
+  ":structural:property:entity:uncollapsed"
 
 // Node defines
 #define STR_PROPERTY_CONTENT_LOCATION ":structural:property:content:location"
@@ -56,19 +61,28 @@
 
 // Reference defines
 #define STR_PROPERTY_REFERENCE_LINK_ID ":structural:property:reference:link:id"
-#define STR_PROPERTY_REFERENCE_LINK_UID ":structural:property:reference:link:uid"
+#define STR_PROPERTY_REFERENCE_LINK_UID                                       \
+  ":structural:property:reference:link:uid"
 
-#define STR_PROPERTY_REFERENCE_COMPONENT_ID ":structural:property:reference:component:id"
-#define STR_PROPERTY_REFERENCE_COMPONENT_UID ":structural:property:reference:component:uid"
+#define STR_PROPERTY_REFERENCE_COMPONENT_ID                                   \
+  ":structural:property:reference:component:id"
+#define STR_PROPERTY_REFERENCE_COMPONENT_UID                                  \
+  ":structural:property:reference:component:uid"
 
-#define STR_PROPERTY_REFERENCE_INTERFACE_ID ":structural:property:reference:interface:id"
-#define STR_PROPERTY_REFERENCE_INTERFACE_UID ":structural:property:reference:interface:uid"
+#define STR_PROPERTY_REFERENCE_INTERFACE_ID                                   \
+  ":structural:property:reference:interface:id"
+#define STR_PROPERTY_REFERENCE_INTERFACE_UID                                  \
+  ":structural:property:reference:interface:uid"
 
-#define STR_PROPERTY_REFERENCE_XCONNECTOR_ID ":structural:property:reference:xconnector:id"
-#define STR_PROPERTY_REFERENCE_XCONNECTOR_UID ":structural:property:reference:xconnector:uid"
+#define STR_PROPERTY_REFERENCE_XCONNECTOR_ID                                  \
+  ":structural:property:reference:xconnector:id"
+#define STR_PROPERTY_REFERENCE_XCONNECTOR_UID                                 \
+  ":structural:property:reference:xconnector:uid"
 
-#define STR_PROPERTY_REFERENCE_REFER_ID ":structural:property:reference:refer:id"
-#define STR_PROPERTY_REFERENCE_REFER_UID ":structural:property:reference:refer:uid"
+#define STR_PROPERTY_REFERENCE_REFER_ID                                       \
+  ":structural:property:reference:refer:id"
+#define STR_PROPERTY_REFERENCE_REFER_UID                                      \
+  ":structural:property:reference:refer:uid"
 
 //
 // Settings
@@ -200,29 +214,29 @@ class Structural
 public:
   enum StructuralCategory
   {
-    Node        = 1,
-    Edge        = 2,
-    Interface   = 3,
+    Node = 1,
+    Edge = 2,
+    Interface = 3,
 
-    NoCategory  = 0
+    NoCategory = 0
   };
 
   enum StructuralType
   {
-    Media       = 1,
-    Body        = 2,
-    Context     = 3,
-    Switch      = 4,
-    Link        = 5,
-    Port        = 6,
-    SwitchPort  = 7,
-    Area        = 8,
-    Property    = 9,
-    Bind        = 10,
-    Reference   = 11,
-    Mapping     = 12,
+    Media = 1,
+    Body = 2,
+    Context = 3,
+    Switch = 4,
+    Link = 5,
+    Port = 6,
+    SwitchPort = 7,
+    Area = 8,
+    Property = 9,
+    Bind = 10,
+    Reference = 11,
+    Mapping = 12,
 
-    NoType      = 0
+    NoType = 0
   };
 
   enum StructuralRole
@@ -246,38 +260,41 @@ public:
     NoRole
   };
 
-  enum StructuralMimeType {
-    Image       = 1,
-    Audio       = 2,
-    Video       = 3,
-    Text        = 4,
-    HTML        = 5,
-    NCL         = 6,
-    NCLua       = 7,
-    Settings    = 9,
-    Time        = 10,
+  enum StructuralMimeType
+  {
+    Image = 1,
+    Audio = 2,
+    Video = 3,
+    Text = 4,
+    HTML = 5,
+    NCL = 6,
+    NCLua = 7,
+    Settings = 9,
+    Time = 10,
 
-    NoMimeType  = 0
+    NoMimeType = 0
   };
 
-  enum StructuralResize {
-    Top         = 1,
-    TopRight    = 2,
-    Right       = 3,
+  enum StructuralResize
+  {
+    Top = 1,
+    TopRight = 2,
+    Right = 3,
     BottomRight = 4,
-    Bottom      = 5,
-    BottomLeft  = 6,
-    Left        = 7,
-    TopLeft     = 8,
+    Bottom = 5,
+    BottomLeft = 6,
+    Left = 7,
+    TopLeft = 8,
 
-    NoResize    = 0
+    NoResize = 0
   };
 
-  enum StructuralMode {
-    Pointing    = 1,
-    Linking     = 2,
+  enum StructuralMode
+  {
+    Pointing = 1,
+    Linking = 2,
 
-    NoMode      = 0
+    NoMode = 0
   };
 };
 

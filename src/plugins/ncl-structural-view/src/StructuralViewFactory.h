@@ -26,16 +26,16 @@ using namespace cpr::core;
 class StructuralViewFactory : public QObject, public IPluginFactory
 {
   Q_OBJECT
-  Q_INTERFACES(IPluginFactory)
-  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "ncl-structural-view.json")
+  Q_INTERFACES (IPluginFactory)
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "ncl-structural-view.json")
 
 public:
-  StructuralViewFactory(QObject* parent = 0);
-  virtual ~StructuralViewFactory();
+  StructuralViewFactory (QObject *parent = 0);
+  virtual ~StructuralViewFactory ();
 
-  IPlugin* createPluginInstance();
-  void releasePluginInstance(IPlugin *);
-  QString id() const;
+  IPlugin *createPluginInstance ();
+  void releasePluginInstance (IPlugin *);
+  QString id () const;
 };
 
 #endif // QNSTCOMPOSERPLUGINFACTORY_H

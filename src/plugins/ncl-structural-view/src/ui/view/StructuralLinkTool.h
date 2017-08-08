@@ -6,14 +6,14 @@
 class StructuralLinkTool : public StructuralEdge
 {
 public:
-    StructuralLinkTool(StructuralEntity* parent = 0);
-    virtual ~StructuralLinkTool();
+  StructuralLinkTool (StructuralEntity *parent = 0);
+  virtual ~StructuralLinkTool ();
 
-    QLineF getLine() const;
-    void setLine(const QLineF &_line);
+  QLineF getLine () const;
+  void setLine (const QLineF &_line);
 
 private:
-    QLineF _line;
+  QLineF _line;
 };
 
 #endif // STRUCTURALLINKTOOL_H

@@ -1,35 +1,33 @@
 #include "StructuralInterface.h"
 
-StructuralInterface::StructuralInterface(StructuralEntity* parent)
-  : StructuralEntity(parent)
+StructuralInterface::StructuralInterface (StructuralEntity *parent)
+    : StructuralEntity (parent)
 {
-  setStructuralCategory(Structural::Interface);
-  setStructuralType(Structural::NoType);
+  setStructuralCategory (Structural::Interface);
+  setStructuralType (Structural::NoType);
 
-  setResizable(false);
+  setResizable (false);
 
-  setTop(0);
-  setLeft(0);
-  setWidth(STR_DEFAULT_INTERFACE_W);
-  setHeight(STR_DEFAULT_INTERFACE_H);
+  setTop (0);
+  setLeft (0);
+  setWidth (STR_DEFAULT_INTERFACE_W);
+  setHeight (STR_DEFAULT_INTERFACE_H);
 
   if (!STR_DEFAULT_WITH_INTERFACES)
   {
-    setHidden(true);
+    setHidden (true);
   }
 }
 
-StructuralInterface::~StructuralInterface()
-{
+StructuralInterface::~StructuralInterface () {}
 
-}
-
-void StructuralInterface::adjust(bool collision,  bool recursion)
+void
+StructuralInterface::adjust (bool collision, bool recursion)
 {
-  StructuralEntity::adjust(collision, recursion);
+  StructuralEntity::adjust (collision, recursion);
 
   // Adjusting position...
-  StructuralEntity* parent = getStructuralParent();
+  StructuralEntity *parent = getStructuralParent ();
 
   if (parent != NULL || !STR_DEFAULT_WITH_BODY)
   {
@@ -41,41 +39,44 @@ void StructuralInterface::adjust(bool collision,  bool recursion)
       {
         bool colliding = false;
 
-        foreach(StructuralEntity *entity, StructuralUtil::getNeighbors(this))
+        foreach (StructuralEntity *entity, StructuralUtil::getNeighbors (this))
         {
-          if(this != entity)
+          if (this != entity)
           {
             int max = 1000;
             int n = 0;
 
             qreal current = 0.0;
 
-            entity->setSelectable(false);
+            entity->setSelectable (false);
 
-            while(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
+            while (collidesWithItem (entity, Qt::IntersectsItemBoundingRect))
             {
-              QLineF line = QLineF(getLeft()+getWidth()/2, getTop()+getHeight()/2,
-                                   entity->getWidth()/2, entity->getHeight()/2);
+              QLineF line = QLineF (
+                  getLeft () + getWidth () / 2, getTop () + getHeight () / 2,
+                  entity->getWidth () / 2, entity->getHeight () / 2);
 
-              line.setAngle(qrand()%360);
+              line.setAngle (qrand () % 360);
 
-              current += (double)(qrand()%100)/1000.0;
+              current += (double)(qrand () % 100) / 1000.0;
 
-              setTop(getTop()+line.pointAt(current/2).y()-line.p1().y());
-              setLeft(getLeft()+line.pointAt(current/2).x()-line.p1().x());
+              setTop (getTop () + line.pointAt (current / 2).y ()
+                      - line.p1 ().y ());
+              setLeft (getLeft () + line.pointAt (current / 2).x ()
+                       - line.p1 ().x ());
 
               if (++n > max)
                 break;
             }
 
-            constrain();
+            constrain ();
 
-            entity->setSelectable(true);
+            entity->setSelectable (true);
           }
         }
 
-        foreach(StructuralEntity *entity, StructuralUtil::getNeighbors(this))
-          if(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
+        foreach (StructuralEntity *entity, StructuralUtil::getNeighbors (this))
+          if (collidesWithItem (entity, Qt::IntersectsItemBoundingRect))
             colliding = true;
 
         if (!colliding)
@@ -83,33 +84,36 @@ void StructuralInterface::adjust(bool collision,  bool recursion)
       }
     }
 
-    constrain();
+    constrain ();
 
-    StructuralUtil::adjustEdges(this);
+    StructuralUtil::adjustEdges (this);
   }
 }
 
-void StructuralInterface::constrain()
+void
+StructuralInterface::constrain ()
 {
-  StructuralEntity* parent = getStructuralParent();
+  StructuralEntity *parent = getStructuralParent ();
 
   if (parent != NULL)
   {
-    QPointF tail(parent->getWidth()/2, parent->getHeight()/2);
-    QPointF head(getLeft() + getWidth()/2, getTop() + getHeight()/2);
+    QPointF tail (parent->getWidth () / 2, parent->getHeight () / 2);
+    QPointF head (getLeft () + getWidth () / 2, getTop () + getHeight () / 2);
 
     if (tail == head)
     {
-      head.setX(tail.x());
-      head.setY(tail.y() - 10);
+      head.setX (tail.x ());
+      head.setY (tail.y () - 10);
     }
 
-    QPointF p = head;  QLineF line(tail,head); bool status = true;
+    QPointF p = head;
+    QLineF line (tail, head);
+    bool status = true;
 
     qreal current = 1.0;
     qreal step = 0.01;
 
-    if (!parent->contains(p))
+    if (!parent->contains (p))
     {
       step = -0.01;
       status = false;
@@ -118,67 +122,68 @@ void StructuralInterface::constrain()
     do
     {
       current += step;
-      p = line.pointAt(current);
-    } while(parent->contains(p) == status);
+      p = line.pointAt (current);
+    } while (parent->contains (p) == status);
 
-    if (QLineF(p,head).length() > 7)
+    if (QLineF (p, head).length () > 7)
     {
-      setTop(p.y() - getHeight()/2);
-      setLeft(p.x() - getWidth()/2);
+      setTop (p.y () - getHeight () / 2);
+      setLeft (p.x () - getWidth () / 2);
     }
   }
 }
 
-void StructuralInterface::draw(QPainter* painter)
+void
+StructuralInterface::draw (QPainter *painter)
 {
   int x = STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_INTERFACE_PADDING;
   int y = STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_INTERFACE_PADDING;
-  int w = getWidth() - 2*STR_DEFAULT_INTERFACE_PADDING;
-  int h = getHeight() - 2*STR_DEFAULT_INTERFACE_PADDING;
+  int w = getWidth () - 2 * STR_DEFAULT_INTERFACE_PADDING;
+  int h = getHeight () - 2 * STR_DEFAULT_INTERFACE_PADDING;
 
-  painter->drawPixmap(x, y, w, h, QPixmap(StructuralUtil::getIcon(getStructuralType())));
+  painter->drawPixmap (
+      x, y, w, h, QPixmap (StructuralUtil::getIcon (getStructuralType ())));
 
-  if (!STR_DEFAULT_WITH_BODY &&
-      !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+  if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
   {
-    if (getStructuralProperty(STR_PROPERTY_ENTITY_AUTOSTART) == STR_VALUE_TRUE)
+    if (getStructuralProperty (STR_PROPERTY_ENTITY_AUTOSTART)
+        == STR_VALUE_TRUE)
     {
-      painter->setPen(QPen(QBrush(QColor(76, 76, 76)), 2));
-      painter->drawRect(x, y, w, h);
+      painter->setPen (QPen (QBrush (QColor (76, 76, 76)), 2));
+      painter->drawRect (x, y, w, h);
     }
   }
 
-  if (!getError().isEmpty() ||
-      !getWarning().isEmpty())
+  if (!getError ().isEmpty () || !getWarning ().isEmpty ())
   {
 
     QString icon;
 
-    if (!getError().isEmpty())
+    if (!getError ().isEmpty ())
     {
-      icon = QString(STR_DEFAULT_ALERT_ERROR_ICON);
+      icon = QString (STR_DEFAULT_ALERT_ERROR_ICON);
     }
     else
     {
-      icon = QString(STR_DEFAULT_ALERT_WARNING_ICON);
+      icon = QString (STR_DEFAULT_ALERT_WARNING_ICON);
     }
 
-    painter->drawPixmap(x + w/2 - (STR_DEFAULT_ALERT_ICON_W-3)/2,
-                        y + h/2 - (STR_DEFAULT_ALERT_ICON_H-3)/2,
-                        STR_DEFAULT_ALERT_ICON_W - 3, STR_DEFAULT_ALERT_ICON_H - 3,
-                        QPixmap(icon));
+    painter->drawPixmap (x + w / 2 - (STR_DEFAULT_ALERT_ICON_W - 3) / 2,
+                         y + h / 2 - (STR_DEFAULT_ALERT_ICON_H - 3) / 2,
+                         STR_DEFAULT_ALERT_ICON_W - 3,
+                         STR_DEFAULT_ALERT_ICON_H - 3, QPixmap (icon));
   }
 
-  if (isMoving())
+  if (isMoving ())
   {
-    painter->setBrush(QBrush(Qt::NoBrush));
-    painter->setPen(QPen(QBrush(Qt::black), 0));
+    painter->setBrush (QBrush (Qt::NoBrush));
+    painter->setPen (QPen (QBrush (Qt::black), 0));
 
-    int moveX = x + getMoveLeft() - getLeft();
-    int moveY = y + getMoveTop() - getTop();
+    int moveX = x + getMoveLeft () - getLeft ();
+    int moveY = y + getMoveTop () - getTop ();
     int moveW = w;
     int moveH = h;
 
-    painter->drawRect(moveX, moveY, moveW, moveH);
+    painter->drawRect (moveX, moveY, moveW, moveH);
   }
 }
