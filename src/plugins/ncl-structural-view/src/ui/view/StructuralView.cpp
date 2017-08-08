@@ -1422,21 +1422,21 @@ StructuralView::adjustReferences (StructuralEntity *entity)
         StructuralEntity *tail = ((StructuralEdge *)entity)->getTail ();
         StructuralEntity *head = ((StructuralEdge *)entity)->getHead ();
 
-        if (!STR_DEFAULT_WITH_INTERFACES)
-        {
-          if (tail->getStructuralCategory () == Structural::Interface)
-          {
-            ((StructuralEdge *)entity)->setTail (tail->getStructuralParent ());
-          }
-
-          if (head->getStructuralCategory () == Structural::Interface)
-          {
-            ((StructuralEdge *)entity)->setHead (head->getStructuralParent ());
-          }
-        }
-
         if (tail != NULL && head != NULL)
         {
+          if (!STR_DEFAULT_WITH_INTERFACES)
+          {
+            if (tail->getStructuralCategory () == Structural::Interface)
+            {
+              ((StructuralEdge *)entity)->setTail (tail->getStructuralParent ());
+            }
+
+            if (head->getStructuralCategory () == Structural::Interface)
+            {
+              ((StructuralEdge *)entity)->setHead (head->getStructuralParent ());
+            }
+          }
+
           if (entity->getStructuralParent () != NULL)
             if (!entity->getStructuralParent ()->isUncollapsed ())
               isVisible = false;
