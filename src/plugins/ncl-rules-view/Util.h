@@ -1,20 +1,22 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-extern const char *RULEBASE_LABEL;
-extern const char *RULE_LABEL;
-extern const char *COMPOSITERULE_LABEL;
+#include <QString>
 
-extern const char *ID_ATTR;
-extern const char *VAR_ATTR;
-extern const char *OPERATOR_ATTR;
-extern const char *COMPARATOR_ATTR;
-extern const char *VALUE_ATTR;
+const QString RULEBASE_LABEL = "ruleBase";
+const QString RULE_LABEL = "rule";
+const QString COMPOSITERULE_LABEL = "compositeRule";
 
-extern const int ELEMENT_COLUMN;
-extern const int ID_COLUMN;
-extern const int VAR_COLUMN;
-extern const int COMP_COLUMN;
-extern const int VALUE_COLUMN;
+const QString ID_ATTR = "id";
+const QString VAR_ATTR = "var";
+const QString OPERATOR_ATTR = "operator";
+const QString COMPARATOR_ATTR = "comparator";
+const QString VALUE_ATTR = "value";
+
+const int ELEMENT_COLUMN = 0;
+const int ID_COLUMN = 1;
+const int VAR_COLUMN = 2;
+const int COMP_COLUMN = 3;
+const int VALUE_COLUMN = 4;
 
 #endif // UTIL_H

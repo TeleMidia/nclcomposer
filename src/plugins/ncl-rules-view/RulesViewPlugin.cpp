@@ -8,22 +8,6 @@
 #include "RuleItem.h"
 #include "Util.h"
 
-const char *RULEBASE_LABEL = "ruleBase";
-const char *RULE_LABEL = "rule";
-const char *COMPOSITERULE_LABEL = "compositeRule";
-
-const char *ID_ATTR = "id";
-const char *VAR_ATTR = "var";
-const char *OPERATOR_ATTR = "operator";
-const char *COMPARATOR_ATTR = "comparator";
-const char *VALUE_ATTR = "value";
-
-const int ELEMENT_COLUMN = 0;
-const int ID_COLUMN = 1;
-const int VAR_COLUMN = 2;
-const int COMP_COLUMN = 3;
-const int VALUE_COLUMN = 4;
-
 RulesViewPlugin::RulesViewPlugin () : IPlugin ()
 {
   _selectedUId = 0;
