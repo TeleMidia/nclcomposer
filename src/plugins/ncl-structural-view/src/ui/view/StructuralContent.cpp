@@ -26,7 +26,7 @@ StructuralContent::getMimeType () const
 }
 
 void
-StructuralContent::setMimeType (Structural::StructuralMimeType type)
+StructuralContent::setMimeType (Structural::MimeType type)
 {
   _mimetype = type;
 

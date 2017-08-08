@@ -212,7 +212,7 @@
 class Structural
 {
 public:
-  enum StructuralCategory
+  enum Category
   {
     Node = 1,
     Edge = 2,
@@ -221,7 +221,7 @@ public:
     NoCategory = 0
   };
 
-  enum StructuralType
+  enum Type
   {
     Media = 1,
     Body = 2,
@@ -239,7 +239,7 @@ public:
     NoType = 0
   };
 
-  enum StructuralRole
+  enum Role
   {
     onBegin,
     onEnd,
@@ -260,7 +260,7 @@ public:
     NoRole
   };
 
-  enum StructuralMimeType
+  enum MimeType
   {
     Image = 1,
     Audio = 2,
@@ -275,7 +275,7 @@ public:
     NoMimeType = 0
   };
 
-  enum StructuralResize
+  enum Resize
   {
     Top = 1,
     TopRight = 2,
@@ -289,7 +289,7 @@ public:
     NoResize = 0
   };
 
-  enum StructuralMode
+  enum Mode
   {
     Pointing = 1,
     Linking = 2,
@@ -298,11 +298,11 @@ public:
   };
 };
 
-typedef Structural::StructuralCategory StructualCategory;
-typedef Structural::StructuralType StructuralType;
-typedef Structural::StructuralResize StructuralResize;
-typedef Structural::StructuralMimeType StructuralMimeType;
-typedef Structural::StructuralRole StructuralRole;
-typedef Structural::StructuralMode StructuralMode;
+typedef Structural::Category StructuralCategory;
+typedef Structural::Type StructuralType;
+typedef Structural::Resize StructuralResize;
+typedef Structural::MimeType StructuralMimeType;
+typedef Structural::Role StructuralRole;
+typedef Structural::Mode StructuralMode;
 
 #endif // STRUCTURAL_H

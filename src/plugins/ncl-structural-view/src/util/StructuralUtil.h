@@ -26,8 +26,8 @@ public:
   static QMap<QString, QString> createCoreTranslations (StructuralType type);
   static QMap<QString, QString> createPluginTranslations (StructuralType type);
 
-  static QString translateCategoryToString (StructualCategory category);
-  static StructualCategory translateStringToCategory (const QString &category);
+  static QString translateCategoryToString (StructuralCategory category);
+  static StructuralCategory translateStringToCategory (const QString &category);
 
   static QString translateTypeToString (StructuralType type);
   static StructuralType translateStringToType (const QString &type);
@@ -72,8 +72,8 @@ public:
   static bool validateKinship (StructuralType type, StructuralType parent);
 
 private:
-  static std::map<StructualCategory, QString> _mapCategoryToString;
-  static std::map<QString, StructualCategory> _mapStringToCategory;
+  static std::map<StructuralCategory, QString> _mapCategoryToString;
+  static std::map<QString, StructuralCategory> _mapStringToCategory;
 
   static std::map<QString, StructuralType> _mapStringToType;
   static std::map<StructuralType, QString> _mapTypeToString;

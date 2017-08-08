@@ -718,7 +718,7 @@ StructuralViewPlugin::insertInView (Entity *entity, bool undo)
 {
   QMap<QString, QString> properties;
 
-  Structural::StructuralType type
+  Structural::Type type
       = StructuralUtil::translateStringToType (entity->getType ());
 
   if (type != Structural::NoType)
@@ -946,7 +946,7 @@ StructuralViewPlugin::changeInView (Entity *entity)
 {
   QMap<QString, QString> properties;
 
-  Structural::StructuralType type
+  Structural::Type type
       = StructuralUtil::translateStringToType (entity->getType ());
 
   if (type != Structural::NoType)
@@ -1313,7 +1313,7 @@ StructuralViewPlugin::changeInCore (QString uid,
   {
     QMap<QString, QString> attributes;
 
-    Structural::StructuralType type = StructuralUtil::translateStringToType (
+    Structural::Type type = StructuralUtil::translateStringToType (
         properties[STR_PROPERTY_ENTITY_TYPE]);
 
     QMap<QString, QString> translations

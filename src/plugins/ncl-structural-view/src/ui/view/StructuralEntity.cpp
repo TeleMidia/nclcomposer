@@ -89,14 +89,14 @@ StructuralEntity::setStructuralId (const QString &id)
   _properties.insert (STR_PROPERTY_ENTITY_ID, _id);
 }
 
-StructualCategory
+StructuralCategory
 StructuralEntity::getStructuralCategory () const
 {
   return _category;
 }
 
 void
-StructuralEntity::setStructuralCategory (StructualCategory category)
+StructuralEntity::setStructuralCategory (StructuralCategory category)
 {
   _category = category;
   _properties[STR_PROPERTY_ENTITY_CATEGORY]

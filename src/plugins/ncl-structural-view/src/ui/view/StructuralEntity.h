@@ -31,8 +31,8 @@ public:
   QString getStructuralUid () const;
   void setStructuralUid (const QString &uid);
 
-  StructualCategory getStructuralCategory () const;
-  void setStructuralCategory (StructualCategory category);
+  StructuralCategory getStructuralCategory () const;
+  void setStructuralCategory (StructuralCategory category);
 
   StructuralType getStructuralType () const;
   void setStructuralType (StructuralType type);
@@ -256,7 +256,7 @@ private:
   QMap<QString, QString> _properties;
 
   StructuralType _type;
-  StructualCategory _category;
+  StructuralCategory _category;
 
   StructuralEntity *_parent;
   QVector<StructuralEntity *> _children;
