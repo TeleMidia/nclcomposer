@@ -30,6 +30,8 @@ set(NCLCOMPOSER_CORE_HEADERS
   util/Preferences.h
 
 # Model
+  model/Node.h
+  model/Comment.h
   model/Entity.h
   model/Project.h
   #model/Model.h
@@ -37,6 +39,7 @@ set(NCLCOMPOSER_CORE_HEADERS
 )
 
 set(NCLCOMPOSER_CORE_SOURCES
+  model/Node.cpp
   model/Entity.cpp
   model/Project.cpp
   modules/LanguageControl.cpp
