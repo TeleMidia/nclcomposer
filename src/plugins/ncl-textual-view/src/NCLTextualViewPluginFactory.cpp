@@ -28,6 +28,9 @@ NCLTextualViewPluginFactory::NCLTextualViewPluginFactory ()
       "cpr.textual.bgCaretLine",
       new Preference ("bgCaretLine", "#B9D3EE", "Textual"));
   Preferences::getInstance ()->registerPreference (
+      "cpr.textual.caretLineVisible",
+        new Preference ("caretLineVisible", "1", "Textual"));
+  Preferences::getInstance ()->registerPreference (
       "cpr.textual.bgMarginColor",
       new Preference ("bgMarginColor", "#ffffff", "Textual"));
   Preferences::getInstance ()->registerPreference (
@@ -39,6 +42,12 @@ NCLTextualViewPluginFactory::NCLTextualViewPluginFactory ()
   Preferences::getInstance ()->registerPreference (
       "cpr.textual.fontSize",
       new Preference ("fontSize", "10", "Textual"));
+  Preferences::getInstance ()->registerPreference (
+        "cpr.textual.tabWidth",
+        new Preference ("tabWidth", "2","Textual"));
+  Preferences::getInstance ()->registerPreference (
+        "cpr.textual.whitespaceVisibility",
+        new Preference ("whitespaceVisibility", "0", "Textual"));
 }
 
 IPlugin *

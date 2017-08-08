@@ -31,6 +31,8 @@ using namespace cpr::core;
 
 NCLTextEditor::NCLTextEditor (QWidget *parent) : QsciScintilla (parent)
 {
+  Preference *tabWidth
+      = Preferences::getInstance ()->getValue("cpr.textual.tabWidth");
   _nclLexer = nullptr;
   _apis = nullptr;
   _textWithoutUserInter = "";
@@ -40,7 +42,7 @@ NCLTextEditor::NCLTextEditor (QWidget *parent) : QsciScintilla (parent)
   initParameters ();
   setAcceptDrops (true);
 
-  setTabWidth (2);
+  setTabWidth (tabWidth->value().toInt());//(2);
   connect (this, SIGNAL (cursorPositionChanged (int, int)), this,
            SLOT (handleCursorPositionChanged (int, int)));
 }
@@ -53,6 +55,8 @@ NCLTextEditor::initParameters ()
   Preferences::getInstance ()->restore ();
     Preference *bgCaretLine
         = Preferences::getInstance ()->getValue ("cpr.textual.bgCaretLine");
+    Preference *caretLineVisible
+        = Preferences::getInstance ()->getValue("cpr.textual.caretLineVisible");
     Preference *bgMarginColor
         = Preferences::getInstance ()->getValue ("cpr.textual.bgMarginColor");
     Preference *marginForeColor
@@ -61,6 +65,8 @@ NCLTextEditor::initParameters ()
         = Preferences::getInstance ()->getValue ("cpr.textual.marginBackColor");
     Preference *prefFontSize
         = Preferences::getInstance ()->getValue ("cpr.textual.fontSize");
+    Preference *whitespaceVisibility
+        = Preferences::getInstance ()->getValue("cpr.textual.whitespaceVisibility");
 
   _tabBehavior = TAB_BEHAVIOR_DEFAULT;
 
@@ -79,7 +85,18 @@ NCLTextEditor::initParameters ()
 
   setCaretWidth (20);
   setCaretLineBackgroundColor (QColor ("#e6fff0"));
-  setCaretLineVisible (true);
+  if(caretLineVisible->value().toInt()==1)
+    setCaretLineVisible (true);
+
+  //whitespacevisibility switch
+  if(whitespaceVisibility->value().toInt()==0)
+    setWhitespaceVisibility(WhitespaceVisibility::WsInvisible);
+  else if(whitespaceVisibility->value().toInt()==1)
+    setWhitespaceVisibility(WhitespaceVisibility::WsVisible);
+  else if(whitespaceVisibility->value().toInt()==2)
+    setWhitespaceVisibility(WhitespaceVisibility::WsVisibleAfterIndent);
+  else if(whitespaceVisibility->value().toInt()==3)
+    setWhitespaceVisibility(WhitespaceVisibility::WsVisibleOnlyInIndent);
 
   ensureLineVisible (1);
   setUtf8 (true);
