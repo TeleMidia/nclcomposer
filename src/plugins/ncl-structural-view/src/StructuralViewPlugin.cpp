@@ -1762,7 +1762,7 @@ StructuralViewPlugin::adjustConnectors ()
                         if (!current.attributes ()
                                  .namedItem ("name")
                                  .isNull ())
-                          connActions.append (current.attributes ()
+                          connParams.append (current.attributes ()
                                                   .namedItem ("name")
                                                   .nodeValue ());
 
