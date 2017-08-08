@@ -83,7 +83,7 @@ StructuralUtil::createCoreTranslations (StructuralType type)
   {
     case Structural::Body:
     {
-      translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTR_ID] = STR_PROPERTY_ENTITY_ID;
 
       break;
     }
@@ -91,30 +91,30 @@ StructuralUtil::createCoreTranslations (StructuralType type)
     case Structural::Context:
     case Structural::Switch:
     {
-      translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
-      translations[NCL_ATTRIBUTE_REFER] = STR_PROPERTY_REFERENCE_REFER_ID;
+      translations[NCL_ATTR_ID] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTR_REFER] = STR_PROPERTY_REFERENCE_REFER_ID;
 
       break;
     }
 
     case Structural::Media:
     {
-      translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
-      translations[NCL_ATTRIBUTE_REFER] = STR_PROPERTY_REFERENCE_REFER_ID;
-      translations[NCL_ATTRIBUTE_INSTANCE] = STR_PROPERTY_CONTENT_INSTANCE;
-      translations[NCL_ATTRIBUTE_TYPE] = STR_PROPERTY_CONTENT_TYPE;
-      translations[NCL_ATTRIBUTE_SRC] = STR_PROPERTY_CONTENT_LOCATION;
-      translations[NCL_ATTRIBUTE_DESCRIPTOR] = NCL_ATTRIBUTE_DESCRIPTOR;
+      translations[NCL_ATTR_ID] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTR_REFER] = STR_PROPERTY_REFERENCE_REFER_ID;
+      translations[NCL_ATTR_INSTANCE] = STR_PROPERTY_CONTENT_INSTANCE;
+      translations[NCL_ATTR_TYPE] = STR_PROPERTY_CONTENT_TYPE;
+      translations[NCL_ATTR_SRC] = STR_PROPERTY_CONTENT_LOCATION;
+      translations[NCL_ATTR_DESCRIPTOR] = NCL_ATTR_DESCRIPTOR;
 
       break;
     }
 
     case Structural::Port:
     {
-      translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
-      translations[NCL_ATTRIBUTE_COMPONENT]
+      translations[NCL_ATTR_ID] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTR_COMPONENT]
           = STR_PROPERTY_REFERENCE_COMPONENT_ID;
-      translations[NCL_ATTRIBUTE_INTERFACE]
+      translations[NCL_ATTR_INTERFACE]
           = STR_PROPERTY_REFERENCE_INTERFACE_ID;
 
       break;
@@ -122,42 +122,42 @@ StructuralUtil::createCoreTranslations (StructuralType type)
 
     case Structural::Property:
     {
-      translations[NCL_ATTRIBUTE_NAME] = STR_PROPERTY_ENTITY_ID;
-      translations[NCL_ATTRIBUTE_VALUE] = NCL_ATTRIBUTE_VALUE;
-      translations[NCL_ATTRIBUTE_EXTERNABLE] = NCL_ATTRIBUTE_EXTERNABLE;
+      translations[NCL_ATTR_NAME] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTR_VALUE] = NCL_ATTR_VALUE;
+      translations[NCL_ATTR_EXTERNABLE] = NCL_ATTR_EXTERNABLE;
       break;
     }
 
     case Structural::Area:
     {
-      translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTR_ID] = STR_PROPERTY_ENTITY_ID;
 
-      translations[NCL_ATTRIBUTE_COORDS] = NCL_ATTRIBUTE_COORDS;
-      translations[NCL_ATTRIBUTE_BEGIN] = NCL_ATTRIBUTE_BEGIN;
-      translations[NCL_ATTRIBUTE_END] = NCL_ATTRIBUTE_END;
-      translations[NCL_ATTRIBUTE_BEGINTEXT] = NCL_ATTRIBUTE_BEGINTEXT;
-      translations[NCL_ATTRIBUTE_ENDTEXT] = NCL_ATTRIBUTE_ENDTEXT;
-      translations[NCL_ATTRIBUTE_BEGINPOSITION] = NCL_ATTRIBUTE_BEGINPOSITION;
-      translations[NCL_ATTRIBUTE_ENDPOSITION] = NCL_ATTRIBUTE_ENDPOSITION;
-      translations[NCL_ATTRIBUTE_FIRST] = NCL_ATTRIBUTE_FIRST;
-      translations[NCL_ATTRIBUTE_LAST] = NCL_ATTRIBUTE_LAST;
-      translations[NCL_ATTRIBUTE_LABEL] = NCL_ATTRIBUTE_LABEL;
-      translations[NCL_ATTRIBUTE_CLIP] = NCL_ATTRIBUTE_CLIP;
+      translations[NCL_ATTR_COORDS] = NCL_ATTR_COORDS;
+      translations[NCL_ATTR_BEGIN] = NCL_ATTR_BEGIN;
+      translations[NCL_ATTR_END] = NCL_ATTR_END;
+      translations[NCL_ATTR_BEGINTEXT] = NCL_ATTR_BEGINTEXT;
+      translations[NCL_ATTR_ENDTEXT] = NCL_ATTR_ENDTEXT;
+      translations[NCL_ATTR_BEGINPOSITION] = NCL_ATTR_BEGINPOSITION;
+      translations[NCL_ATTR_ENDPOSITION] = NCL_ATTR_ENDPOSITION;
+      translations[NCL_ATTR_FIRST] = NCL_ATTR_FIRST;
+      translations[NCL_ATTR_LAST] = NCL_ATTR_LAST;
+      translations[NCL_ATTR_LABEL] = NCL_ATTR_LABEL;
+      translations[NCL_ATTR_CLIP] = NCL_ATTR_CLIP;
 
       break;
     }
 
     case Structural::SwitchPort:
     {
-      translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTR_ID] = STR_PROPERTY_ENTITY_ID;
 
       break;
     }
 
     case Structural::Link:
     {
-      translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
-      translations[NCL_ATTRIBUTE_XCONNECTOR]
+      translations[NCL_ATTR_ID] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTR_XCONNECTOR]
           = STR_PROPERTY_REFERENCE_XCONNECTOR_ID;
 
       break;
@@ -165,23 +165,23 @@ StructuralUtil::createCoreTranslations (StructuralType type)
 
     case Structural::Bind:
     {
-      translations[NCL_ATTRIBUTE_ROLE] = STR_PROPERTY_ENTITY_ID;
-      translations[NCL_ATTRIBUTE_XCONNECTOR]
+      translations[NCL_ATTR_ROLE] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTR_XCONNECTOR]
           = STR_PROPERTY_REFERENCE_XCONNECTOR_ID;
-      translations[NCL_ATTRIBUTE_COMPONENT]
+      translations[NCL_ATTR_COMPONENT]
           = STR_PROPERTY_REFERENCE_COMPONENT_ID;
-      translations[NCL_ATTRIBUTE_INTERFACE]
+      translations[NCL_ATTR_INTERFACE]
           = STR_PROPERTY_REFERENCE_INTERFACE_ID;
-      translations[NCL_ATTRIBUTE_DESCRIPTOR] = NCL_ATTRIBUTE_DESCRIPTOR;
+      translations[NCL_ATTR_DESCRIPTOR] = NCL_ATTR_DESCRIPTOR;
 
       break;
     }
 
     case Structural::Mapping:
     {
-      translations[NCL_ATTRIBUTE_COMPONENT]
+      translations[NCL_ATTR_COMPONENT]
           = STR_PROPERTY_REFERENCE_COMPONENT_ID;
-      translations[NCL_ATTRIBUTE_INTERFACE]
+      translations[NCL_ATTR_INTERFACE]
           = STR_PROPERTY_REFERENCE_INTERFACE_ID;
 
       break;
