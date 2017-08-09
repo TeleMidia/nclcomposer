@@ -568,11 +568,11 @@ StructuralUtil::getNeighbors (StructuralEntity *entity)
 {
   QVector<StructuralEntity *> neighbors;
 
-  StructuralEntity *parent = entity->getStructuralParent ();
+  StructuralEntity *parent = entity->getParent ();
 
   if (parent != NULL)
   {
-    neighbors = parent->getStructuralEntities ();
+    neighbors = parent->getChildren ();
   }
   else if (!STR_DEFAULT_WITH_BODY)
   {
@@ -582,7 +582,7 @@ StructuralUtil::getNeighbors (StructuralEntity *entity)
           = (StructuralView *)entity->scene ()->views ().at (1);
 
       foreach (StructuralEntity *current, view->getEntities ().values ())
-        if (current->getStructuralParent () == NULL && current != entity)
+        if (current->getParent () == NULL && current != entity)
           neighbors += current;
     }
   }
@@ -595,13 +595,13 @@ StructuralUtil::getUpNeighbors (StructuralEntity *entity)
 {
   QVector<StructuralEntity *> neighbors;
 
-  StructuralEntity *parent = entity->getStructuralParent ();
+  StructuralEntity *parent = entity->getParent ();
 
   if (parent != NULL)
   {
-    if (parent->getStructuralParent () != NULL)
+    if (parent->getParent () != NULL)
     {
-      neighbors += parent->getStructuralParent ()->getStructuralEntities ();
+      neighbors += parent->getParent ()->getChildren ();
     }
     else if (!STR_DEFAULT_WITH_BODY)
     {
@@ -611,7 +611,7 @@ StructuralUtil::getUpNeighbors (StructuralEntity *entity)
             = (StructuralView *)entity->scene ()->views ().at (1);
 
         foreach (StructuralEntity *current, view->getEntities ().values ())
-          if (current->getStructuralParent () == NULL && current != entity)
+          if (current->getParent () == NULL && current != entity)
             neighbors += current;
       }
     }
@@ -661,7 +661,7 @@ StructuralUtil::adjustEdges (StructuralEntity *entity)
 
   foreach (StructuralEntity *relative, relatives)
   {
-    if (relative->getStructuralCategory () == Structural::Edge)
+    if (relative->getCategory () == Structural::Edge)
     {
       StructuralEdge *edge = (StructuralEdge *)relative;
 

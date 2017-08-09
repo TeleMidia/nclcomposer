@@ -3,8 +3,8 @@
 StructuralInterface::StructuralInterface (StructuralEntity *parent)
     : StructuralEntity (parent)
 {
-  setStructuralCategory (Structural::Interface);
-  setStructuralType (Structural::NoType);
+  setCategory (Structural::Interface);
+  setType (Structural::NoType);
 
   setResizable (false);
 
@@ -27,7 +27,7 @@ StructuralInterface::adjust (bool collision, bool recursion)
   StructuralEntity::adjust (collision, recursion);
 
   // Adjusting position...
-  StructuralEntity *parent = getStructuralParent ();
+  StructuralEntity *parent = getParent ();
 
   if (parent != NULL || !STR_DEFAULT_WITH_BODY)
   {
@@ -93,7 +93,7 @@ StructuralInterface::adjust (bool collision, bool recursion)
 void
 StructuralInterface::constrain ()
 {
-  StructuralEntity *parent = getStructuralParent ();
+  StructuralEntity *parent = getParent ();
 
   if (parent != NULL)
   {
@@ -142,11 +142,11 @@ StructuralInterface::draw (QPainter *painter)
   int h = getHeight () - 2 * STR_DEFAULT_INTERFACE_PADDING;
 
   painter->drawPixmap (
-      x, y, w, h, QPixmap (StructuralUtil::getIcon (getStructuralType ())));
+      x, y, w, h, QPixmap (StructuralUtil::getIcon (getType ())));
 
   if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
   {
-    if (getStructuralProperty (STR_PROPERTY_ENTITY_AUTOSTART)
+    if (getProperty (STR_PROPERTY_ENTITY_AUTOSTART)
         == STR_VALUE_TRUE)
     {
       painter->setPen (QPen (QBrush (QColor (76, 76, 76)), 2));

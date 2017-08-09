@@ -5,8 +5,8 @@
 StructuralNode::StructuralNode (StructuralEntity *parent)
     : StructuralEntity (parent)
 {
-  setStructuralCategory (Structural::Node);
-  setStructuralType (Structural::NoType);
+  setCategory (Structural::Node);
+  setType (Structural::NoType);
 }
 
 StructuralNode::~StructuralNode () {}
@@ -14,7 +14,7 @@ StructuralNode::~StructuralNode () {}
 void
 StructuralNode::inside ()
 {
-  StructuralEntity *parent = getStructuralParent ();
+  StructuralEntity *parent = getParent ();
 
   if (parent != NULL)
   {
@@ -61,11 +61,11 @@ StructuralNode::adjust (bool collision, bool recursion)
   setSelectable (false);
 
   if (recursion)
-    foreach (StructuralEntity *entity, getStructuralEntities ())
-      if (entity->getStructuralCategory () != Structural::Edge)
+    foreach (StructuralEntity *entity, getChildren ())
+      if (entity->getCategory () != Structural::Edge)
         entity->adjust (true, false);
 
-  StructuralEntity *parent = getStructuralParent ();
+  StructuralEntity *parent = getParent ();
 
   if (parent != NULL || !STR_DEFAULT_WITH_BODY)
   {

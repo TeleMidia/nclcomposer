@@ -5,8 +5,8 @@
 StructuralEdge::StructuralEdge (StructuralEntity *parent)
     : StructuralEntity (parent)
 {
-  setStructuralCategory (Structural::Edge);
-  setStructuralType (Structural::NoType);
+  setCategory (Structural::Edge);
+  setType (Structural::NoType);
 
   setResizable (false);
   setMoveable (false);
@@ -43,7 +43,7 @@ StructuralEdge::setAngle (qreal angle)
 {
   _angle = angle;
 
-  setStructuralProperty (STR_PROPERTY_EDGE_ANGLE, QString::number (angle));
+  setProperty (STR_PROPERTY_EDGE_ANGLE, QString::number (angle));
 }
 
 qreal
@@ -124,10 +124,10 @@ StructuralEdge::adjust (bool collision, bool recursion)
   StructuralEntity::adjust (collision, recursion);
 
   // Adjusting properties...
-  setAngle (getStructuralProperty (STR_PROPERTY_EDGE_ANGLE).toDouble ());
+  setAngle (getProperty (STR_PROPERTY_EDGE_ANGLE).toDouble ());
 
   // Adjusting position...
-  StructuralEntity *parent = getStructuralParent ();
+  StructuralEntity *parent = getParent ();
 
   if (parent != NULL || !STR_DEFAULT_WITH_BODY)
   {
@@ -144,22 +144,22 @@ StructuralEdge::adjust (bool collision, bool recursion)
                     QPointF (head->getLeft () + head->getWidth () / 2,
                              head->getTop () + head->getHeight () / 2));
 
-      if (tail->getStructuralCategory () == Structural::Interface)
+      if (tail->getCategory () == Structural::Interface)
       {
         if (parent != NULL)
           line.setP1 (
-              parent->mapFromItem (tail->getStructuralParent (), line.p1 ()));
-        else if (tail->getStructuralParent () != NULL)
-          line.setP1 (tail->getStructuralParent ()->mapToScene (line.p1 ()));
+              parent->mapFromItem (tail->getParent (), line.p1 ()));
+        else if (tail->getParent () != NULL)
+          line.setP1 (tail->getParent ()->mapToScene (line.p1 ()));
       }
 
-      if (head->getStructuralCategory () == Structural::Interface)
+      if (head->getCategory () == Structural::Interface)
       {
         if (parent != NULL)
           line.setP2 (
-              parent->mapFromItem (head->getStructuralParent (), line.p2 ()));
-        else if (head->getStructuralParent () != NULL)
-          line.setP2 (head->getStructuralParent ()->mapToScene (line.p2 ()));
+              parent->mapFromItem (head->getParent (), line.p2 ()));
+        else if (head->getParent () != NULL)
+          line.setP2 (head->getParent ()->mapToScene (line.p2 ()));
       }
 
       adjustBox (line);
@@ -351,7 +351,7 @@ StructuralEdge::draw (QPainter *painter)
 
   // Drawing line...
   painter->setPen (
-      QPen (QBrush (QColor (StructuralUtil::getColor (getStructuralType ()))),
+      QPen (QBrush (QColor (StructuralUtil::getColor (getType ()))),
             1, Qt::DashLine));
   painter->drawLine (drawLine);
 
@@ -360,7 +360,7 @@ StructuralEdge::draw (QPainter *painter)
 
   // Drawing head...
   painter->setBrush (
-      QBrush (QColor (StructuralUtil::getColor (getStructuralType ()))));
+      QBrush (QColor (StructuralUtil::getColor (getType ()))));
   painter->setPen (Qt::NoPen);
 
   qreal angle;

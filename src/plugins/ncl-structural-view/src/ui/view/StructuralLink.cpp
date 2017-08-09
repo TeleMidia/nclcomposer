@@ -3,8 +3,8 @@
 StructuralLink::StructuralLink (StructuralEntity *parent)
     : StructuralNode (parent)
 {
-  setStructuralCategory (Structural::Node);
-  setStructuralType (Structural::Link);
+  setCategory (Structural::Node);
+  setType (Structural::Link);
 
   setWidth (STR_DEFAULT_LINK_W);
   setHeight (STR_DEFAULT_LINK_H);
@@ -19,7 +19,7 @@ StructuralLink::draw (QPainter *painter)
 {
   painter->setRenderHint (QPainter::Antialiasing, true);
 
-  QColor drawColor = QColor (StructuralUtil::getColor (getStructuralType ()));
+  QColor drawColor = QColor (StructuralUtil::getColor (getType ()));
 
   if (!getError ().isEmpty () || !getWarning ().isEmpty ())
   {

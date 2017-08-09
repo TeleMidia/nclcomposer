@@ -5,12 +5,12 @@
 StructuralEntity::StructuralEntity (StructuralEntity *parent)
     : QObject (parent), QGraphicsItem (parent), _id ("")
 {
-  setStructuralCategory (Structural::NoCategory);
-  setStructuralType (Structural::NoType);
+  setCategory (Structural::NoCategory);
+  setType (Structural::NoType);
 
-  setStructuralUid (StructuralUtil::createUid ());
-  setStructuralId("");
-  setStructuralParent (parent);
+  setUid (StructuralUtil::createUid ());
+  setId("");
+  setParent (parent);
 
   setMoveable (true);
   setResizable (true);
@@ -65,39 +65,39 @@ StructuralEntity::StructuralEntity (StructuralEntity *parent)
 StructuralEntity::~StructuralEntity () {}
 
 QString
-StructuralEntity::getStructuralUid () const
+StructuralEntity::getUid () const
 {
   return _uid;
 }
 
 void
-StructuralEntity::setStructuralUid (const QString &uid)
+StructuralEntity::setUid (const QString &uid)
 {
   _uid = uid;
   _properties[STR_PROPERTY_ENTITY_UID] = _uid;
 }
 
 QString
-StructuralEntity::getStructuralId () const
+StructuralEntity::getId () const
 {
   return _id;
 }
 
 void
-StructuralEntity::setStructuralId (const QString &id)
+StructuralEntity::setId (const QString &id)
 {
   _id = id;
   _properties.insert (STR_PROPERTY_ENTITY_ID, _id);
 }
 
 StructuralCategory
-StructuralEntity::getStructuralCategory () const
+StructuralEntity::getCategory () const
 {
   return _category;
 }
 
 void
-StructuralEntity::setStructuralCategory (StructuralCategory category)
+StructuralEntity::setCategory (StructuralCategory category)
 {
   _category = category;
   _properties[STR_PROPERTY_ENTITY_CATEGORY]
@@ -105,13 +105,13 @@ StructuralEntity::setStructuralCategory (StructuralCategory category)
 }
 
 StructuralType
-StructuralEntity::getStructuralType () const
+StructuralEntity::getType () const
 {
   return _type;
 }
 
 void
-StructuralEntity::setStructuralType (StructuralType type)
+StructuralEntity::setType (StructuralType type)
 {
   _type = type;
   _properties[STR_PROPERTY_ENTITY_TYPE]
@@ -129,13 +129,13 @@ StructuralEntity::setStructuralType (StructuralType type)
     {
       if (type == Structural::Media)
       {
-        addStructuralRestriction (STR_PROPERTY_CONTENT_TYPE);
-        addStructuralRestriction (STR_PROPERTY_CONTENT_LOCATION);
-        addStructuralRestriction (STR_PROPERTY_CONTENT_INSTANCE);
+        addRestriction (STR_PROPERTY_CONTENT_TYPE);
+        addRestriction (STR_PROPERTY_CONTENT_LOCATION);
+        addRestriction (STR_PROPERTY_CONTENT_INSTANCE);
       }
 
-      addStructuralRestriction (STR_PROPERTY_REFERENCE_REFER_ID);
-      addStructuralRestriction (STR_PROPERTY_REFERENCE_REFER_UID);
+      addRestriction (STR_PROPERTY_REFERENCE_REFER_ID);
+      addRestriction (STR_PROPERTY_REFERENCE_REFER_UID);
 
       break;
     }
@@ -143,33 +143,33 @@ StructuralEntity::setStructuralType (StructuralType type)
     case Structural::Port:
     case Structural::Mapping:
     {
-      addStructuralRestriction (STR_PROPERTY_REFERENCE_COMPONENT_ID);
-      addStructuralRestriction (STR_PROPERTY_REFERENCE_COMPONENT_UID);
-      addStructuralRestriction (STR_PROPERTY_REFERENCE_INTERFACE_ID);
-      addStructuralRestriction (STR_PROPERTY_REFERENCE_INTERFACE_UID);
+      addRestriction (STR_PROPERTY_REFERENCE_COMPONENT_ID);
+      addRestriction (STR_PROPERTY_REFERENCE_COMPONENT_UID);
+      addRestriction (STR_PROPERTY_REFERENCE_INTERFACE_ID);
+      addRestriction (STR_PROPERTY_REFERENCE_INTERFACE_UID);
 
       break;
     }
 
     case Structural::Bind:
     {
-      addStructuralRestriction (STR_PROPERTY_REFERENCE_COMPONENT_ID);
-      addStructuralRestriction (STR_PROPERTY_REFERENCE_COMPONENT_UID);
-      addStructuralRestriction (STR_PROPERTY_REFERENCE_INTERFACE_ID);
-      addStructuralRestriction (STR_PROPERTY_REFERENCE_INTERFACE_UID);
+      addRestriction (STR_PROPERTY_REFERENCE_COMPONENT_ID);
+      addRestriction (STR_PROPERTY_REFERENCE_COMPONENT_UID);
+      addRestriction (STR_PROPERTY_REFERENCE_INTERFACE_ID);
+      addRestriction (STR_PROPERTY_REFERENCE_INTERFACE_UID);
 
-      addStructuralRestriction (STR_PROPERTY_LINKPARAM_NAME);
-      addStructuralRestriction (STR_PROPERTY_LINKPARAM_VALUE);
-      addStructuralRestriction (STR_PROPERTY_BINDPARAM_NAME);
-      addStructuralRestriction (STR_PROPERTY_BINDPARAM_VALUE);
+      addRestriction (STR_PROPERTY_LINKPARAM_NAME);
+      addRestriction (STR_PROPERTY_LINKPARAM_VALUE);
+      addRestriction (STR_PROPERTY_BINDPARAM_NAME);
+      addRestriction (STR_PROPERTY_BINDPARAM_VALUE);
 
       break;
     }
 
     case Structural::Link:
     {
-      addStructuralRestriction (STR_PROPERTY_LINKPARAM_NAME);
-      addStructuralRestriction (STR_PROPERTY_LINKPARAM_VALUE);
+      addRestriction (STR_PROPERTY_LINKPARAM_NAME);
+      addRestriction (STR_PROPERTY_LINKPARAM_VALUE);
 
       break;
     }
@@ -201,13 +201,13 @@ StructuralEntity::setStructuralResize (StructuralResize resize)
 }
 
 QMap<QString, QString>
-StructuralEntity::getStructuralProperties () const
+StructuralEntity::getProperties () const
 {
   return _properties;
 }
 
 void
-StructuralEntity::setStructuralProperties (
+StructuralEntity::setProperties (
     const QMap<QString, QString> &properties)
 {
   if (!_restrictions.isEmpty ())
@@ -232,7 +232,7 @@ StructuralEntity::setStructuralProperties (
 }
 
 QString
-StructuralEntity::getStructuralProperty (const QString &name) const
+StructuralEntity::getProperty (const QString &name) const
 {
   if (_properties.contains(name))
     return _properties.value (name, "");
@@ -241,7 +241,7 @@ StructuralEntity::getStructuralProperty (const QString &name) const
 }
 
 void
-StructuralEntity::setStructuralProperty (const QString &name,
+StructuralEntity::setProperty (const QString &name,
                                          const QString &value)
 {
   _properties[name] = value;
@@ -253,11 +253,11 @@ StructuralEntity::adjust (bool collision, bool recursion)
   Q_UNUSED (collision);
   Q_UNUSED (recursion);
 
-  setStructuralId (_properties[STR_PROPERTY_ENTITY_ID]);
-  setStructuralUid (_properties[STR_PROPERTY_ENTITY_UID]);
-  setStructuralCategory (StructuralUtil::translateStringToCategory (
+  setId (_properties[STR_PROPERTY_ENTITY_ID]);
+  setUid (_properties[STR_PROPERTY_ENTITY_UID]);
+  setCategory (StructuralUtil::translateStringToCategory (
       _properties[STR_PROPERTY_ENTITY_CATEGORY]));
-  setStructuralType (StructuralUtil::translateStringToType (
+  setType (StructuralUtil::translateStringToType (
       _properties[STR_PROPERTY_ENTITY_TYPE]));
 
   setTop (_properties[STR_PROPERTY_ENTITY_TOP].toDouble ());
@@ -718,7 +718,7 @@ StructuralEntity::setMenu (StructuralMenu *menu)
 }
 
 StructuralEntity *
-StructuralEntity::getStructuralParent () const
+StructuralEntity::getParent () const
 {
   return _parent;
 }
@@ -760,33 +760,33 @@ StructuralEntity::setInfo (const QString &info)
 }
 
 void
-StructuralEntity::setStructuralParent (StructuralEntity *parent)
+StructuralEntity::setParent (StructuralEntity *parent)
 {
   _parent = parent;
 
-  setParent (parent);
-  setParentItem (parent);
+  QObject::setParent (parent);
+  QGraphicsItem::setParentItem (parent);
 
   if (parent != NULL)
-    parent->addStructuralEntity (this);
+    parent->addChild (this);
 }
 
 QVector<StructuralEntity *>
-StructuralEntity::getStructuralEntities () const
+StructuralEntity::getChildren () const
 {
   return _children;
 }
 
 void
-StructuralEntity::addStructuralEntity (StructuralEntity *entity)
+StructuralEntity::addChild (StructuralEntity *entity)
 {
   if (entity != NULL)
     if (!_children.contains (entity))
     {
-      if (entity->getStructuralType () == Structural::Link)
+      if (entity->getType () == Structural::Link)
         entity->setzIndex (_zindex + 1);
-      else if (entity->getStructuralType () == Structural::Context
-               || entity->getStructuralType () == Structural::Switch)
+      else if (entity->getType () == Structural::Context
+               || entity->getType () == Structural::Switch)
       {
         entity->setzIndex (_zindex + 2);
         ;
@@ -801,7 +801,7 @@ StructuralEntity::addStructuralEntity (StructuralEntity *entity)
 }
 
 void
-StructuralEntity::removeStructuralEntity (StructuralEntity *entity)
+StructuralEntity::removeChild (StructuralEntity *entity)
 {
   if (entity != NULL)
   {
@@ -810,25 +810,25 @@ StructuralEntity::removeStructuralEntity (StructuralEntity *entity)
     if (index >= 0)
       _children.remove (index);
 
-    entity->setStructuralParent (NULL);
+    entity->setParent (NULL);
   }
 }
 
 QVector<QString>
-StructuralEntity::getStructuralRestrictions () const
+StructuralEntity::getRestrictions () const
 {
   return _restrictions;
 }
 
 void
-StructuralEntity::addStructuralRestriction (const QString &restriction)
+StructuralEntity::addRestriction (const QString &restriction)
 {
   if (!_restrictions.contains (restriction))
     _restrictions.append (restriction);
 }
 
 void
-StructuralEntity::removeStructuralRestriction (const QString &restriction)
+StructuralEntity::removeRestriction (const QString &restriction)
 {
   Q_UNUSED (restriction);
 }
@@ -1105,7 +1105,7 @@ StructuralEntity::mousePressEvent (QGraphicsSceneMouseEvent *event)
     if (_selectable && !_selected)
     {
       setSelected (true);
-      emit selected (getStructuralUid (), StructuralUtil::createSettings ());
+      emit selected (getUid (), StructuralUtil::createSettings ());
     }
 
     setPressTop (event->pos ().y ());
@@ -1210,12 +1210,12 @@ StructuralEntity::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
 
     if ((_top != _moveTop || _left != _moveLeft))
     {
-      QMap<QString, QString> previous = getStructuralProperties ();
+      QMap<QString, QString> previous = getProperties ();
 
       setTop (_moveTop);
       setLeft (_moveLeft);
 
-      emit changed (getStructuralUid (), getStructuralProperties (), previous,
+      emit changed (getUid (), getProperties (), previous,
                     StructuralUtil::createSettings ());
     }
   }
@@ -1223,7 +1223,7 @@ StructuralEntity::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
   {
     setResizing (false);
 
-    QMap<QString, QString> previous = getStructuralProperties ();
+    QMap<QString, QString> previous = getProperties ();
 
     if ((_top != _resizeTop || _left != _resizeLeft || _width != _resizeWidth
          || _height != _resizeHeight))
@@ -1263,7 +1263,7 @@ StructuralEntity::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
       setWidth (_resizeWidth);
       setHeight (_resizeHeight);
 
-      emit changed (getStructuralUid (), getStructuralProperties (), previous,
+      emit changed (getUid (), getProperties (), previous,
                     StructuralUtil::createSettings ());
     }
   }
@@ -1283,7 +1283,7 @@ StructuralEntity::contextMenuEvent (QGraphicsSceneContextMenuEvent *event)
     if (!isSelected ())
     {
       setSelected (true);
-      emit selected (getStructuralUid (), StructuralUtil::createSettings ());
+      emit selected (getUid (), StructuralUtil::createSettings ());
     }
 
     if (_menu != NULL)
@@ -1294,21 +1294,21 @@ StructuralEntity::contextMenuEvent (QGraphicsSceneContextMenuEvent *event)
 
       if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
       {
-        if (getStructuralParent () == NULL)
+        if (getParent () == NULL)
         {
           _menu->switchAutostart (true);
 
-          if (getStructuralProperty (STR_PROPERTY_ENTITY_AUTOSTART)
+          if (getProperty (STR_PROPERTY_ENTITY_AUTOSTART)
               == STR_VALUE_TRUE)
             _menu->switchAutostartProperty (true);
         }
-        else if (getStructuralParent ()->getStructuralParent () == NULL)
+        else if (getParent ()->getParent () == NULL)
         {
-          if (getStructuralCategory () == Structural::Interface)
+          if (getCategory () == Structural::Interface)
           {
             _menu->switchAutostart (true);
 
-            if (getStructuralProperty (STR_PROPERTY_ENTITY_AUTOSTART)
+            if (getProperty (STR_PROPERTY_ENTITY_AUTOSTART)
                 == STR_VALUE_TRUE)
               _menu->switchAutostartProperty (true);
           }

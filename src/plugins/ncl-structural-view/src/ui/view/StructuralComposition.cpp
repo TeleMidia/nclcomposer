@@ -22,7 +22,7 @@ StructuralComposition::~StructuralComposition () {}
 void
 StructuralComposition::collapse (bool notify)
 {
-  QMap<QString, QString> previous = getStructuralProperties ();
+  QMap<QString, QString> previous = getProperties ();
 
   if (!isUncollapsed ())
   {
@@ -36,9 +36,9 @@ StructuralComposition::collapse (bool notify)
     setWidth (getUncollapedWidth ());
     setHeight (getUncollapedHeight ());
 
-    foreach (StructuralEntity *entity, getStructuralEntities ())
+    foreach (StructuralEntity *entity, getChildren ())
     {
-      if (entity->getStructuralCategory () == Structural::Interface)
+      if (entity->getCategory () == Structural::Interface)
       {
         entity->setTop (entity->getTop () * getUncollapedHeight ()
                         / STR_DEFAULT_CONTENT_H);
@@ -75,12 +75,12 @@ StructuralComposition::collapse (bool notify)
     setWidth (STR_DEFAULT_CONTENT_W);
     setHeight (STR_DEFAULT_CONTENT_H);
 
-    foreach (StructuralEntity *entity, getStructuralEntities ())
+    foreach (StructuralEntity *entity, getChildren ())
     {
       entity->setUncollapedTop (entity->getTop ());
       entity->setUncollapedLeft (entity->getLeft ());
 
-      if (entity->getStructuralCategory () == Structural::Interface)
+      if (entity->getCategory () == Structural::Interface)
       {
         entity->setTop (((entity->getTop () * STR_DEFAULT_CONTENT_H)
                          / getUncollapedHeight ()));
@@ -103,7 +103,7 @@ StructuralComposition::collapse (bool notify)
   setUncollapsed (!isUncollapsed ());
 
   if (notify)
-    emit changed (getStructuralUid (), getStructuralProperties (), previous,
+    emit changed (getUid (), getProperties (), previous,
                   StructuralUtil::createSettings (true, false));
 }
 
@@ -116,7 +116,7 @@ StructuralComposition::draw (QPainter *painter)
     painter->setRenderHint (QPainter::SmoothPixmapTransform, false);
 
     QColor drawColor
-        = QColor (StructuralUtil::getColor (getStructuralType ()));
+        = QColor (StructuralUtil::getColor (getType ()));
     painter->setBrush (drawColor);
 
     if (!getError ().isEmpty () || !getWarning ().isEmpty ())
@@ -138,7 +138,7 @@ StructuralComposition::draw (QPainter *painter)
     {
       if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
       {
-        if (getStructuralProperty (STR_PROPERTY_ENTITY_AUTOSTART)
+        if (getProperty (STR_PROPERTY_ENTITY_AUTOSTART)
             == STR_VALUE_TRUE)
         {
           painter->setPen (QPen (QBrush (QColor (76, 76, 76)), 2));
@@ -175,7 +175,7 @@ StructuralComposition::draw (QPainter *painter)
 
     if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
     {
-      if (getStructuralProperty (STR_PROPERTY_ENTITY_AUTOSTART)
+      if (getProperty (STR_PROPERTY_ENTITY_AUTOSTART)
           == STR_VALUE_TRUE)
       {
         painter->fillRect (
@@ -203,7 +203,7 @@ StructuralComposition::draw (QPainter *painter)
         getWidth () - 2 * STR_DEFAULT_CONTENT_PADDING,
         getHeight () - 2 * STR_DEFAULT_CONTENT_PADDING
             - 4 * STR_DEFAULT_CONTENT_PADDING,
-        QPixmap (StructuralUtil::getIcon (getStructuralType ())));
+        QPixmap (StructuralUtil::getIcon (getType ())));
 
     if (!getError ().isEmpty () || !getWarning ().isEmpty ())
     {
@@ -256,7 +256,7 @@ StructuralComposition::draw (QPainter *painter)
     painter->setBrush (Qt::NoBrush);
     painter->setPen (QPen (QBrush (Qt::black), 0));
 
-    QString text = getStructuralId ();
+    QString text = getId ();
 
     if (text.isEmpty ())
       text = "(?)";
@@ -340,7 +340,7 @@ StructuralComposition::dropEvent (QGraphicsSceneDragDropEvent *event)
       properties[STR_PROPERTY_ENTITY_LEFT]
           = QString::number (event->pos ().x () - STR_DEFAULT_CONTENT_W / 2);
 
-      inserted (StructuralUtil::createUid (), getStructuralUid (), properties,
+      inserted (StructuralUtil::createUid (), getUid (), properties,
                 StructuralUtil::createSettings ());
     }
   }

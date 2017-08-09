@@ -7,7 +7,7 @@
 StructuralContent::StructuralContent (StructuralEntity *parent)
     : StructuralNode (parent)
 {
-  setStructuralType (Structural::Media);
+  setType (Structural::Media);
 
   setMimeType (Structural::NoMimeType);
 
@@ -30,7 +30,7 @@ StructuralContent::setMimeType (Structural::MimeType type)
 {
   _mimetype = type;
 
-  StructuralNode::setStructuralProperty (
+  StructuralNode::setProperty (
       STR_PROPERTY_CONTENT_MIMETYPE,
       StructuralUtil::translateMimeTypeToString (type));
 }
@@ -41,9 +41,9 @@ StructuralContent::adjust (bool collision, bool recursion)
   StructuralNode::adjust (collision, recursion);
 
   // Adjusting properties
-  if (!getStructuralProperty (STR_PROPERTY_CONTENT_TYPE).isEmpty ())
+  if (!getProperty (STR_PROPERTY_CONTENT_TYPE).isEmpty ())
   {
-    QString type = getStructuralProperty (STR_PROPERTY_CONTENT_TYPE);
+    QString type = getProperty (STR_PROPERTY_CONTENT_TYPE);
 
     if (type.startsWith ("image"))
     {
@@ -85,9 +85,9 @@ StructuralContent::adjust (bool collision, bool recursion)
       setMimeType (Structural::NoMimeType);
     }
   }
-  else if (!getStructuralProperty (STR_PROPERTY_CONTENT_LOCATION).isEmpty ())
+  else if (!getProperty (STR_PROPERTY_CONTENT_LOCATION).isEmpty ())
   {
-    QString location = getStructuralProperty (STR_PROPERTY_CONTENT_LOCATION);
+    QString location = getProperty (STR_PROPERTY_CONTENT_LOCATION);
     QString suffix
         = location.right (location.length () - location.lastIndexOf ('.') - 1);
 
@@ -100,7 +100,7 @@ StructuralContent::adjust (bool collision, bool recursion)
 
   if (_mimetype != Structural::NoMimeType)
     setToolTip (StructuralUtil::getMimeTypeTooltip (
-        _mimetype, getStructuralId (), getInfo (), getWarning (),
+        _mimetype, getId (), getInfo (), getWarning (),
         getError ()));
 }
 
@@ -119,7 +119,7 @@ StructuralContent::draw (QPainter *painter)
 
   if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
   {
-    if (getStructuralProperty (STR_PROPERTY_ENTITY_AUTOSTART)
+    if (getProperty (STR_PROPERTY_ENTITY_AUTOSTART)
         == STR_VALUE_TRUE)
     {
       painter->drawPixmap ((getWidth () - 2 * STR_DEFAULT_CONTENT_PADDING) / 2
@@ -181,7 +181,7 @@ StructuralContent::draw (QPainter *painter)
   painter->setBrush (Qt::NoBrush);
   painter->setPen (QPen (QBrush (Qt::black), 0));
 
-  QString text = getStructuralId ();
+  QString text = getId ();
 
   if (text.isEmpty ())
     text = "(?)";

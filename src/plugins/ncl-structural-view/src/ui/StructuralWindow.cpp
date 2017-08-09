@@ -443,7 +443,7 @@ StructuralWindow::select (QString uid, QMap<QString, QString> settings)
 
   if (entity != NULL)
   {
-    StructuralType type = _view->getEntity (uid)->getStructuralType ();
+    StructuralType type = _view->getEntity (uid)->getType ();
 
     switch (type)
     {

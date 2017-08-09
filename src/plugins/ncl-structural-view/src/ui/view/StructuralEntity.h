@@ -25,37 +25,37 @@ public:
   StructuralEntity (StructuralEntity *parent = 0);
   virtual ~StructuralEntity ();
 
-  QString getStructuralId () const;
-  void setStructuralId (const QString &id);
+  QString getId () const;
+  void setId (const QString &id);
 
-  QString getStructuralUid () const;
-  void setStructuralUid (const QString &uid);
+  QString getUid () const;
+  void setUid (const QString &uid);
 
-  StructuralCategory getStructuralCategory () const;
-  void setStructuralCategory (StructuralCategory category);
+  StructuralCategory getCategory () const;
+  void setCategory (StructuralCategory category);
 
-  StructuralType getStructuralType () const;
-  void setStructuralType (StructuralType type);
+  StructuralType getType () const;
+  void setType (StructuralType type);
 
   StructuralResize getStructuralResize () const;
   void setStructuralResize (StructuralResize resize);
 
-  QMap<QString, QString> getStructuralProperties () const;
-  void setStructuralProperties (const QMap<QString, QString> &properties);
+  QMap<QString, QString> getProperties () const;
+  void setProperties (const QMap<QString, QString> &properties);
 
-  QString getStructuralProperty (const QString &name) const;
-  void setStructuralProperty (const QString &name, const QString &value);
+  QString getProperty (const QString &name) const;
+  void setProperty (const QString &name, const QString &value);
 
-  StructuralEntity *getStructuralParent () const;
-  void setStructuralParent (StructuralEntity *parent);
+  StructuralEntity *getParent () const;
+  void setParent (StructuralEntity *parent);
 
-  QVector<StructuralEntity *> getStructuralEntities () const;
-  void addStructuralEntity (StructuralEntity *entity);
-  void removeStructuralEntity (StructuralEntity *entity);
+  QVector<StructuralEntity *> getChildren () const;
+  void addChild (StructuralEntity *entity);
+  void removeChild (StructuralEntity *entity);
 
-  QVector<QString> getStructuralRestrictions () const;
-  void addStructuralRestriction (const QString &restriction);
-  void removeStructuralRestriction (const QString &restriction);
+  QVector<QString> getRestrictions () const;
+  void addRestriction (const QString &restriction);
+  void removeRestriction (const QString &restriction);
 
   bool isMoveable () const;
   void setMoveable (bool moveable);
