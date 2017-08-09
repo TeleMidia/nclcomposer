@@ -23,7 +23,9 @@
 #include <QStack>
 
 #include "model/Entity.h"
+#include "model/Comment.h"
 #include "model/Exceptions.h"
+
 #include "util/Utilities.h"
 using namespace cpr::core;
 

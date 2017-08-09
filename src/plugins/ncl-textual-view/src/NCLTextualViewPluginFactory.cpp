@@ -24,21 +24,31 @@ NCLTextualViewPluginFactory::NCLTextualViewPluginFactory ()
 {
   _prefPageWidget = nullptr;
 
-  Preferences::getInstance ()->registerPreference (
-      "cpr.textual.bgCaretLine",
-      new Preference ("bgCaretLine", "#B9D3EE", "Textual"));
-  Preferences::getInstance ()->registerPreference (
+  Preferences *prefs = Preferences::getInstance ();
+  prefs->registerPreference (
+        "cpr.textual.bgCaretLine",
+        new Preference ("bgCaretLine", QColor ("#B9D3EE"), "Textual"));
+  prefs->registerPreference (
+      "cpr.textual.caretLineVisible",
+        new Preference ("caretLineVisible", true, "Textual"));
+  prefs->registerPreference (
       "cpr.textual.bgMarginColor",
-      new Preference ("bgMarginColor", "#ffffff", "Textual"));
-  Preferences::getInstance ()->registerPreference (
+      new Preference ("bgMarginColor", QColor ("#ffffff"), "Textual"));
+  prefs->registerPreference (
       "cpr.textual.marginForeColor",
-      new Preference ("marginForeColor", "#B9D3EE", "Textual"));
-  Preferences::getInstance ()->registerPreference (
+      new Preference ("marginForeColor", QColor ("#B9D3EE"), "Textual"));
+  prefs->registerPreference (
       "cpr.textual.marginBackColor",
-      new Preference ("marginBackColor", "FFFFFF", "Textual"));
-  Preferences::getInstance ()->registerPreference (
+      new Preference ("marginBackColor", QColor ("#FFFFFF"), "Textual"));
+  prefs->registerPreference (
       "cpr.textual.fontSize",
-      new Preference ("fontSize", "10", "Textual"));
+      new Preference ("fontSize", 10, "Textual"));
+  prefs->registerPreference (
+        "cpr.textual.tabWidth",
+        new Preference ("tabWidth", 2,"Textual"));
+  prefs->registerPreference (
+        "cpr.textual.whitespaceVisibility",
+        new Preference ("whitespaceVisibility", false, "Textual"));
 }
 
 IPlugin *

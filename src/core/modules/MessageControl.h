@@ -27,6 +27,7 @@ using namespace std;
 #include "extensions/IDocumentParser.h"
 #include "extensions/IPlugin.h"
 #include "model/Entity.h"
+#include "model/Comment.h"
 #include "model/Project.h"
 using namespace cpr::core;
 
