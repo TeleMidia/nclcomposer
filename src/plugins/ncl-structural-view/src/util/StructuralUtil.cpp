@@ -208,11 +208,10 @@ StructuralUtil::createPluginTranslations (StructuralType type)
 
 std::map<Structural::Category, QString>
     StructuralUtil::_mapCategoryToString
-    = StructuralMap<Structural::Category, QString> (
-        Structural::Node, "node") (Structural::Edge,
-                                   "edge") (Structural::Interface, "interface")
-
-        (Structural::NoCategory, "");
+    = { {Structural::Node, "node"},
+        {Structural::Edge, "edge"},
+        {Structural::Interface, "interface"},
+        {Structural::NoCategory, ""} };
 
 std::map<QString, Structural::Category>
     StructuralUtil::_mapStringToCategory
@@ -238,15 +237,19 @@ StructuralUtil::translateStringToCategory (const QString &category)
 }
 
 std::map<Structural::Type, QString> StructuralUtil::_mapTypeToString
-    = StructuralMap<Structural::Type, QString> (
-        Structural::Media, "media") (Structural::Body, "body") (
-        Structural::Context, "context") (Structural::Switch, "switch") (
-        Structural::Port, "port") (Structural::SwitchPort, "switchPort") (
-        Structural::Area, "area") (Structural::Property, "property") (
-        Structural::Link, "link") (Structural::Bind, "bind") (
-        Structural::Reference, "reference") (Structural::Mapping, "mapping")
-
-        (Structural::NoType, "");
+    = { {Structural::Media, "media"},
+        {Structural::Body, "body"},
+        {Structural::Context, "context"},
+        {Structural::Switch, "switch"},
+        {Structural::Port, "port"},
+        {Structural::SwitchPort, "switchPort"},
+        {Structural::Area, "area"},
+        {Structural::Property, "property"},
+        {Structural::Link, "link"},
+        {Structural::Bind, "bind"},
+        {Structural::Reference, "reference"},
+        {Structural::Mapping, "mapping"},
+        {Structural::NoType, ""} };
 
 std::map<QString, Structural::Type> StructuralUtil::_mapStringToType
     = invert<QString, Structural::Type> (
@@ -271,20 +274,21 @@ StructuralUtil::translateStringToType (const QString &type)
 }
 
 std::map<Structural::Role, QString> StructuralUtil::_mapRoleToString
-    = StructuralMap<Structural::Role, QString> (Structural::onBegin,
-                                                          "onBegin") (
-        Structural::onEnd, "onEnd") (Structural::onSelection, "onSelection") (
-        Structural::onResume, "onResume") (Structural::onPause, "onPause") (
-        Structural::onBeginAttribution, "onBeginAttribution") (
-        Structural::onEndAttribution, "onEndAttribution") (
-        Structural::onPauseAttribution, "onPauseAttribution") (
-        Structural::onResumeAttribution, "onResumeAttribution")
-
-        (Structural::Start, "start") (Structural::Stop, "stop") (
-            Structural::Resume, "resume") (Structural::Pause,
-                                           "pause") (Structural::Set, "set")
-
-            (Structural::NoRole, "");
+    = { {Structural::onBegin, "onBegin"},
+        {Structural::onEnd, "onEnd"},
+        {Structural::onSelection, "onSelection"},
+        {Structural::onResume, "onResume"},
+        {Structural::onPause, "onPause"},
+        {Structural::onBeginAttribution, "onBeginAttribution"},
+        {Structural::onEndAttribution, "onEndAttribution"},
+        {Structural::onPauseAttribution, "onPauseAttribution"},
+        {Structural::onResumeAttribution, "onResumeAttribution"},
+        {Structural::Start, "start"},
+        {Structural::Stop, "stop"},
+        {Structural::Resume, "resume"},
+        {Structural::Pause, "pause"},
+        {Structural::Set, "set"},
+        {Structural::NoRole, ""} };
 
 std::map<QString, Structural::Role> StructuralUtil::_mapStringToRole
     = invert<QString, Structural::Role> (
@@ -310,14 +314,16 @@ StructuralUtil::translateStringToRole (const QString &role)
 
 std::map<Structural::MimeType, QString>
     StructuralUtil::_mapMimeTypeToString
-    = StructuralMap<Structural::MimeType, QString> (
-        Structural::Text, "text") (Structural::Image, "image") (
-        Structural::Audio, "audio") (Structural::Video, "video") (
-        Structural::HTML, "html") (Structural::NCL, "ncl") (
-        Structural::NCLua, "nclua") (Structural::Settings,
-                                     "settings") (Structural::Time, "time")
-
-        (Structural::NoMimeType, "");
+    = { {Structural::Text, "text"},
+        {Structural::Image, "image"},
+        {Structural::Audio, "audio"},
+        {Structural::Video, "video"},
+        {Structural::HTML, "html"},
+        {Structural::NCL, "ncl"},
+        {Structural::NCLua, "nclua"},
+        {Structural::Settings, "settings"},
+        {Structural::Time, "time"},
+        {Structural::NoMimeType, ""} };
 
 std::map<QString, Structural::MimeType>
     StructuralUtil::_mapStringToMimeType
@@ -343,18 +349,19 @@ StructuralUtil::translateStringToMimeType (const QString &mimetype)
 }
 
 std::map<Structural::Type, QString> StructuralUtil::_entitiesIcon
-    = StructuralMap<Structural::Type, QString> (
-        Structural::Media, ":/icon/media") (Structural::Body, ":/icon/body") (
-        Structural::Context, ":/icon/context") (Structural::Switch,
-                                                ":/icon/switch") (
-        Structural::Port, ":/icon/port-mini") (Structural::SwitchPort,
-                                               ":/icon/switchport-mini") (
-        Structural::Area, ":/icon/area-mini") (
-        Structural::Property, ":/icon/property-mini") (Structural::Link, "") (
-        Structural::Bind, "") (Structural::Reference, "") (Structural::Mapping,
-                                                           "")
-
-        (Structural::NoType, "");
+    = { {Structural::Media, ":/icon/media"},
+        {Structural::Body, ":/icon/body"},
+        {Structural::Context, ":/icon/context"},
+        {Structural::Switch, ":/icon/switch"},
+        {Structural::Port, ":/icon/port-mini"},
+        {Structural::SwitchPort, ":/icon/switchport-mini"},
+        {Structural::Area, ":/icon/area-mini"},
+        {Structural::Property, ":/icon/property-mini"},
+        {Structural::Link, ""},
+        {Structural::Bind, ""},
+        {Structural::Reference, ""},
+        {Structural::Mapping, ""},
+        {Structural::NoType, ""} };
 
 QString
 StructuralUtil::getIcon (StructuralType type)
@@ -366,15 +373,19 @@ StructuralUtil::getIcon (StructuralType type)
 }
 
 std::map<Structural::Type, QString> StructuralUtil::_entitiesColor
-    = StructuralMap<Structural::Type, QString> (
-        Structural::Media, "") (Structural::Body, "#EEEEEE") (
-        Structural::Context, "#F4E4CC") (Structural::Switch, "#C6E2FF") (
-        Structural::Port, "") (Structural::SwitchPort, "") (
-        Structural::Area, "") (Structural::Property, "") (
-        Structural::Link, "#000000") (Structural::Bind, "#000000") (
-        Structural::Reference, "#000000") (Structural::Mapping, "#5C0099")
-
-        (Structural::NoType, "");
+    = { {Structural::Media, ""},
+        {Structural::Body, "#EEEEEE"},
+        {Structural::Context, "#F4E4CC"},
+        {Structural::Switch, "#C6E2FF"},
+        {Structural::Port, ""},
+        {Structural::SwitchPort, ""},
+        {Structural::Area, ""},
+        {Structural::Property, ""},
+        {Structural::Link, "#000000"},
+        {Structural::Bind, "#000000"},
+        {Structural::Reference, "#000000"},
+        {Structural::Mapping, "#5C0099"},
+        {Structural::NoType, ""} };
 
 QString
 StructuralUtil::getColor (StructuralType type)
@@ -386,15 +397,19 @@ StructuralUtil::getColor (StructuralType type)
 }
 
 std::map<Structural::Type, QString> StructuralUtil::_entitiesPrefix
-    = StructuralMap<Structural::Type, QString> (
-        Structural::Media, "m") (Structural::Body, "b") (
-        Structural::Context, "ctx") (Structural::Switch, "swt") (
-        Structural::Port, "p") (Structural::SwitchPort, "swtp") (
-        Structural::Area, "a") (Structural::Property, "p") (
-        Structural::Link, "l") (Structural::Bind, "") (
-        Structural::Reference, "") (Structural::Mapping, "")
-
-        (Structural::NoType, "e");
+    = { {Structural::Media, "m"},
+        {Structural::Body, "b"},
+        {Structural::Context, "ctx"},
+        {Structural::Switch, "swt"},
+        {Structural::Port, "p"},
+        {Structural::SwitchPort, "swtp"},
+        {Structural::Area, "a"},
+        {Structural::Property, "p"},
+        {Structural::Link, "l"},
+        {Structural::Bind, ""},
+        {Structural::Reference, ""},
+        {Structural::Mapping, ""},
+        {Structural::NoType, "e"} };
 
 QString
 StructuralUtil::getPrefix (StructuralType type)
@@ -451,18 +466,16 @@ StructuralUtil::getTooltip (StructuralType type, const QString &title,
 
 std::map<Structural::MimeType, QString>
     StructuralUtil::_mimetypesIcon
-    = StructuralMap<Structural::MimeType, QString> (
-        Structural::Text, ":/icon/media-text") (
-        Structural::Image, ":/icon/media-image") (Structural::Audio,
-                                                  ":/icon/media-audio") (
-        Structural::Video, ":/icon/media-video") (Structural::HTML,
-                                                  ":/icon/media-text-html") (
-        Structural::NCL, ":/icon/media-ncl") (Structural::NCLua,
-                                              ":/icon/media-nclua") (
-        Structural::Settings, ":/icon/media-settings") (Structural::Time,
-                                                        ":/icon/media-time")
-
-        (Structural::NoMimeType, ":/icon/media");
+    = { {Structural::Text, ":/icon/media-text"},
+        {Structural::Image, ":/icon/media-image"},
+        {Structural::Audio, ":/icon/media-audio"},
+        {Structural::Video, ":/icon/media-video"},
+        {Structural::HTML, ":/icon/media-text-html"},
+        {Structural::NCL, ":/icon/media-ncl"},
+        {Structural::NCLua, ":/icon/media-nclua"},
+        {Structural::Settings, ":/icon/media-settings"},
+        {Structural::Time, ":/icon/media-time"},
+        {Structural::NoMimeType, ":/icon/media"} };
 
 QString
 StructuralUtil::getMimeTypeIcon (StructuralMimeType type)
@@ -514,16 +527,24 @@ StructuralUtil::getMimeTypeTooltip (StructuralMimeType mimetype,
 
 std::map<QString, Structural::MimeType>
     StructuralUtil::_mimetypesExtension
-    = StructuralMap<QString, Structural::MimeType> (
-        "txt", Structural::Text) ("png", Structural::Image) (
-        "jpg", Structural::Image) ("jpeg", Structural::Image) (
-        "gif", Structural::Image) ("mp3", Structural::Audio) (
-        "wav", Structural::Audio) ("mp4", Structural::Video) (
-        "mpeg4", Structural::Video) ("mpeg", Structural::Video) (
-        "mpg", Structural::Video) ("mov", Structural::Video) (
-        "avi", Structural::Video) ("mkv", Structural::Video) (
-        "htm", Structural::HTML) ("html", Structural::HTML) (
-        "ncl", Structural::NCL) ("lua", Structural::NCLua);
+    = { {"txt", Structural::Text},
+        {"png", Structural::Image},
+        {"jpg", Structural::Image},
+        {"jpeg", Structural::Image},
+        {"gif", Structural::Image},
+        {"mp3", Structural::Audio},
+        {"wav", Structural::Audio},
+        {"mp4", Structural::Video},
+        {"mpeg4", Structural::Video},
+        {"mpeg", Structural::Video},
+        {"mpg", Structural::Video},
+        {"mov", Structural::Video},
+        {"avi", Structural::Video},
+        {"mkv", Structural::Video},
+        {"htm", Structural::HTML},
+        {"html", Structural::HTML},
+        {"ncl", Structural::NCL},
+        {"lua", Structural::NCLua} };
 
 Structural::MimeType
 StructuralUtil::getMimeTypeByExtension (const QString &extension)
@@ -535,24 +556,21 @@ StructuralUtil::getMimeTypeByExtension (const QString &extension)
 }
 
 std::map<Structural::Role, QString> StructuralUtil::_rolesIcon
-    = StructuralMap<Structural::Role, QString> (
-        Structural::onBegin, ":/icon/bind-onbegin") (
-        Structural::onEnd, ":/icon/bind-onend") (Structural::onSelection,
-                                                 ":/icon/bind-onselection") (
-        Structural::onResume, ":/icon/bind-onresume") (Structural::onPause,
-                                                       ":/icon/bind-onpause") (
-        Structural::onBeginAttribution,
-        "") (Structural::onEndAttribution,
-             "") (Structural::onPauseAttribution,
-                  "") (Structural::onResumeAttribution, "")
-
-        (Structural::Start, ":/icon/bind-start") (
-            Structural::Stop, ":/icon/bind-stop") (Structural::Resume,
-                                                   ":/icon/bind-resume") (
-            Structural::Pause, ":/icon/bind-pause") (Structural::Set,
-                                                     ":/icon/bind-set")
-
-            (Structural::NoRole, "");
+    = { {Structural::onBegin, ":/icon/bind-onbegin"},
+        {Structural::onEnd, ":/icon/bind-onend"},
+        {Structural::onSelection, ":/icon/bind-onselection"},
+        {Structural::onResume, ":/icon/bind-onresume"},
+        {Structural::onPause, ":/icon/bind-onpause"},
+        {Structural::onBeginAttribution, ""},
+        {Structural::onEndAttribution, ""},
+        {Structural::onPauseAttribution, ""},
+        {Structural::onResumeAttribution, ""},
+        {Structural::Start, ":/icon/bind-start"},
+        {Structural::Stop, ":/icon/bind-stop"},
+        {Structural::Resume, ":/icon/bind-resume"},
+        {Structural::Pause, ":/icon/bind-pause"},
+        {Structural::Set, ":/icon/bind-set"},
+        {Structural::NoRole, ""} };
 
 QString
 StructuralUtil::getIcon (StructuralRole role)

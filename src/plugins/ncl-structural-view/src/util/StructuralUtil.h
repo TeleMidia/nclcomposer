@@ -94,24 +94,6 @@ private:
   static std::map<StructuralRole, QString> _rolesIcon;
 };
 
-template <typename T, typename U> class StructuralMap
-{
-private:
-  std::map<T, U> _map;
-
-public:
-  StructuralMap (const T &key, const U &value) { _map[key] = value; }
-
-  StructuralMap<T, U> &
-  operator() (const T &key, const U &value)
-  {
-    _map[key] = value;
-    return *this;
-  }
-
-  operator std::map<T, U> () { return _map; }
-};
-
 template <typename K, typename V>
 std::pair<V, K>
 flip (const std::pair<K, V> &pair)
