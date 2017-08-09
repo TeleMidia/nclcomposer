@@ -212,6 +212,15 @@ StructuralViewPlugin::updateFromModel ()
 
   foreach (StructuralEntity *e, _window->getView ()->getEntities ().values ())
   {
+    // When STR_DEFAULT_WITH_INTERFACES is disabled, Structural::Reference
+    // entities exists but they are hidden. So, there is no need for
+    // adjustment.
+    if (e->getStructuralType() == Structural::Reference &&
+        !STR_DEFAULT_WITH_INTERFACES)
+      continue;
+
+    bool hasChange = false;
+
     foreach (const QString &r, references.keys ())
     {
       QString pId = r;
@@ -222,10 +231,14 @@ StructuralViewPlugin::updateFromModel ()
         QString coreUid = getUidById (e->getStructuralProperty (pId));
 
         if (_mapCoreToView.contains (coreUid))
+        {
           e->setStructuralProperty (pUid, _mapCoreToView.value (coreUid));
+          hasChange = true;
+        }
       }
     }
 
+    if (hasChange)
     _window->getView ()->adjustReferences (e);
   }
 
@@ -249,6 +262,15 @@ StructuralViewPlugin::updateFromModel ()
 
     QMap<QString, QString> settings
         = StructuralUtil::createSettings (false, false);
+
+    // When STR_DEFAULT_WITH_INTERFACES is disabled, Structural::Reference
+    // entities exists but they are hidden. So, they could be ignore here.
+    // In fact, Structural::Reference are created/removed/changed dynamically
+    // based in Structural::Port properties in
+    // StructuralView::adjustReferences().
+    if (e->getStructuralType() == Structural::Reference &&
+        !STR_DEFAULT_WITH_INTERFACES)
+      continue;
 
     // Setting cached data...
     if (cache.contains (e->getStructuralId () + pId))

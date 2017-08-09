@@ -9,6 +9,7 @@ StructuralEntity::StructuralEntity (StructuralEntity *parent)
   setStructuralType (Structural::NoType);
 
   setStructuralUid (StructuralUtil::createUid ());
+  setStructuralId("");
   setStructuralParent (parent);
 
   setMoveable (true);
