@@ -206,14 +206,14 @@ StructuralUtil::createPluginTranslations (StructuralType type)
   return translations;
 }
 
-std::map<Structural::Category, QString>
+const std::map<Structural::Category, QString>
     StructuralUtil::_mapCategoryToString
     = { {Structural::Node, "node"},
         {Structural::Edge, "edge"},
         {Structural::Interface, "interface"},
         {Structural::NoCategory, ""} };
 
-std::map<QString, Structural::Category>
+const std::map<QString, Structural::Category>
     StructuralUtil::_mapStringToCategory
     = invert<QString, Structural::Category> (
         StructuralUtil::_mapCategoryToString);
@@ -222,7 +222,7 @@ QString
 StructuralUtil::translateCategoryToString (StructuralCategory category)
 {
   if (_mapCategoryToString.count (category))
-    return _mapCategoryToString[category];
+    return _mapCategoryToString.at (category);
   else
     return "";
 }
@@ -231,12 +231,12 @@ StructuralCategory
 StructuralUtil::translateStringToCategory (const QString &category)
 {
   if (_mapStringToCategory.count (category))
-    return _mapStringToCategory[category];
+    return _mapStringToCategory.at (category);
   else
     return Structural::NoCategory;
 }
 
-std::map<Structural::Type, QString> StructuralUtil::_mapTypeToString
+const std::map<Structural::Type, QString> StructuralUtil::_mapTypeToString
     = { {Structural::Media, "media"},
         {Structural::Body, "body"},
         {Structural::Context, "context"},
@@ -251,7 +251,7 @@ std::map<Structural::Type, QString> StructuralUtil::_mapTypeToString
         {Structural::Mapping, "mapping"},
         {Structural::NoType, ""} };
 
-std::map<QString, Structural::Type> StructuralUtil::_mapStringToType
+const std::map<QString, Structural::Type> StructuralUtil::_mapStringToType
     = invert<QString, Structural::Type> (
         StructuralUtil::_mapTypeToString);
 
@@ -259,7 +259,7 @@ QString
 StructuralUtil::translateTypeToString (StructuralType type)
 {
   if (_mapTypeToString.count (type))
-    return _mapTypeToString[type];
+    return _mapTypeToString.at (type);
   else
     return "";
 }
@@ -268,12 +268,12 @@ StructuralType
 StructuralUtil::translateStringToType (const QString &type)
 {
   if (_mapStringToType.count (type))
-    return _mapStringToType[type];
+    return _mapStringToType.at (type);
   else
     return Structural::NoType;
 }
 
-std::map<Structural::Role, QString> StructuralUtil::_mapRoleToString
+const std::map<Structural::Role, QString> StructuralUtil::_mapRoleToString
     = { {Structural::onBegin, "onBegin"},
         {Structural::onEnd, "onEnd"},
         {Structural::onSelection, "onSelection"},
@@ -290,7 +290,7 @@ std::map<Structural::Role, QString> StructuralUtil::_mapRoleToString
         {Structural::Set, "set"},
         {Structural::NoRole, ""} };
 
-std::map<QString, Structural::Role> StructuralUtil::_mapStringToRole
+const std::map<QString, Structural::Role> StructuralUtil::_mapStringToRole
     = invert<QString, Structural::Role> (
         StructuralUtil::_mapRoleToString);
 
@@ -298,7 +298,7 @@ QString
 StructuralUtil::translateRoleToString (StructuralRole role)
 {
   if (_mapRoleToString.count (role))
-    return _mapRoleToString[role];
+    return _mapRoleToString.at (role);
   else
     return "";
 }
@@ -307,12 +307,12 @@ StructuralRole
 StructuralUtil::translateStringToRole (const QString &role)
 {
   if (_mapStringToRole.count (role))
-    return _mapStringToRole[role];
+    return _mapStringToRole.at (role);
   else
     return Structural::NoRole;
 }
 
-std::map<Structural::MimeType, QString>
+const std::map<Structural::MimeType, QString>
     StructuralUtil::_mapMimeTypeToString
     = { {Structural::Text, "text"},
         {Structural::Image, "image"},
@@ -325,7 +325,7 @@ std::map<Structural::MimeType, QString>
         {Structural::Time, "time"},
         {Structural::NoMimeType, ""} };
 
-std::map<QString, Structural::MimeType>
+const std::map<QString, Structural::MimeType>
     StructuralUtil::_mapStringToMimeType
     = invert<QString, Structural::MimeType> (
         StructuralUtil::_mapMimeTypeToString);
@@ -334,7 +334,7 @@ QString
 StructuralUtil::translateMimeTypeToString (StructuralMimeType mimetype)
 {
   if (_mapMimeTypeToString.count (mimetype))
-    return _mapMimeTypeToString[mimetype];
+    return _mapMimeTypeToString.at (mimetype);
   else
     return "media";
 }
@@ -343,12 +343,12 @@ StructuralMimeType
 StructuralUtil::translateStringToMimeType (const QString &mimetype)
 {
   if (_mapStringToMimeType.count (mimetype))
-    return _mapStringToMimeType[mimetype];
+    return _mapStringToMimeType.at (mimetype);
   else
     return Structural::NoMimeType;
 }
 
-std::map<Structural::Type, QString> StructuralUtil::_entitiesIcon
+const std::map<Structural::Type, QString> StructuralUtil::_entitiesIcon
     = { {Structural::Media, ":/icon/media"},
         {Structural::Body, ":/icon/body"},
         {Structural::Context, ":/icon/context"},
@@ -367,12 +367,12 @@ QString
 StructuralUtil::getIcon (StructuralType type)
 {
   if (_entitiesIcon.count (type))
-    return _entitiesIcon[type];
+    return _entitiesIcon.at (type);
   else
     return "";
 }
 
-std::map<Structural::Type, QString> StructuralUtil::_entitiesColor
+const std::map<Structural::Type, QString> StructuralUtil::_entitiesColor
     = { {Structural::Media, ""},
         {Structural::Body, "#EEEEEE"},
         {Structural::Context, "#F4E4CC"},
@@ -391,12 +391,12 @@ QString
 StructuralUtil::getColor (StructuralType type)
 {
   if (_entitiesColor.count (type))
-    return _entitiesColor[type];
+    return _entitiesColor.at (type);
   else
     return "";
 }
 
-std::map<Structural::Type, QString> StructuralUtil::_entitiesPrefix
+const std::map<Structural::Type, QString> StructuralUtil::_entitiesPrefix
     = { {Structural::Media, "m"},
         {Structural::Body, "b"},
         {Structural::Context, "ctx"},
@@ -415,7 +415,7 @@ QString
 StructuralUtil::getPrefix (StructuralType type)
 {
   if (_entitiesPrefix.count (type))
-    return _entitiesPrefix[type];
+    return _entitiesPrefix.at (type);
   else
     return "e";
 }
@@ -464,7 +464,7 @@ StructuralUtil::getTooltip (StructuralType type, const QString &title,
   return tooltip;
 }
 
-std::map<Structural::MimeType, QString>
+const std::map<Structural::MimeType, QString>
     StructuralUtil::_mimetypesIcon
     = { {Structural::Text, ":/icon/media-text"},
         {Structural::Image, ":/icon/media-image"},
@@ -481,7 +481,7 @@ QString
 StructuralUtil::getMimeTypeIcon (StructuralMimeType type)
 {
   if (_mimetypesIcon.count (type))
-    return _mimetypesIcon[type];
+    return _mimetypesIcon.at (type);
   else
     return ":/icon/media";
 }
@@ -525,7 +525,7 @@ StructuralUtil::getMimeTypeTooltip (StructuralMimeType mimetype,
   return tooltip;
 }
 
-std::map<QString, Structural::MimeType>
+const std::map<QString, Structural::MimeType>
     StructuralUtil::_mimetypesExtension
     = { {"txt", Structural::Text},
         {"png", Structural::Image},
@@ -550,12 +550,12 @@ Structural::MimeType
 StructuralUtil::getMimeTypeByExtension (const QString &extension)
 {
   if (_mimetypesExtension.count (extension))
-    return _mimetypesExtension[extension];
+    return _mimetypesExtension.at (extension);
   else
     return Structural::NoMimeType;
 }
 
-std::map<Structural::Role, QString> StructuralUtil::_rolesIcon
+const std::map<Structural::Role, QString> StructuralUtil::_rolesIcon
     = { {Structural::onBegin, ":/icon/bind-onbegin"},
         {Structural::onEnd, ":/icon/bind-onend"},
         {Structural::onSelection, ":/icon/bind-onselection"},
@@ -576,7 +576,7 @@ QString
 StructuralUtil::getIcon (StructuralRole role)
 {
   if (_rolesIcon.count (role))
-    return _rolesIcon[role];
+    return _rolesIcon.at (role);
   else
     return "";
 }
@@ -654,7 +654,7 @@ StructuralUtil::isCondition (StructuralRole role)
 bool
 StructuralUtil::isCondition (const QString &role)
 {
-  return (_mapStringToRole.count (role) ? isCondition (_mapStringToRole[role])
+  return (_mapStringToRole.count (role) ? isCondition (_mapStringToRole.at (role))
                                         : false);
 }
 
@@ -667,7 +667,7 @@ StructuralUtil::isAction (StructuralRole role)
 bool
 StructuralUtil::isAction (const QString &role)
 {
-  return isAction (_mapStringToRole[role]);
+  return isAction (_mapStringToRole.at (role));
 }
 
 void

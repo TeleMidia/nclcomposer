@@ -72,26 +72,26 @@ public:
   static bool validateKinship (StructuralType type, StructuralType parent);
 
 private:
-  static std::map<StructuralCategory, QString> _mapCategoryToString;
-  static std::map<QString, StructuralCategory> _mapStringToCategory;
+  static const std::map<StructuralCategory, QString> _mapCategoryToString;
+  static const std::map<QString, StructuralCategory> _mapStringToCategory;
 
-  static std::map<QString, StructuralType> _mapStringToType;
-  static std::map<StructuralType, QString> _mapTypeToString;
+  static const std::map<QString, StructuralType> _mapStringToType;
+  static const std::map<StructuralType, QString> _mapTypeToString;
 
-  static std::map<StructuralRole, QString> _mapRoleToString;
-  static std::map<QString, StructuralRole> _mapStringToRole;
+  static const std::map<StructuralRole, QString> _mapRoleToString;
+  static const std::map<QString, StructuralRole> _mapStringToRole;
 
-  static std::map<StructuralMimeType, QString> _mapMimeTypeToString;
-  static std::map<QString, StructuralMimeType> _mapStringToMimeType;
+  static const std::map<StructuralMimeType, QString> _mapMimeTypeToString;
+  static const std::map<QString, StructuralMimeType> _mapStringToMimeType;
 
-  static std::map<StructuralType, QString> _entitiesIcon;
-  static std::map<StructuralType, QString> _entitiesColor;
-  static std::map<StructuralType, QString> _entitiesPrefix;
+  static const std::map<StructuralType, QString> _entitiesIcon;
+  static const std::map<StructuralType, QString> _entitiesColor;
+  static const std::map<StructuralType, QString> _entitiesPrefix;
 
-  static std::map<StructuralMimeType, QString> _mimetypesIcon;
-  static std::map<QString, StructuralMimeType> _mimetypesExtension;
+  static const std::map<StructuralMimeType, QString> _mimetypesIcon;
+  static const std::map<QString, StructuralMimeType> _mimetypesExtension;
 
-  static std::map<StructuralRole, QString> _rolesIcon;
+  static const std::map<StructuralRole, QString> _rolesIcon;
 };
 
 template <typename K, typename V>
