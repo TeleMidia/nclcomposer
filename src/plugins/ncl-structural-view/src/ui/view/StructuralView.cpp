@@ -83,7 +83,7 @@ StructuralView::hasEntity (const QString &uid)
 StructuralEntity *
 StructuralView::getEntity (const QString &uid)
 {
-  return _entities.value (uid, NULL);
+  return _entities.value (uid, nullptr);
 }
 
 QMap<QString, StructuralEntity *>

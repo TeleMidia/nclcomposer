@@ -44,7 +44,7 @@ public slots:
 
   virtual void onEntityAdded (const QString &pluginID, Entity *entity);
   virtual void onEntityChanged (const QString &pluginID, Entity *entity);
-  virtual void onEntityRemoved (const QString &pluginID, QString entityID);
+  virtual void onEntityRemoved (const QString &pluginID, const QString &entityID);
   virtual void changeSelectedEntity (const QString &pluginID, void *entityUID);
 
   virtual void errorMessage (const QString &error);
@@ -83,7 +83,7 @@ private:
   void clean ();
 
 private:
-  bool _synching;
+  bool _syncing;
   bool _waiting;
 
   QString _notified;

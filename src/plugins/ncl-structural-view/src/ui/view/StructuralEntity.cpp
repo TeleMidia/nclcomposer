@@ -3,7 +3,7 @@
 #include <QMimeData>
 
 StructuralEntity::StructuralEntity (StructuralEntity *parent)
-    : QObject (parent), QGraphicsItem (parent)
+    : QObject (parent), QGraphicsItem (parent), _id ("")
 {
   setStructuralCategory (Structural::NoCategory);
   setStructuralType (Structural::NoType);
@@ -234,7 +234,10 @@ StructuralEntity::setStructuralProperties (
 QString
 StructuralEntity::getStructuralProperty (const QString &name) const
 {
-  return _properties.value (name, "");
+  if (_properties.contains(name))
+    return _properties.value (name, "");
+  else
+    return "";
 }
 
 void

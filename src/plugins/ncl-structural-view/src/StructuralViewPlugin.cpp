@@ -24,7 +24,7 @@ StructuralViewPlugin::StructuralViewPlugin (QObject *parent)
   createWidgets ();
   createConnections ();
 
-  _synching = false;
+  _syncing = false;
   _waiting = false;
 
   _notified = ""; // last entity uid notified by the view
@@ -45,21 +45,35 @@ StructuralViewPlugin::createConnections ()
 {
   StructuralView *view = _window->getView ();
 
-  connect (view, SIGNAL (inserted (QString, QString, QMap<QString, QString>,
-                                   QMap<QString, QString>)),
-           SLOT (insertInCore (QString, QString, QMap<QString, QString>,
-                               QMap<QString, QString>)));
-  connect (view, SIGNAL (removed (QString, QMap<QString, QString>)),
-           SLOT (removeInCore (QString, QMap<QString, QString>)));
-  connect (
-      view, SIGNAL (changed (QString, QMap<QString, QString>,
-                             QMap<QString, QString>, QMap<QString, QString>)),
-      SLOT (changeInCore (QString, QMap<QString, QString>,
-                          QMap<QString, QString>, QMap<QString, QString>)));
-  connect (view, SIGNAL (selected (QString, QMap<QString, QString>)),
-           SLOT (selectInCore (QString, QMap<QString, QString>)));
+  connect (view,
+           &StructuralView::inserted,
+           this,
+           &StructuralViewPlugin::insertInCore,
+           Qt::DirectConnection);
 
-  connect (view, SIGNAL (requestedUpdate ()), SLOT (adjustConnectors ()));
+  connect (view,
+           &StructuralView::removed,
+           this,
+           &StructuralViewPlugin::removeInCore,
+           Qt::DirectConnection);
+
+  connect (view,
+           &StructuralView::changed,
+           this,
+           &StructuralViewPlugin::changeInCore,
+           Qt::DirectConnection);
+
+  connect (view,
+           &StructuralView::selected,
+           this,
+           &StructuralViewPlugin::selectInCore,
+           Qt::DirectConnection);
+
+  connect (view,
+           &StructuralView::requestedUpdate,
+           this,
+           &StructuralViewPlugin::adjustConnectors,
+           Qt::DirectConnection);
 }
 
 void
@@ -141,21 +155,22 @@ StructuralViewPlugin::updateFromModel ()
   //
   // Caching...
   //
-
   QMap<QString, QMap<QString, QString> > cache;
 
   foreach (const QString &key, _mapCoreToView.keys ())
   {
-    StructuralEntity *e
-        = _window->getView ()->getEntity (_mapCoreToView.value (key));
+    QString viewKey = _mapCoreToView.value (key);
 
-    if (e != NULL)
+    if (_window->getView()->hasEntity(viewKey))
     {
+      StructuralEntity *e = _window->getView ()->getEntity (viewKey);
+      Q_ASSERT (e);
+
       if (!e->getStructuralId ().isEmpty ())
       {
         QString pId = "";
 
-        if (e->getStructuralParent () != NULL)
+        if (e->getStructuralParent () != nullptr)
           pId = e->getStructuralParent ()->getStructuralId ();
 
         QMap<QString, QString> properties = e->getStructuralProperties ();
@@ -178,14 +193,12 @@ StructuralViewPlugin::updateFromModel ()
   //
   // Cleaning...
   //
-
   _window->getView ()->clean ();
   clean ();
 
   //
   // Inserting...
   //
-
   QStack<Entity *> stack;
   stack.push (project);
 
@@ -241,21 +254,21 @@ StructuralViewPlugin::updateFromModel ()
     }
 
     if (hasChange)
-    _window->getView ()->adjustReferences (e);
+      _window->getView ()->adjustReferences (e);
   }
 
-  QStack<StructuralEntity *> s;
+  QStack<StructuralEntity *> stack2;
 
   foreach (StructuralEntity *current,
            _window->getView ()->getEntities ().values ())
   {
     if (current->getStructuralParent () == nullptr)
-      s.push (current);
+      stack2.push (current);
   }
 
-  while (!s.isEmpty ())
+  while (!stack2.isEmpty ())
   {
-    StructuralEntity *e = s.pop ();
+    StructuralEntity *e = stack2.pop ();
 
     QString pId = "";
 
@@ -266,7 +279,7 @@ StructuralViewPlugin::updateFromModel ()
         = StructuralUtil::createSettings (false, false);
 
     // When STR_DEFAULT_WITH_INTERFACES is disabled, Structural::Reference
-    // entities exists but they are hidden. So, they could be ignore here.
+    // entities exists but they are hidden.  So, they could be ignore here.
     // In fact, Structural::Reference are created/removed/changed dynamically
     // based in Structural::Port properties in
     // StructuralView::adjustReferences().
@@ -575,7 +588,7 @@ StructuralViewPlugin::updateFromModel ()
     }
 
     foreach (StructuralEntity *c, e->getStructuralEntities ())
-      s.push (c);
+      stack2.push (c);
   }
 
   foreach (const QString &key, _window->getView ()->getEntities ().keys ())
@@ -667,7 +680,7 @@ StructuralViewPlugin::clean ()
 void
 StructuralViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
 {
-  if (_synching)
+  if (_syncing)
     return;
 
   if (pluginID != getPluginInstanceID ())
@@ -692,7 +705,7 @@ StructuralViewPlugin::errorMessage (const QString &error)
 void
 StructuralViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
 {
-  if (_synching)
+  if (_syncing)
     return;
 
   if (pluginID != getPluginInstanceID () && !_waiting)
@@ -705,9 +718,9 @@ StructuralViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
 
 void
 StructuralViewPlugin::onEntityRemoved (const QString &pluginID,
-                                       QString entityID)
+                                       const QString &entityID)
 {
-  if (_synching)
+  if (_syncing)
     return;
 
   if (pluginID != getPluginInstanceID ())
@@ -721,7 +734,7 @@ void
 StructuralViewPlugin::changeSelectedEntity (const QString &pluginID,
                                             void *param)
 {
-  if (_synching)
+  if (_syncing)
     return;
 
   if (pluginID != getPluginInstanceID ())
@@ -919,8 +932,7 @@ StructuralViewPlugin::removeInView (Entity *entity, bool undo)
     if (entity->getType () == "linkParam" || entity->getType () == "bindParam")
     {
 
-      QString name;
-      QString value;
+      QString name, value;
 
       if (entity->getType () == "linkParam")
       {
@@ -1530,13 +1542,13 @@ StructuralViewPlugin::changeInCore (QString uid,
 void
 StructuralViewPlugin::textualStartSync (QString, void *)
 {
-  _synching = true;
+  _syncing = true;
 }
 
 void
 StructuralViewPlugin::textualFinishSync (QString, void *)
 {
-  _synching = false;
+  _syncing = false;
   updateFromModel ();
 }
 
@@ -1553,7 +1565,7 @@ StructuralViewPlugin::validationError (QString pluginID, void *param)
 {
   Q_UNUSED (pluginID);
 
-  if (_synching)
+  if (_syncing)
     return;
 
   if (param)

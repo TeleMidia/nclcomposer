@@ -45,7 +45,7 @@ IPlugin* NCLLayoutViewFactory::createPluginInstance()
 
 void NCLLayoutViewFactory::releasePluginInstance(IPlugin* plugin)
 {
-  delete(plugin);
+  delete plugin;
 }
 
 QString NCLLayoutViewFactory::id() const
