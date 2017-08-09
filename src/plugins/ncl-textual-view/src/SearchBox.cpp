@@ -81,6 +81,7 @@ SearchBox::on_pushButton_ReplaceAll_clicked ()
 void
 SearchBox::on_lineEdit_Find_textChanged (const QString &arg1)
 {
+  Q_UNUSED (arg1);
   if (_ui->checkBox_SearchWhileTyping->isChecked ())
     emit findNext (_ui->lineEdit_Find->text ());
 }

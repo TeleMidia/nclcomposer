@@ -167,10 +167,12 @@ StructuralBind::draw (QPainter *painter)
     QString icon = StructuralUtil::getIcon (getRole ());
 
     if (icon.isEmpty ())
+    {
       if (tail->getStructuralType () == Structural::Link)
         icon = ":/icon/bind-unknow-action";
       else
         icon = ":/icon/bind-unknow-condition";
+    }
 
     if (angle != 0)
     {
@@ -320,6 +322,7 @@ StructuralBind::delineate (QPainterPath *painter) const
 void
 StructuralBind::mouseDoubleClickEvent (QGraphicsSceneMouseEvent *event)
 {
+  Q_UNUSED (event);
   //  StructuralEdge::mouseDoubleClickEvent(event);
 
   emit performedEdit (this);

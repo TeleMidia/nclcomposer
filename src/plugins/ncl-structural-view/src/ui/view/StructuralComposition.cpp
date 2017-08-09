@@ -353,5 +353,6 @@ StructuralComposition::dropEvent (QGraphicsSceneDragDropEvent *event)
 void
 StructuralComposition::mouseDoubleClickEvent (QGraphicsSceneMouseEvent *event)
 {
+  Q_UNUSED (event);
   collapse (true);
 }

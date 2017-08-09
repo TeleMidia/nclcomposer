@@ -42,7 +42,6 @@ protected:
   virtual void keyPressEvent (QKeyEvent *keyEvent);
 
 private:
-  QString styleSheetForCurrentState () const;
   QString buttonStyleSheetForCurrentState () const;
 
   QToolButton *_mSearchButton;

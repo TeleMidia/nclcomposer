@@ -36,10 +36,6 @@ SearchLineEdit::SearchLineEdit (QWidget *parent) : QLineEdit (parent)
 
   // Some stylesheet and size corrections for the text box
   this->setPlaceholderText (tr ("Search"));
-  this->setStyleSheet (this->styleSheetForCurrentState ());
-
-  int frameWidth = this->style ()->pixelMetric (QStyle::PM_DefaultFrameWidth);
-  QSize minSizeHint = this->minimumSizeHint ();
 
   /* this->setMinimumSize(
         qMax(minSizeHint.width(),
@@ -78,38 +74,8 @@ SearchLineEdit::updateSearchButton (const QString &text)
                          SLOT (clear ()));
   }
 
-  this->setStyleSheet (this->styleSheetForCurrentState ());
   this->_mSearchButton->setStyleSheet (
       this->buttonStyleSheetForCurrentState ());
-}
-
-QString
-SearchLineEdit::styleSheetForCurrentState () const
-{
-  int frameWidth = this->style ()->pixelMetric (QStyle::PM_DefaultFrameWidth);
-
-  QString style;
-  /* style += "QLineEdit {";
-  if (this->text().isEmpty())
-  {
-    style += "font-family: 'MS Sans Serif';";
-    style += "font-style: italic;";
-    style += "font-size: 12px;";
-  }
-
-  style += "padding-left: 3px;";
-  //style += QString("padding-right: %1px;").arg(
-  //      this->_mSearchButton->sizeHint().width() + frameWidth + 1 );
-
-  style += "border-width: 3px;";
-  style += "border-image: url(:/images/esf-border.png) 3 3 3 3 stretch;";
-  style += "background-color: rgba(255, 255, 255, 204);";
-  style += "}";
-
-  style += "QLineEdit:hover, QLineEdit:focus {";
-  style += "background-color: rgba(255, 255, 255, 255);";
-  style += "}"; */
-  return style;
 }
 
 QString

@@ -301,7 +301,9 @@ NCLTextualViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
 void
 NCLTextualViewPlugin::onCommentAdded (const QString &pluginID, Comment *comment)
 {
-  qCWarning (CPR_PLUGIN_TEXTUAL) << "Comment added " << comment->get ();
+  Q_UNUSED (pluginID);
+
+  qCDebug (CPR_PLUGIN_TEXTUAL) << "Comment added " << comment->get ();
 
   QString line = "<!--" + comment->get () + "-->\n";
 
@@ -696,7 +698,7 @@ NCLTextualViewPlugin::nonIncrementalUpdateCoreModel ()
       QMap<QString, QString> atts;
 
       QDomNamedNodeMap attributes = current_el.attributes ();
-      for (uint i = 0; i < attributes.length (); i++)
+      for (int i = 0; i < attributes.length (); i++)
       {
         QDomAttr item = attributes.item (i).toAttr ();
         atts[item.name ()] = item.value ();
@@ -815,7 +817,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
         // TODO: Compare attributes
         QMap<QString, QString> atts;
         QDomNamedNodeMap attributes = children[i].attributes ();
-        for (uint k = 0; k < attributes.length (); k++)
+        for (int k = 0; k < attributes.length (); k++)
         {
           QDomNode item = attributes.item (k);
           atts.insert (item.nodeName (), item.nodeValue ());
@@ -848,7 +850,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
         // and insert a new entity with the required type.
         QMap<QString, QString> atts;
         QDomNamedNodeMap attributes = children[i].attributes ();
-        for (uint k = 0; k < attributes.length (); k++)
+        for (int k = 0; k < attributes.length (); k++)
         {
           QDomNode item = attributes.item (k);
           atts[item.nodeName ()] = item.nodeValue ();
@@ -872,7 +874,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
         // add new entity
         QMap<QString, QString> atts;
         QDomNamedNodeMap attributes = children[i].attributes ();
-        for (uint k = 0; k < attributes.length (); k++)
+        for (int k = 0; k < attributes.length (); k++)
         {
           QDomNode item = attributes.item (k);
           atts[item.nodeName ()] = item.nodeValue ();

@@ -19,6 +19,8 @@
 
 StructuralViewPlugin::StructuralViewPlugin (QObject *parent)
 {
+  Q_UNUSED (parent);
+
   createWidgets ();
   createConnections ();
 
@@ -684,6 +686,7 @@ StructuralViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
 void
 StructuralViewPlugin::errorMessage (const QString &error)
 {
+  Q_UNUSED (error);
 }
 
 void
@@ -1167,6 +1170,8 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
                                     QMap<QString, QString> properties,
                                     QMap<QString, QString> settings)
 {
+  Q_UNUSED (settings);
+
   StructuralType type = StructuralUtil::translateStringToType (
       properties[STR_PROPERTY_ENTITY_TYPE]);
 
@@ -1300,6 +1305,8 @@ void
 StructuralViewPlugin::removeInCore (QString uid,
                                     QMap<QString, QString> settings)
 {
+  Q_UNUSED (settings);
+
   if (!_mapViewToCore.value (uid, "").isEmpty ())
   {
     emit removeEntity (
@@ -1329,6 +1336,8 @@ StructuralViewPlugin::changeInCore (QString uid,
                                     QMap<QString, QString> previous,
                                     QMap<QString, QString> settings)
 {
+  Q_UNUSED (previous);
+
   Entity *entity = getProject ()->getEntityById (_mapViewToCore.value (uid));
 
   if (entity != NULL)
@@ -1534,12 +1543,16 @@ StructuralViewPlugin::textualFinishSync (QString, void *)
 void
 StructuralViewPlugin::clearValidationMessages (QString, void *param)
 {
+  Q_UNUSED (param);
+
   _window->getView ()->cleanErrors ();
 }
 
 void
 StructuralViewPlugin::validationError (QString pluginID, void *param)
 {
+  Q_UNUSED (pluginID);
+
   if (_synching)
     return;
 
@@ -1708,7 +1721,7 @@ StructuralViewPlugin::adjustConnectors ()
             bool hasConnBase = false;
 
             QDomNodeList hc = h.childNodes ();
-            for (unsigned int i = 0; i < hc.length (); i++)
+            for (int i = 0; i < hc.length (); i++)
             {
               if (hc.item (i).isElement ())
               {
@@ -1725,7 +1738,7 @@ StructuralViewPlugin::adjustConnectors ()
             if (hasConnBase)
             {
               QDomNodeList bc = b.childNodes ();
-              for (unsigned int i = 0; i < bc.length (); i++)
+              for (int i = 0; i < bc.length (); i++)
               {
                 if (bc.item (i).isElement ())
                 {
@@ -1749,7 +1762,7 @@ StructuralViewPlugin::adjustConnectors ()
 
                     QStack<QDomNode> next;
 
-                    for (unsigned int j = 0; j < bcc.length (); j++)
+                    for (int j = 0; j < bcc.length (); j++)
                       next.push (bcc.item (j));
 
                     while (!next.isEmpty ())
@@ -1793,7 +1806,7 @@ StructuralViewPlugin::adjustConnectors ()
                           || current.nodeName () == "assessmentStatement")
                       {
                         QDomNodeList nc = current.childNodes ();
-                        for (unsigned int j = 0; j < nc.length (); j++)
+                        for (int j = 0; j < nc.length (); j++)
                           next.push (nc.item (j));
                       }
                     }

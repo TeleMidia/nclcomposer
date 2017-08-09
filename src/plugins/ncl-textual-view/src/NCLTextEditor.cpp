@@ -87,13 +87,13 @@ NCLTextEditor::initParameters ()
     setCaretLineVisible (true);
 
   // whitespacevisibility switch
-  if(whitespaceVisibility->value().toInt()==0)
+  if(whitespaceVisibility->value().toInt() == 0)
     setWhitespaceVisibility(WhitespaceVisibility::WsInvisible);
-  else if(whitespaceVisibility->value().toInt()==1)
+  else if(whitespaceVisibility->value().toInt() == 1)
     setWhitespaceVisibility(WhitespaceVisibility::WsVisible);
-  else if(whitespaceVisibility->value().toInt()==2)
+  else if(whitespaceVisibility->value().toInt() == 2)
     setWhitespaceVisibility(WhitespaceVisibility::WsVisibleAfterIndent);
-  else if(whitespaceVisibility->value().toInt()==3)
+  else if(whitespaceVisibility->value().toInt() == 3)
     setWhitespaceVisibility(WhitespaceVisibility::WsVisibleOnlyInIndent);
 
   ensureLineVisible (1);
@@ -237,12 +237,6 @@ NCLTextEditor::mousePressEvent (QMouseEvent *event)
   SendScintilla (SCI_INDICATORCLEARRANGE, clearBegin, clearEnd);
 
   QsciScintilla::mousePressEvent (event);
-
-  int line, index;
-  getCursorPosition (&line, &index);
-  int pos, style;
-  pos = SendScintilla (SCI_GETCURRENTPOS);
-  style = SendScintilla (SCI_GETSTYLEAT, pos);
 }
 
 //\fixme I DONT KNOW WHY (or WHERE), BUT THE UNDO IS NOT WORKING EVERY TIME!
@@ -773,7 +767,7 @@ NCLTextEditor::elementsByTagname (const QDomDocument &domDoc,
 {
   QDomNodeList elements = domDoc.elementsByTagName (tagname);
   QList<QDomElement> ret;
-  for (uint i = 0; i < elements.length (); i++)
+  for (int i = 0; i < elements.length (); i++)
   {
     ret.push_back (elements.at (i).toElement ());
   }

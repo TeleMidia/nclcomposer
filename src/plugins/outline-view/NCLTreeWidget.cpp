@@ -373,21 +373,18 @@ NCLTreeWidget::getItemById (QString itemId)
 void
 NCLTreeWidget::removeItem (QString itemId)
 {
-  QRegExp exp ("*");
   QList<QTreeWidgetItem *> items
       = this->findItems (itemId, Qt::MatchExactly | Qt::MatchRecursive, 2);
   QTreeWidgetItem *item;
 
   if (items.size () > 1)
   {
-    qDebug () << "NCLTreeWidget::removeItem Warning - You have more than "
-              << "one item with id='" << itemId
-              << "' - All them will be deleted!";
+    qWarning () << "You have more than one item with id='" << itemId << "."
+                << "They will all be deleted!";
   }
   else if (items.size () == 0)
   {
-    qDebug () << "NCLTreeWidget::removeItem Warning! Item with id ='" << itemId
-              << "' was not found!";
+    qWarning () << "Item with id ='" << itemId << "' was not found!";
   }
 
   for (int i = 0; i < items.size (); i++)
@@ -398,12 +395,8 @@ NCLTreeWidget::removeItem (QString itemId)
       item->parent ()->removeChild (item);
       qDeleteAll (item->takeChildren ());
     }
-    else
-    {
-      int index = indexOfTopLevelItem (item);
-      QTreeWidgetItem *item = takeTopLevelItem (index);
-    }
   }
+
   repaint ();
 }
 

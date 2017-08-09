@@ -827,6 +827,7 @@ StructuralEntity::addStructuralRestriction (const QString &restriction)
 void
 StructuralEntity::removeStructuralRestriction (const QString &restriction)
 {
+  Q_UNUSED (restriction);
 }
 
 void
@@ -842,38 +843,6 @@ StructuralEntity::move (QGraphicsSceneMouseEvent *event)
   // setting
   qreal x = getLeft ();
   qreal y = getTop ();
-
-  StructuralEntity *parent = getStructuralParent ();
-
-  // setting minimal position
-  qreal minx;
-  qreal miny;
-
-  if (parent != NULL)
-  {
-    minx = STR_DEFAULT_ENTITY_PADDING;
-    miny = STR_DEFAULT_ENTITY_PADDING;
-  }
-  else
-  {
-    minx = 0;
-    miny = 0;
-  }
-
-  // setting maximal position
-  qreal maxx;
-  qreal maxy;
-
-  if (parent != NULL)
-  {
-    maxx = parent->getWidth () - getWidth () - STR_DEFAULT_ENTITY_PADDING;
-    maxy = parent->getHeight () - getHeight () - STR_DEFAULT_ENTITY_PADDING;
-  }
-  else
-  {
-    maxx = scene ()->width () - getWidth ();
-    maxy = scene ()->height () - getHeight ();
-  }
 
   // setting delta
   qreal dx = event->pos ().x () - getPressLeft (); // (x1 - x0)
@@ -899,50 +868,6 @@ StructuralEntity::resize (QGraphicsSceneMouseEvent *event)
   qreal y = getTop ();
   qreal w = getWidth ();
   qreal h = getHeight ();
-
-  StructuralEntity *parent = getStructuralParent ();
-
-  // setting minimal bounds
-  qreal minx;
-  qreal miny;
-  qreal minw;
-  qreal minh;
-
-  if (parentItem () != NULL)
-  {
-    minx = STR_DEFAULT_ENTITY_PADDING;
-    miny = STR_DEFAULT_ENTITY_PADDING;
-    minw = -1; // not used
-    minh = -1; // not used
-  }
-  else
-  {
-    minx = 0;
-    miny = 0;
-    minw = -1; // not used
-    minh = -1; // not used
-  }
-
-  // setting maximal bounds
-  qreal maxx;
-  qreal maxy;
-  qreal maxw;
-  qreal maxh;
-
-  if (parentItem () != NULL)
-  {
-    maxx = parent->getWidth () - getWidth () - STR_DEFAULT_ENTITY_PADDING;
-    maxy = parent->getHeight () - getHeight () - STR_DEFAULT_ENTITY_PADDING;
-    maxw = parent->getWidth () - STR_DEFAULT_ENTITY_PADDING;
-    maxh = parent->getHeight () - STR_DEFAULT_ENTITY_PADDING;
-  }
-  else
-  {
-    maxx = scene ()->width () - getWidth ();
-    maxy = scene ()->height () - getHeight ();
-    maxw = scene ()->width ();
-    maxh = scene ()->height ();
-  }
 
   // setting delta
   qreal dx = event->pos ().x () - getPressLeft (); // (x1 - x0)
@@ -1028,6 +953,10 @@ StructuralEntity::resize (QGraphicsSceneMouseEvent *event)
 
       break;
     }
+
+    case Structural::NoResize:
+      // do nothing
+      break;
   }
 
   // resizing
@@ -1087,6 +1016,9 @@ StructuralEntity::paint (QPainter *painter,
                          const QStyleOptionGraphicsItem *option,
                          QWidget *widget)
 {
+  Q_UNUSED (option);
+  Q_UNUSED (widget);
+
   if (_reference)
     painter->setOpacity (0.5);
 

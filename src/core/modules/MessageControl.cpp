@@ -469,6 +469,9 @@ MessageControl::sendMessageToPlugins (Message message, const QString &senderId,
         case Message::ENTITY_CHANGED:
           inst->onEntityChanged (senderId, entity);
           break;
+        default:
+          qFatal ("Send message to plugins called with unknown type.");
+          break;
       }
     }
   }
@@ -486,6 +489,9 @@ MessageControl::sendMessageToPlugins (Message message, const QString &senderId,
         break;
       case Message::ENTITY_CHANGED:
         pluginMsgSrc->onEntityChanged (senderId, entity);
+        break;
+      default:
+        qFatal ("Send message to plugins called with unknown type.");
         break;
     }
   }
@@ -518,6 +524,9 @@ MessageControl::sendCommentMessageToPlugins (Message message,
       case Message::COMMENT_ADDED:
         inst->onCommentAdded (senderId, comment);
         break;
+      default:
+        qFatal ("Send comment message to plugins called with unknown type.");
+        break;
     }
   }
 
@@ -528,6 +537,9 @@ MessageControl::sendCommentMessageToPlugins (Message message,
       {
         case Message::COMMENT_ADDED:
           pluginMsgSrc->onCommentAdded (senderId, comment);
+          break;
+        default:
+          qFatal ("Send comment message to plugins called with unknown type.");
           break;
       }
   }

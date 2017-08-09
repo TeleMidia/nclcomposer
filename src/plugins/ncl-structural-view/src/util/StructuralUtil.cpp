@@ -479,6 +479,8 @@ StructuralUtil::getMimeTypeTooltip (StructuralMimeType mimetype,
                                     const QString &warning,
                                     const QString &error, const QString &extra)
 {
+  Q_UNUSED (extra);
+
   QString tooltip;
 
   // Adding type
@@ -673,7 +675,7 @@ QString
 StructuralUtil::formatId (const QString &id)
 {
   QString normalized = id.normalized (QString::NormalizationForm_KD);
-  normalized.remove (QRegExp ("[^a-zA-Z_-\.\\s]"));
+  normalized.remove (QRegExp ("[^a-zA-Z_-\\.\\s]"));
 
   if (normalized.at (0).isDigit ())
     normalized = "_" + normalized;
