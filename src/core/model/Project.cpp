@@ -292,7 +292,6 @@ Project::getEntityByAttrId (const QString &id)
   QMutexLocker locker (_lockEntities);
   QMapIterator<QString, Node *> it (_nodes);
   QList<Entity *> listRet;
-  qCDebug (CPR_CORE) << "Project::getEntitiesbyType " << _domNode.toElement ().tagName ();
 
   while (it.hasNext ())
   {
