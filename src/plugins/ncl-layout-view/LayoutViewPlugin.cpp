@@ -196,7 +196,7 @@ bool NCLLayoutViewPlugin::saveSubsession()
   line += QString("resolutionWidth=") + resolutionWidth.toString() + "\n";
   line += QString("resolutionHeight=") + resolutionHeight.toString() + "\n";
   data.append(line);
-  qCDebug(CPR_PLUGIN_LAYOUT) << "[QNLY] saveSubsession() data is " << data;
+
   emit setPluginData(data);
 
   return true;
