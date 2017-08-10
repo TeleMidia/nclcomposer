@@ -173,7 +173,7 @@ ProjectReader::endElement (const QString &namespaceURI,
   Q_UNUSED (qName)
 
   _lockStack.lock ();
-  if (_elementStack.size ())
+  if (_elementStack.size () != 0)
     _elementStack.pop ();
   _lockStack.unlock ();
 

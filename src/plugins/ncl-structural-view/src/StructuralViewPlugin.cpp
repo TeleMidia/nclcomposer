@@ -270,6 +270,8 @@ StructuralViewPlugin::updateFromModel ()
   {
     StructuralEntity *e = stack2.pop ();
 
+    Q_ASSERT (e != nullptr);
+
     QString pId = "";
 
     if (e->getParent () != nullptr)
@@ -1349,6 +1351,7 @@ StructuralViewPlugin::changeInCore (QString uid,
                                     QMap<QString, QString> settings)
 {
   Q_UNUSED (previous);
+  Q_UNUSED (settings);
 
   Entity *entity = getProject ()->getEntityById (_mapViewToCore.value (uid));
 

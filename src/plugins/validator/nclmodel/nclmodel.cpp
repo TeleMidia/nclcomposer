@@ -111,8 +111,7 @@ Model::randomId ()
 void
 Model::setElementId (virtualId id, ModelElement &element)
 {
-  if (&element)
-    element._id = id;
+  element._id = id;
 }
 
 bool

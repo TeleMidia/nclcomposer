@@ -3,13 +3,13 @@
 #include <QMimeData>
 
 StructuralEntity::StructuralEntity (StructuralEntity *parent)
-    : QObject (parent), QGraphicsItem (parent), _id ("")
+    : QObject (parent), QGraphicsItem (parent)
 {
   setCategory (Structural::NoCategory);
   setType (Structural::NoType);
 
   setUid (StructuralUtil::createUid ());
-  setId("");
+  setId ("");
   setParent (parent);
 
   setMoveable (true);
@@ -241,8 +241,7 @@ StructuralEntity::getProperty (const QString &name) const
 }
 
 void
-StructuralEntity::setProperty (const QString &name,
-                                         const QString &value)
+StructuralEntity::setProperty (const QString &name, const QString &value)
 {
   _properties[name] = value;
 }
@@ -255,6 +254,7 @@ StructuralEntity::adjust (bool collision, bool recursion)
 
   setId (_properties[STR_PROPERTY_ENTITY_ID]);
   setUid (_properties[STR_PROPERTY_ENTITY_UID]);
+
   setCategory (StructuralUtil::translateStringToCategory (
       _properties[STR_PROPERTY_ENTITY_CATEGORY]));
   setType (StructuralUtil::translateStringToType (
@@ -780,38 +780,36 @@ StructuralEntity::getChildren () const
 void
 StructuralEntity::addChild (StructuralEntity *entity)
 {
-  if (entity != NULL)
-    if (!_children.contains (entity))
-    {
-      if (entity->getType () == Structural::Link)
-        entity->setzIndex (_zindex + 1);
-      else if (entity->getType () == Structural::Context
-               || entity->getType () == Structural::Switch)
-      {
-        entity->setzIndex (_zindex + 2);
-        ;
-      }
-      else
-      {
-        entity->setzIndex (_zindex);
-      }
+  Q_ASSERT (entity != nullptr);
+  Q_ASSERT (!_children.contains (entity));
 
-      _children.append (entity);
-    }
+  if (entity->getType () == Structural::Link)
+    entity->setzIndex (_zindex + 1);
+  else if (entity->getType () == Structural::Context
+           || entity->getType () == Structural::Switch)
+  {
+    entity->setzIndex (_zindex + 2);
+    ;
+  }
+  else
+  {
+    entity->setzIndex (_zindex);
+  }
+
+  _children.append (entity);
 }
 
 void
 StructuralEntity::removeChild (StructuralEntity *entity)
 {
-  if (entity != NULL)
-  {
-    int index = _children.indexOf (entity);
+  Q_ASSERT (entity != nullptr);
 
-    if (index >= 0)
-      _children.remove (index);
+  int index = _children.indexOf (entity);
 
-    entity->setParent (NULL);
-  }
+  if (index >= 0)
+    _children.remove (index);
+
+  entity->setParent (NULL);
 }
 
 QVector<QString>

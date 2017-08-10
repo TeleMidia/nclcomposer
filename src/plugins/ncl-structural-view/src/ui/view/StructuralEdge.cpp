@@ -188,10 +188,7 @@ StructuralEdge::adjustBox (QLineF line)
   QPointF ptail = line.p1 ();
   QPointF phead = line.p2 ();
 
-  qreal x;
-  qreal y;
-  qreal w;
-  qreal h;
+  qreal x = 0.0, y = 0.0, w = 0.0, h = 0.0;
 
   if (ptail.x () <= phead.x () && ptail.y () <= phead.y ())
   {
@@ -300,10 +297,7 @@ StructuralEdge::getDrawLine (qreal padding) const
 
   QLineF drawLine;
 
-  int x;
-  int y;
-  int z;
-  int w;
+  int x = 0, y = 0, z = 0, w = 0;
 
   if (ptail.x () <= phead.x () && ptail.y () <= phead.y ())
   {

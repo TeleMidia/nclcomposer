@@ -653,8 +653,8 @@ void LayoutRegionBase::removeRegion(LayoutRegion* region)
         if(child != NULL)
           _regions.remove(child->getUid());
         else
-          qCWarning (CPR_PLUGIN_LAYOUT) << "Trying to remove an element that is not of\
-                        the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
+          qCWarning (CPR_PLUGIN_LAYOUT) << "Trying to remove an element that "
+                                           "is not a QnlyGraphicsRegion.";
       }
 
       parent->removeRegion(region);
@@ -668,8 +668,8 @@ void LayoutRegionBase::removeRegion(LayoutRegion* region)
         if(child != NULL)
           _regions.remove(child->getUid());
         else
-          qCWarning (CPR_PLUGIN_LAYOUT) << "Trying to remove an element that is not of the\
-                        type QnlyGraphicsRegion " << __FILE__ << __LINE__;
+          qCWarning (CPR_PLUGIN_LAYOUT) << "Trying to remove an element that"
+                                           "is not a QnlyGraphicsRegion.";
       }
 
       if(_regionActions.contains(region->getUid()))

@@ -232,7 +232,7 @@ StructuralBind::draw (QPainter *painter)
         color = QColor (QString (STR_DEFAULT_ALERT_WARNING_COLOR));
       }
 
-      color.setAlpha (0.75);
+      color.setAlphaF (0.75);
 
       painter->setBrush (color);
       painter->setPen (QPen (QBrush (color), 0));
@@ -254,8 +254,7 @@ StructuralBind::delineate (QPainterPath *painter) const
     // Setting...
     QLineF drawLine = getDrawLine (STR_DEFAULT_BIND_PADDING);
 
-    qreal x;
-    qreal y;
+    qreal x = 0.0, y = 0.0;
 
     if (drawLine.p1 ().x () <= drawLine.p2 ().x ()
         && drawLine.p1 ().y () <= drawLine.p2 ().y ())
