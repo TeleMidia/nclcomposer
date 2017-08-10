@@ -1290,26 +1290,31 @@ StructuralEntity::contextMenuEvent (QGraphicsSceneContextMenuEvent *event)
       _menu->setInsertLeft (event->pos ().x ());
       _menu->adjust (_type);
 
-      if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+      if (!STR_DEFAULT_WITH_INTERFACES)
       {
-        if (getParent () == NULL)
+        _menu->switchAutostart (true);
+
+        if (_properties.value (STR_PROPERTY_ENTITY_AUTOSTART)
+            == STR_VALUE_TRUE)
+          _menu->switchAutostartProperty (true);
+        else
+          _menu->switchAutostartProperty (false);
+      }
+      else if (!STR_DEFAULT_WITH_BODY &&
+               !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+      {
+        if ((_parent != NULL &&
+            _parent->getParent () == NULL &&
+            _category == Structural::Interface) ||
+            (_parent == NULL))
         {
           _menu->switchAutostart (true);
 
-          if (getProperty (STR_PROPERTY_ENTITY_AUTOSTART)
+          if (_properties.value (STR_PROPERTY_ENTITY_AUTOSTART)
               == STR_VALUE_TRUE)
             _menu->switchAutostartProperty (true);
-        }
-        else if (getParent ()->getParent () == NULL)
-        {
-          if (getCategory () == Structural::Interface)
-          {
-            _menu->switchAutostart (true);
-
-            if (getProperty (STR_PROPERTY_ENTITY_AUTOSTART)
-                == STR_VALUE_TRUE)
-              _menu->switchAutostartProperty (true);
-          }
+          else
+            _menu->switchAutostartProperty (false);
         }
       }
 
