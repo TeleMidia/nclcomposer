@@ -59,7 +59,7 @@ public:
    * \todo use const for parameters
    */
   void addElement (const QString &name, const QString &father,
-                   char cardinality, bool define_scope = false);
+                   char cardinality, bool _define_scope = false);
   /*!
    * \brief
    *
@@ -196,16 +196,16 @@ public:
   bool defineScope (const QString &tagname);
 
 private:
-  map<QString, map<QString, bool> *> *attributes;     /**< TODO */
-  map<QString, deque<QString> *> *attributes_ordered; /**< TODO */
-  map<QString, map<QString, char> *> *nesting;        /**< TODO */
-  deque<QString> *elements_ordered;
-  map<QString, QString> *dataTypes; /**< TODO */
+  map<QString, map<QString, bool> *> *_attributes;     /**< TODO */
+  map<QString, deque<QString> *> *_attributes_ordered; /**< TODO */
+  map<QString, map<QString, char> *> *_nesting;        /**< TODO */
+  deque<QString> *_elements_ordered;
+  map<QString, QString> *_datatypes; /**< TODO */
 
-  map<QString, QStringList> *dataTypeDefaultSuggestions;
-  map<QString, map<QString, QString> *> *attributesDatatype; /**< TODO */
-  QMultiMap<QString, AttributeReferences *> *references;     /**< TODO */
-  map<QString, bool> define_scope;
+  map<QString, QStringList> *_datatypeDefaultSuggestions;
+  map<QString, map<QString, QString> *> *_attributesDatatype; /**< TODO */
+  QMultiMap<QString, AttributeReferences *> *_references;     /**< TODO */
+  map<QString, bool> _define_scope;
 
   /*!
    * \brief Constructor (it is private because this class is a singleton).

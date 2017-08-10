@@ -17,14 +17,14 @@ INIT_SINGLETON (NCLStructure)
 
 NCLStructure::NCLStructure ()
 {
-  attributes = new map<QString, map<QString, bool> *> ();
-  attributes_ordered = new map<QString, deque<QString> *> ();
-  nesting = new map<QString, map<QString, char> *> ();
-  elements_ordered = new deque<QString> ();
-  dataTypes = new map<QString, QString> ();
-  dataTypeDefaultSuggestions = new map<QString, QStringList> ();
-  attributesDatatype = new map<QString, map<QString, QString> *> ();
-  references = new QMultiMap<QString, AttributeReferences *> ();
+  _attributes = new map<QString, map<QString, bool> *> ();
+  _attributes_ordered = new map<QString, deque<QString> *> ();
+  _nesting = new map<QString, map<QString, char> *> ();
+  _elements_ordered = new deque<QString> ();
+  _datatypes = new map<QString, QString> ();
+  _datatypeDefaultSuggestions = new map<QString, QStringList> ();
+  _attributesDatatype = new map<QString, map<QString, QString> *> ();
+  _references = new QMultiMap<QString, AttributeReferences *> ();
 
   loadStructure ();
 }
@@ -33,45 +33,45 @@ NCLStructure::~NCLStructure ()
 {
   // TODO: Destructor
   map<QString, map<QString, bool> *>::iterator it; /**< TODO */
-  for (it = attributes->begin (); it != attributes->end (); ++it)
+  for (it = _attributes->begin (); it != _attributes->end (); ++it)
   {
     map<QString, bool> *content = it->second;
     content->clear ();
     delete content;
   }
-  attributes->clear ();
-  delete attributes;
+  _attributes->clear ();
+  delete _attributes;
 
   map<QString, map<QString, char> *>::iterator it2; /**< TODO */
-  for (it2 = nesting->begin (); it2 != nesting->end (); ++it2)
+  for (it2 = _nesting->begin (); it2 != _nesting->end (); ++it2)
   {
     map<QString, char> *content = it2->second;
     content->clear ();
     delete content;
   }
-  nesting->clear ();
-  delete nesting;
-  delete elements_ordered;
+  _nesting->clear ();
+  delete _nesting;
+  delete _elements_ordered;
 
-  dataTypes->clear ();
-  delete dataTypes;
+  _datatypes->clear ();
+  delete _datatypes;
 
-  dataTypeDefaultSuggestions->clear ();
-  delete dataTypeDefaultSuggestions;
+  _datatypeDefaultSuggestions->clear ();
+  delete _datatypeDefaultSuggestions;
 
   map<QString, map<QString, QString> *>::iterator it3;
-  for (it3 = attributesDatatype->begin (); it3 != attributesDatatype->end ();
+  for (it3 = _attributesDatatype->begin (); it3 != _attributesDatatype->end ();
        ++it3)
   {
     map<QString, QString> *content = it3->second;
     content->clear ();
     delete content;
   }
-  attributesDatatype->clear ();
-  delete attributesDatatype;
+  _attributesDatatype->clear ();
+  delete _attributesDatatype;
 
   // TODO: DELETE EACH INTERNAL POINTER
-  references->clear ();
+  _references->clear ();
 }
 
 // TODO: This function should be based on lex and yacc to a better
@@ -249,45 +249,45 @@ void
 NCLStructure::addElement (const QString &name, const QString &father,
                           char cardinality, bool define_scope)
 {
-  if (!nesting->count (father))
-    (*nesting)[father] = new map<QString, char> ();
+  if (!_nesting->count (father))
+    (*_nesting)[father] = new map<QString, char> ();
 
-  if (!attributes->count (name))
-    (*attributes)[name] = new map<QString, bool> ();
+  if (!_attributes->count (name))
+    (*_attributes)[name] = new map<QString, bool> ();
 
-  if (!attributesDatatype->count (name))
-    (*attributesDatatype)[name] = new map<QString, QString> ();
+  if (!_attributesDatatype->count (name))
+    (*_attributesDatatype)[name] = new map<QString, QString> ();
 
-  if (!attributes_ordered->count (name))
-    (*attributes_ordered)[name] = new deque<QString> ();
+  if (!_attributes_ordered->count (name))
+    (*_attributes_ordered)[name] = new deque<QString> ();
 
   deque<QString>::iterator location
-      = find (elements_ordered->begin (), elements_ordered->end (), name);
-  if (location == elements_ordered->end ())
-    elements_ordered->push_back (name);
+      = find (_elements_ordered->begin (), _elements_ordered->end (), name);
+  if (location == _elements_ordered->end ())
+    _elements_ordered->push_back (name);
 
-  (*(*nesting)[father])[name] = cardinality;
-  this->define_scope[name] = define_scope;
+  (*(*_nesting)[father])[name] = cardinality;
+  this->_define_scope[name] = define_scope;
 }
 
 void
 NCLStructure::addAttribute (const QString &element, const QString &attr,
                             const QString &type, bool required)
 {
-  if (!attributes->count (element))
-    (*attributes)[element] = new map<QString, bool> ();
+  if (!_attributes->count (element))
+    (*_attributes)[element] = new map<QString, bool> ();
 
-  if (!attributesDatatype->count (element))
-    (*attributesDatatype)[element] = new map<QString, QString> ();
+  if (!_attributesDatatype->count (element))
+    (*_attributesDatatype)[element] = new map<QString, QString> ();
 
-  if (!attributes_ordered->count (element))
-    (*attributes_ordered)[element] = new deque<QString> ();
+  if (!_attributes_ordered->count (element))
+    (*_attributes_ordered)[element] = new deque<QString> ();
 
   // qDebug() << "NCLStructure::addAttribute (" << element << ", " << attr <<
   // ")";
-  (*(*attributes)[element])[attr] = required;
-  (*(*attributes_ordered)[element]).push_back (attr);
-  (*(*attributesDatatype)[element])[attr] = type;
+  (*(*_attributes)[element])[attr] = required;
+  (*(*_attributes_ordered)[element]).push_back (attr);
+  (*(*_attributesDatatype)[element])[attr] = type;
 }
 
 void
@@ -297,91 +297,92 @@ NCLStructure::addReference (const QString &element, const QString &attr,
 {
   AttributeReferences *ref
       = new AttributeReferences (element, attr, ref_element, ref_attr, scope);
-  references->insert (element, ref);
+  _references->insert (element, ref);
 }
 
 void
 NCLStructure::addDatatype (const QString &name, const QString &regex)
 {
-  // qDebug() << "NCLStructure::addDatatype (" << name << ", " << regex << ")";
-  (*dataTypes)[name] = regex;
+  (*_datatypes)[name] = regex;
 }
 
 void
 NCLStructure::addDatatypeDefaultSuggestions (const QString &datatype,
                                              const QString &values)
 {
-  // qDebug() << "NCLStructure::addDatatypeDefaultSuggestion (" << datatype
-  //   << ", " << values << ")";
   if (values != "")
-    (*dataTypeDefaultSuggestions)[datatype] = values.split (',');
+    (*_datatypeDefaultSuggestions)[datatype] = values.split (',');
   else
-    (*dataTypeDefaultSuggestions)[datatype] = QStringList ();
+    (*_datatypeDefaultSuggestions)[datatype] = QStringList ();
 }
 
 QString
 NCLStructure::getAttributeDatatype (const QString &element,
                                     const QString &name)
 {
-  if (attributesDatatype->count (element)
-      && (*attributesDatatype)[element]->count (name))
+  if (_attributesDatatype->count (element)
+      && (*_attributesDatatype)[element]->count (name))
   {
-    return (*(*attributesDatatype)[element])[name];
+    return (*(*_attributesDatatype)[element])[name];
   }
+
   return QString ("Unknown");
 }
 
 QStringList
 NCLStructure::getDatatypeDefaultSuggestions (const QString &datatype)
 {
-  if (dataTypeDefaultSuggestions->count (datatype))
+  if (_datatypeDefaultSuggestions->count (datatype))
   {
-    return (*dataTypeDefaultSuggestions)[datatype];
+    return (*_datatypeDefaultSuggestions)[datatype];
   }
+
   return QStringList ();
 }
 
 map<QString, bool> *
 NCLStructure::getAttributes (const QString &element)
 {
-  if (attributes->count (element))
-    return (*attributes)[element];
+  if (_attributes->count (element))
+    return (*_attributes)[element];
+
   return nullptr;
 }
 
 deque<QString> *
 NCLStructure::getAttributesOrdered (const QString &element)
 {
-  if (attributes_ordered->count (element))
-    return (*attributes_ordered)[element];
+  if (_attributes_ordered->count (element))
+    return (*_attributes_ordered)[element];
+
   return nullptr;
 }
 
 map<QString, map<QString, char> *> *
 NCLStructure::getNesting ()
 {
-  return this->nesting;
+  return this->_nesting;
 }
 
 map<QString, char> *
 NCLStructure::getChildren (const QString &tagname)
 {
-  if (nesting->count (tagname))
-    return (*nesting)[tagname];
+  if (_nesting->count (tagname))
+    return (*_nesting)[tagname];
   return nullptr;
 }
 
 deque<QString> *
 NCLStructure::getElementsOrdered ()
 {
-  return elements_ordered;
+  return _elements_ordered;
 }
 
 vector<AttributeReferences *>
 NCLStructure::getReferences (const QString &element, const QString &attr)
 {
   vector<AttributeReferences *> ref;
-  foreach (AttributeReferences *value, references->values (element))
+  foreach (AttributeReferences *value, _references->values (element))
   {
     if (value->getAttribute () == attr)
       ref.push_back (value);
@@ -392,8 +393,9 @@ NCLStructure::getReferences (const QString &element, const QString &attr)
 bool
 NCLStructure::defineScope (const QString &tagname)
 {
-  if (define_scope.count (tagname))
-    return define_scope[tagname];
+  if (_define_scope.count (tagname))
+    return _define_scope[tagname];
+
   return false;
 }
 
