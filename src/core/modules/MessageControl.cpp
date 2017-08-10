@@ -274,8 +274,6 @@ MessageControl::addContent (const QString &entity_content,
 void
 MessageControl::addComment (const QString &content, const QString &parentId)
 {
-  qCWarning (CPR_CORE) << "MessageControl::addComment";
-
   // Cast to IPlugin to make sure it's a plugin
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender ());
   IDocumentParser *parser
