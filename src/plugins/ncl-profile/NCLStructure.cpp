@@ -103,8 +103,6 @@ NCLStructure::loadStructure ()
       bool error = false;
       if (tokens.size () >= 3)
       {
-        // qDebug() << "I'm reading a new DATATYPE element " << tokens[0]
-        //         << tokens[1] << " " << tokens[2];
         addDatatype (tokens[1], tokens[2]);
         if (tokens.size () >= 4)
         {
@@ -121,9 +119,6 @@ NCLStructure::loadStructure ()
     }
     else if (tokens[0].toLower () == "element")
     {
-      // qDebug() << "I'm reading a new ELEMENT element";
-      // qDebug() << "Adding Element -- " << tokens[1];
-
       if (tokens.size () == 5)
       {
         bool define_scope = false;
@@ -139,13 +134,10 @@ NCLStructure::loadStructure ()
                         "(ELEMENT NAME, ELEMENT FATHER, CARDINALITY) ";
 
         qErrnoWarning (msg.toStdString ().c_str ());
-        // qDebug() << tokens;
       }
     }
     else if (tokens[0].toLower () == "attribute")
     {
-      // qDebug() << "I'm reading a new ATTRIBUTE element" << endl;
-
       if (tokens.size () == 5)
       {
         bool required = false;
@@ -162,16 +154,13 @@ NCLStructure::loadStructure ()
     }
     else if (tokens[0].toLower () == "scope")
     {
-      // qDebug() << "I'm reading a new SCOPE element - This is not supported
-      // yet"
-      //         << endl;
+      qWarning() << "I'm reading a new SCOPE element. "
+                    "This is not supported yet";
     }
     else if (tokens[0].toLower () == "reference")
     {
-      // qDebug() << "I'm reading a new REFERENCE element" << endl;
       addReference (tokens[1], tokens[2], tokens[3], tokens[4], tokens[5]);
     }
-    // qDebug() << line << endl;
   }
   fInput.close ();
 }
@@ -283,8 +272,6 @@ NCLStructure::addAttribute (const QString &element, const QString &attr,
   if (!_attributes_ordered->count (element))
     (*_attributes_ordered)[element] = new deque<QString> ();
 
-  // qDebug() << "NCLStructure::addAttribute (" << element << ", " << attr <<
-  // ")";
   (*(*_attributes)[element])[attr] = required;
   (*(*_attributes_ordered)[element]).push_back (attr);
   (*(*_attributesDatatype)[element])[attr] = type;
