@@ -1368,6 +1368,11 @@ StructuralViewPlugin::changeInCore (QString uid,
         attributes.insert (translations.value (key), properties.value (key));
     }
 
+    // The code below should not be here. The logic was moved to
+    // StructuralView::performAutostart (). However, i am keeping this
+    // for later review.
+
+    /*
     if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
     {
       if (properties.contains (STR_PROPERTY_ENTITY_AUTOSTART))
@@ -1443,6 +1448,7 @@ StructuralViewPlugin::changeInCore (QString uid,
         }
       }
     }
+    */
 
     if (type == Structural::Link || type == Structural::Bind)
     {

@@ -310,7 +310,7 @@ StructuralMenu::createMenus ()
   addAction (_helpAction);
   addSeparator ();
 
-  if (!STR_DEFAULT_WITH_FLOATING_INTERFACES)
+  if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
   {
     addAction (_autostartAction);
     addSeparator ();
