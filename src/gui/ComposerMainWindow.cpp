@@ -605,7 +605,8 @@ ComposerMainWindow::addPluginWidget (IPluginFactory *fac, IPlugin *plugin,
     ui->menubar->setNativeMenuBar (true);
 #endif
 
-    QAction *action_checkForUpdate = new QAction ("Check for updates", this);
+    QAction *action_checkForUpdate = new QAction (tr("Check for updates"),
+                                                  this);
     connect (action_checkForUpdate, SIGNAL (triggered ()), this,
              SLOT (checkForUpdates ()));
     _ui->menu_Help->addAction (action_checkForUpdate);
