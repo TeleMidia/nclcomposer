@@ -45,6 +45,16 @@ set(UI_SOURCES
 QT5_WRAP_UI(UI_GENERATED_HEADERS
   ${UI_SOURCES}
 )
+# Qt5 Translations
+find_package (Qt5LinguistTools)
+set_directory_properties (PROPERTIES CLEAN_NO_CUSTOM 1)
+qt5_create_translation (QM_FILES
+  ${CMAKE_CURRENT_SOURCE_DIR}
+
+  translations/nclcomposer_en.ts
+  translations/nclcomposer_es_ES.ts
+  translations/nclcomposer_pt_BR.ts
+)
 
 #add_library(QSimpleUpdater INTERFACE)
 #target_include_directories(QSimpleUpdater INTERFACE)
@@ -89,6 +99,7 @@ add_executable(nclcomposer ${GUI_TYPE}
   QSimpleUpdater/etc/resources/qsimpleupdater.qrc
   
   nclcomposer.rc
+  ${QM_FILES}
 )
 
 set_target_properties(nclcomposer PROPERTIES
@@ -118,15 +129,25 @@ set(GUI_DATAFILES
   data/style.qss
   data/style.ini
   data/default.ini
+
+  ${QM_FILES}
 )
 
 # Copy datafiles to build dir
 add_custom_target(copy_datafiles ALL)
+add_dependencies(copy_datafiles nclcomposer)
 foreach(file_i ${GUI_DATAFILES})
   get_filename_component(filename ${file_i} NAME)
+
+  # if it is not absoute transform it to absolute path
+  set(INPUT_FILE ${file_i})
+  if(NOT IS_ABSOLUTE ${INPUT_FILE})
+    set (INPUT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${INPUT_FILE}")
+  endif()
+
   add_custom_command(TARGET copy_datafiles POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-      ${CMAKE_CURRENT_SOURCE_DIR}/${file_i}
+      ${INPUT_FILE}
       ${CMAKE_BINARY_DIR}/${NCLCOMPOSER_DATA_DIR}/${filename}
     DEPENDS ${file_i}
     COMMENT "Copying ${file_i}")
