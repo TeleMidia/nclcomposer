@@ -48,9 +48,12 @@ loadTranslations ()
   QStringList extensions_paths = settings.value ("path").toStringList ();
   settings.endGroup ();
 
-  qCDebug (CPR_MAIN) << "Looking for extensions in " << extensions_paths;
+  // Add datadir for looking for translation files.
+  extensions_paths.push_front(
+    QApplication::applicationDirPath () + "/../share/nclcomposer/");
 
-  /* Go in each path and search for files from that language */
+  qCDebug (CPR_MAIN) << "Looking for translations in " << extensions_paths;
+  /* Go in each extension path and search for files from that language */
   foreach (QString curPath, extensions_paths)
   {
     QDir curDir (curPath);
