@@ -1606,6 +1606,55 @@ StructuralView::adjustReferences (StructuralEntity *entity)
             }
           }
         }
+        else if (!STR_DEFAULT_WITH_FLOATING_INTERFACES)
+        {
+          StructuralEntity* component = nullptr;
+          StructuralEntity* interface = nullptr;
+
+          if (_entities.contains(
+                entity->getProperty (STR_PROPERTY_REFERENCE_COMPONENT_UID)))
+          {
+            component = _entities[
+                entity->getProperty (STR_PROPERTY_REFERENCE_COMPONENT_UID)];
+          }
+
+          if (_entities.contains(
+                entity->getProperty (STR_PROPERTY_REFERENCE_INTERFACE_UID)))
+          {
+            interface = _entities[
+                entity->getProperty (STR_PROPERTY_REFERENCE_INTERFACE_UID)];
+          }
+
+          QMap<QString, QString> properties;
+
+          QMap<QString, QString> settings
+              = StructuralUtil::createSettings (true, true);
+
+          if (interface != nullptr)
+          {
+            if (component != nullptr &&
+                interface->getParent () == component)
+            {
+              properties = interface->getProperties();
+              properties[STR_PROPERTY_ENTITY_AUTOSTART] = STR_VALUE_TRUE;
+
+              change (interface->getUid (),
+                      properties,
+                      entity->getProperties (),
+                      settings);
+            }
+          }
+          else if (component != nullptr)
+          {
+            properties = component->getProperties();
+            properties[STR_PROPERTY_ENTITY_AUTOSTART] = STR_VALUE_TRUE;
+
+            change (component->getUid (),
+                    properties,
+                    entity->getProperties (),
+                    settings);
+          }
+        }
 
         break;
       }
