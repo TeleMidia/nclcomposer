@@ -46,7 +46,8 @@ QT5_WRAP_UI(UI_GENERATED_HEADERS
   ${UI_SOURCES}
 )
 # Qt5 Translations
-find_package (Qt5LinguistTools)
+find_package (Qt5LinguistTools QUIET)
+if (DEFINED Qt5LinguistTools_DIR AND Qt5LinguistTools_FOUND)
 set_directory_properties (PROPERTIES CLEAN_NO_CUSTOM 1)
 qt5_create_translation (QM_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}
@@ -55,6 +56,7 @@ qt5_create_translation (QM_FILES
   translations/nclcomposer_es_ES.ts
   translations/nclcomposer_pt_BR.ts
 )
+endif()
 
 #add_library(QSimpleUpdater INTERFACE)
 #target_include_directories(QSimpleUpdater INTERFACE)
