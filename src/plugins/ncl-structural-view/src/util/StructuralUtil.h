@@ -9,7 +9,6 @@ class StructuralEntity;
 
 class StructuralUtil
 {
-
 public:
   static QString createUid ();
 

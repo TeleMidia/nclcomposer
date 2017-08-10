@@ -2262,8 +2262,7 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
         properties[STR_PROPERTY_REFERENCE_XCONNECTOR_ID]
             = _dialog->getConnector ();
 
-        qreal x;
-        qreal y;
+        qreal x = 0.0, y = 0.0;
 
         if (ptail.x () <= phead.x () && ptail.y () <= phead.y ())
         {
