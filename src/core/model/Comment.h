@@ -63,7 +63,7 @@ public:
     }
 
     out += " content=\"";
-    out += this->_content;
+    out += this->_content.toHtmlEscaped();
     out += "\"/>\n";
 
     return out;
