@@ -605,12 +605,6 @@ ComposerMainWindow::addPluginWidget (IPluginFactory *fac, IPlugin *plugin,
     ui->menubar->setNativeMenuBar (true);
 #endif
 
-    QAction *action_checkForUpdate = new QAction (tr("Check for updates"),
-                                                  this);
-    connect (action_checkForUpdate, SIGNAL (triggered ()), this,
-             SLOT (checkForUpdates ()));
-    _ui->menu_Help->addAction (action_checkForUpdate);
-
     connect (_ui->menu_View, SIGNAL (aboutToShow ()), this,
              SLOT (updateViewMenu ()));
 
@@ -628,6 +622,9 @@ ComposerMainWindow::addPluginWidget (IPluginFactory *fac, IPlugin *plugin,
 
     connect (_ui->action_NewProject, SIGNAL (triggered ()), this,
              SLOT (launchProjectWizard ()));
+
+    connect (_ui->actionCheck_for_updates, SIGNAL (triggered ()),
+             this, SLOT (checkForUpdates()));
 
     /* _menuLanguage = new QMenu(0);
     _tbLanguageDropList->setMenu(_menuLanguage);

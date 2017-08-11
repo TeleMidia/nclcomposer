@@ -130,7 +130,7 @@
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>26</height>
+     <height>23</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -206,6 +206,8 @@
     <addaction name="separator"/>
     <addaction name="action_About"/>
     <addaction name="action_AboutPlugins"/>
+    <addaction name="separator"/>
+    <addaction name="actionCheck_for_updates"/>
    </widget>
    <widget class="QMenu" name="menu_View">
     <property name="title">
@@ -598,6 +600,11 @@
    </property>
    <property name="toolTip">
     <string>Preferences editor</string>
+   </property>
+  </action>
+  <action name="actionCheck_for_updates">
+   <property name="text">
+    <string>Check for updates</string>
    </property>
   </action>
  </widget>
