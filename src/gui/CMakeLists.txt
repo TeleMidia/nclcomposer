@@ -55,6 +55,9 @@ qt5_create_translation (QM_FILES
   translations/nclcomposer_en.ts
   translations/nclcomposer_es_ES.ts
   translations/nclcomposer_pt_BR.ts
+
+  OPTIONS
+  -extensions h,cpp,c,cc,ui
 )
 endif()
 
