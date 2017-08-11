@@ -269,6 +269,7 @@ public slots:
 private slots:
   void checkForUpdates ();
   void on_action_Preferences_2_triggered();
+  void on_action_Help_triggered();
 };
 
 CPR_GUI_END_NAMESPACE

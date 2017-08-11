@@ -1860,3 +1860,9 @@ void cpr::gui::ComposerMainWindow::on_action_Preferences_2_triggered()
 {
   _preferencesEditor->show(); //TEST
 }
+
+void cpr::gui::ComposerMainWindow::on_action_Help_triggered()
+{
+  QDesktopServices::openUrl (
+      QUrl ("http://ncl-composer-manual.readthedocs.io/en/latest/"));
+}
