@@ -54,7 +54,7 @@ loadTranslations ()
 
   qCDebug (CPR_MAIN) << "Looking for translations in " << extensions_paths;
   /* Go in each extension path and search for files from that language */
-  foreach (QString curPath, extensions_paths)
+  foreach (const QString &curPath, extensions_paths)
   {
     QDir curDir (curPath);
     // filter only the files for the current language code
