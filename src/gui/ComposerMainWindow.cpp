@@ -623,8 +623,8 @@ ComposerMainWindow::addPluginWidget (IPluginFactory *fac, IPlugin *plugin,
     connect (_ui->action_NewProject, SIGNAL (triggered ()), this,
              SLOT (launchProjectWizard ()));
 
-    connect (_ui->actionCheck_for_updates, SIGNAL (triggered ()),
-             this, SLOT (checkForUpdates()));
+    connect (_ui->actionCheck_for_updates, SIGNAL (triggered ()), this,
+             SLOT (checkForUpdates ()));
 
     /* _menuLanguage = new QMenu(0);
     _tbLanguageDropList->setMenu(_menuLanguage);
@@ -1856,13 +1856,13 @@ ComposerMainWindow::addPluginWidget (IPluginFactory *fac, IPlugin *plugin,
     dialog.exec ();
   }
 
-void cpr::gui::ComposerMainWindow::on_action_Preferences_2_triggered()
-{
-  _preferencesEditor->show(); //TEST
-}
+  void cpr::gui::ComposerMainWindow::on_action_Preferences_2_triggered ()
+  {
+    _preferencesEditor->show (); // TEST
+  }
 
-void cpr::gui::ComposerMainWindow::on_action_Help_triggered()
-{
-  QDesktopServices::openUrl (
-      QUrl ("http://ncl-composer-manual.readthedocs.io/en/latest/"));
-}
+  void cpr::gui::ComposerMainWindow::on_action_Help_triggered ()
+  {
+    QDesktopServices::openUrl (
+        QUrl ("http://ncl-composer-manual.readthedocs.io/en/latest/"));
+  }

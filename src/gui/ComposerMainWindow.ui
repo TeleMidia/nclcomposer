@@ -596,7 +596,7 @@
      <normaloff>:/icon/preferences</normaloff>:/icon/preferences</iconset>
    </property>
    <property name="text">
-    <string>&amp;Preferences Editor</string>
+    <string>Plu&amp;gins preferences</string>
    </property>
    <property name="toolTip">
     <string>Preferences editor</string>
