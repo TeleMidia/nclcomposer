@@ -667,7 +667,8 @@ StructuralUtil::isAction (StructuralRole role)
 bool
 StructuralUtil::isAction (const QString &role)
 {
-  return isAction (_mapStringToRole.at (role));
+  return _mapStringToRole.count (role)
+      && isAction (_mapStringToRole.at (role));
 }
 
 void
