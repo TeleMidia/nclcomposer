@@ -174,7 +174,16 @@ ProjectControl::importFromDocument (const QString &docLocation,
     project->setLocation (projLocation);
 
     _openProjects[projLocation] = project;
+  }
+  else
+    qCDebug (CPR_CORE) << tr ("Project could not be open!");
 
+  emit endOpenProject (projLocation);
+
+  QCoreApplication::processEvents();
+
+  if (project != nullptr)
+  {
     IDocumentParser *parser;
     parser = profile->createParser (project);
     PluginControl::getInstance ()->connectParser (
@@ -188,10 +197,6 @@ ProjectControl::importFromDocument (const QString &docLocation,
 
     input.close ();
   }
-  else
-    qCDebug (CPR_CORE) << tr ("Project could not be open!");
-
-  emit endOpenProject (projLocation);
 
   project->setDirty (false);
 

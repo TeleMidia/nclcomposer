@@ -20,6 +20,7 @@
 #include <QObject>
 #include <QProcess>
 #include <QTextStream>
+#include <QCoreApplication>
 
 #include <iostream>
 
