@@ -171,6 +171,9 @@ MessageControl::addEntity (const QString &type, const QString &parentEntityId,
     _qUndoStack->push (new AddEntityCmd (_project, ent, parentEntityId));
 
     sendMessageToPlugins (Message::ENTITY_ADDED, senderId, ent);
+
+    if (parser)
+      parser->onEntityAdded(senderId, ent);
   }
   catch (exception &e)
   {

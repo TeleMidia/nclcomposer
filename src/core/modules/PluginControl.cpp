@@ -286,12 +286,9 @@ PluginControl::connectParser (IDocumentParser *parser,
                               MessageControl *mControl)
 {
   connect (parser,
-           SIGNAL (addEntity (QString, QString, QMap<QString, QString> &)),
+           &IDocumentParser::addEntity,
            mControl,
-           SLOT (onAddEntity (QString, QString, QMap<QString, QString> &)));
-
-  connect (mControl, SIGNAL (entityAdded (const QString &, Entity *)), parser,
-           SLOT (onEntityAdded (const QString &, Entity *)));
+           &MessageControl::addEntity);
 }
 
 QList<IPluginFactory *>
