@@ -68,6 +68,10 @@ NCLTextEditor::initParameters ()
   Preference *prefFontSize = prefs->getValue ("cpr.textual.fontSize");
   Preference *whitespaceVisibility
       = prefs->getValue("cpr.textual.whitespaceVisibility");
+  Preference *edgeMode
+      = prefs->getValue("cpr.textual.edgeMode");
+  Preference *edgeColumn
+      = prefs->getValue("cpr.textual.edgeColumn");
 
   _tabBehavior = TAB_BEHAVIOR_DEFAULT;
 
@@ -150,8 +154,9 @@ NCLTextEditor::initParameters ()
   _fillingAttributeIndicator = indicatorDefine (RoundBoxIndicator, 2);
 
   // setWhitespaceVisibility(QsciScintilla::WsVisible);
-  // setEdgeMode(QsciScintilla::EdgeLine);
-  // setEdgeColumn(80);
+  if(edgeMode->value().toInt()==1)
+    setEdgeMode(QsciScintilla::EdgeLine);
+  setEdgeColumn(edgeColumn->value().toInt());
 
   prefs->save ();
 }

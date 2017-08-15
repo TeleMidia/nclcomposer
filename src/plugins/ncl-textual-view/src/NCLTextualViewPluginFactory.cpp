@@ -49,6 +49,12 @@ NCLTextualViewPluginFactory::NCLTextualViewPluginFactory ()
   prefs->registerPreference (
         "cpr.textual.whitespaceVisibility",
         new Preference ("whitespaceVisibility", false, "Textual"));
+  prefs->registerPreference (
+        "cpr.textual.edgeMode",
+         new Preference ("edgeMode", false, "Textual"));
+  prefs->registerPreference (
+        "cpr.textual.edgeColumn",
+        new Preference ("edgeColumn", "80", "Textual"));
 }
 
 IPlugin *
