@@ -787,6 +787,30 @@ StructuralViewPlugin::insertInView (Entity *entity, bool undo)
       if (!undo)
         setReferences (properties);
 
+      if (properties.contains (STR_PROPERTY_REFERENCE_COMPONENT_ID))
+      {
+        QString coreUID = getUidById (
+            properties.value (STR_PROPERTY_REFERENCE_COMPONENT_ID));
+
+        if (_mapCoreToView.contains (coreUID))
+        {
+          properties.insert (STR_PROPERTY_REFERENCE_COMPONENT_UID,
+                             _mapCoreToView.value (coreUID));
+        }
+      }
+
+      if (properties.contains (STR_PROPERTY_REFERENCE_INTERFACE_ID))
+      {
+        QString coreUID = getUidById (
+            properties.value (STR_PROPERTY_REFERENCE_INTERFACE_ID));
+
+        if (_mapCoreToView.contains (coreUID))
+        {
+          properties.insert (STR_PROPERTY_REFERENCE_INTERFACE_UID,
+                             _mapCoreToView.value (coreUID));
+        }
+      }
+
       if (type == Structural::Bind)
       {
         parentUID = entity->getParent ()->getParentUniqueId ();
@@ -811,9 +835,6 @@ StructuralViewPlugin::insertInView (Entity *entity, bool undo)
               properties.insert (
                   STR_PROPERTY_EDGE_TAIL,
                   properties.value (STR_PROPERTY_REFERENCE_INTERFACE_UID));
-              properties.insert (
-                  STR_PROPERTY_EDGE_HEAD,
-                  _mapCoreToView.value (entity->getParentUniqueId ()));
             }
             else if (!properties.value (STR_PROPERTY_REFERENCE_COMPONENT_UID)
                           .isEmpty ())
@@ -821,19 +842,17 @@ StructuralViewPlugin::insertInView (Entity *entity, bool undo)
               properties.insert (
                   STR_PROPERTY_EDGE_TAIL,
                   properties.value (STR_PROPERTY_REFERENCE_COMPONENT_UID));
-              properties.insert (
-                  STR_PROPERTY_EDGE_HEAD,
-                  _mapCoreToView.value (entity->getParentUniqueId ()));
             }
+
+            properties.insert (
+                STR_PROPERTY_EDGE_HEAD,
+                _mapCoreToView.value (entity->getParentUniqueId ()));
           }
           else if (StructuralUtil::isAction (role))
           {
             if (!properties.value (STR_PROPERTY_REFERENCE_INTERFACE_UID)
                      .isEmpty ())
             {
-              properties.insert (
-                  STR_PROPERTY_EDGE_TAIL,
-                  _mapCoreToView.value (entity->getParentUniqueId ()));
               properties.insert (
                   STR_PROPERTY_EDGE_HEAD,
                   properties.value (STR_PROPERTY_REFERENCE_INTERFACE_UID));
@@ -842,12 +861,13 @@ StructuralViewPlugin::insertInView (Entity *entity, bool undo)
                           .isEmpty ())
             {
               properties.insert (
-                  STR_PROPERTY_EDGE_TAIL,
-                  _mapCoreToView.value (entity->getParentUniqueId ()));
-              properties.insert (
                   STR_PROPERTY_EDGE_HEAD,
                   properties.value (STR_PROPERTY_REFERENCE_COMPONENT_UID));
             }
+
+            properties.insert (
+                STR_PROPERTY_EDGE_TAIL,
+                _mapCoreToView.value (entity->getParentUniqueId ()));
           }
         }
       }
