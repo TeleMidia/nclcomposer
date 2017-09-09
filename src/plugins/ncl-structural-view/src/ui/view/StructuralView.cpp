@@ -1654,7 +1654,7 @@ StructuralView::adjustReferences (StructuralEntity *entity)
 
                   bind->setProperty (
                         STR_PROPERTY_REFERENCE_COMPONENT_ID,
-                        entity->getParent()->getUid());
+                        entity->getParent()->getId());
 
                   bind->setProperty (
                         STR_PROPERTY_REFERENCE_COMPONENT_UID,

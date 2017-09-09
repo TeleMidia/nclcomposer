@@ -171,7 +171,18 @@ StructuralViewPlugin::updateFromModel ()
         QString pId = "";
 
         if (e->getParent () != nullptr)
+        {
           pId = e->getParent ()->getId ();
+        }
+        else
+        {
+          Entity* body = getProject()->getEntitiesbyType("body").first();
+
+          if (body != nullptr)
+          {
+            pId = body->getAttribute("id");
+          }
+        }
 
         QMap<QString, QString> properties = e->getProperties ();
 
@@ -275,7 +286,18 @@ StructuralViewPlugin::updateFromModel ()
     QString pId = "";
 
     if (e->getParent () != nullptr)
+    {
       pId = e->getParent ()->getId ();
+    }
+    else
+    {
+      Entity* body = getProject()->getEntitiesbyType("body").first();
+
+      if (body != nullptr)
+      {
+        pId = body->getAttribute("id");
+      }
+    }
 
     QMap<QString, QString> settings
         = StructuralUtil::createSettings (false, false);
