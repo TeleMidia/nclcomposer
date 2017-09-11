@@ -168,21 +168,7 @@ StructuralViewPlugin::updateFromModel ()
 
       if (!e->getId ().isEmpty ())
       {
-        QString pId = "";
-
-        if (e->getParent () != nullptr)
-        {
-          pId = e->getParent ()->getId ();
-        }
-        else
-        {
-          Entity* body = getProject()->getEntitiesbyType("body").first();
-
-          if (body != nullptr)
-          {
-            pId = body->getAttribute("id");
-          }
-        }
+        QString cacheId = createCacheId(e);
 
         QMap<QString, QString> properties = e->getProperties ();
 
@@ -196,7 +182,7 @@ StructuralViewPlugin::updateFromModel ()
             properties.remove (key);
         }
 
-        cache.insert (e->getId () + pId, properties);
+        cache.insert (e->getId () + cacheId, properties);
       }
     }
   }
@@ -283,21 +269,7 @@ StructuralViewPlugin::updateFromModel ()
 
     Q_ASSERT (e != nullptr);
 
-    QString pId = "";
-
-    if (e->getParent () != nullptr)
-    {
-      pId = e->getParent ()->getId ();
-    }
-    else
-    {
-      Entity* body = getProject()->getEntitiesbyType("body").first();
-
-      if (body != nullptr)
-      {
-        pId = body->getAttribute("id");
-      }
-    }
+    QString cacheId = createCacheId(e);
 
     QMap<QString, QString> settings
         = StructuralUtil::createSettings (false, false);
@@ -312,10 +284,10 @@ StructuralViewPlugin::updateFromModel ()
       continue;
 
     // Setting cached data...
-    if (cache.contains (e->getId () + pId))
+    if (cache.contains (e->getId () + cacheId))
     {
       QMap<QString, QString> properties
-          = cache.value (e->getId () + pId);
+          = cache.value (e->getId () + cacheId);
       properties.insert (STR_PROPERTY_ENTITY_UID, e->getUid ());
 
       QMap<QString, QString> translations
@@ -1627,6 +1599,42 @@ StructuralViewPlugin::validationError (QString pluginID, void *param)
       _window->getView ()->setError (_mapCoreToView.value (p->first),
                                      p->second);
   }
+}
+
+QString
+StructuralViewPlugin::createCacheId (StructuralEntity* entity)
+{
+  QString cacheId = "";
+
+  if (entity->getParent () != nullptr)
+  {
+    cacheId = entity->getParent ()->getId ();
+  }
+  else
+  {
+    Entity* body = getProject ()->getEntitiesbyType ("body").first ();
+
+    if (body != nullptr)
+    {
+      cacheId = body->getAttribute ("id");
+    }
+  }
+
+  if (entity->getType () == Structural::Bind)
+  {
+    StructuralEntity* l = _window->getView ()->getEntity (
+          entity->getProperty (STR_PROPERTY_REFERENCE_LINK_UID));
+
+    if (l != nullptr)
+    {
+      cacheId += entity->getProperty (STR_PROPERTY_REFERENCE_LINK_ID);
+    }
+
+    cacheId += entity->getProperty (STR_PROPERTY_REFERENCE_COMPONENT_ID);
+    cacheId += entity->getProperty (STR_PROPERTY_REFERENCE_INTERFACE_ID);
+  }
+
+  return cacheId;
 }
 
 QString
