@@ -4,6 +4,8 @@ project(nclcomposer_core)
 set(CMAKE_INCLUDE_CURRENTDIR ON)
 set(CMAKE_AUTOMOC ON)
 
+add_definitions(-DNCLCOMPOSER_CORE_VERSION="${VERSION}")
+
 find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 
 set(NCLCOMPOSER_CORE_HEADERS

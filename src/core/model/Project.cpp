@@ -219,7 +219,7 @@ Project::toString (int ntabs, bool writeuid)
 
   QString result = "";
   result += "#COMPOSER_PROJECT name=\"" + this->_projectName
-            + "\" version=\"0.1\"#\n";
+            + "\" version=\"" + NCLCOMPOSER_CORE_VERSION + "\"#\n";
 
   result += "#COMPOSER_MODEL#\n";
   result += Entity::toString (0);
