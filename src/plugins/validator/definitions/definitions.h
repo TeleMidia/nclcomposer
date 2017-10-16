@@ -34,7 +34,7 @@ typedef string virtualId;
 class Attribute
 {
 public:
-  inline explicit Attribute (){};
+  inline explicit Attribute () {}
   inline explicit Attribute (string name, string value)
   {
     _name = name;

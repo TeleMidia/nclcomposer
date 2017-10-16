@@ -31,6 +31,7 @@ CPR_NCLPROFILE_BEGIN_NAMESPACE
 /*!
  * \brief Class that keep information about the language description.
  *
+ * \todo Improve the parser error reporting.
  */
 class NCLLANGUAGEPROFILESHARED_EXPORT NCLStructure
 {

@@ -230,6 +230,7 @@ NCLStructure::parseLine (const QString &line)
     }
     i++;
   }
+
   return ret;
 }
 

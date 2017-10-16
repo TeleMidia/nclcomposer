@@ -859,7 +859,7 @@ ComposerMainWindow::showEditPreferencesDialog ()
 void
 ComposerMainWindow::startOpenProject (QString project)
 {
-  (void)project;
+  Q_UNUSED (project);
 
   this->setCursor (QCursor (Qt::WaitCursor));
   update ();
