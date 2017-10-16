@@ -8,15 +8,16 @@ ENDIF(WIN32)
 
 # Current date and time
 string(TIMESTAMP BUILD_DATE "%Y-%m-%d %H:%M")
-add_definitions(-DBUILD_DATE="${BUILD_DATE}")
 
 # Definitions
-add_definitions(-DNCLCOMPOSER_GUI_VERSION="${VERSION}")
-add_definitions(-DNCL_COMPOSER_NOTIFY_URL="http://composer.telemidia.puc-rio.br/")
-add_definitions(-DDEFAULT_MIN_MESSAGE_ID_TO_SHOW=1)
-add_definitions(-DDEFAULT_MAX_NOTIFY_MESSAGES=3)
-add_definitions(-DQTOOLWINDOWMANAGER_BUILD_LIB)
-add_definitions(-DDATA_PATH="~/")
+add_definitions(
+  -DBUILD_DATE="${BUILD_DATE}"
+  -DNCLCOMPOSER_GUI_VERSION="${VERSION}"
+  -DNCL_COMPOSER_NOTIFY_URL="http://composer.telemidia.puc-rio.br/"
+  -DDEFAULT_MIN_MESSAGE_ID_TO_SHOW=1
+  -DDEFAULT_MAX_NOTIFY_MESSAGES=3
+  -DQTOOLWINDOWMANAGER_BUILD_LIB
+  -DDATA_PATH="~/")
 
 # CMake/Qt Integration
 set(CMAKE_INCLUDE_CURRENTDIR ON)

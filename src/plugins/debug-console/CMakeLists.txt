@@ -20,7 +20,7 @@ add_library(debugconsole SHARED
   ${DEBUG_CONSOLE_SOURCES}
 )
 
-target_link_libraries (debugconsole
+target_link_libraries(debugconsole
   nclcomposer_core
   Qt5::Widgets
 )
@@ -29,4 +29,4 @@ target_include_directories (debugconsole
   PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-install (TARGETS debugconsole DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})
+install(TARGETS debugconsole DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})

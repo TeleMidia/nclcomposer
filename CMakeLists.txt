@@ -75,6 +75,15 @@ if(DOXYGEN_FOUND)
   )
 endif(DOXYGEN_FOUND)
 
+##
+# Add uninstall target
+# Requirements: Copy the uninstall.cmake file to the appropriate
+# CMAKE_MODULE_PATH.
+add_custom_target(uninstall
+  "${CMAKE_COMMAND}" -P "${CMAKE_MODULE_PATH}/uninstall.cmake"
+)
+
+# Feature summary
 include(FeatureSummary)
 feature_summary(WHAT ALL
                 INCLUDE_QUIET_PACKAGES
@@ -107,7 +116,9 @@ set(CPACK_DEBIAN_PACKAGE_DESCRIPTION
 )
 set(CPACK_DEBIAN_PACKAGE_SECTION "contrib/graphics")
 
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt5core5a, libqt5gui5, libqt5network5, libqt5xml5, libqt5svg5, libqt5webkit5, libqt5help5")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS
+    "libqt5core5a, libqt5gui5, libqt5network5, libqt5xml5, libqt5svg5, \
+     libqt5webkit5, libqt5help5")
 
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 # Copy QT's dynamic libs
@@ -129,5 +140,5 @@ if(WIN32)
           DESTINATION bin/plugins/platforms)
 endif()
 
-# This must always be last!
+# This must always be the last!
 include(CPack)
