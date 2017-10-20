@@ -321,13 +321,13 @@ StructuralWindow::createConnections ()
   connect (_portAction, &QAction::triggered, _view, &StructuralView::performPort);
   connect (_switchportAction, &QAction::triggered, _view, &StructuralView::performSwitchPort);
 
-  connect (_view, &StructuralView::switchedUndo, this, &StructuralWindow::switchUndo);
-  connect (_view, &StructuralView::switchedRedo, this, &StructuralWindow::switchRedo);
-  connect (_view, &StructuralView::switchedCut, this, &StructuralWindow::switchCut);
-  connect (_view, &StructuralView::switchedCopy, this, &StructuralWindow::switchCopy);
-  connect (_view, &StructuralView::switchedPaste, this, &StructuralWindow::switchPaste);
-  connect (_view, &StructuralView::switchedDelete, this, &StructuralWindow::switchDelete);
-  connect (_view, &StructuralView::switchedSnapshot, this, &StructuralWindow::switchSnapshot);
+  connect (_view, &StructuralView::switchedUndo, _undoAction, &QAction::setEnabled);
+  connect (_view, &StructuralView::switchedRedo, _redoAction, &QAction::setEnabled);
+  connect (_view, &StructuralView::switchedCut, _cutAction, &QAction::setEnabled);
+  connect (_view, &StructuralView::switchedCopy, _copyAction, &QAction::setEnabled);
+  connect (_view, &StructuralView::switchedPaste, _pasteAction, &QAction::setEnabled);
+  connect (_view, &StructuralView::switchedDelete, _deleteAction, &QAction::setEnabled);
+  connect (_view, &StructuralView::switchedSnapshot, _snapshotAction, &QAction::setEnabled);
 
 
   connect (_view, &StructuralView::zoomChanged, this, &StructuralWindow::handleZoomChanged);
@@ -337,48 +337,6 @@ StructuralWindow::createConnections ()
   connect (_view, &StructuralView::switchedBody, this, &StructuralWindow::switchBody);
 
   connect (_view, &StructuralView::selected, this, &StructuralWindow::select);
-}
-
-void
-StructuralWindow::switchUndo (bool state)
-{
-  _undoAction->setEnabled (state);
-}
-
-void
-StructuralWindow::switchRedo (bool state)
-{
-  _redoAction->setEnabled (state);
-}
-
-void
-StructuralWindow::switchCut (bool state)
-{
-  _cutAction->setEnabled (state);
-}
-
-void
-StructuralWindow::switchCopy (bool state)
-{
-  _copyAction->setEnabled (state);
-}
-
-void
-StructuralWindow::switchPaste (bool state)
-{
-  _pasteAction->setEnabled (state);
-}
-
-void
-StructuralWindow::switchDelete (bool state)
-{
-  _deleteAction->setEnabled (state);
-}
-
-void
-StructuralWindow::switchSnapshot (bool state)
-{
-  _snapshotAction->setEnabled (state);
 }
 
 void
@@ -515,9 +473,9 @@ StructuralWindow::select (QString uid, QMap<QString, QString> settings)
       }
     }
 
-    switchCut (true);
-    switchCopy (true);
-    switchDelete (true);
+    _cutAction->setEnabled (true);
+    _copyAction->setEnabled (true);
+    _deleteAction->setEnabled (true);
   }
   else
   {
@@ -553,8 +511,8 @@ StructuralWindow::select (QString uid, QMap<QString, QString> settings)
       }
     }
 
-    switchCut (false);
-    switchCopy (false);
-    switchDelete (false);
+    _cutAction->setEnabled (false);
+    _copyAction->setEnabled (false);
+    _deleteAction->setEnabled (false);
   }
 }

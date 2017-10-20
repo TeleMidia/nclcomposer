@@ -21,13 +21,6 @@ public:
   void setView (StructuralView *view);
 
 protected slots:
-  void switchUndo (bool state);
-  void switchRedo (bool state);
-  void switchCut (bool state);
-  void switchCopy (bool state);
-  void switchPaste (bool state);
-  void switchDelete (bool state);
-  void switchSnapshot (bool state);
   void handleZoomChanged (int zoom);
   void switchPointer (bool state);
   void switchLink (bool state);
@@ -42,31 +35,18 @@ private:
   void createStatusbar ();
   void createConnections ();
 
-  QToolBar *_editToolbar;
-  QToolBar *_insertToolbar;
-  QToolBar *_windowToolbar;
+  QToolBar *_editToolbar, *_insertToolbar, *_windowToolbar;
 
-  QAction *_undoAction;
-  QAction *_redoAction;
-  QAction *_cutAction;
-  QAction *_copyAction;
-  QAction *_pasteAction;
-  QAction *_deleteAction;
-  QAction *_snapshotAction;
-  QAction *_zoominAction;
-  QAction *_zoomoutAction;
-  QAction *_zoomresetAction;
-  QAction *_pointerAction;
-  QAction *_linkAction;
-  QAction *_minimapAction;
-  QAction *_mediaAction;
-  QAction *_contextAction;
-  QAction *_switchAction;
-  QAction *_bodyAction;
-  QAction *_areaAction;
-  QAction *_propertyAction;
-  QAction *_portAction;
-  QAction *_switchportAction;
+  QAction *_undoAction, *_redoAction;
+  QAction *_cutAction, *_copyAction, *_pasteAction, *_deleteAction;
+  QAction *_snapshotAction, *_zoominAction, *_zoomoutAction, *_zoomresetAction,
+          *_minimapAction;
+
+  QAction *_pointerAction, *_linkAction;
+
+  QAction *_mediaAction, *_contextAction, *_switchAction, *_bodyAction,
+          *_areaAction, *_propertyAction, *_portAction, *_switchportAction;
+
   QAction *_preferencesAction;
 
   QActionGroup *_insertActionGroup;
