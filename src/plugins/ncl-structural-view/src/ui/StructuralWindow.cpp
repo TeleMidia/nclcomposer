@@ -1,12 +1,14 @@
 #include "StructuralWindow.h"
 
-StructuralWindow::StructuralWindow (QWidget *parent) : QMainWindow (parent)
+StructuralWindow::StructuralWindow (QWidget *parent) : QMainWindow (parent),
+  _view (new StructuralView (this))
 {
-  createWidgets ();
   createActions ();
   createToolbar ();
   createStatusbar ();
   createConnections ();
+
+  setCentralWidget (_view);
 }
 
 StructuralWindow::~StructuralWindow () {}
@@ -34,70 +36,70 @@ StructuralWindow::createActions ()
   _undoAction->setShortcut (QKeySequence ("Ctrl+Z"));
 
   // redo action
-  _redoAction = new QAction ((QObject *)this);
+  _redoAction = new QAction (this);
   _redoAction->setEnabled (false);
   _redoAction->setText (tr ("Redo"));
   _redoAction->setIcon (QIcon (":/icon/redo"));
   _redoAction->setShortcut (QKeySequence ("Ctrl+Shift+Z"));
 
   // cut action
-  _cutAction = new QAction ((QObject *)this);
+  _cutAction = new QAction (this);
   _cutAction->setEnabled (false);
   _cutAction->setText (tr ("Cut"));
   _cutAction->setIcon (QIcon (":/icon/cut"));
   _cutAction->setShortcut (QKeySequence ("Ctrl+X"));
 
   // copy action
-  _copyAction = new QAction ((QObject *)this);
+  _copyAction = new QAction (this);
   _copyAction->setEnabled (false);
   _copyAction->setText (tr ("Copy"));
   _copyAction->setIcon (QIcon (":/icon/copy"));
   _copyAction->setShortcut (QKeySequence ("Ctrl+C"));
 
   // paste action
-  _pasteAction = new QAction ((QObject *)this);
+  _pasteAction = new QAction (this);
   _pasteAction->setEnabled (false);
   _pasteAction->setText (tr ("Paste"));
   _pasteAction->setIcon (QIcon (":/icon/paste"));
   _pasteAction->setShortcut (QKeySequence ("Ctrl+V"));
 
   // delete action
-  _deleteAction = new QAction ((QObject *)this);
+  _deleteAction = new QAction (this);
   _deleteAction->setEnabled (false);
   _deleteAction->setText (tr ("Delete"));
   _deleteAction->setToolTip (tr ("Delete"));
   _deleteAction->setIcon (QIcon (":/icon/delete"));
 
   // snapshot action
-  _snapshotAction = new QAction ((QObject *)this);
+  _snapshotAction = new QAction (this);
   _snapshotAction->setEnabled (true);
   _snapshotAction->setText (tr ("Snapshot"));
   _snapshotAction->setToolTip (tr ("Take a Snapshot..."));
   _snapshotAction->setIcon (QIcon (":/icon/snapshot"));
 
   // zoomin action
-  _zoominAction = new QAction ((QObject *)this);
+  _zoominAction = new QAction (this);
   _zoominAction->setEnabled (false);
   _zoominAction->setText (tr ("Zoom In"));
   _zoominAction->setIcon (QIcon (":/icon/zoomin"));
   _zoominAction->setShortcut (QKeySequence ("Ctrl++"));
 
   // zoomout action
-  _zoomoutAction = new QAction ((QObject *)this);
+  _zoomoutAction = new QAction (this);
   _zoomoutAction->setEnabled (true);
   _zoomoutAction->setText (tr ("Zoom Out"));
   _zoomoutAction->setIcon (QIcon (":/icon/zoomout"));
   _zoomoutAction->setShortcut (QKeySequence ("Ctrl+-"));
 
   // zoomreset action
-  _zoomresetAction = new QAction ((QObject *)this);
+  _zoomresetAction = new QAction (this);
   _zoomresetAction->setEnabled (false);
   _zoomresetAction->setText (tr ("Reset Zoom"));
   _zoomresetAction->setIcon (QIcon (":/icon/zoomreset"));
   _zoomresetAction->setShortcut (QKeySequence ("Ctrl+0"));
 
   // pointer action
-  _pointerAction = new QAction ((QObject *)this);
+  _pointerAction = new QAction (this);
   _pointerAction->setEnabled (true);
   _pointerAction->setCheckable (true);
   _pointerAction->setChecked (true);
@@ -107,7 +109,7 @@ StructuralWindow::createActions ()
   _pointerAction->setShortcut (QKeySequence ("1"));
 
   // link action
-  _linkAction = new QAction ((QObject *)this);
+  _linkAction = new QAction (this);
   _linkAction->setEnabled (true);
   _linkAction->setCheckable (true);
   _linkAction->setChecked (false);
@@ -117,7 +119,7 @@ StructuralWindow::createActions ()
   _linkAction->setShortcut (QKeySequence ("2"));
 
   // media action
-  _mediaAction = new QAction ((QObject *)this);
+  _mediaAction = new QAction (this);
   _mediaAction->setEnabled (false);
   _mediaAction->setText (tr ("Media"));
   _mediaAction->setToolTip (tr ("Insert &lt;media&gt; entity"));
@@ -125,7 +127,7 @@ StructuralWindow::createActions ()
   _mediaAction->setShortcut (QKeySequence ("3"));
 
   // context action
-  _contextAction = new QAction ((QObject *)this);
+  _contextAction = new QAction (this);
   _contextAction->setEnabled (false);
   _contextAction->setText (tr ("Context"));
   _contextAction->setToolTip (tr ("Insert &lt;context&gt; entity"));
@@ -133,7 +135,7 @@ StructuralWindow::createActions ()
   _contextAction->setShortcut (QKeySequence ("4"));
 
   // switch action
-  _switchAction = new QAction ((QObject *)this);
+  _switchAction = new QAction (this);
   _switchAction->setEnabled (false);
   _switchAction->setText (tr ("Switch"));
   _switchAction->setToolTip (tr ("Insert &lt;switch&gt; entity"));
@@ -141,7 +143,7 @@ StructuralWindow::createActions ()
   _switchAction->setShortcut (QKeySequence ("5"));
 
   // body action
-  _bodyAction = new QAction ((QObject *)this);
+  _bodyAction = new QAction (this);
   _bodyAction->setEnabled (true);
   _bodyAction->setText (tr ("Body"));
   _bodyAction->setToolTip (tr ("Insert &lt;body&gt; entity"));
@@ -149,7 +151,7 @@ StructuralWindow::createActions ()
   _bodyAction->setShortcut (QKeySequence ("6"));
 
   // area action
-  _areaAction = new QAction ((QObject *)this);
+  _areaAction = new QAction (this);
   _areaAction->setEnabled (false);
   _areaAction->setText (tr ("Area"));
   _areaAction->setToolTip (tr ("Insert &lt;area&gt; entity"));
@@ -157,7 +159,7 @@ StructuralWindow::createActions ()
   _areaAction->setShortcut (QKeySequence ("7"));
 
   // property action
-  _propertyAction = new QAction ((QObject *)this);
+  _propertyAction = new QAction (this);
   _propertyAction->setEnabled (false);
   _propertyAction->setText (tr ("Property"));
   _propertyAction->setToolTip (tr ("Insert &lt;property&gt; entity"));
@@ -165,7 +167,7 @@ StructuralWindow::createActions ()
   _propertyAction->setShortcut (QKeySequence ("8"));
 
   // port action
-  _portAction = new QAction ((QObject *)this);
+  _portAction = new QAction (this);
   _portAction->setEnabled (false);
   _portAction->setText (tr ("Port"));
   _portAction->setToolTip (tr ("Insert &lt;port&gt; entity"));
@@ -173,7 +175,7 @@ StructuralWindow::createActions ()
   _portAction->setShortcut (QKeySequence ("9"));
 
   // switchport action
-  _switchportAction = new QAction ((QObject *)this);
+  _switchportAction = new QAction (this);
   _switchportAction->setEnabled (false);
   _switchportAction->setText (tr ("Switch Port"));
   _switchportAction->setToolTip (tr ("Insert &lt;switchport&gt; entity"));
@@ -181,7 +183,7 @@ StructuralWindow::createActions ()
   _switchportAction->setShortcut (QKeySequence ("0"));
 
   // minimap action
-  _minimapAction = new QAction ((QObject *)this);
+  _minimapAction = new QAction (this);
   _minimapAction->setEnabled (true);
   _minimapAction->setCheckable (true);
   _minimapAction->setChecked (true);
@@ -191,14 +193,14 @@ StructuralWindow::createActions ()
   _minimapAction->setShortcut (QKeySequence ("Ctrl+M"));
 
   // preferences action
-  _preferencesAction = new QAction ((QObject *)this);
+  _preferencesAction = new QAction (this);
   _preferencesAction->setEnabled (true);
   _preferencesAction->setText (tr ("Preferences..."));
   _preferencesAction->setIcon (QIcon (":/icon/preferences"));
   _preferencesAction->setShortcut (QKeySequence ("Ctrl+P"));
 
   // insert group
-  _insertActionGroup = new QActionGroup ((QObject *)this);
+  _insertActionGroup = new QActionGroup (this);
   _insertActionGroup->setExclusive (true);
 
   _insertActionGroup->addAction (_linkAction);
@@ -277,14 +279,6 @@ StructuralWindow::createToolbar ()
 #endif
 
   select ("", StructuralUtil::createSettings ());
-}
-
-void
-StructuralWindow::createWidgets ()
-{
-  _view = new StructuralView (this);
-
-  setCentralWidget (_view);
 }
 
 void
