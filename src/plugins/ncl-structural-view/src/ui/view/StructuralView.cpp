@@ -11,10 +11,13 @@
 
 #include "StructuralUtil.h"
 
-StructuralView::StructuralView (QWidget *parent) : QGraphicsView (parent)
+StructuralView::StructuralView (QWidget *parent) : QGraphicsView (parent),
+  _minimap (new StructuralMinimap (this)),
+  _menu (new StructuralMenu (this)),
+  _dialog (new StructuralLinkDialog (this)),
+  _scene (new StructuralScene (this))
 {
-  createObjects ();
-  createConnection ();
+  createConnections ();
 
   _mode = Structural::Pointing;
 
@@ -32,6 +35,20 @@ StructuralView::StructuralView (QWidget *parent) : QGraphicsView (parent)
   setAttribute (Qt::WA_TranslucentBackground);
   setAcceptDrops (true);
   //  setDragMode(ScrollHandDrag);
+
+  // Initialize scene
+  _scene->setMenu (_menu);
+
+  // Initialize minimap...
+  _minimap->init (this);
+  _minimap->setMinimumSize (STR_DEFAULT_MINIMAP_W, STR_DEFAULT_MINIMAP_H);
+  _minimap->setMaximumSize (STR_DEFAULT_MINIMAP_W * 2,
+                            STR_DEFAULT_MINIMAP_H * 2);
+  _minimap->show ();
+
+  // Setting...
+  setScene (_scene);
+  centerOn (0, 0);
 }
 
 StructuralView::~StructuralView ()
@@ -304,32 +321,6 @@ StructuralView::save ()
 }
 
 void
-StructuralView::createObjects ()
-{
-  // Creating menu...
-  _menu = new StructuralMenu (this);
-
-  // Creating scene...
-  _scene = new StructuralScene (this);
-  _scene->setMenu (_menu);
-
-  // Creating minimap...
-  _minimap = new StructuralMinimap (this);
-  _minimap->init (this);
-  _minimap->setMinimumSize (STR_DEFAULT_MINIMAP_W, STR_DEFAULT_MINIMAP_H);
-  _minimap->setMaximumSize (STR_DEFAULT_MINIMAP_W * 2,
-                            STR_DEFAULT_MINIMAP_H * 2);
-  _minimap->show ();
-
-  // Creating dialogs
-  _dialog = new StructuralLinkDialog (this);
-
-  // Setting...
-  setScene (_scene);
-  centerOn (0, 0);
-}
-
-void
 StructuralView::resizeEvent (QResizeEvent *event)
 {
   _minimap->move (event->size ().width () - _minimap->width (),
@@ -339,7 +330,7 @@ StructuralView::resizeEvent (QResizeEvent *event)
 }
 
 void
-StructuralView::createConnection ()
+StructuralView::createConnections ()
 {
   // Connecting with menu...
   connect (this, SIGNAL (switchedUndo (bool)), _menu,

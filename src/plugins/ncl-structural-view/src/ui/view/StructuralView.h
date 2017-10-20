@@ -159,8 +159,7 @@ protected:
   virtual void resizeEvent (QResizeEvent *event);
 
 private:
-  void createObjects ();
-  void createConnection ();
+  void createConnections ();
 
   void createEntity (StructuralType type);
   void createEntity (StructuralType type, QMap<QString, QString> properties,
@@ -206,16 +205,14 @@ private:
 
   QUndoStack _commnads;
 
+  StructuralMinimap *_minimap;
   StructuralMenu *_menu;
+  StructuralLinkDialog *_dialog;
   StructuralScene *_scene;
   StructuralLinkTool *_tool;
-  StructuralLinkDialog *_dialog;
-  StructuralMinimap *_minimap;
 
   QMap<StructuralType, int> _counter;
-
   QMap<QString, QString> _references;
-
   QMap<QString, StructuralEntity *> _entities;
 };
 
