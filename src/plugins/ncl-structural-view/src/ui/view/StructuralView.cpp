@@ -23,13 +23,13 @@ StructuralView::StructuralView (QWidget *parent) : QGraphicsView (parent),
   _zoom = ZOOM_ORIGINAL;
 
   _linking = false;
-  _linkingTail = NULL;
-  _linkingHead = NULL;
+  _linkingTail = nullptr;
+  _linkingHead = nullptr;
 
   _selected = "";
 
-  _clipboard = NULL;
-  _tool = NULL;
+  _clipboard = nullptr;
+  _tool = nullptr;
 
   setAttribute (Qt::WA_TranslucentBackground);
   setAcceptDrops (true);
@@ -61,7 +61,7 @@ StructuralView::getScene ()
 StructuralEntity *
 StructuralView::getBody ()
 {
-  StructuralEntity *entity = NULL;
+  StructuralEntity *entity = nullptr;
 
   foreach (StructuralEntity *e, _entities.values ())
   {
@@ -1869,49 +1869,48 @@ StructuralView::move (QString uid, QString parent,
                       QMap<QString, QString> properties,
                       QMap<QString, QString> settings)
 {
-  if (_entities.contains (uid))
+  Q_ASSERT (_entities.contains (uid));
+
+  //
+  // Initializing...
+  //
+  StructuralEntity *e = _entities.value (uid);
+  StructuralEntity *p = _entities.value (parent);
+
+  StructuralType type = Structural::Body;
+
+  if (p != NULL)
+    type = p->getType ();
+
+  Q_ASSERT (StructuralUtil::validateKinship (e->getType (), type));
+  if (e->getParent () != p)
   {
     //
-    // Initializing...
+    // Setting...
     //
-    StructuralEntity *e = _entities.value (uid);
-    StructuralEntity *p = _entities.value (parent);
+    foreach (StructuralEntity *entity, _entities.values ())
+      entity->setDraggable (false);
 
-    StructuralType type = Structural::Body;
+    select ("", settings);
 
-    if (p != NULL)
-      type = p->getType ();
+    StructuralEntity *copy = clone (e, NULL);
 
-    if (StructuralUtil::validateKinship (e->getType (), type)
-        && e->getParent () != p)
-    {
-      //
-      // Setting...
-      //
-      foreach (StructuralEntity *entity, _entities.values ())
-        entity->setDraggable (false);
+    foreach (const QString &name, properties.keys ())
+      copy->setProperty (name, properties.value (name));
 
-      select ("", settings);
+    copy->adjust ();
 
-      StructuralEntity *copy = clone (e, NULL);
+    if (properties.contains (STR_PROPERTY_ENTITY_TOP))
+      copy->setTop (copy->getTop () - copy->getHeight () / 2);
 
-      foreach (const QString &name, properties.keys ())
-        copy->setProperty (name, properties.value (name));
+    if (properties.contains (STR_PROPERTY_ENTITY_LEFT))
+      copy->setLeft (copy->getLeft () - copy->getWidth () / 2);
 
-      copy->adjust ();
-
-      if (properties.contains (STR_PROPERTY_ENTITY_TOP))
-        copy->setTop (copy->getTop () - copy->getHeight () / 2);
-
-      if (properties.contains (STR_PROPERTY_ENTITY_LEFT))
-        copy->setLeft (copy->getLeft () - copy->getWidth () / 2);
-
-      //
-      // Moving...
-      //
-      paste (copy, p, settings.value (STR_SETTING_CODE), false);
-      remove (uid, settings);
-    }
+    //
+    // Moving...
+    //
+    paste (copy, p, settings.value (STR_SETTING_CODE), false);
+    remove (uid, settings);
   }
 }
 
@@ -1937,8 +1936,7 @@ StructuralView::createEntity (StructuralType type,
     parent = _selected;
 
   if (!properties.contains (STR_PROPERTY_ENTITY_TYPE))
-    properties[STR_PROPERTY_ENTITY_TYPE]
-        = StructuralUtil::typeToString (type);
+    properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::typeToString (type);
 
   if (!settings.contains (STR_SETTING_UNDO))
     settings[STR_SETTING_UNDO] = STR_VALUE_TRUE;
@@ -1961,86 +1959,76 @@ StructuralView::performHelp ()
 void
 StructuralView::performAutostart ()
 {
-  if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+  Q_ASSERT_X (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES,
+              "performAutostart",
+              "Autostart is only available when when body and floating"
+              "interfaces are disabled in build");
+
+  Q_ASSERT (_entities.contains (_selected));
+
+  StructuralEntity *e = _entities.value (_selected);
+  QMap<QString, QString> props = e->getProperties ();
+
+  QMap<QString, QString> settings
+      = StructuralUtil::createSettings (true, true);
+
+  // Case 1: media already has an autostart property
+  if (props.contains (STR_PROPERTY_ENTITY_AUTOSTART) &&
+      props[STR_PROPERTY_ENTITY_AUTOSTART] == STR_VALUE_TRUE)
   {
-    if (_entities.contains (_selected))
+    QVector<StructuralEntity *> neighbors
+        = StructuralUtil::getNeighbors (e);
+
+    if (e->getCategory() == Structural::Interface) // Why?
+      neighbors += StructuralUtil::getUpNeighbors (e);
+
+    foreach (StructuralEntity* neighbor, neighbors)
     {
-      StructuralEntity *entity = _entities.value (_selected);
-
-      QMap<QString, QString> eProperties
-          = entity->getProperties ();
-
-      QMap<QString, QString> settings
-          = StructuralUtil::createSettings (true, true);
-
-      if (eProperties.contains (STR_PROPERTY_ENTITY_AUTOSTART) &&
-          eProperties[STR_PROPERTY_ENTITY_AUTOSTART] == STR_VALUE_TRUE)
+      if (neighbor->getCategory() == Structural::Interface)
       {
-        QVector<StructuralEntity *> relatives;
-        relatives += StructuralUtil::getNeighbors (entity);
-
-        if (entity->getCategory() == Structural::Interface)
-          relatives += StructuralUtil::getUpNeighbors (entity);
-
-        foreach (StructuralEntity* e, relatives)
+        if (neighbor->getProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID)
+            == e->getUid())
         {
-          if (entity->getCategory() == Structural::Interface)
-          {
-            if (e->getProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID)
-                == entity->getUid())
-            {
-              remove(e->getUid(), settings);
-              break;
-            }
-          }
-          else
-          {
-            if (e->getProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID)
-                == entity->getUid())
-            {
-              remove(e->getUid(), settings);
-              break;
-            }
-          }
+          remove (neighbor->getUid(), settings);
         }
-
-        eProperties[STR_PROPERTY_ENTITY_AUTOSTART] = STR_VALUE_FALSE;
       }
-      else
-      {
-        QMap<QString, QString> pProperty;
-        pProperty[STR_PROPERTY_ENTITY_TYPE]
-            = StructuralUtil::typeToString (Structural::Port);
-        pProperty.insert (STR_PROPERTY_REFERENCE_COMPONENT_UID,
-                   entity->getUid());
-        pProperty.insert (STR_PROPERTY_REFERENCE_COMPONENT_ID,
-                   entity->getId());
-
-        QString pParent = "";
-
-        entity->getParent () != nullptr ?
-              entity->getParent ()->getUid () : "";
-
-        if (entity->getCategory() == Structural::Interface &&
-            entity->getParent ()->getParent () != nullptr)
-        {
-          pParent = entity->getParent ()->getParent ()->getUid();
-        }
-        else if (entity->getParent () != nullptr)
-        {
-          pParent = entity->getParent ()->getUid();
-        }
-
-        insert(StructuralUtil::createUid (), pParent, pProperty, settings);
-
-        eProperties[STR_PROPERTY_ENTITY_AUTOSTART] = STR_VALUE_TRUE;
-      }
-
-      change (entity->getUid (), eProperties,
-              entity->getProperties (),
-              StructuralUtil::createSettings (true, true));
     }
+
+    props[STR_PROPERTY_ENTITY_AUTOSTART] = STR_VALUE_FALSE;
   }
+  // Case 2: media does not has autostart property
+  else
+  {
+    QMap<QString, QString> pProperty;
+    pProperty[STR_PROPERTY_ENTITY_TYPE]
+        = StructuralUtil::typeToString (Structural::Port);
+    pProperty.insert (STR_PROPERTY_REFERENCE_COMPONENT_UID,
+                      e->getUid());
+    pProperty.insert (STR_PROPERTY_REFERENCE_COMPONENT_ID,
+                      e->getId());
+
+    QString pParent = "";
+
+    e->getParent () != nullptr ? e->getParent ()->getUid () : "";
+
+    if (e->getCategory() == Structural::Interface &&
+        e->getParent ()->getParent () != nullptr)
+    {
+      pParent = e->getParent ()->getParent ()->getUid();
+    }
+    else if (e->getParent () != nullptr)
+    {
+      pParent = e->getParent ()->getUid();
+    }
+
+    insert (StructuralUtil::createUid (), pParent, pProperty, settings);
+
+    props[STR_PROPERTY_ENTITY_AUTOSTART] = STR_VALUE_TRUE;
+  }
+
+  change (e->getUid (), props,
+          e->getProperties (),
+          StructuralUtil::createSettings (true, true));
 }
 
 void
