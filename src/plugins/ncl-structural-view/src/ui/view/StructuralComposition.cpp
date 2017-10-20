@@ -330,7 +330,7 @@ StructuralComposition::dropEvent (QGraphicsSceneDragDropEvent *event)
 
       QMap<QString, QString> properties;
       properties[STR_PROPERTY_ENTITY_TYPE]
-          = StructuralUtil::translateTypeToString (Structural::Media);
+          = StructuralUtil::typeToString (Structural::Media);
       properties[STR_PROPERTY_ENTITY_ID]
           = StructuralUtil::formatId (QFileInfo (filename).baseName ());
       properties[STR_PROPERTY_CONTENT_LOCATION] = filename;

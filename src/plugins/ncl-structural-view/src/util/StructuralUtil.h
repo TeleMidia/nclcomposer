@@ -28,15 +28,15 @@ public:
   static QString translateCategoryToString (StructuralCategory category);
   static StructuralCategory translateStringToCategory (const QString &category);
 
-  static QString translateTypeToString (StructuralType type);
-  static StructuralType translateStringToType (const QString &type);
+  static QString typeToString (StructuralType type);
+  static StructuralType stringToType (const QString &type);
 
-  static QString translateRoleToString (StructuralRole role);
-  static StructuralRole translateStringToRole (const QString &role);
+  static QString roleToString (StructuralRole role);
+  static StructuralRole stringToRole (const QString &role);
 
-  static QString translateMimeTypeToString (StructuralMimeType mimetype);
+  static QString mimeTypeToString (StructuralMimeType mimetype);
   static StructuralMimeType
-  translateStringToMimeType (const QString &mimetype);
+  stringToMimeType (const QString &mimetype);
 
   static QString getIcon (StructuralType type);
   static QString getColor (StructuralType type);

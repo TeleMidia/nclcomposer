@@ -256,7 +256,7 @@ const std::map<QString, Structural::Type> StructuralUtil::_mapStringToType
         StructuralUtil::_mapTypeToString);
 
 QString
-StructuralUtil::translateTypeToString (StructuralType type)
+StructuralUtil::typeToString (StructuralType type)
 {
   if (_mapTypeToString.count (type))
     return _mapTypeToString.at (type);
@@ -265,7 +265,7 @@ StructuralUtil::translateTypeToString (StructuralType type)
 }
 
 StructuralType
-StructuralUtil::translateStringToType (const QString &type)
+StructuralUtil::stringToType (const QString &type)
 {
   if (_mapStringToType.count (type))
     return _mapStringToType.at (type);
@@ -295,7 +295,7 @@ const std::map<QString, Structural::Role> StructuralUtil::_mapStringToRole
         StructuralUtil::_mapRoleToString);
 
 QString
-StructuralUtil::translateRoleToString (StructuralRole role)
+StructuralUtil::roleToString (StructuralRole role)
 {
   if (_mapRoleToString.count (role))
     return _mapRoleToString.at (role);
@@ -304,7 +304,7 @@ StructuralUtil::translateRoleToString (StructuralRole role)
 }
 
 StructuralRole
-StructuralUtil::translateStringToRole (const QString &role)
+StructuralUtil::stringToRole (const QString &role)
 {
   if (_mapStringToRole.count (role))
     return _mapStringToRole.at (role);
@@ -331,7 +331,7 @@ const std::map<QString, Structural::MimeType>
         StructuralUtil::_mapMimeTypeToString);
 
 QString
-StructuralUtil::translateMimeTypeToString (StructuralMimeType mimetype)
+StructuralUtil::mimeTypeToString (StructuralMimeType mimetype)
 {
   if (_mapMimeTypeToString.count (mimetype))
     return _mapMimeTypeToString.at (mimetype);
@@ -340,7 +340,7 @@ StructuralUtil::translateMimeTypeToString (StructuralMimeType mimetype)
 }
 
 StructuralMimeType
-StructuralUtil::translateStringToMimeType (const QString &mimetype)
+StructuralUtil::stringToMimeType (const QString &mimetype)
 {
   if (_mapStringToMimeType.count (mimetype))
     return _mapStringToMimeType.at (mimetype);
@@ -428,7 +428,7 @@ StructuralUtil::getTooltip (StructuralType type, const QString &title,
   QString tooltip;
 
   // Adding type
-  tooltip += translateTypeToString (type);
+  tooltip += typeToString (type);
   tooltip += " ";
 
   // Adding title
@@ -497,7 +497,7 @@ StructuralUtil::getMimeTypeTooltip (StructuralMimeType mimetype,
   QString tooltip;
 
   // Adding type
-  tooltip += translateMimeTypeToString (mimetype);
+  tooltip += mimeTypeToString (mimetype);
   tooltip += " ";
 
   // Adding title

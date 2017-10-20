@@ -46,7 +46,6 @@ public:
   virtual ~StructuralView ();
 
   StructuralScene *getScene ();
-  StructuralMenu *getMenu ();
   StructuralEntity *getBody ();
   StructuralLinkDialog *getDialog ();
 
@@ -57,7 +56,6 @@ public:
   StructuralMode getMode () const;
   void setMode (StructuralMode mode);
 
-  QString getError (const QString &uid) const;
   void setError (const QString &uid, const QString &error);
 
   void cleanErrors ();
@@ -79,6 +77,13 @@ public slots:
   void move (QString uid, QString parent, QMap<QString, QString> properties,
              QMap<QString, QString> settings);
 
+  void performZoomIn ();
+  void performZoomOut ();
+  void performZoomOriginal ();
+  void performSnapshot ();
+  void performMinimap ();
+
+  // FIXME: This methods should not be part of StructuralView
   void performHelp ();
   void performAutostart ();
   void performUndo ();
@@ -86,14 +91,9 @@ public slots:
   void performCut ();
   void performCopy ();
   void performPaste ();
-  void performZoomIn ();
-  void performZoomOut ();
-  void performZoomOriginal ();
   void performPointer ();
   void performLink ();
   void performDelete ();
-  void performSnapshot ();
-  void performMinimap ();
   void performMedia ();
   void performContext ();
   void performSwitch ();
@@ -193,8 +193,8 @@ private:
   StructuralMode _mode;
 
   int _zoom; // an integer in %  (varing from ZOOM_MIN to ZOOM_MAX)
-
   bool _linking;
+
   StructuralEntity *_linkingTail;
   StructuralEntity *_linkingHead;
 
@@ -203,7 +203,7 @@ private:
   StructuralEntity *_clipboard;
   QMap<QString, QString> _clipboardReferences;
 
-  QUndoStack _commnads;
+  QUndoStack _commands;
 
   StructuralMinimap *_minimap;
   StructuralMenu *_menu;

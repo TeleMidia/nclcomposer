@@ -378,7 +378,7 @@ StructuralViewPlugin::updateFromModel ()
       {
         if (!properties.value (STR_PROPERTY_ENTITY_ID).isEmpty ())
         {
-          StructuralRole role = StructuralUtil::translateStringToRole (
+          StructuralRole role = StructuralUtil::stringToRole (
               properties.value (STR_PROPERTY_ENTITY_ID));
 
           QString coreBindUID = _mapViewToCore.value (e->getUid ());
@@ -753,7 +753,7 @@ StructuralViewPlugin::insertInView (Entity *entity, bool undo)
   QMap<QString, QString> properties;
 
   Structural::Type type
-      = StructuralUtil::translateStringToType (entity->getType ());
+      = StructuralUtil::stringToType (entity->getType ());
 
   if (type != Structural::NoType)
   {
@@ -812,11 +812,11 @@ StructuralViewPlugin::insertInView (Entity *entity, bool undo)
 
         if (!properties.value (STR_PROPERTY_ENTITY_ID).isEmpty ())
         {
-          StructuralRole role = StructuralUtil::translateStringToRole (
+          StructuralRole role = StructuralUtil::stringToRole (
               properties.value (STR_PROPERTY_ENTITY_ID));
 
           properties.insert (STR_PROPERTY_BIND_ROLE,
-                             StructuralUtil::translateRoleToString (role));
+                             StructuralUtil::roleToString (role));
           properties.insert (
               STR_PROPERTY_REFERENCE_LINK_UID,
               _mapCoreToView.value (entity->getParentUniqueId ()));
@@ -1000,7 +1000,7 @@ StructuralViewPlugin::changeInView (Entity *entity)
   QMap<QString, QString> properties;
 
   Structural::Type type
-      = StructuralUtil::translateStringToType (entity->getType ());
+      = StructuralUtil::stringToType (entity->getType ());
 
   if (type != Structural::NoType)
   {
@@ -1025,11 +1025,11 @@ StructuralViewPlugin::changeInView (Entity *entity)
       {
         if (!properties.value (STR_PROPERTY_ENTITY_ID).isEmpty ())
         {
-          StructuralRole role = StructuralUtil::translateStringToRole (
+          StructuralRole role = StructuralUtil::stringToRole (
               properties.value (STR_PROPERTY_ENTITY_ID));
 
           properties.insert (STR_PROPERTY_BIND_ROLE,
-                             StructuralUtil::translateRoleToString (role));
+                             StructuralUtil::roleToString (role));
           properties.insert (
               STR_PROPERTY_REFERENCE_LINK_UID,
               _mapCoreToView.value (entity->getParentUniqueId ()));
@@ -1200,7 +1200,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
 {
   Q_UNUSED (settings);
 
-  StructuralType type = StructuralUtil::translateStringToType (
+  StructuralType type = StructuralUtil::stringToType (
       properties[STR_PROPERTY_ENTITY_TYPE]);
 
   Entity *entityParent = NULL;
@@ -1286,7 +1286,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
     _waiting = true;
     _notified = uid;
 
-    emit addEntity (StructuralUtil::translateTypeToString (type),
+    emit addEntity (StructuralUtil::typeToString (type),
                     entityParent->getUniqueId (), attributes);
 
     if (type == Structural::Link || type == Structural::Bind)
@@ -1373,7 +1373,7 @@ StructuralViewPlugin::changeInCore (QString uid,
   {
     QMap<QString, QString> attributes;
 
-    Structural::Type type = StructuralUtil::translateStringToType (
+    Structural::Type type = StructuralUtil::stringToType (
         properties[STR_PROPERTY_ENTITY_TYPE]);
 
     QMap<QString, QString> translations

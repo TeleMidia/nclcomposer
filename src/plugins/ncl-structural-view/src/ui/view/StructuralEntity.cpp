@@ -115,7 +115,7 @@ StructuralEntity::setType (StructuralType type)
 {
   _type = type;
   _properties[STR_PROPERTY_ENTITY_TYPE]
-      = StructuralUtil::translateTypeToString (_type);
+      = StructuralUtil::typeToString (_type);
 
   _restrictions.clear ();
 
@@ -257,7 +257,7 @@ StructuralEntity::adjust (bool collision, bool recursion)
 
   setCategory (StructuralUtil::translateStringToCategory (
       _properties[STR_PROPERTY_ENTITY_CATEGORY]));
-  setType (StructuralUtil::translateStringToType (
+  setType (StructuralUtil::stringToType (
       _properties[STR_PROPERTY_ENTITY_TYPE]));
 
   setTop (_properties[STR_PROPERTY_ENTITY_TOP].toDouble ());
@@ -1083,7 +1083,7 @@ StructuralEntity::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
     QDrag *drag = new QDrag (event->widget ());
     QMimeData *minedata = new QMimeData ();
 
-    minedata->setObjectName (StructuralUtil::translateTypeToString (_type));
+    minedata->setObjectName (StructuralUtil::typeToString (_type));
     minedata->setText (_uid);
 
     drag->setMimeData (minedata);
@@ -1420,7 +1420,7 @@ StructuralEntity::hoverLeaveEvent (QGraphicsSceneHoverEvent *event)
 void
 StructuralEntity::dragEnterEvent (QGraphicsSceneDragDropEvent *event)
 {
-  StructuralType type = StructuralUtil::translateStringToType (
+  StructuralType type = StructuralUtil::stringToType (
       event->mimeData ()->objectName ());
 
   if (StructuralUtil::validateKinship (type, _type)
@@ -1433,7 +1433,7 @@ StructuralEntity::dragEnterEvent (QGraphicsSceneDragDropEvent *event)
 void
 StructuralEntity::dragMoveEvent (QGraphicsSceneDragDropEvent *event)
 {
-  StructuralType type = StructuralUtil::translateStringToType (
+  StructuralType type = StructuralUtil::stringToType (
       event->mimeData ()->objectName ());
 
   if (StructuralUtil::validateKinship (type, _type)
@@ -1446,7 +1446,7 @@ StructuralEntity::dragMoveEvent (QGraphicsSceneDragDropEvent *event)
 void
 StructuralEntity::dropEvent (QGraphicsSceneDragDropEvent *event)
 {
-  StructuralType type = StructuralUtil::translateStringToType (
+  StructuralType type = StructuralUtil::stringToType (
       event->mimeData ()->objectName ());
 
   if (StructuralUtil::validateKinship (type, _type)

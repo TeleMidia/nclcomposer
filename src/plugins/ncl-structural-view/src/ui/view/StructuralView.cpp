@@ -20,7 +20,6 @@ StructuralView::StructuralView (QWidget *parent) : QGraphicsView (parent),
   createConnections ();
 
   _mode = Structural::Pointing;
-
   _zoom = ZOOM_ORIGINAL;
 
   _linking = false;
@@ -34,7 +33,7 @@ StructuralView::StructuralView (QWidget *parent) : QGraphicsView (parent),
 
   setAttribute (Qt::WA_TranslucentBackground);
   setAcceptDrops (true);
-  //  setDragMode(ScrollHandDrag);
+  // setDragMode(ScrollHandDrag);
 
   // Initialize scene
   _scene->setMenu (_menu);
@@ -60,12 +59,6 @@ StructuralScene *
 StructuralView::getScene ()
 {
   return _scene;
-}
-
-StructuralMenu *
-StructuralView::getMenu ()
-{
-  return _menu;
 }
 
 StructuralEntity *
@@ -121,20 +114,6 @@ StructuralView::setMode (StructuralMode mode)
   _mode = mode;
 }
 
-QString
-StructuralView::getError (const QString &uid) const
-{
-  QString error = "";
-
-  if (_entities.contains (uid))
-  {
-    StructuralEntity *entity = _entities.value (uid);
-    error = entity->getError ();
-  }
-
-  return error;
-}
-
 void
 StructuralView::setError (const QString &uid, const QString &error)
 {
@@ -177,7 +156,7 @@ StructuralView::load (const QString &data)
         if (element.nodeName () == "entity")
         {
           if (element.attributeNode ("type").nodeValue ()
-              == StructuralUtil::translateTypeToString (Structural::Body))
+              == StructuralUtil::typeToString (Structural::Body))
           {
             hasBody = true;
             break;
@@ -472,7 +451,7 @@ StructuralView::insert (QString uid, QString parent,
     // Creating...
     //
 
-    StructuralType type = StructuralUtil::translateStringToType (
+    StructuralType type = StructuralUtil::stringToType (
         properties[STR_PROPERTY_ENTITY_TYPE]);
 
     if (p != NULL || !STR_DEFAULT_WITH_BODY)
@@ -755,7 +734,7 @@ StructuralView::insert (QString uid, QString parent,
         connect (command, SIGNAL (select (QString, QMap<QString, QString>)),
                  SLOT (select (QString, QMap<QString, QString>)));
 
-        _commnads.push (command);
+        _commands.push (command);
         emit switchedUndo (true);
       }
 
@@ -887,7 +866,7 @@ StructuralView::remove (QString uid, QMap<QString, QString> settings)
       connect (command, SIGNAL (select (QString, QMap<QString, QString>)),
                SLOT (select (QString, QMap<QString, QString>)));
 
-      _commnads.push (command);
+      _commands.push (command);
       emit switchedUndo (true);
       return;
     }
@@ -1087,7 +1066,7 @@ StructuralView::change (QString uid, QMap<QString, QString> properties,
       connect (command, SIGNAL (select (QString, QMap<QString, QString>)),
                SLOT (select (QString, QMap<QString, QString>)));
 
-      _commnads.push (command);
+      _commands.push (command);
       emit switchedUndo (true);
       return;
     }
@@ -1696,7 +1675,7 @@ StructuralView::adjustReferences (StructuralEntity *entity)
               {
                 QMap<QString, QString> properties;
                 properties[STR_PROPERTY_ENTITY_TYPE]
-                    = StructuralUtil::translateTypeToString (
+                    = StructuralUtil::typeToString (
                         Structural::Reference);
                 properties[STR_PROPERTY_EDGE_TAIL] = entity->getUid ();
                 properties[STR_PROPERTY_EDGE_HEAD] = head->getUid ();
@@ -1944,7 +1923,7 @@ StructuralView::createEntity (StructuralType type)
 {
   QMap<QString, QString> properties;
   properties[STR_PROPERTY_ENTITY_TYPE]
-      = StructuralUtil::translateTypeToString (type);
+      = StructuralUtil::typeToString (type);
 
   createEntity (type, properties, StructuralUtil::createSettings ());
 }
@@ -1962,7 +1941,7 @@ StructuralView::createEntity (StructuralType type,
 
   if (!properties.contains (STR_PROPERTY_ENTITY_TYPE))
     properties[STR_PROPERTY_ENTITY_TYPE]
-        = StructuralUtil::translateTypeToString (type);
+        = StructuralUtil::typeToString (type);
 
   if (!settings.contains (STR_SETTING_UNDO))
     settings[STR_SETTING_UNDO] = STR_VALUE_TRUE;
@@ -2034,7 +2013,7 @@ StructuralView::performAutostart ()
       {
         QMap<QString, QString> pProperty;
         pProperty[STR_PROPERTY_ENTITY_TYPE]
-            = StructuralUtil::translateTypeToString (Structural::Port);
+            = StructuralUtil::typeToString (Structural::Port);
         pProperty.insert (STR_PROPERTY_REFERENCE_COMPONENT_UID,
                    entity->getUid());
         pProperty.insert (STR_PROPERTY_REFERENCE_COMPONENT_ID,
@@ -2070,17 +2049,17 @@ StructuralView::performAutostart ()
 void
 StructuralView::performUndo ()
 {
-  if (_commnads.canUndo ())
+  if (_commands.canUndo ())
   {
-    QString code = _commnads.undoText ();
+    QString code = _commands.undoText ();
 
-    while (code == _commnads.undoText ())
-      _commnads.undo ();
+    while (code == _commands.undoText ())
+      _commands.undo ();
 
     emit switchedRedo (true);
   }
 
-  if (!_commnads.canUndo ())
+  if (!_commands.canUndo ())
     emit switchedUndo (false);
 
   foreach (const QString &key, _references.keys ())
@@ -2139,17 +2118,17 @@ StructuralView::performUndo ()
 void
 StructuralView::performRedo ()
 {
-  if (_commnads.canRedo ())
+  if (_commands.canRedo ())
   {
-    QString code = _commnads.redoText ();
+    QString code = _commands.redoText ();
 
-    while (code == _commnads.redoText ())
-      _commnads.redo ();
+    while (code == _commands.redoText ())
+      _commands.redo ();
 
     emit switchedUndo (true);
   }
 
-  if (!_commnads.canRedo ())
+  if (!_commands.canRedo ())
     emit switchedRedo (false);
 }
 
@@ -2442,7 +2421,7 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
 
         QMap<QString, QString> properties;
         properties[STR_PROPERTY_ENTITY_TYPE]
-            = StructuralUtil::translateTypeToString (Structural::Link);
+            = StructuralUtil::typeToString (Structural::Link);
         properties[STR_PROPERTY_REFERENCE_XCONNECTOR_ID]
             = _dialog->getConnector ();
 
@@ -2587,7 +2566,7 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
 
       QMap<QString, QString> properties;
       properties[STR_PROPERTY_ENTITY_TYPE]
-          = StructuralUtil::translateTypeToString (Structural::Bind);
+          = StructuralUtil::typeToString (Structural::Bind);
       properties[STR_PROPERTY_EDGE_TAIL] = tail->getUid ();
       properties[STR_PROPERTY_EDGE_HEAD] = head->getUid ();
 
@@ -2855,7 +2834,7 @@ StructuralView::createReference (StructuralEntity *tail,
       else if (tail->getType () == Structural::SwitchPort)
       {
         properties[STR_PROPERTY_ENTITY_TYPE]
-            = StructuralUtil::translateTypeToString (Structural::Mapping);
+            = StructuralUtil::typeToString (Structural::Mapping);
         properties[STR_PROPERTY_EDGE_TAIL] = tail->getUid ();
         properties[STR_PROPERTY_EDGE_HEAD] = head->getUid ();
 
@@ -3325,7 +3304,7 @@ StructuralView::dragEnterEvent (QDragEnterEvent *event)
     if (!event->isAccepted ())
     {
       QList<QUrl> list = event->mimeData ()->urls ();
-      StructuralType type = StructuralUtil::translateStringToType (
+      StructuralType type = StructuralUtil::stringToType (
           event->mimeData ()->objectName ());
 
       if (!list.isEmpty ()
@@ -3347,7 +3326,7 @@ StructuralView::dragMoveEvent (QDragMoveEvent *event)
     if (!event->isAccepted ())
     {
       QList<QUrl> list = event->mimeData ()->urls ();
-      StructuralType type = StructuralUtil::translateStringToType (
+      StructuralType type = StructuralUtil::stringToType (
           event->mimeData ()->objectName ());
 
       if (!list.isEmpty ()
@@ -3369,7 +3348,7 @@ StructuralView::dropEvent (QDropEvent *event)
     if (event->isAccepted ())
     {
       QList<QUrl> list = event->mimeData ()->urls ();
-      StructuralType type = StructuralUtil::translateStringToType (
+      StructuralType type = StructuralUtil::stringToType (
           event->mimeData ()->objectName ());
 
       if (!list.isEmpty ())
@@ -3380,7 +3359,7 @@ StructuralView::dropEvent (QDropEvent *event)
 
           QMap<QString, QString> properties;
           properties[STR_PROPERTY_ENTITY_TYPE]
-              = StructuralUtil::translateTypeToString (Structural::Media);
+              = StructuralUtil::typeToString (Structural::Media);
           properties[STR_PROPERTY_ENTITY_ID]
               = StructuralUtil::formatId (QFileInfo (filename).baseName ());
           properties[STR_PROPERTY_CONTENT_LOCATION] = filename;
@@ -3427,7 +3406,7 @@ StructuralView::clean ()
 
   _references.clear ();
   _entities.clear ();
-  _commnads.clear ();
+  _commands.clear ();
 
   emit switchedRedo (false);
   emit switchedUndo (false);
