@@ -77,11 +77,11 @@ public slots:
   void move (QString uid, QString parent, QMap<QString, QString> properties,
              QMap<QString, QString> settings);
 
-  void performZoomIn ();
-  void performZoomOut ();
-  void performZoomOriginal ();
-  void performSnapshot ();
-  void performMinimap ();
+  void zoomIn ();
+  void zoomOut ();
+  void zoomOriginal ();
+  void snapshot ();
+  void toggleMinimapVisibility ();
 
   // FIXME: This methods should not be part of StructuralView
   void performHelp ();

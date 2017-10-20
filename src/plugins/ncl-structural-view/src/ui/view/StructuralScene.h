@@ -9,11 +9,8 @@
 class StructuralScene : public QGraphicsScene
 {
 public:
-  StructuralScene (QObject *parent = 0);
+  StructuralScene (StructuralMenu *menu, QObject *parent = 0);
   virtual ~StructuralScene ();
-
-  StructuralMenu *getMenu () const;
-  void setMenu (StructuralMenu *menu);
 
 protected:
   virtual void contextMenuEvent (QGraphicsSceneContextMenuEvent *event);

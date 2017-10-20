@@ -15,7 +15,7 @@ StructuralView::StructuralView (QWidget *parent) : QGraphicsView (parent),
   _minimap (new StructuralMinimap (this)),
   _menu (new StructuralMenu (this)),
   _dialog (new StructuralLinkDialog (this)),
-  _scene (new StructuralScene (this))
+  _scene (new StructuralScene (_menu, this))
 {
   createConnections ();
 
@@ -34,9 +34,6 @@ StructuralView::StructuralView (QWidget *parent) : QGraphicsView (parent),
   setAttribute (Qt::WA_TranslucentBackground);
   setAcceptDrops (true);
   // setDragMode(ScrollHandDrag);
-
-  // Initialize scene
-  _scene->setMenu (_menu);
 
   // Initialize minimap...
   _minimap->init (this);
@@ -332,7 +329,7 @@ StructuralView::createConnections ()
   connect (_menu, SIGNAL (performedCopy ()), SLOT (performCopy ()));
   connect (_menu, SIGNAL (performedPaste ()), SLOT (paste ()));
   connect (_menu, SIGNAL (performedDelete ()), SLOT (performDelete ()));
-  connect (_menu, SIGNAL (performedSnapshot ()), SLOT (performSnapshot ()));
+  connect (_menu, SIGNAL (performedSnapshot ()), SLOT (snapshot ()));
   connect (_menu, SIGNAL (performedMedia ()), SLOT (performMedia ()));
   connect (_menu, SIGNAL (performedContext ()), SLOT (performContext ()));
   connect (_menu, SIGNAL (performedSwitch ()), SLOT (performSwitch ()));
@@ -357,7 +354,7 @@ StructuralView::createConnections ()
 }
 
 void
-StructuralView::performZoomIn ()
+StructuralView::zoomIn ()
 {
   if (_zoom + ZOOM_STEP <= ZOOM_MAX)
   {
@@ -371,7 +368,7 @@ StructuralView::performZoomIn ()
 }
 
 void
-StructuralView::performZoomOut ()
+StructuralView::zoomOut ()
 {
   if (_zoom - ZOOM_STEP >= ZOOM_MIN)
   {
@@ -385,7 +382,7 @@ StructuralView::performZoomOut ()
 }
 
 void
-StructuralView::performZoomOriginal ()
+StructuralView::zoomOriginal ()
 {
   _zoom = ZOOM_ORIGINAL;
 
@@ -2897,7 +2894,7 @@ StructuralView::performDelete ()
 }
 
 void
-StructuralView::performSnapshot ()
+StructuralView::snapshot ()
 {
   qreal top = _scene->height ();
   qreal left = _scene->width ();
@@ -2968,7 +2965,7 @@ StructuralView::performSnapshot ()
 }
 
 void
-StructuralView::performMinimap ()
+StructuralView::toggleMinimapVisibility ()
 {
   if (!_minimap->isVisible ())
     _minimap->show ();
@@ -3282,9 +3279,9 @@ StructuralView::wheelEvent (QWheelEvent *event)
   if (event->modifiers () & Qt::ControlModifier)
   {
     if (event->delta () > 0)
-      performZoomIn ();
+      zoomIn ();
     else
-      performZoomOut ();
+      zoomOut ();
 
     event->accept ();
   }

@@ -296,58 +296,47 @@ StructuralWindow::createStatusbar ()
 void
 StructuralWindow::createConnections ()
 {
+  connect (_snapshotAction, &QAction::triggered, _view, &StructuralView::snapshot);
+  connect (_zoominAction, &QAction::triggered, _view, &StructuralView::zoomIn);
+  connect (_zoomoutAction, &QAction::triggered, _view, &StructuralView::zoomOut);
+  connect (_zoomresetAction, &QAction::triggered, _view, &StructuralView::zoomOriginal);
 
-  connect (_undoAction, SIGNAL (triggered ()), _view, SLOT (performUndo ()));
-  connect (_redoAction, SIGNAL (triggered ()), _view, SLOT (performRedo ()));
-  connect (_cutAction, SIGNAL (triggered ()), _view, SLOT (performCut ()));
-  connect (_copyAction, SIGNAL (triggered ()), _view, SLOT (performCopy ()));
-  connect (_pasteAction, SIGNAL (triggered ()), _view, SLOT (performPaste ()));
-  connect (_deleteAction, SIGNAL (triggered ()), _view,
-           SLOT (performDelete ()));
-  connect (_snapshotAction, SIGNAL (triggered ()), _view,
-           SLOT (performSnapshot ()));
-  connect (_zoominAction, SIGNAL (triggered ()), _view,
-           SLOT (performZoomIn ()));
-  connect (_zoomoutAction, SIGNAL (triggered ()), _view,
-           SLOT (performZoomOut ()));
-  connect (_zoomresetAction, SIGNAL (triggered ()), _view,
-           SLOT (performZoomOriginal ()));
-  connect (_pointerAction, SIGNAL (triggered ()), _view,
-           SLOT (performPointer ()));
-  connect (_linkAction, SIGNAL (triggered ()), _view, SLOT (performLink ()));
-  connect (_minimapAction, SIGNAL (triggered ()), _view,
-           SLOT (performMinimap ()));
-  connect (_mediaAction, SIGNAL (triggered ()), _view, SLOT (performMedia ()));
-  connect (_contextAction, SIGNAL (triggered ()), _view,
-           SLOT (performContext ()));
-  connect (_switchAction, SIGNAL (triggered ()), _view,
-           SLOT (performSwitch ()));
-  connect (_bodyAction, SIGNAL (triggered ()), _view, SLOT (performBody ()));
-  connect (_areaAction, SIGNAL (triggered ()), _view, SLOT (performArea ()));
-  connect (_propertyAction, SIGNAL (triggered ()), _view,
-           SLOT (performProperty ()));
-  connect (_portAction, SIGNAL (triggered ()), _view, SLOT (performPort ()));
-  connect (_switchportAction, SIGNAL (triggered ()), _view,
-           SLOT (performSwitchPort ()));
+  connect (_minimapAction, &QAction::triggered, _view, &StructuralView::toggleMinimapVisibility);
 
-  connect (_view, SIGNAL (switchedUndo (bool)), SLOT (switchUndo (bool)));
-  connect (_view, SIGNAL (switchedRedo (bool)), SLOT (switchRedo (bool)));
-  connect (_view, SIGNAL (switchedCut (bool)), SLOT (switchCut (bool)));
-  connect (_view, SIGNAL (switchedCopy (bool)), SLOT (switchCopy (bool)));
-  connect (_view, SIGNAL (switchedPaste (bool)), SLOT (switchPaste (bool)));
-  connect (_view, SIGNAL (switchedDelete (bool)), SLOT (switchDelete (bool)));
-  connect (_view, SIGNAL (switchedSnapshot (bool)),
-           SLOT (switchSnapshot (bool)));
+  connect (_undoAction, &QAction::triggered, _view, &StructuralView::performUndo);
+  connect (_redoAction, &QAction::triggered, _view, &StructuralView::performRedo);
+  connect (_cutAction, &QAction::triggered, _view, &StructuralView::performCut);
+  connect (_copyAction, &QAction::triggered, _view, &StructuralView::performCopy);
+  connect (_pasteAction, &QAction::triggered, _view, &StructuralView::performPaste);
+  connect (_deleteAction, &QAction::triggered, _view, &StructuralView::performDelete);
+  connect (_pointerAction, &QAction::triggered, _view, &StructuralView::performPointer);
+  connect (_linkAction, &QAction::triggered, _view, &StructuralView::performLink);
+  connect (_mediaAction, &QAction::triggered, _view, &StructuralView::performMedia);
+  connect (_contextAction, &QAction::triggered, _view, &StructuralView::performContext);
+  connect (_switchAction, &QAction::triggered, _view, &StructuralView::performSwitch);
+  connect (_bodyAction, &QAction::triggered, _view, &StructuralView::performBody);
+  connect (_areaAction, &QAction::triggered, _view, &StructuralView::performArea);
 
-  connect (_view, SIGNAL (zoomChanged (int)), SLOT (handleZoomChanged (int)));
+  connect (_propertyAction, &QAction::triggered, _view, &StructuralView::performProperty);
+  connect (_portAction, &QAction::triggered, _view, &StructuralView::performPort);
+  connect (_switchportAction, &QAction::triggered, _view, &StructuralView::performSwitchPort);
 
-  connect (_view, SIGNAL (switchedPointer (bool)),
-           SLOT (switchPointer (bool)));
-  connect (_view, SIGNAL (switchedLink (bool)), SLOT (switchLink (bool)));
-  connect (_view, SIGNAL (switchedBody (bool)), SLOT (switchBody (bool)));
+  connect (_view, &StructuralView::switchedUndo, this, &StructuralWindow::switchUndo);
+  connect (_view, &StructuralView::switchedRedo, this, &StructuralWindow::switchRedo);
+  connect (_view, &StructuralView::switchedCut, this, &StructuralWindow::switchCut);
+  connect (_view, &StructuralView::switchedCopy, this, &StructuralWindow::switchCopy);
+  connect (_view, &StructuralView::switchedPaste, this, &StructuralWindow::switchPaste);
+  connect (_view, &StructuralView::switchedDelete, this, &StructuralWindow::switchDelete);
+  connect (_view, &StructuralView::switchedSnapshot, this, &StructuralWindow::switchSnapshot);
 
-  connect (_view, SIGNAL (selected (QString, QMap<QString, QString>)),
-           SLOT (select (QString, QMap<QString, QString>)));
+
+  connect (_view, &StructuralView::zoomChanged, this, &StructuralWindow::handleZoomChanged);
+
+  connect (_view, &StructuralView::switchedPointer, this, &StructuralWindow::switchPointer);
+  connect (_view, &StructuralView::switchedLink, this, &StructuralWindow::switchLink);
+  connect (_view, &StructuralView::switchedBody, this, &StructuralWindow::switchBody);
+
+  connect (_view, &StructuralView::selected, this, &StructuralWindow::select);
 }
 
 void
