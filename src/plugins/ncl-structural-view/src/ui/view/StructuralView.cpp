@@ -309,48 +309,38 @@ void
 StructuralView::createConnections ()
 {
   // Connecting with menu...
-  connect (this, SIGNAL (switchedUndo (bool)), _menu,
-           SLOT (switchUndo (bool)));
-  connect (this, SIGNAL (switchedRedo (bool)), _menu,
-           SLOT (switchRedo (bool)));
-  connect (this, SIGNAL (switchedCut (bool)), _menu, SLOT (switchCut (bool)));
-  connect (this, SIGNAL (switchedCopy (bool)), _menu,
-           SLOT (switchCopy (bool)));
-  connect (this, SIGNAL (switchedPaste (bool)), _menu,
-           SLOT (switchPaste (bool)));
-  connect (this, SIGNAL (switchedBody (bool)), _menu,
-           SLOT (switchBody (bool)));
+  connect (this, &StructuralView::switchedUndo, _menu, &StructuralMenu::switchUndo);
+  connect (this, &StructuralView::switchedRedo, _menu, &StructuralMenu::switchRedo);
+  connect (this, &StructuralView::switchedCut, _menu, &StructuralMenu::switchCut);
+  connect (this, &StructuralView::switchedCopy, _menu, &StructuralMenu::switchCopy);
+  connect (this, &StructuralView::switchedPaste, _menu, &StructuralMenu::switchPaste);
+  connect (this, &StructuralView::switchedBody, _menu, &StructuralMenu::switchBody);
 
-  connect (_menu, SIGNAL (performedHelp ()), SLOT (performHelp ()));
-  connect (_menu, SIGNAL (performedAutostart ()), SLOT (performAutostart ()));
-  connect (_menu, SIGNAL (performedUndo ()), SLOT (performUndo ()));
-  connect (_menu, SIGNAL (performedRedo ()), SLOT (performRedo ()));
-  connect (_menu, SIGNAL (performedCut ()), SLOT (performCut ()));
-  connect (_menu, SIGNAL (performedCopy ()), SLOT (performCopy ()));
-  connect (_menu, SIGNAL (performedPaste ()), SLOT (paste ()));
-  connect (_menu, SIGNAL (performedDelete ()), SLOT (performDelete ()));
-  connect (_menu, SIGNAL (performedSnapshot ()), SLOT (snapshot ()));
-  connect (_menu, SIGNAL (performedMedia ()), SLOT (performMedia ()));
-  connect (_menu, SIGNAL (performedContext ()), SLOT (performContext ()));
-  connect (_menu, SIGNAL (performedSwitch ()), SLOT (performSwitch ()));
-  connect (_menu, SIGNAL (performedBody ()), SLOT (performBody ()));
-  connect (_menu, SIGNAL (performedArea ()), SLOT (performArea ()));
-  connect (_menu, SIGNAL (performedProperty ()), SLOT (performProperty ()));
-  connect (_menu, SIGNAL (performedPort ()), SLOT (performPort ()));
-  connect (_menu, SIGNAL (performedSwitchPort ()),
-           SLOT (performSwitchPort ()));
+  connect (_menu, &StructuralMenu::performedHelp, this, &StructuralView::performHelp);
+  connect (_menu, &StructuralMenu::performedAutostart, this, &StructuralView::performAutostart);
+  connect (_menu, &StructuralMenu::performedUndo, this, &StructuralView::performUndo);
+  connect (_menu, &StructuralMenu::performedRedo, this, &StructuralView::performRedo);
+  connect (_menu, &StructuralMenu::performedCut, this, &StructuralView::performCut);
+  connect (_menu, &StructuralMenu::performedCopy, this, &StructuralView::performCopy);
+  connect (_menu, &StructuralMenu::performedPaste, this, &StructuralView::performPaste);
+  connect (_menu, &StructuralMenu::performedDelete, this, &StructuralView::performDelete);
+  connect (_menu, &StructuralMenu::performedSnapshot, this, &StructuralView::snapshot);
+  connect (_menu, &StructuralMenu::performedMedia, this, &StructuralView::performMedia);
+  connect (_menu, &StructuralMenu::performedContext, this, &StructuralView::performContext);
+  connect (_menu, &StructuralMenu::performedSwitch, this, &StructuralView::performSwitch);
+  connect (_menu, &StructuralMenu::performedBody, this, &StructuralView::performBody);
+  connect (_menu, &StructuralMenu::performedArea, this, &StructuralView::performArea);
+  connect (_menu, &StructuralMenu::performedProperty, this, &StructuralView::performProperty);
+  connect (_menu, &StructuralMenu::performedPort, this, &StructuralView::performPort);
+  connect (_menu, &StructuralMenu::performedSwitchPort, this, &StructuralView::performSwitchPort);
 
 #ifdef WITH_GRAPHVIZ
-  connect (_menu, SIGNAL (performedAutoAdjust ()),
-           SLOT (performAutoAdjust ()));
+  connect (_menu, &StructuralMenu::performedAutoAdjust, this, &StructuralView::performAutoAdjust;
 #endif
 
-  connect (_menu, SIGNAL (performedProperties ()),
-           SLOT (performProperties ()));
+  connect (_menu, &StructuralMenu::performedProperties, this, &StructuralView::performProperties);
 
-  connect (_menu,
-           SIGNAL (performedInsert (StructuralType, QMap<QString, QString>)),
-           SLOT (performInsert (StructuralType, QMap<QString, QString>)));
+  connect (_menu, &StructuralMenu::performedInsert, this, &StructuralView::performInsert);
 }
 
 void
@@ -480,9 +470,8 @@ StructuralView::insert (QString uid, QString parent,
           e->setType (type);
 
           // Connecting...
-          connect ((StructuralLink *)e,
-                   SIGNAL (performedEdit (StructuralLink *)),
-                   SLOT (performDialog (StructuralLink *)));
+          connect ((StructuralLink *)e, &StructuralLink::performedEdit,
+                   this, &StructuralView::performLinkDialog);
 
           break;
         }
@@ -526,9 +515,8 @@ StructuralView::insert (QString uid, QString parent,
           // nothing
 
           // Connecting...
-          connect (((StructuralBind *)e),
-                   SIGNAL (performedEdit (StructuralBind *)),
-                   SLOT (performDialog (StructuralBind *)));
+          connect ((StructuralBind *) e, &StructuralBind::performedEdit,
+                   this, &StructuralView::performBindDialog);
 
           break;
         }
@@ -687,23 +675,11 @@ StructuralView::insert (QString uid, QString parent,
       // Connecting...
       //
 
-      connect (e, SIGNAL (inserted (QString, QString, QMap<QString, QString>,
-                                    QMap<QString, QString>)),
-               SLOT (insert (QString, QString, QMap<QString, QString>,
-                             QMap<QString, QString>)));
-      connect (e, SIGNAL (removed (QString, QMap<QString, QString>)),
-               SLOT (remove (QString, QMap<QString, QString>)));
-      connect (
-          e, SIGNAL (changed (QString, QMap<QString, QString>,
-                              QMap<QString, QString>, QMap<QString, QString>)),
-          SLOT (change (QString, QMap<QString, QString>,
-                        QMap<QString, QString>, QMap<QString, QString>)));
-      connect (e, SIGNAL (selected (QString, QMap<QString, QString>)),
-               SLOT (select (QString, QMap<QString, QString>)));
-      connect (e, SIGNAL (moved (QString, QString, QMap<QString, QString>,
-                                 QMap<QString, QString>)),
-               SLOT (move (QString, QString, QMap<QString, QString>,
-                           QMap<QString, QString>)));
+      connect (e, &StructuralEntity::inserted, this, &StructuralView::insert);
+      connect (e, &StructuralEntity::removed, this, &StructuralView::remove);
+      connect (e, &StructuralEntity::changed, this, &StructuralView::change);
+      connect (e, &StructuralEntity::selected, this, &StructuralView::select);
+      connect (e, &StructuralEntity::moved, this, &StructuralView::move);
 
       //
       // Saving...
@@ -711,27 +687,16 @@ StructuralView::insert (QString uid, QString parent,
 
       if (settings[STR_SETTING_UNDO] == STR_VALUE_TRUE)
       {
-        Insert *command = new Insert (uid, parent,
+        Insert *cmd = new Insert (uid, parent,
                                       e->getProperties (), settings);
-        command->setText (settings[STR_SETTING_CODE]);
+        cmd->setText (settings[STR_SETTING_CODE]);
 
-        connect (command,
-                 SIGNAL (insert (QString, QString, QMap<QString, QString>,
-                                 QMap<QString, QString>)),
-                 SLOT (insert (QString, QString, QMap<QString, QString>,
-                               QMap<QString, QString>)));
-        connect (command, SIGNAL (remove (QString, QMap<QString, QString>)),
-                 SLOT (remove (QString, QMap<QString, QString>)));
-        connect (
-            command,
-            SIGNAL (change (QString, QMap<QString, QString>,
-                            QMap<QString, QString>, QMap<QString, QString>)),
-            SLOT (change (QString, QMap<QString, QString>,
-                          QMap<QString, QString>, QMap<QString, QString>)));
-        connect (command, SIGNAL (select (QString, QMap<QString, QString>)),
-                 SLOT (select (QString, QMap<QString, QString>)));
+        connect (cmd, &Insert::insert, this, &StructuralView::insert);
+        connect (cmd, &Insert::remove, this, &StructuralView::remove);
+        connect (cmd, &Insert::change, this, &StructuralView::change);
+        connect (cmd, &Insert::select, this, &StructuralView::select);
 
-        _commands.push (command);
+        _commands.push (cmd);
         emit switchedUndo (true);
       }
 
@@ -754,7 +719,7 @@ StructuralView::insert (QString uid, QString parent,
         // (interface in this case).
         emit changed (uid, e->getProperties (),
                       e->getProperties (), // this param is not used
-                                                     // in this case
+                                           // in this case
                       StructuralUtil::createSettings (false, false));
       }
     }
@@ -843,27 +808,16 @@ StructuralView::remove (QString uid, QMap<QString, QString> settings)
       if (_entities[uid]->getParent () != NULL)
         parent = _entities[uid]->getParent ()->getUid ();
 
-      Remove *command
-          = new Remove (_entities[uid]->getUid (), parent,
-                        _entities[uid]->getProperties (), settings);
-      command->setText (settings[STR_SETTING_CODE]);
+      Remove *cmd = new Remove (_entities[uid]->getUid (), parent,
+                                _entities[uid]->getProperties (), settings);
+      cmd->setText (settings[STR_SETTING_CODE]);
 
-      connect (command,
-               SIGNAL (insert (QString, QString, QMap<QString, QString>,
-                               QMap<QString, QString>)),
-               SLOT (insert (QString, QString, QMap<QString, QString>,
-                             QMap<QString, QString>)));
-      connect (command, SIGNAL (remove (QString, QMap<QString, QString>)),
-               SLOT (remove (QString, QMap<QString, QString>)));
-      connect (command, SIGNAL (change (QString, QMap<QString, QString>,
-                                        QMap<QString, QString>,
-                                        QMap<QString, QString>)),
-               SLOT (change (QString, QMap<QString, QString>,
-                             QMap<QString, QString>, QMap<QString, QString>)));
-      connect (command, SIGNAL (select (QString, QMap<QString, QString>)),
-               SLOT (select (QString, QMap<QString, QString>)));
+      connect (cmd, &Remove::insert, this, &StructuralView::insert);
+      connect (cmd, &Remove::remove, this, &StructuralView::remove);
+      connect (cmd, &Remove::change, this, &StructuralView::change);
+      connect (cmd, &Remove::select, this, &StructuralView::select);
 
-      _commands.push (command);
+      _commands.push (cmd);
       emit switchedUndo (true);
       return;
     }
@@ -1045,25 +999,15 @@ StructuralView::change (QString uid, QMap<QString, QString> properties,
     //
     if (settings[STR_SETTING_UNDO] == STR_VALUE_TRUE)
     {
-      Change *command = new Change (uid, properties, previous, settings);
-      command->setText (settings[STR_SETTING_CODE]);
+      Change *cmd = new Change (uid, properties, previous, settings);
+      cmd->setText (settings[STR_SETTING_CODE]);
 
-      connect (command,
-               SIGNAL (insert (QString, QString, QMap<QString, QString>,
-                               QMap<QString, QString>)),
-               SLOT (insert (QString, QString, QMap<QString, QString>,
-                             QMap<QString, QString>)));
-      connect (command, SIGNAL (remove (QString, QMap<QString, QString>)),
-               SLOT (remove (QString, QMap<QString, QString>)));
-      connect (command, SIGNAL (change (QString, QMap<QString, QString>,
-                                        QMap<QString, QString>,
-                                        QMap<QString, QString>)),
-               SLOT (change (QString, QMap<QString, QString>,
-                             QMap<QString, QString>, QMap<QString, QString>)));
-      connect (command, SIGNAL (select (QString, QMap<QString, QString>)),
-               SLOT (select (QString, QMap<QString, QString>)));
+      connect (cmd, &Change::insert, this, &StructuralView::insert);
+      connect (cmd, &Change::remove, this, &StructuralView::remove);
+      connect (cmd, &Change::change, this, &StructuralView::change);
+      connect (cmd, &Change::select, this, &StructuralView::select);
 
-      _commands.push (command);
+      _commands.push (cmd);
       emit switchedUndo (true);
       return;
     }
@@ -3419,7 +3363,7 @@ StructuralView::clean ()
 }
 
 void
-StructuralView::performDialog (StructuralLink *entity)
+StructuralView::performLinkDialog (StructuralLink *entity)
 {
   emit requestedUpdate ();
 
@@ -3495,7 +3439,7 @@ StructuralView::performDialog (StructuralLink *entity)
 }
 
 void
-StructuralView::performDialog (StructuralBind *entity)
+StructuralView::performBindDialog (StructuralBind *entity)
 {
   QMap<QString, QString> pBind;
   foreach (const QString &name, entity->getProperties ().keys ())

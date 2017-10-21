@@ -111,8 +111,8 @@ public slots:
 
   void performInsert (StructuralType type, QMap<QString, QString> properties);
 
-  void performDialog (StructuralLink *entity);
-  void performDialog (StructuralBind *entity);
+  void performLinkDialog (StructuralLink *entity);
+  void performBindDialog (StructuralBind *entity);
 
   void clean ();
 
