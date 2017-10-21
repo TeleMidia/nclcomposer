@@ -1979,17 +1979,26 @@ StructuralView::performAutostart ()
     QVector<StructuralEntity *> neighbors
         = StructuralUtil::getNeighbors (e);
 
-    if (e->getCategory() == Structural::Interface) // Why?
-      neighbors += StructuralUtil::getUpNeighbors (e);
+    if (STR_DEFAULT_WITH_INTERFACES)
+    {
+      if (e->getCategory() == Structural::Interface)
+        neighbors += StructuralUtil::getUpNeighbors (e);
+    }
 
+    // If STR_DEFAULT_WITH_INTERFACES is disabled, interface entities are
+    // just hidden. So, it is OK to iterate through interfaces, since they
+    // exist even with STR_DEFAULT_WITH_INTERFACES disabled.
     foreach (StructuralEntity* neighbor, neighbors)
     {
       if (neighbor->getCategory() == Structural::Interface)
       {
         if (neighbor->getProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID)
-            == e->getUid())
+            == e->getUid() || (STR_DEFAULT_WITH_INTERFACES &&
+            neighbor->getProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID)
+            == e->getUid()))
         {
           remove (neighbor->getUid(), settings);
+          break;
         }
       }
     }
@@ -2002,23 +2011,35 @@ StructuralView::performAutostart ()
     QMap<QString, QString> pProperty;
     pProperty[STR_PROPERTY_ENTITY_TYPE]
         = StructuralUtil::typeToString (Structural::Port);
-    pProperty.insert (STR_PROPERTY_REFERENCE_COMPONENT_UID,
-                      e->getUid());
-    pProperty.insert (STR_PROPERTY_REFERENCE_COMPONENT_ID,
-                      e->getId());
 
     QString pParent = "";
 
-    e->getParent () != nullptr ? e->getParent ()->getUid () : "";
+    if (e->getCategory() == Structural::Interface)
+    {
+      if (e->getParent () != nullptr)
+      {
+        pProperty.insert (STR_PROPERTY_REFERENCE_COMPONENT_UID,
+                          e->getParent()->getUid());
+        pProperty.insert (STR_PROPERTY_REFERENCE_COMPONENT_ID,
+                          e->getParent()->getId());
 
-    if (e->getCategory() == Structural::Interface &&
-        e->getParent ()->getParent () != nullptr)
-    {
-      pParent = e->getParent ()->getParent ()->getUid();
+        pProperty.insert (STR_PROPERTY_REFERENCE_INTERFACE_UID,
+                          e->getUid());
+        pProperty.insert (STR_PROPERTY_REFERENCE_INTERFACE_ID,
+                          e->getId());
+
+        pParent = e->getParent ()->getParent () != nullptr ?
+            e->getParent ()->getParent ()->getUid () : "";
+      }
     }
-    else if (e->getParent () != nullptr)
+    else
     {
-      pParent = e->getParent ()->getUid();
+      pProperty.insert (STR_PROPERTY_REFERENCE_COMPONENT_UID,
+                        e->getUid());
+      pProperty.insert (STR_PROPERTY_REFERENCE_COMPONENT_ID,
+                        e->getId());
+
+      pParent = e->getParent () != nullptr ? e->getParent ()->getUid () : "";
     }
 
     insert (StructuralUtil::createUid (), pParent, pProperty, settings);
