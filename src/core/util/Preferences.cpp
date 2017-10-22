@@ -61,7 +61,7 @@ Preferences::registerPreference (const QString &key, Preference *preference)
     qCWarning (CPR_CORE) << "Trying to register an already registered " << key
                          << "preference.  It will be ignored!";
 
-  Q_ASSERT (!_preferences.contains (key));
+  CPR_ASSERT (!_preferences.contains (key));
   _preferences.insert (key, preference);
 }
 

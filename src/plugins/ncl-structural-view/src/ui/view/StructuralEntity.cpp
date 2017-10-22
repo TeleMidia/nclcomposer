@@ -1,6 +1,7 @@
 #include "StructuralEntity.h"
 
 #include <QMimeData>
+#include "util/Utilities.h"
 
 StructuralEntity::StructuralEntity (StructuralEntity *parent)
     : QObject (parent), QGraphicsItem (parent)
@@ -774,8 +775,8 @@ StructuralEntity::getChildren () const
 void
 StructuralEntity::addChild (StructuralEntity *entity)
 {
-  Q_ASSERT (entity != nullptr);
-  Q_ASSERT (!_children.contains (entity));
+  CPR_ASSERT (entity != nullptr);
+  CPR_ASSERT (!_children.contains (entity));
 
   if (entity->getType () == Structural::Link)
     entity->setzIndex (_zindex + 1);
@@ -796,7 +797,7 @@ StructuralEntity::addChild (StructuralEntity *entity)
 void
 StructuralEntity::removeChild (StructuralEntity *entity)
 {
-  Q_ASSERT (entity != nullptr);
+  CPR_ASSERT (entity != nullptr);
 
   int index = _children.indexOf (entity);
 
@@ -1278,7 +1279,7 @@ StructuralEntity::contextMenuEvent (QGraphicsSceneContextMenuEvent *event)
       emit selected (getUid (), StructuralUtil::createSettings ());
     }
 
-    Q_ASSERT (_menu != nullptr);
+    CPR_ASSERT (_menu != nullptr);
     _menu->exec (event->screenPos(), this);
 
     event->accept ();

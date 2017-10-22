@@ -10,6 +10,7 @@
 #include <QUuid>
 
 #include "StructuralUtil.h"
+#include "util/Utilities.h"
 
 StructuralView::StructuralView (QWidget *parent) : QGraphicsView (parent),
   _minimap (new StructuralMinimap (this)),
@@ -1773,7 +1774,7 @@ StructuralView::move (QString uid, QString parent,
                       QMap<QString, QString> properties,
                       QMap<QString, QString> settings)
 {
-  Q_ASSERT (_entities.contains (uid));
+  CPR_ASSERT (_entities.contains (uid));
 
   //
   // Initializing...
@@ -1786,7 +1787,7 @@ StructuralView::move (QString uid, QString parent,
   if (p != NULL)
     type = p->getType ();
 
-  Q_ASSERT (StructuralUtil::validateKinship (e->getType (), type));
+  CPR_ASSERT (StructuralUtil::validateKinship (e->getType (), type));
   if (e->getParent () != p)
   {
     //
@@ -1857,12 +1858,12 @@ StructuralView::createEntity (StructuralType type,
 void
 StructuralView::performAutostart ()
 {
-  Q_ASSERT_X (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES,
-              "performAutostart",
-              "Autostart is only available when when body and floating"
-              "interfaces are disabled in build");
+  CPR_ASSERT_X (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES,
+                "performAutostart",
+                "Autostart is only available when when body and floating"
+                "interfaces are disabled in build");
 
-  Q_ASSERT (_entities.contains (_selected));
+  CPR_ASSERT (_entities.contains (_selected));
 
   StructuralEntity *e = _entities.value (_selected);
   QMap<QString, QString> props = e->getProperties ();

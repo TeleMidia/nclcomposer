@@ -107,6 +107,11 @@ COMPOSERCORESHARED_EXPORT
     Q_DECLARE_LOGGING_CATEGORY (CPR_CORE) COMPOSERCORESHARED_EXPORT
     Q_DECLARE_LOGGING_CATEGORY (CPR_GUI)
 
+
+// Assert macros.
+#define CPR_ASSERT(cond) ((!(cond)) ? qt_assert(#cond,__FILE__,__LINE__) : qt_noop())
+#define CPR_ASSERT_X(cond, where, what) ((!(cond)) ? qt_assert_x(where, what,__FILE__,__LINE__) : qt_noop())
+
 CPR_CORE_END_NAMESPACE
 
 #endif // DEFINITIONS_H

@@ -164,7 +164,7 @@ StructuralViewPlugin::updateFromModel ()
     if (_window->getView()->hasEntity(viewKey))
     {
       StructuralEntity *e = _window->getView ()->getEntity (viewKey);
-      Q_ASSERT (e);
+      CPR_ASSERT (e);
 
       if (!e->getId ().isEmpty ())
       {
@@ -267,7 +267,7 @@ StructuralViewPlugin::updateFromModel ()
   {
     StructuralEntity *e = stack2.pop ();
 
-    Q_ASSERT (e != nullptr);
+    CPR_ASSERT (e != nullptr);
 
     QString cacheId = createCacheId(e);
 

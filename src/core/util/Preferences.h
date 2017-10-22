@@ -30,11 +30,6 @@ CPR_CORE_BEGIN_NAMESPACE
  */
 class COMPOSERCORESHARED_EXPORT Preference
 {
-private:
-  QString _name;
-  QString _category;
-  QVariant _value, _defaultValue;
-
 public:
   Preference (const QString &name,
               const QVariant &defaultValue = QVariant (""),
@@ -63,6 +58,11 @@ public:
   {
     return "cpr."+_category.toLower()+"."+_name;
   }
+
+private:
+  QString _name;
+  QString _category;
+  QVariant _value, _defaultValue;
 };
 
 /*!
