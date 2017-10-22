@@ -160,8 +160,6 @@ protected:
   virtual void resizeEvent (QResizeEvent *event);
 
 private:
-  void createConnections ();
-
   void createEntity (StructuralType type);
   void createEntity (StructuralType type, QMap<QString, QString> properties,
                      QMap<QString, QString> settings);

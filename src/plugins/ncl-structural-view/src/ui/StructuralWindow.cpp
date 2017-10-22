@@ -85,7 +85,7 @@ StructuralWindow::createActions ()
   _snapshotAction->setText (tr ("Snapshot"));
   _snapshotAction->setToolTip (tr ("Take a Snapshot..."));
   _snapshotAction->setIcon (QIcon (":/icon/snapshot"));
-  _view->getMenu ()->addAction (_snapshotAction);
+//  _view->getMenu ()->addAction (_snapshotAction);
 
   // zoomin action
   _zoominAction = new QAction (this);
@@ -128,6 +128,18 @@ StructuralWindow::createActions ()
   _linkAction->setIcon (QIcon (":/icon/link"));
   _linkAction->setShortcut (QKeySequence ("2"));
 
+  // autostart action
+  _autostartAction = new QAction (this);
+  _autostartAction->setEnabled (false);
+  _autostartAction->setCheckable (true);
+  _autostartAction->setChecked (false);
+  _autostartAction->setText (tr ("Set as starting node"));
+  _autostartAction->setIcon (QIcon (""));
+  _view->getMenu ()->addAction (_autostartAction);
+
+  QMenu *insertMenu = new QMenu (_view->getMenu ());
+  insertMenu->setTitle (tr("&Insert"));
+
   // media action
   _mediaAction = new QAction (this);
   _mediaAction->setEnabled (false);
@@ -135,6 +147,7 @@ StructuralWindow::createActions ()
   _mediaAction->setToolTip (tr ("Insert &lt;media&gt; entity"));
   _mediaAction->setIcon (QIcon (":/icon/media-insert"));
   _mediaAction->setShortcut (QKeySequence ("3"));
+  insertMenu->addAction (_mediaAction);
 
   // context action
   _contextAction = new QAction (this);
@@ -143,6 +156,7 @@ StructuralWindow::createActions ()
   _contextAction->setToolTip (tr ("Insert &lt;context&gt; entity"));
   _contextAction->setIcon (QIcon (":/icon/context-insert"));
   _contextAction->setShortcut (QKeySequence ("4"));
+  insertMenu->addAction (_contextAction);
 
   // switch action
   _switchAction = new QAction (this);
@@ -151,6 +165,7 @@ StructuralWindow::createActions ()
   _switchAction->setToolTip (tr ("Insert &lt;switch&gt; entity"));
   _switchAction->setIcon (QIcon (":/icon/switch-insert"));
   _switchAction->setShortcut (QKeySequence ("5"));
+  insertMenu->addAction (_switchAction);
 
   // body action
   _bodyAction = new QAction (this);
@@ -159,6 +174,7 @@ StructuralWindow::createActions ()
   _bodyAction->setToolTip (tr ("Insert &lt;body&gt; entity"));
   _bodyAction->setIcon (QIcon (":/icon/body-insert"));
   _bodyAction->setShortcut (QKeySequence ("6"));
+  insertMenu->addAction (_bodyAction);
 
   // area action
   _areaAction = new QAction (this);
@@ -167,6 +183,7 @@ StructuralWindow::createActions ()
   _areaAction->setToolTip (tr ("Insert &lt;area&gt; entity"));
   _areaAction->setIcon (QIcon (":/icon/area-insert"));
   _areaAction->setShortcut (QKeySequence ("7"));
+  insertMenu->addAction (_areaAction);
 
   // property action
   _propertyAction = new QAction (this);
@@ -175,6 +192,7 @@ StructuralWindow::createActions ()
   _propertyAction->setToolTip (tr ("Insert &lt;property&gt; entity"));
   _propertyAction->setIcon (QIcon (":/icon/property-insert"));
   _propertyAction->setShortcut (QKeySequence ("8"));
+  insertMenu->addAction (_propertyAction);
 
   // port action
   _portAction = new QAction (this);
@@ -183,6 +201,7 @@ StructuralWindow::createActions ()
   _portAction->setToolTip (tr ("Insert &lt;port&gt; entity"));
   _portAction->setIcon (QIcon (":/icon/port-insert"));
   _portAction->setShortcut (QKeySequence ("9"));
+  insertMenu->addAction (_portAction);
 
   // switchport action
   _switchportAction = new QAction (this);
@@ -191,6 +210,9 @@ StructuralWindow::createActions ()
   _switchportAction->setToolTip (tr ("Insert &lt;switchport&gt; entity"));
   _switchportAction->setIcon (QIcon (":/icon/switchport-insert"));
   _switchportAction->setShortcut (QKeySequence ("0"));
+  insertMenu->addAction (_switchportAction);
+
+  _view->getMenu ()->addMenu (insertMenu);
 
   // minimap action
   _minimapAction = new QAction (this);
@@ -209,12 +231,27 @@ StructuralWindow::createActions ()
   _preferencesAction->setIcon (QIcon (":/icon/preferences"));
   _preferencesAction->setShortcut (QKeySequence ("Ctrl+P"));
 
+  // properties action
+  _propertiesAction = new QAction (this);
+  _propertiesAction->setEnabled (false);
+  _propertiesAction->setText (tr ("Properties"));
+  _propertiesAction->setIcon (QIcon (":/icon/properties"));
+  _view->getMenu ()->addAction (_propertiesAction);
+
   // insert group
   _insertActionGroup = new QActionGroup (this);
   _insertActionGroup->setExclusive (true);
 
   _insertActionGroup->addAction (_linkAction);
   _insertActionGroup->addAction (_pointerAction);
+
+#ifdef WITH_GRAPHVIZ
+  // autoadjust action
+  _autoadjustAction = new QAction (this);
+  _autoadjustAction->setEnabled (true);
+  _autoadjustAction->setText (tr ("Auto adjust"));
+  _view->getMenu ()->addAction (_autoadjustAction);
+#endif
 }
 
 void
@@ -313,8 +350,11 @@ StructuralWindow::createConnections ()
   connect (_copyAction, &QAction::triggered, _view, &StructuralView::performCopy);
   connect (_pasteAction, &QAction::triggered, _view, &StructuralView::performPaste);
   connect (_deleteAction, &QAction::triggered, _view, &StructuralView::performDelete);
+
   connect (_pointerAction, &QAction::triggered, _view, &StructuralView::performPointer);
   connect (_linkAction, &QAction::triggered, _view, &StructuralView::performLink);
+
+  connect (_autostartAction, &QAction::triggered, _view, &StructuralView::performAutostart);
   connect (_mediaAction, &QAction::triggered, _view, &StructuralView::performMedia);
   connect (_contextAction, &QAction::triggered, _view, &StructuralView::performContext);
   connect (_switchAction, &QAction::triggered, _view, &StructuralView::performSwitch);
@@ -324,6 +364,10 @@ StructuralWindow::createConnections ()
   connect (_propertyAction, &QAction::triggered, _view, &StructuralView::performProperty);
   connect (_portAction, &QAction::triggered, _view, &StructuralView::performPort);
   connect (_switchportAction, &QAction::triggered, _view, &StructuralView::performSwitchPort);
+
+#ifdef WITH_GRAPHVIZ
+  connect (_autostartAction, &QAction::triggered, this, &StructuralView::performAutoAdjust);
+#endif
 
   connect (_view, &StructuralView::switchedUndo, _undoAction, &QAction::setEnabled);
   connect (_view, &StructuralView::switchedRedo, _redoAction, &QAction::setEnabled);

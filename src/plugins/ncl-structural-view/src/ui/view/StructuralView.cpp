@@ -17,8 +17,6 @@ StructuralView::StructuralView (QWidget *parent) : QGraphicsView (parent),
   _dialog (new StructuralLinkDialog (this)),
   _scene (new StructuralScene (_menu, this))
 {
-  createConnections ();
-
   _mode = Structural::Pointing;
   _zoom = ZOOM_ORIGINAL;
 
@@ -303,31 +301,6 @@ StructuralView::resizeEvent (QResizeEvent *event)
                   event->size ().height () - _minimap->height ());
 
   QGraphicsView::resizeEvent (event);
-}
-
-void
-StructuralView::createConnections ()
-{
-  // Connecting with menu...
-  connect (this, &StructuralView::switchedBody, _menu, &StructuralMenu::switchBody);
-
-  connect (_menu, &StructuralMenu::performedAutostart, this, &StructuralView::performAutostart);
-  connect (_menu, &StructuralMenu::performedMedia, this, &StructuralView::performMedia);
-  connect (_menu, &StructuralMenu::performedContext, this, &StructuralView::performContext);
-  connect (_menu, &StructuralMenu::performedSwitch, this, &StructuralView::performSwitch);
-  connect (_menu, &StructuralMenu::performedBody, this, &StructuralView::performBody);
-  connect (_menu, &StructuralMenu::performedArea, this, &StructuralView::performArea);
-  connect (_menu, &StructuralMenu::performedProperty, this, &StructuralView::performProperty);
-  connect (_menu, &StructuralMenu::performedPort, this, &StructuralView::performPort);
-  connect (_menu, &StructuralMenu::performedSwitchPort, this, &StructuralView::performSwitchPort);
-
-#ifdef WITH_GRAPHVIZ
-  connect (_menu, &StructuralMenu::performedAutoAdjust, this, &StructuralView::performAutoAdjust;
-#endif
-
-  connect (_menu, &StructuralMenu::performedProperties, this, &StructuralView::performProperties);
-
-  connect (_menu, &StructuralMenu::performedInsert, this, &StructuralView::performInsert);
 }
 
 void

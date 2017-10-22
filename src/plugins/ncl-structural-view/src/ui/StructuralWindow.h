@@ -65,6 +65,13 @@ private:
           *_portAction,
           *_switchportAction;
 
+  QAction *_autostartAction,
+          *_propertiesAction;
+
+#ifdef WITH_GRAPHVIZ
+  QAction *_autoadjustAction;
+#endif
+
   QAction *_preferencesAction;
 
   QActionGroup *_insertActionGroup;

@@ -27,71 +27,8 @@ public:
 public slots:
   void switchAutostart (bool state);
   void switchAutostartProperty (bool state);
-  void switchMedia (bool state);
-  void switchContext (bool state);
-  void switchSwitch (bool state);
-  void switchBody (bool state);
-  void switchArea (bool state);
-  void switchProperty (bool state);
-  void switchPort (bool state);
-  void switchSwitchPort (bool state);
-  void switchProperties (bool state);
-
-#ifdef WITH_GRAPHVIZ
-  void switchAutoAdjust (bool state);
-#endif
-
-signals:
-  void performedAutostart ();
-  void performedMedia ();
-  void performedContext ();
-  void performedSwitch ();
-  void performedBody ();
-  void performedArea ();
-  void performedProperty ();
-  void performedPort ();
-  void performedSwitchPort ();
-  void performedProperties ();
-
-#ifdef WITH_GRAPHVIZ
-  void performedAutoAdjust ();
-#endif
-
-  void performedInsert (StructuralType type,
-                        QMap<QString, QString> properties);
-
-private slots:
-  void performMedia ();
-  void performContext ();
-  void performSwitch ();
-  void performBody ();
-  void performArea ();
-  void performProperty ();
-  void performPort ();
-  void performSwitchPort ();
 
 private:
-  void createActions ();
-  void createMenus ();
-  void createConnections ();
-
-  QMenu *_insertMenu;
-
-  QAction *_autostartAction;
-  QAction *_mediaAction;
-  QAction *_contextAction;
-  QAction *_switchAction;
-  QAction *_bodyAction;
-  QAction *_portAction;
-  QAction *_areaAction;
-  QAction *_propertyAction;
-  QAction *_switchPortAction;
-  QAction *_propertiesAction;
-
-#ifdef WITH_GRAPHVIZ
-  QAction *_autoadjustAction;
-#endif
-
   qreal _insertTop;
   qreal _insertLeft;
 };
