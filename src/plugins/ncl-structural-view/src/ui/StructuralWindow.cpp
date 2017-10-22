@@ -85,7 +85,7 @@ StructuralWindow::createActions ()
   _snapshotAction->setText (tr ("Snapshot"));
   _snapshotAction->setToolTip (tr ("Take a Snapshot..."));
   _snapshotAction->setIcon (QIcon (":/icon/snapshot"));
-//  _view->getMenu ()->addAction (_snapshotAction);
+  // _view->getMenu ()->addAction (_snapshotAction);
 
   // zoomin action
   _zoominAction = new QAction (this);

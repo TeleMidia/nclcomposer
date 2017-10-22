@@ -391,7 +391,7 @@ StructuralView::insert (QString uid, QString parent,
     // Initializing....
     //
 
-    StructuralEntity *e = NULL;
+    StructuralEntity *e = nullptr;
     StructuralEntity *p = _entities.value (parent, NULL);
 
     //
@@ -563,7 +563,7 @@ StructuralView::insert (QString uid, QString parent,
         }
       }
 
-      // Setting 'menu'...
+
       e->setMenu (_menu);
 
       // Setting 'others'...

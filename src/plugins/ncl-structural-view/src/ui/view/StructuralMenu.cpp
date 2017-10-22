@@ -1,37 +1,49 @@
 #include "StructuralMenu.h"
 
-StructuralMenu::StructuralMenu (QWidget *parent) : QMenu (parent)
+StructuralMenu::StructuralMenu (QWidget *parent) :
+  QMenu (parent)
 {
-  setInsertTop (0);
-  setInsertLeft (0);
 
-  adjust ();
-}
-
-StructuralMenu::~StructuralMenu () {}
-
-qreal
-StructuralMenu::getInsertTop () const
-{
-  return _insertTop;
 }
 
 void
-StructuralMenu::setInsertTop (qreal insertTop)
+StructuralMenu::exec (const QPoint &screenPos, const StructuralEntity *e)
 {
-  _insertTop = insertTop;
-}
+  StructuralType t = Structural::NoType;
+  if (e)
+  {
+    QMap <QString, QString> props = e->getProperties();
+    t = e->getType();
 
-qreal
-StructuralMenu::getInsertLeft () const
-{
-  return _insertLeft;
-}
+    if (!STR_DEFAULT_WITH_INTERFACES)
+    {
+      setAutostartEnabled (true);
 
-void
-StructuralMenu::setInsertLeft (qreal insertLeft)
-{
-  _insertLeft = insertLeft;
+      if (props.value (STR_PROPERTY_ENTITY_AUTOSTART) == STR_VALUE_TRUE)
+        setAutoStartChecked (true);
+      else
+        setAutoStartChecked (false);
+    }
+    else if (!STR_DEFAULT_WITH_BODY &&
+             !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+    {
+      if ((e->getParent() != nullptr
+           && e->getParent()->getParent() == nullptr
+           && e->getCategory() == Structural::Interface)
+          || (e->getParent() == nullptr))
+      {
+        setAutostartEnabled (true);
+
+        if (props.value (STR_PROPERTY_ENTITY_AUTOSTART) == STR_VALUE_TRUE)
+          setAutoStartChecked (true);
+        else
+          setAutoStartChecked (false);
+      }
+    }
+  }
+
+  adjust (t);
+  QMenu::exec (screenPos);
 }
 
 void
@@ -41,20 +53,20 @@ StructuralMenu::adjust (StructuralType type)
   {
     case Structural::Media:
     {
-      switchAutostart (false);
+      setAutostartEnabled (false);
       break;
     }
 
     case Structural::Body:
     case Structural::Context:
     {
-      switchAutostart (false);
+      setAutostartEnabled (false);
       break;
     }
 
     case Structural::Switch:
     {
-      switchAutostart (false);
+      setAutostartEnabled (false);
       break;
     }
 
@@ -63,20 +75,20 @@ StructuralMenu::adjust (StructuralType type)
     case Structural::Port:
     case Structural::SwitchPort:
     {
-      switchAutostart (false);
+      setAutostartEnabled (false);
       break;
     }
 
     default:
     {
-      switchAutostart (false);
+      setAutostartEnabled (false);
       break;
     }
   }
 }
 
 void
-StructuralMenu::switchAutostart (bool state)
+StructuralMenu::setAutostartEnabled (bool state)
 {
   foreach (QAction *act, actions())
   {
@@ -88,7 +100,7 @@ StructuralMenu::switchAutostart (bool state)
 }
 
 void
-StructuralMenu::switchAutostartProperty (bool state)
+StructuralMenu::setAutoStartChecked (bool state)
 {
   foreach (QAction *act, actions())
   {
@@ -99,12 +111,3 @@ StructuralMenu::switchAutostartProperty (bool state)
   }
 }
 
-//void
-//StructuralMenu::performMedia ()
-//{
-//  qreal top = _insertTop - STR_DEFAULT_CONTENT_H / 2;
-//  qreal left = _insertLeft - STR_DEFAULT_CONTENT_W / 2;
-
-//  emit performedInsert (Structural::Media,
-//                        StructuralUtil::createProperties (top, left));
-//}

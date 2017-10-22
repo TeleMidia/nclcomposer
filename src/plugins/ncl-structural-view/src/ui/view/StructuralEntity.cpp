@@ -705,12 +705,6 @@ StructuralEntity::setzIndex (qreal zIndex)
   setZValue (zIndex);
 }
 
-StructuralMenu *
-StructuralEntity::getMenu () const
-{
-  return _menu;
-}
-
 void
 StructuralEntity::setMenu (StructuralMenu *menu)
 {
@@ -1284,42 +1278,8 @@ StructuralEntity::contextMenuEvent (QGraphicsSceneContextMenuEvent *event)
       emit selected (getUid (), StructuralUtil::createSettings ());
     }
 
-    if (_menu != NULL)
-    {
-      _menu->setInsertTop (event->pos ().y ());
-      _menu->setInsertLeft (event->pos ().x ());
-      _menu->adjust (_type);
-
-      if (!STR_DEFAULT_WITH_INTERFACES)
-      {
-        _menu->switchAutostart (true);
-
-        if (_properties.value (STR_PROPERTY_ENTITY_AUTOSTART)
-            == STR_VALUE_TRUE)
-          _menu->switchAutostartProperty (true);
-        else
-          _menu->switchAutostartProperty (false);
-      }
-      else if (!STR_DEFAULT_WITH_BODY &&
-               !STR_DEFAULT_WITH_FLOATING_INTERFACES)
-      {
-        if ((_parent != NULL &&
-            _parent->getParent () == NULL &&
-            _category == Structural::Interface) ||
-            (_parent == NULL))
-        {
-          _menu->switchAutostart (true);
-
-          if (_properties.value (STR_PROPERTY_ENTITY_AUTOSTART)
-              == STR_VALUE_TRUE)
-            _menu->switchAutostartProperty (true);
-          else
-            _menu->switchAutostartProperty (false);
-        }
-      }
-
-      _menu->exec (event->screenPos ());
-    }
+    Q_ASSERT (_menu != nullptr);
+    _menu->exec (event->screenPos(), this);
 
     event->accept ();
   }

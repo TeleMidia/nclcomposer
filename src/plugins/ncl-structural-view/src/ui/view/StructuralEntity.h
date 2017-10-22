@@ -153,7 +153,6 @@ public:
   qreal getzIndex () const;
   void setzIndex (qreal zIndex);
 
-  StructuralMenu *getMenu () const;
   void setMenu (StructuralMenu *menu);
 
   QString getError () const;

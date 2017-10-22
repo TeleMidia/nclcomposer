@@ -16,12 +16,7 @@ StructuralScene::contextMenuEvent (QGraphicsSceneContextMenuEvent *event)
 
   if (!event->isAccepted ())
   {
-    _menu->setInsertTop (event->scenePos ().y ());
-    _menu->setInsertLeft (event->scenePos ().x ());
-    _menu->adjust ();
-
     _menu->exec (event->screenPos ());
-
     event->accept ();
   }
 }

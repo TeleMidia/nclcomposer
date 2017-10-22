@@ -14,23 +14,14 @@ class StructuralMenu : public QMenu
 
 public:
   StructuralMenu (QWidget *parent = 0);
-  virtual ~StructuralMenu ();
-
-  qreal getInsertTop () const;
-  void setInsertTop (qreal insertTop);
-
-  qreal getInsertLeft () const;
-  void setInsertLeft (qreal insertLeft);
-
+  virtual ~StructuralMenu () {}
   void adjust (StructuralType type = Structural::NoType);
 
-public slots:
-  void switchAutostart (bool state);
-  void switchAutostartProperty (bool state);
+  void exec (const QPoint &, const StructuralEntity *e = nullptr);
 
-private:
-  qreal _insertTop;
-  qreal _insertLeft;
+public slots:
+  void setAutostartEnabled (bool state);
+  void setAutoStartChecked (bool state);
 };
 
 #endif // STRUCTURALMENU_H
