@@ -25,7 +25,6 @@ public:
   void adjust (StructuralType type = Structural::NoType);
 
 public slots:
-  void switchHelp (bool state);
   void switchAutostart (bool state);
   void switchAutostartProperty (bool state);
   void switchMedia (bool state);
@@ -43,7 +42,6 @@ public slots:
 #endif
 
 signals:
-  void performedHelp ();
   void performedAutostart ();
   void performedMedia ();
   void performedContext ();
@@ -79,7 +77,6 @@ private:
 
   QMenu *_insertMenu;
 
-  QAction *_helpAction;
   QAction *_autostartAction;
   QAction *_mediaAction;
   QAction *_contextAction;

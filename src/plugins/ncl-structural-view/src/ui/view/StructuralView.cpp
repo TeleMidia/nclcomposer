@@ -311,7 +311,6 @@ StructuralView::createConnections ()
   // Connecting with menu...
   connect (this, &StructuralView::switchedBody, _menu, &StructuralMenu::switchBody);
 
-  connect (_menu, &StructuralMenu::performedHelp, this, &StructuralView::performHelp);
   connect (_menu, &StructuralMenu::performedAutostart, this, &StructuralView::performAutostart);
   connect (_menu, &StructuralMenu::performedMedia, this, &StructuralView::performMedia);
   connect (_menu, &StructuralMenu::performedContext, this, &StructuralView::performContext);
@@ -1880,12 +1879,6 @@ StructuralView::createEntity (StructuralType type,
     settings[STR_SETTING_CODE] = StructuralUtil::createUid ();
 
   insert (uid, parent, properties, settings);
-}
-
-void
-StructuralView::performHelp ()
-{
-  // TODO
 }
 
 void

@@ -150,13 +150,6 @@ StructuralMenu::adjust (StructuralType type)
 void
 StructuralMenu::createActions ()
 {
-  // help action
-  _helpAction = new QAction (this);
-  _helpAction->setEnabled (false);
-  _helpAction->setText (tr ("Help"));
-  _helpAction->setShortcut (QKeySequence ("F1"));
-  _helpAction->setIcon (QIcon (":/icon/help"));
-
   // autostart action
   _autostartAction = new QAction (this);
   _autostartAction->setEnabled (false);
@@ -254,7 +247,6 @@ StructuralMenu::createMenus ()
     _insertMenu->addAction (_switchPortAction);
   }
 
-  addAction (_helpAction);
   addSeparator ();
 
   if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
@@ -277,7 +269,6 @@ StructuralMenu::createMenus ()
 void
 StructuralMenu::createConnections ()
 {
-  connect (_helpAction, SIGNAL (triggered ()), SIGNAL (performedHelp ()));
   connect (_autostartAction, SIGNAL (triggered ()),
            SIGNAL (performedAutostart ()));
 
@@ -297,12 +288,6 @@ StructuralMenu::createConnections ()
   connect (_switchPortAction, SIGNAL (triggered ()),
            SLOT (performSwitchPort ()));
   connect (_propertyAction, SIGNAL (triggered ()), SLOT (performProperty ()));
-}
-
-void
-StructuralMenu::switchHelp (bool state)
-{
-  _helpAction->setEnabled (state);
 }
 
 void
