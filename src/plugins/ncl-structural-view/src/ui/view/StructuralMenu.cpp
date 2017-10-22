@@ -1,5 +1,7 @@
 #include "StructuralMenu.h"
 
+#include <QDebug>
+
 StructuralMenu::StructuralMenu (QWidget *parent) :
   QMenu (parent)
 {
@@ -11,10 +13,12 @@ StructuralMenu::exec (const QPoint &screenPos, const StructuralEntity *e)
 {
   StructuralType t = Structural::NoType;
   if (e)
+    t = e->getType();
+  adjust (t);
+
+  if (e)
   {
     QMap <QString, QString> props = e->getProperties();
-    t = e->getType();
-
     if (!STR_DEFAULT_WITH_INTERFACES)
     {
       setAutostartEnabled (true);
@@ -42,7 +46,6 @@ StructuralMenu::exec (const QPoint &screenPos, const StructuralEntity *e)
     }
   }
 
-  adjust (t);
   QMenu::exec (screenPos);
 }
 

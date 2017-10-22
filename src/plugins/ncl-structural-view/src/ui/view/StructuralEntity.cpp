@@ -1281,7 +1281,6 @@ StructuralEntity::contextMenuEvent (QGraphicsSceneContextMenuEvent *event)
 
     CPR_ASSERT (_menu != nullptr);
     _menu->exec (event->screenPos(), this);
-
     event->accept ();
   }
 }

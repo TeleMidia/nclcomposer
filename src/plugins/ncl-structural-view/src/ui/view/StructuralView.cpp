@@ -635,7 +635,6 @@ StructuralView::insert (QString uid, QString parent,
       //
       // Connecting...
       //
-
       connect (e, &StructuralEntity::inserted, this, &StructuralView::insert);
       connect (e, &StructuralEntity::removed, this, &StructuralView::remove);
       connect (e, &StructuralEntity::changed, this, &StructuralView::change);
@@ -645,11 +644,9 @@ StructuralView::insert (QString uid, QString parent,
       //
       // Saving...
       //
-
       if (settings[STR_SETTING_UNDO] == STR_VALUE_TRUE)
       {
-        Insert *cmd = new Insert (uid, parent,
-                                      e->getProperties (), settings);
+        Insert *cmd = new Insert (uid, parent, e->getProperties (), settings);
         cmd->setText (settings[STR_SETTING_CODE]);
 
         connect (cmd, &Insert::insert, this, &StructuralView::insert);
@@ -695,7 +692,7 @@ StructuralView::getNewAngle (StructuralBind *bind)
 
   qreal angle = 0;
 
-  if (bind->getTail () != NULL && bind->getHead () != NULL)
+  if (bind->getTail () != nullptr && bind->getHead () != nullptr)
   {
     foreach (StructuralEntity *e, _entities.values ())
     {
@@ -1959,7 +1956,9 @@ StructuralView::performUndo ()
     QString code = _commands.undoText ();
 
     while (code == _commands.undoText ())
+    {
       _commands.undo ();
+    }
 
     emit switchedRedo (true);
   }
@@ -3849,9 +3848,9 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
   // Skip link entities.
   foreach (StructuralEntity *e, children)
   {
-    if ((e->getStructuralCategory () == Structural::Node
+    if ((e->getCategory () == Structural::Node
          || (WITH_INTERFACE_AS_NODE
-             && e->getStructuralCategory () == Structural::Interface))
+             && e->getCategory () == Structural::Interface))
         && e->getStructuralType () != Structural::Link)
     {
 
@@ -3880,7 +3879,7 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
 
   foreach (StructuralEntity *e, children)
   {
-    if (e->getStructuralCategory () == Structural::Edge)
+    if (e->getCategory () == Structural::Edge)
     {
       StructuralEdge *ee = (StructuralEdge *)e;
 
@@ -3901,7 +3900,7 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
           // In case the bind connect the link entity with a interface entity
           // (Node -> Interface) consider the parent of the interface entity
           // instead (Node -> Node).
-          if (head->getStructuralCategory () == Structural::Interface
+          if (head->getCategory () == Structural::Interface
               && head->getStructuralParent () != entity)
             head = head->getStructuralParent ();
 
@@ -3922,7 +3921,7 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
           // In case the bind connect the link entity with a interface entity
           // (Interface -> Node) consider the parent of the interface entity
           // instead (Node -> Node).
-          if (tail->getStructuralCategory () == Structural::Interface
+          if (tail->getCategory () == Structural::Interface
               && tail->getStructuralParent () != entity)
             tail = tail->getStructuralParent ();
 
@@ -3945,7 +3944,7 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
             // In case the bind connect the link entity with a interface entity
             // (Node -> Interface) consider the parent of the interface entity
             // instead (Node -> Node).
-            if (head->getStructuralCategory () == Structural::Interface
+            if (head->getCategory () == Structural::Interface
                 && head->getStructuralParent () != entity)
               head = head->getStructuralParent ();
 
@@ -3960,7 +3959,7 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
             // In case the bind connect the link entity with a interface entity
             // (Interface -> Node) consider the parent of the interface entity
             // instead (Node -> Node).
-            if (tail->getStructuralCategory () == Structural::Interface
+            if (tail->getCategory () == Structural::Interface
                 && tail->getStructuralParent () != entity)
               tail = tail->getStructuralParent ();
 
