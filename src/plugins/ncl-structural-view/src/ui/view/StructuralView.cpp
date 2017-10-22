@@ -309,22 +309,10 @@ void
 StructuralView::createConnections ()
 {
   // Connecting with menu...
-  connect (this, &StructuralView::switchedUndo, _menu, &StructuralMenu::switchUndo);
-  connect (this, &StructuralView::switchedRedo, _menu, &StructuralMenu::switchRedo);
-  connect (this, &StructuralView::switchedCut, _menu, &StructuralMenu::switchCut);
-  connect (this, &StructuralView::switchedCopy, _menu, &StructuralMenu::switchCopy);
-  connect (this, &StructuralView::switchedPaste, _menu, &StructuralMenu::switchPaste);
   connect (this, &StructuralView::switchedBody, _menu, &StructuralMenu::switchBody);
 
   connect (_menu, &StructuralMenu::performedHelp, this, &StructuralView::performHelp);
   connect (_menu, &StructuralMenu::performedAutostart, this, &StructuralView::performAutostart);
-  connect (_menu, &StructuralMenu::performedUndo, this, &StructuralView::performUndo);
-  connect (_menu, &StructuralMenu::performedRedo, this, &StructuralView::performRedo);
-  connect (_menu, &StructuralMenu::performedCut, this, &StructuralView::performCut);
-  connect (_menu, &StructuralMenu::performedCopy, this, &StructuralView::performCopy);
-  connect (_menu, &StructuralMenu::performedPaste, this, &StructuralView::performPaste);
-  connect (_menu, &StructuralMenu::performedDelete, this, &StructuralView::performDelete);
-  connect (_menu, &StructuralMenu::performedSnapshot, this, &StructuralView::snapshot);
   connect (_menu, &StructuralMenu::performedMedia, this, &StructuralView::performMedia);
   connect (_menu, &StructuralMenu::performedContext, this, &StructuralView::performContext);
   connect (_menu, &StructuralMenu::performedSwitch, this, &StructuralView::performSwitch);

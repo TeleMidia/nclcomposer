@@ -28,13 +28,6 @@ public slots:
   void switchHelp (bool state);
   void switchAutostart (bool state);
   void switchAutostartProperty (bool state);
-  void switchUndo (bool state);
-  void switchRedo (bool state);
-  void switchCut (bool state);
-  void switchCopy (bool state);
-  void switchPaste (bool state);
-  void switchDelete (bool state);
-  void switchSnapshot (bool state);
   void switchMedia (bool state);
   void switchContext (bool state);
   void switchSwitch (bool state);
@@ -52,13 +45,6 @@ public slots:
 signals:
   void performedHelp ();
   void performedAutostart ();
-  void performedUndo ();
-  void performedRedo ();
-  void performedCut ();
-  void performedCopy ();
-  void performedPaste ();
-  void performedDelete ();
-  void performedSnapshot ();
   void performedMedia ();
   void performedContext ();
   void performedSwitch ();
@@ -94,13 +80,6 @@ private:
   QMenu *_insertMenu;
 
   QAction *_helpAction;
-  QAction *_undoAction;
-  QAction *_redoAction;
-  QAction *_cutAction;
-  QAction *_copyAction;
-  QAction *_pasteAction;
-  QAction *_deleteAction;
-  QAction *_snapshotAction;
   QAction *_autostartAction;
   QAction *_mediaAction;
   QAction *_contextAction;

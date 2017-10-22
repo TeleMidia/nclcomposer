@@ -47,7 +47,6 @@ StructuralMenu::adjust (StructuralType type)
     {
       switchAutostart (false);
       switchAutostartProperty (false);
-      switchDelete (true);
       switchMedia (false);
       switchContext (false);
       switchSwitch (false);
@@ -64,7 +63,6 @@ StructuralMenu::adjust (StructuralType type)
     {
       switchAutostart (false);
       switchAutostartProperty (false);
-      switchDelete (true);
       switchMedia (true);
       switchContext (true);
       switchSwitch (true);
@@ -80,7 +78,6 @@ StructuralMenu::adjust (StructuralType type)
     {
       switchAutostart (false);
       switchAutostartProperty (false);
-      switchDelete (true);
       switchMedia (true);
       switchContext (true);
       switchSwitch (true);
@@ -99,7 +96,6 @@ StructuralMenu::adjust (StructuralType type)
     {
       switchAutostart (false);
       switchAutostartProperty (false);
-      switchDelete (true);
       switchMedia (false);
       switchContext (false);
       switchSwitch (false);
@@ -115,7 +111,6 @@ StructuralMenu::adjust (StructuralType type)
     {
       switchAutostart (false);
       switchAutostartProperty (false);
-      switchDelete (false);
       switchSwitchPort (false);
 
       if (STR_DEFAULT_WITH_BODY)
@@ -161,54 +156,6 @@ StructuralMenu::createActions ()
   _helpAction->setText (tr ("Help"));
   _helpAction->setShortcut (QKeySequence ("F1"));
   _helpAction->setIcon (QIcon (":/icon/help"));
-
-  // undo action
-  _undoAction = new QAction (this);
-  _undoAction->setEnabled (false);
-  _undoAction->setText (tr ("Undo"));
-  _undoAction->setShortcut (QKeySequence ("Ctrl+Z"));
-  _undoAction->setIcon (QIcon (":/icon/undo"));
-
-  // redo action
-  _redoAction = new QAction (this);
-  _redoAction->setEnabled (false);
-  _redoAction->setText (tr ("Redo"));
-  _redoAction->setShortcut (QKeySequence ("Ctrl+Shift+Z"));
-  _redoAction->setIcon (QIcon (":/icon/redo"));
-
-  // cut action
-  _cutAction = new QAction (this);
-  _cutAction->setEnabled (false);
-  _cutAction->setText (tr ("Cut"));
-  _cutAction->setShortcut (QKeySequence ("Ctrl+X"));
-  _cutAction->setIcon (QIcon (":/icon/cut"));
-
-  // copy action
-  _copyAction = new QAction (this);
-  _copyAction->setEnabled (false);
-  _copyAction->setText (tr ("Copy"));
-  _copyAction->setShortcut (QKeySequence ("Ctrl+C"));
-  _copyAction->setIcon (QIcon (":/icon/copy"));
-
-  // paste action
-  _pasteAction = new QAction (this);
-  _pasteAction->setEnabled (false);
-  _pasteAction->setText (tr ("Paste"));
-  _pasteAction->setShortcut (QKeySequence ("Ctrl+V"));
-  _pasteAction->setIcon (QIcon (":/icon/paste"));
-
-  // delete action
-  _deleteAction = new QAction (this);
-  _deleteAction->setEnabled (false);
-  _deleteAction->setText (tr ("Delete"));
-  _deleteAction->setShortcut (QKeySequence ("Del"));
-  _deleteAction->setIcon (QIcon (":/icon/delete"));
-
-  // snapshot action
-  _snapshotAction = new QAction (this);
-  _snapshotAction->setEnabled (true);
-  _snapshotAction->setText (tr ("Take a Snapshot..."));
-  _snapshotAction->setIcon (QIcon (":/icon/snapshot"));
 
   // autostart action
   _autostartAction = new QAction (this);
@@ -318,17 +265,6 @@ StructuralMenu::createMenus ()
 
   addMenu (_insertMenu);
   addSeparator ();
-  addAction (_undoAction);
-  addAction (_redoAction);
-  addSeparator ();
-  addAction (_cutAction);
-  addAction (_copyAction);
-  addAction (_pasteAction);
-  addSeparator ();
-  addAction (_deleteAction);
-  addSeparator ();
-  addAction (_snapshotAction);
-  addSeparator ();
 
 #ifdef WITH_GRAPHVIZ
   addAction (_autoadjustAction);
@@ -344,14 +280,6 @@ StructuralMenu::createConnections ()
   connect (_helpAction, SIGNAL (triggered ()), SIGNAL (performedHelp ()));
   connect (_autostartAction, SIGNAL (triggered ()),
            SIGNAL (performedAutostart ()));
-  connect (_undoAction, SIGNAL (triggered ()), SIGNAL (performedUndo ()));
-  connect (_redoAction, SIGNAL (triggered ()), SIGNAL (performedRedo ()));
-  connect (_cutAction, SIGNAL (triggered ()), SIGNAL (performedCut ()));
-  connect (_copyAction, SIGNAL (triggered ()), SIGNAL (performedCopy ()));
-  connect (_pasteAction, SIGNAL (triggered ()), SIGNAL (performedPaste ()));
-  connect (_deleteAction, SIGNAL (triggered ()), SIGNAL (performedDelete ()));
-  connect (_snapshotAction, SIGNAL (triggered ()),
-           SIGNAL (performedSnapshot ()));
 
 #ifdef WITH_GRAPHVIZ
   connect (_autoadjustAction, SIGNAL (triggered ()),
@@ -387,48 +315,6 @@ void
 StructuralMenu::switchAutostartProperty (bool state)
 {
   _autostartAction->setChecked (state);
-}
-
-void
-StructuralMenu::switchUndo (bool state)
-{
-  _undoAction->setEnabled (state);
-}
-
-void
-StructuralMenu::switchRedo (bool state)
-{
-  _redoAction->setEnabled (state);
-}
-
-void
-StructuralMenu::switchCut (bool state)
-{
-  _cutAction->setEnabled (state);
-}
-
-void
-StructuralMenu::switchCopy (bool state)
-{
-  _copyAction->setEnabled (state);
-}
-
-void
-StructuralMenu::switchPaste (bool state)
-{
-  _pasteAction->setEnabled (state);
-}
-
-void
-StructuralMenu::switchDelete (bool state)
-{
-  _deleteAction->setEnabled (state);
-}
-
-void
-StructuralMenu::switchSnapshot (bool state)
-{
-  _snapshotAction->setEnabled (state);
 }
 
 void

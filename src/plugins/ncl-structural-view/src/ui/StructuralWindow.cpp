@@ -34,6 +34,7 @@ StructuralWindow::createActions ()
   _undoAction->setText (tr ("Undo"));
   _undoAction->setIcon (QIcon (":/icon/undo"));
   _undoAction->setShortcut (QKeySequence ("Ctrl+Z"));
+  _view->getMenu()->addAction (_undoAction);
 
   // redo action
   _redoAction = new QAction (this);
@@ -41,6 +42,8 @@ StructuralWindow::createActions ()
   _redoAction->setText (tr ("Redo"));
   _redoAction->setIcon (QIcon (":/icon/redo"));
   _redoAction->setShortcut (QKeySequence ("Ctrl+Shift+Z"));
+  _view->getMenu ()->addAction (_redoAction);
+  _view->getMenu ()->addSeparator ();
 
   // cut action
   _cutAction = new QAction (this);
@@ -48,6 +51,7 @@ StructuralWindow::createActions ()
   _cutAction->setText (tr ("Cut"));
   _cutAction->setIcon (QIcon (":/icon/cut"));
   _cutAction->setShortcut (QKeySequence ("Ctrl+X"));
+  _view->getMenu ()->addAction (_cutAction);
 
   // copy action
   _copyAction = new QAction (this);
@@ -55,6 +59,7 @@ StructuralWindow::createActions ()
   _copyAction->setText (tr ("Copy"));
   _copyAction->setIcon (QIcon (":/icon/copy"));
   _copyAction->setShortcut (QKeySequence ("Ctrl+C"));
+  _view->getMenu ()->addAction (_copyAction);
 
   // paste action
   _pasteAction = new QAction (this);
@@ -62,6 +67,8 @@ StructuralWindow::createActions ()
   _pasteAction->setText (tr ("Paste"));
   _pasteAction->setIcon (QIcon (":/icon/paste"));
   _pasteAction->setShortcut (QKeySequence ("Ctrl+V"));
+  _view->getMenu ()->addAction (_pasteAction);
+  _view->getMenu ()->addSeparator ();
 
   // delete action
   _deleteAction = new QAction (this);
@@ -69,6 +76,8 @@ StructuralWindow::createActions ()
   _deleteAction->setText (tr ("Delete"));
   _deleteAction->setToolTip (tr ("Delete"));
   _deleteAction->setIcon (QIcon (":/icon/delete"));
+  _view->getMenu ()->addAction (_deleteAction);
+  _view->getMenu ()->addSeparator ();
 
   // snapshot action
   _snapshotAction = new QAction (this);
@@ -76,6 +85,7 @@ StructuralWindow::createActions ()
   _snapshotAction->setText (tr ("Snapshot"));
   _snapshotAction->setToolTip (tr ("Take a Snapshot..."));
   _snapshotAction->setIcon (QIcon (":/icon/snapshot"));
+  _view->getMenu ()->addAction (_snapshotAction);
 
   // zoomin action
   _zoominAction = new QAction (this);

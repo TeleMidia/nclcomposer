@@ -65,6 +65,8 @@ public:
 
   QString save ();
 
+  StructuralMenu *getMenu () {return _menu;}
+
 public slots:
   void insert (QString uid, QString parent, QMap<QString, QString> properties,
                QMap<QString, QString> settings);
