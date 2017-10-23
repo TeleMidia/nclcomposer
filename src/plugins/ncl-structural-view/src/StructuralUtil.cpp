@@ -14,26 +14,22 @@ StructuralUtil::createUid ()
 QMap<QString, QString>
 StructuralUtil::createProperties (qreal top, qreal left)
 {
-  QMap<QString, QString> props;
-
-  props[ST_ATTR_ENT_TOP] = QString::number (top);
-  props[ST_ATTR_ENT_LEFT] = QString::number (left);
-
-  return props;
+  return {
+    {ST_ATTR_ENT_TOP, QString::number (top)},
+    {ST_ATTR_ENT_LEFT, QString::number (left)}
+  };
 }
 
 QMap<QString, QString>
 StructuralUtil::createProperties (qreal top, qreal left, qreal width,
                                   qreal height)
 {
-  QMap<QString, QString> props;
-
-  props[ST_ATTR_ENT_TOP] = QString::number (top);
-  props[ST_ATTR_ENT_LEFT] = QString::number (left);
-  props[ST_ATTR_ENT_WIDTH] = QString::number (width);
-  props[ST_ATTR_ENT_HEIGHT] = QString::number (height);
-
-  return props;
+  return {
+    {ST_ATTR_ENT_TOP, QString::number (top)},
+    {ST_ATTR_ENT_LEFT, QString::number (left)},
+    {ST_ATTR_ENT_WIDTH, QString::number (width)},
+    {ST_ATTR_ENT_HEIGHT, QString::number (height)}
+  };
 }
 
 QMap<QString, QString>
@@ -77,13 +73,13 @@ StructuralUtil::createSettings (const QString &undo, const QString &notify,
 QMap<QString, QString>
 StructuralUtil::createCoreTranslations (StructuralType type)
 {
-  QMap<QString, QString> transl;
+  QMap<QString, QString> transls;
 
   switch (type)
   {
     case Structural::Body:
     {
-      transl[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
+      transls = { {NCL_ATTR_ID, ST_ATTR_ENT_ID} };
 
       break;
     }
@@ -91,90 +87,88 @@ StructuralUtil::createCoreTranslations (StructuralType type)
     case Structural::Context:
     case Structural::Switch:
     {
-      transl[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
-      transl[NCL_ATTR_REFER] = ST_ATTR_REFERENCE_REFER_ID;
+      transls = { {NCL_ATTR_ID, ST_ATTR_ENT_ID},
+                  {NCL_ATTR_REFER, ST_ATTR_REFERENCE_REFER_ID} };
 
       break;
     }
 
     case Structural::Media:
     {
-      transl[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
-      transl[NCL_ATTR_REFER] = ST_ATTR_REFERENCE_REFER_ID;
-      transl[NCL_ATTR_INSTANCE] = ST_ATTR_NODE_INSTANCE;
-      transl[NCL_ATTR_TYPE] = ST_ATTR_NODE_TYPE;
-      transl[NCL_ATTR_SRC] = ST_ATTR_NODE_SRC;
-      transl[NCL_ATTR_DESCRIPTOR] = NCL_ATTR_DESCRIPTOR;
-
+      transls = { {NCL_ATTR_ID, ST_ATTR_ENT_ID},
+                  {NCL_ATTR_REFER, ST_ATTR_REFERENCE_REFER_ID},
+                  {NCL_ATTR_INSTANCE, ST_ATTR_NODE_INSTANCE},
+                  {NCL_ATTR_TYPE, ST_ATTR_NODE_TYPE},
+                  {NCL_ATTR_SRC, ST_ATTR_NODE_SRC},
+                  {NCL_ATTR_DESCRIPTOR, NCL_ATTR_DESCRIPTOR} };
       break;
     }
 
     case Structural::Port:
     {
-      transl[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
-      transl[NCL_ATTR_COMPONENT] = ST_ATTR_REFERENCE_COMPONENT_ID;
-      transl[NCL_ATTR_INTERFACE] = ST_ATTR_REFERENCE_INTERFACE_ID;
+      transls = { {NCL_ATTR_ID, ST_ATTR_ENT_ID},
+                  {NCL_ATTR_COMPONENT, ST_ATTR_REFERENCE_COMPONENT_ID},
+                  {NCL_ATTR_INTERFACE, ST_ATTR_REFERENCE_INTERFACE_ID} };
 
       break;
     }
 
     case Structural::Property:
     {
-      transl[NCL_ATTR_NAME] = ST_ATTR_ENT_ID;
-      transl[NCL_ATTR_VALUE] = NCL_ATTR_VALUE;
-      transl[NCL_ATTR_EXTERNABLE] = NCL_ATTR_EXTERNABLE;
+      transls = { {NCL_ATTR_NAME, ST_ATTR_ENT_ID},
+                  {NCL_ATTR_VALUE, NCL_ATTR_VALUE},
+                  {NCL_ATTR_EXTERNABLE, NCL_ATTR_EXTERNABLE} };
       break;
     }
 
     case Structural::Area:
     {
-      transl[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
-
-      transl[NCL_ATTR_COORDS] = NCL_ATTR_COORDS;
-      transl[NCL_ATTR_BEGIN] = NCL_ATTR_BEGIN;
-      transl[NCL_ATTR_END] = NCL_ATTR_END;
-      transl[NCL_ATTR_BEGINTEXT] = NCL_ATTR_BEGINTEXT;
-      transl[NCL_ATTR_ENDTEXT] = NCL_ATTR_ENDTEXT;
-      transl[NCL_ATTR_BEGINPOSITION] = NCL_ATTR_BEGINPOSITION;
-      transl[NCL_ATTR_ENDPOSITION] = NCL_ATTR_ENDPOSITION;
-      transl[NCL_ATTR_FIRST] = NCL_ATTR_FIRST;
-      transl[NCL_ATTR_LAST] = NCL_ATTR_LAST;
-      transl[NCL_ATTR_LABEL] = NCL_ATTR_LABEL;
-      transl[NCL_ATTR_CLIP] = NCL_ATTR_CLIP;
+      transls = { {NCL_ATTR_ID, ST_ATTR_ENT_ID},
+                  {NCL_ATTR_COORDS, NCL_ATTR_COORDS},
+                  {NCL_ATTR_BEGIN, NCL_ATTR_BEGIN},
+                  {NCL_ATTR_END, NCL_ATTR_END},
+                  {NCL_ATTR_BEGINTEXT, NCL_ATTR_BEGINTEXT},
+                  {NCL_ATTR_ENDTEXT, NCL_ATTR_ENDTEXT},
+                  {NCL_ATTR_BEGINPOSITION, NCL_ATTR_BEGINPOSITION},
+                  {NCL_ATTR_ENDPOSITION, NCL_ATTR_ENDPOSITION},
+                  {NCL_ATTR_FIRST, NCL_ATTR_FIRST},
+                  {NCL_ATTR_LAST, NCL_ATTR_LAST},
+                  {NCL_ATTR_LABEL, NCL_ATTR_LABEL},
+                  {NCL_ATTR_CLIP, NCL_ATTR_CLIP} };
 
       break;
     }
 
     case Structural::SwitchPort:
     {
-      transl[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
+      transls = { {NCL_ATTR_ID, ST_ATTR_ENT_ID} };
 
       break;
     }
 
     case Structural::Link:
     {
-      transl[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
-      transl[NCL_ATTR_XCONNECTOR] = ST_ATTR_REFERENCE_XCONNECTOR_ID;
+      transls = { {NCL_ATTR_ID, ST_ATTR_ENT_ID},
+                  {NCL_ATTR_XCONNECTOR, ST_ATTR_REFERENCE_XCONNECTOR_ID} };
 
       break;
     }
 
     case Structural::Bind:
     {
-      transl[NCL_ATTR_ROLE] = ST_ATTR_ENT_ID;
-      transl[NCL_ATTR_XCONNECTOR] = ST_ATTR_REFERENCE_XCONNECTOR_ID;
-      transl[NCL_ATTR_COMPONENT] = ST_ATTR_REFERENCE_COMPONENT_ID;
-      transl[NCL_ATTR_INTERFACE] = ST_ATTR_REFERENCE_INTERFACE_ID;
-      transl[NCL_ATTR_DESCRIPTOR] = NCL_ATTR_DESCRIPTOR;
+      transls = { {NCL_ATTR_ROLE, ST_ATTR_ENT_ID},
+                  {NCL_ATTR_XCONNECTOR, ST_ATTR_REFERENCE_XCONNECTOR_ID},
+                  {NCL_ATTR_COMPONENT, ST_ATTR_REFERENCE_COMPONENT_ID},
+                  {NCL_ATTR_INTERFACE, ST_ATTR_REFERENCE_INTERFACE_ID},
+                  {NCL_ATTR_DESCRIPTOR, NCL_ATTR_DESCRIPTOR} };
 
       break;
     }
 
     case Structural::Mapping:
     {
-      transl[NCL_ATTR_COMPONENT] = ST_ATTR_REFERENCE_COMPONENT_ID;
-      transl[NCL_ATTR_INTERFACE] = ST_ATTR_REFERENCE_INTERFACE_ID;
+      transls = { {NCL_ATTR_COMPONENT, ST_ATTR_REFERENCE_COMPONENT_ID},
+                  {NCL_ATTR_INTERFACE, ST_ATTR_REFERENCE_INTERFACE_ID} };
 
       break;
     }
@@ -183,7 +177,7 @@ StructuralUtil::createCoreTranslations (StructuralType type)
       break;
   }
 
-  return transl;
+  return transls;
 }
 
 QMap<QString, QString>
