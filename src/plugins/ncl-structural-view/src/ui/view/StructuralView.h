@@ -14,7 +14,7 @@
 #include <QDir>
 #include <QUndoStack>
 
-#include "Command.h"
+#include "Commands.h"
 
 #include "StructuralBind.h"
 #include "StructuralComposition.h"

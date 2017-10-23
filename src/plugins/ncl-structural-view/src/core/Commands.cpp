@@ -1,4 +1,4 @@
-#include "Command.h"
+#include "Commands.h"
 
 Command::Command (Command *parent) : QObject (parent), QUndoCommand (parent)
 {
