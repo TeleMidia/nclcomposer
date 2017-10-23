@@ -16,11 +16,11 @@ set(NCL_STRUCTURAL_VIEW_SOURCES
   src/core/Remove.h
   src/core/Insert.h
   src/core/Change.h
+  src/core/StructuralUtil.h
   src/StructuralViewPlugin.h
   src/StructuralViewFactory.h
   src/ui/StructuralWindow.h
   src/ui/view/StructuralView.h
-  src/util/StructuralUtil.h
   src/ui/view/StructuralScene.h
   src/ui/view/StructuralEdge.h
   src/ui/view/StructuralNode.h
@@ -36,11 +36,11 @@ set(NCL_STRUCTURAL_VIEW_SOURCES
   src/ui/view/StructuralLinkTool.h
 
   src/core/Command.cpp
+  src/core/StructuralUtil.cpp
   src/StructuralViewPlugin.cpp
   src/StructuralViewFactory.cpp
   src/ui/StructuralWindow.cpp
   src/ui/view/StructuralView.cpp
-  src/util/StructuralUtil.cpp
   src/ui/view/StructuralScene.cpp
   src/ui/view/StructuralNode.cpp
   src/ui/view/StructuralMinimap.cpp
