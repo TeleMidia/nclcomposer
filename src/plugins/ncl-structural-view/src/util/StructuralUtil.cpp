@@ -14,26 +14,26 @@ StructuralUtil::createUid ()
 QMap<QString, QString>
 StructuralUtil::createProperties (qreal top, qreal left)
 {
-  QMap<QString, QString> properties;
+  QMap<QString, QString> props;
 
-  properties[ST_ATTR_ENT_TOP] = QString::number (top);
-  properties[ST_ATTR_ENT_LEFT] = QString::number (left);
+  props[ST_ATTR_ENT_TOP] = QString::number (top);
+  props[ST_ATTR_ENT_LEFT] = QString::number (left);
 
-  return properties;
+  return props;
 }
 
 QMap<QString, QString>
 StructuralUtil::createProperties (qreal top, qreal left, qreal width,
                                   qreal height)
 {
-  QMap<QString, QString> properties;
+  QMap<QString, QString> props;
 
-  properties[ST_ATTR_ENT_TOP] = QString::number (top);
-  properties[ST_ATTR_ENT_LEFT] = QString::number (left);
-  properties[ST_ATTR_ENT_WIDTH] = QString::number (width);
-  properties[ST_ATTR_ENT_HEIGHT] = QString::number (height);
+  props[ST_ATTR_ENT_TOP] = QString::number (top);
+  props[ST_ATTR_ENT_LEFT] = QString::number (left);
+  props[ST_ATTR_ENT_WIDTH] = QString::number (width);
+  props[ST_ATTR_ENT_HEIGHT] = QString::number (height);
 
-  return properties;
+  return props;
 }
 
 QMap<QString, QString>
@@ -77,13 +77,13 @@ StructuralUtil::createSettings (const QString &undo, const QString &notify,
 QMap<QString, QString>
 StructuralUtil::createCoreTranslations (StructuralType type)
 {
-  QMap<QString, QString> translations;
+  QMap<QString, QString> transl;
 
   switch (type)
   {
     case Structural::Body:
     {
-      translations[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
+      transl[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
 
       break;
     }
@@ -91,90 +91,90 @@ StructuralUtil::createCoreTranslations (StructuralType type)
     case Structural::Context:
     case Structural::Switch:
     {
-      translations[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
-      translations[NCL_ATTR_REFER] = ST_ATTR_REFERENCE_REFER_ID;
+      transl[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
+      transl[NCL_ATTR_REFER] = ST_ATTR_REFERENCE_REFER_ID;
 
       break;
     }
 
     case Structural::Media:
     {
-      translations[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
-      translations[NCL_ATTR_REFER] = ST_ATTR_REFERENCE_REFER_ID;
-      translations[NCL_ATTR_INSTANCE] = ST_ATTR_NODE_INSTANCE;
-      translations[NCL_ATTR_TYPE] = ST_ATTR_NODE_TYPE;
-      translations[NCL_ATTR_SRC] = ST_ATTR_NODE_SRC;
-      translations[NCL_ATTR_DESCRIPTOR] = NCL_ATTR_DESCRIPTOR;
+      transl[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
+      transl[NCL_ATTR_REFER] = ST_ATTR_REFERENCE_REFER_ID;
+      transl[NCL_ATTR_INSTANCE] = ST_ATTR_NODE_INSTANCE;
+      transl[NCL_ATTR_TYPE] = ST_ATTR_NODE_TYPE;
+      transl[NCL_ATTR_SRC] = ST_ATTR_NODE_SRC;
+      transl[NCL_ATTR_DESCRIPTOR] = NCL_ATTR_DESCRIPTOR;
 
       break;
     }
 
     case Structural::Port:
     {
-      translations[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
-      translations[NCL_ATTR_COMPONENT] = ST_ATTR_REFERENCE_COMPONENT_ID;
-      translations[NCL_ATTR_INTERFACE] = ST_ATTR_REFERENCE_INTERFACE_ID;
+      transl[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
+      transl[NCL_ATTR_COMPONENT] = ST_ATTR_REFERENCE_COMPONENT_ID;
+      transl[NCL_ATTR_INTERFACE] = ST_ATTR_REFERENCE_INTERFACE_ID;
 
       break;
     }
 
     case Structural::Property:
     {
-      translations[NCL_ATTR_NAME] = ST_ATTR_ENT_ID;
-      translations[NCL_ATTR_VALUE] = NCL_ATTR_VALUE;
-      translations[NCL_ATTR_EXTERNABLE] = NCL_ATTR_EXTERNABLE;
+      transl[NCL_ATTR_NAME] = ST_ATTR_ENT_ID;
+      transl[NCL_ATTR_VALUE] = NCL_ATTR_VALUE;
+      transl[NCL_ATTR_EXTERNABLE] = NCL_ATTR_EXTERNABLE;
       break;
     }
 
     case Structural::Area:
     {
-      translations[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
+      transl[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
 
-      translations[NCL_ATTR_COORDS] = NCL_ATTR_COORDS;
-      translations[NCL_ATTR_BEGIN] = NCL_ATTR_BEGIN;
-      translations[NCL_ATTR_END] = NCL_ATTR_END;
-      translations[NCL_ATTR_BEGINTEXT] = NCL_ATTR_BEGINTEXT;
-      translations[NCL_ATTR_ENDTEXT] = NCL_ATTR_ENDTEXT;
-      translations[NCL_ATTR_BEGINPOSITION] = NCL_ATTR_BEGINPOSITION;
-      translations[NCL_ATTR_ENDPOSITION] = NCL_ATTR_ENDPOSITION;
-      translations[NCL_ATTR_FIRST] = NCL_ATTR_FIRST;
-      translations[NCL_ATTR_LAST] = NCL_ATTR_LAST;
-      translations[NCL_ATTR_LABEL] = NCL_ATTR_LABEL;
-      translations[NCL_ATTR_CLIP] = NCL_ATTR_CLIP;
+      transl[NCL_ATTR_COORDS] = NCL_ATTR_COORDS;
+      transl[NCL_ATTR_BEGIN] = NCL_ATTR_BEGIN;
+      transl[NCL_ATTR_END] = NCL_ATTR_END;
+      transl[NCL_ATTR_BEGINTEXT] = NCL_ATTR_BEGINTEXT;
+      transl[NCL_ATTR_ENDTEXT] = NCL_ATTR_ENDTEXT;
+      transl[NCL_ATTR_BEGINPOSITION] = NCL_ATTR_BEGINPOSITION;
+      transl[NCL_ATTR_ENDPOSITION] = NCL_ATTR_ENDPOSITION;
+      transl[NCL_ATTR_FIRST] = NCL_ATTR_FIRST;
+      transl[NCL_ATTR_LAST] = NCL_ATTR_LAST;
+      transl[NCL_ATTR_LABEL] = NCL_ATTR_LABEL;
+      transl[NCL_ATTR_CLIP] = NCL_ATTR_CLIP;
 
       break;
     }
 
     case Structural::SwitchPort:
     {
-      translations[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
+      transl[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
 
       break;
     }
 
     case Structural::Link:
     {
-      translations[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
-      translations[NCL_ATTR_XCONNECTOR] = ST_ATTR_REFERENCE_XCONNECTOR_ID;
+      transl[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
+      transl[NCL_ATTR_XCONNECTOR] = ST_ATTR_REFERENCE_XCONNECTOR_ID;
 
       break;
     }
 
     case Structural::Bind:
     {
-      translations[NCL_ATTR_ROLE] = ST_ATTR_ENT_ID;
-      translations[NCL_ATTR_XCONNECTOR] = ST_ATTR_REFERENCE_XCONNECTOR_ID;
-      translations[NCL_ATTR_COMPONENT] = ST_ATTR_REFERENCE_COMPONENT_ID;
-      translations[NCL_ATTR_INTERFACE] = ST_ATTR_REFERENCE_INTERFACE_ID;
-      translations[NCL_ATTR_DESCRIPTOR] = NCL_ATTR_DESCRIPTOR;
+      transl[NCL_ATTR_ROLE] = ST_ATTR_ENT_ID;
+      transl[NCL_ATTR_XCONNECTOR] = ST_ATTR_REFERENCE_XCONNECTOR_ID;
+      transl[NCL_ATTR_COMPONENT] = ST_ATTR_REFERENCE_COMPONENT_ID;
+      transl[NCL_ATTR_INTERFACE] = ST_ATTR_REFERENCE_INTERFACE_ID;
+      transl[NCL_ATTR_DESCRIPTOR] = NCL_ATTR_DESCRIPTOR;
 
       break;
     }
 
     case Structural::Mapping:
     {
-      translations[NCL_ATTR_COMPONENT] = ST_ATTR_REFERENCE_COMPONENT_ID;
-      translations[NCL_ATTR_INTERFACE] = ST_ATTR_REFERENCE_INTERFACE_ID;
+      transl[NCL_ATTR_COMPONENT] = ST_ATTR_REFERENCE_COMPONENT_ID;
+      transl[NCL_ATTR_INTERFACE] = ST_ATTR_REFERENCE_INTERFACE_ID;
 
       break;
     }
@@ -183,38 +183,38 @@ StructuralUtil::createCoreTranslations (StructuralType type)
       break;
   }
 
-  return translations;
+  return transl;
 }
 
 QMap<QString, QString>
 StructuralUtil::createPluginTranslations (StructuralType type)
 {
-  QMap<QString, QString> translations;
+  QMap<QString, QString> transl;
   QMap<QString, QString> inverted = createCoreTranslations (type);
 
   foreach (const QString &key, inverted.keys ())
-    translations[inverted.value (key)] = key;
+    transl[inverted.value (key)] = key;
 
-  return translations;
+  return transl;
 }
 
 const std::map<Structural::Category, QString>
-    StructuralUtil::_mapCategoryToString
+    StructuralUtil::_categoryToString
     = { { Structural::Node, "node" },
         { Structural::Edge, "edge" },
         { Structural::Interface, "interface" },
         { Structural::NoCategory, "" } };
 
 const std::map<QString, Structural::Category>
-    StructuralUtil::_mapStringToCategory
+    StructuralUtil::_stringToCategory
     = invert<QString, Structural::Category> (
-        StructuralUtil::_mapCategoryToString);
+        StructuralUtil::_categoryToString);
 
 QString
 StructuralUtil::translateCategoryToString (StructuralCategory category)
 {
-  if (_mapCategoryToString.count (category))
-    return _mapCategoryToString.at (category);
+  if (_categoryToString.count (category))
+    return _categoryToString.at (category);
   else
     return "";
 }
@@ -222,13 +222,13 @@ StructuralUtil::translateCategoryToString (StructuralCategory category)
 StructuralCategory
 StructuralUtil::translateStringToCategory (const QString &category)
 {
-  if (_mapStringToCategory.count (category))
-    return _mapStringToCategory.at (category);
+  if (_stringToCategory.count (category))
+    return _stringToCategory.at (category);
   else
     return Structural::NoCategory;
 }
 
-const std::map<Structural::Type, QString> StructuralUtil::_mapTypeToString
+const std::map<Structural::Type, QString> StructuralUtil::_typeToString
     = { { Structural::Media, "media" },
         { Structural::Body, "body" },
         { Structural::Context, "context" },
@@ -243,14 +243,14 @@ const std::map<Structural::Type, QString> StructuralUtil::_mapTypeToString
         { Structural::Mapping, "mapping" },
         { Structural::NoType, "" } };
 
-const std::map<QString, Structural::Type> StructuralUtil::_mapStringToType
-    = invert<QString, Structural::Type> (StructuralUtil::_mapTypeToString);
+const std::map<QString, Structural::Type> StructuralUtil::_stringToType
+    = invert<QString, Structural::Type> (StructuralUtil::_typeToString);
 
 QString
 StructuralUtil::typeToString (StructuralType type)
 {
-  if (_mapTypeToString.count (type))
-    return _mapTypeToString.at (type);
+  if (_typeToString.count (type))
+    return _typeToString.at (type);
   else
     return "";
 }
@@ -258,13 +258,13 @@ StructuralUtil::typeToString (StructuralType type)
 StructuralType
 StructuralUtil::stringToType (const QString &type)
 {
-  if (_mapStringToType.count (type))
-    return _mapStringToType.at (type);
+  if (_stringToType.count (type))
+    return _stringToType.at (type);
   else
     return Structural::NoType;
 }
 
-const std::map<Structural::Role, QString> StructuralUtil::_mapRoleToString
+const std::map<Structural::Role, QString> StructuralUtil::_roleToString
     = { { Structural::onBegin, "onBegin" },
         { Structural::onEnd, "onEnd" },
         { Structural::onSelection, "onSelection" },
@@ -281,14 +281,14 @@ const std::map<Structural::Role, QString> StructuralUtil::_mapRoleToString
         { Structural::Set, "set" },
         { Structural::NoRole, "" } };
 
-const std::map<QString, Structural::Role> StructuralUtil::_mapStringToRole
-    = invert<QString, Structural::Role> (StructuralUtil::_mapRoleToString);
+const std::map<QString, Structural::Role> StructuralUtil::_stringToRole
+    = invert<QString, Structural::Role> (StructuralUtil::_roleToString);
 
 QString
 StructuralUtil::roleToString (StructuralRole role)
 {
-  if (_mapRoleToString.count (role))
-    return _mapRoleToString.at (role);
+  if (_roleToString.count (role))
+    return _roleToString.at (role);
   else
     return "";
 }
@@ -296,14 +296,14 @@ StructuralUtil::roleToString (StructuralRole role)
 StructuralRole
 StructuralUtil::stringToRole (const QString &role)
 {
-  if (_mapStringToRole.count (role))
-    return _mapStringToRole.at (role);
+  if (_stringToRole.count (role))
+    return _stringToRole.at (role);
   else
     return Structural::NoRole;
 }
 
 const std::map<Structural::MimeType, QString>
-    StructuralUtil::_mapMimeTypeToString
+    StructuralUtil::_mimeTypeToString
     = { { Structural::Text, "text" },   { Structural::Image, "image" },
         { Structural::Audio, "audio" }, { Structural::Video, "video" },
         { Structural::HTML, "html" },   { Structural::NCL, "ncl" },
@@ -311,15 +311,15 @@ const std::map<Structural::MimeType, QString>
         { Structural::Time, "time" },   { Structural::NoMimeType, "" } };
 
 const std::map<QString, Structural::MimeType>
-    StructuralUtil::_mapStringToMimeType
+    StructuralUtil::_stringToMimeType
     = invert<QString, Structural::MimeType> (
-        StructuralUtil::_mapMimeTypeToString);
+        StructuralUtil::_mimeTypeToString);
 
 QString
 StructuralUtil::mimeTypeToString (StructuralMimeType mimetype)
 {
-  if (_mapMimeTypeToString.count (mimetype))
-    return _mapMimeTypeToString.at (mimetype);
+  if (_mimeTypeToString.count (mimetype))
+    return _mimeTypeToString.at (mimetype);
   else
     return "media";
 }
@@ -327,8 +327,8 @@ StructuralUtil::mimeTypeToString (StructuralMimeType mimetype)
 StructuralMimeType
 StructuralUtil::stringToMimeType (const QString &mimetype)
 {
-  if (_mapStringToMimeType.count (mimetype))
-    return _mapStringToMimeType.at (mimetype);
+  if (_stringToMimeType.count (mimetype))
+    return _stringToMimeType.at (mimetype);
   else
     return Structural::NoMimeType;
 }
@@ -623,8 +623,8 @@ StructuralUtil::isCondition (StructuralRole role)
 bool
 StructuralUtil::isCondition (const QString &role)
 {
-  return (_mapStringToRole.count (role)
-              ? isCondition (_mapStringToRole.at (role))
+  return (_stringToRole.count (role)
+              ? isCondition (_stringToRole.at (role))
               : false);
 }
 
@@ -637,8 +637,8 @@ StructuralUtil::isAction (StructuralRole role)
 bool
 StructuralUtil::isAction (const QString &role)
 {
-  return _mapStringToRole.count (role)
-         && isAction (_mapStringToRole.at (role));
+  return _stringToRole.count (role)
+         && isAction (_stringToRole.at (role));
 }
 
 void

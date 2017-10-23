@@ -211,8 +211,7 @@ StructuralView::load (QDomElement entity, QDomElement parent)
 {
   if (!entity.attributeNode ("uid").nodeValue ().isEmpty ())
   {
-    QString entityUid;
-    QString parentUid;
+    QString entityUid, parentUid;
 
     entityUid = entity.attributeNode ("uid").nodeValue ();
 
@@ -223,25 +222,19 @@ StructuralView::load (QDomElement entity, QDomElement parent)
 
     QDomNodeList entityChildren = entity.childNodes ();
 
-    QMap<QString, QString> properties;
-
-    for (int i = 0; i < entityChildren.length (); i++)
+    QMap<QString, QString> props;
+    QDomNamedNodeMap attrs = entity.attributes();
+    for (int i = 0; i < attrs.count(); i++)
     {
-      if (entityChildren.item (i).isElement ())
-      {
-        QDomElement child = entityChildren.item (i).toElement ();
-
-        if (child.nodeName () == "property")
-          properties.insert (child.attributeNode ("name").nodeValue (),
-                             child.attributeNode ("value").nodeValue ());
-      }
+      QDomAttr attr = attrs.item (i).toAttr();
+      props.insert (attr.name (), attr.value ());
     }
 
     QMap<QString, QString> settings
         = StructuralUtil::createSettings (false, false);
     settings[ST_SETTINGS_ADJUST_REFERENCE] = ST_VALUE_FALSE;
 
-    insert (entityUid, parentUid, properties, settings);
+    insert (entityUid, parentUid, props, settings);
 
     for (int i = 0; i < entityChildren.length (); i++)
     {
@@ -259,9 +252,9 @@ StructuralView::load (QDomElement entity, QDomElement parent)
 QString
 StructuralView::save ()
 {
-  QDomDocument *document = new QDomDocument ();
+  QDomDocument *doc = new QDomDocument ();
 
-  QDomElement root = document->createElement ("structural");
+  QDomElement root = doc->createElement ("structural");
 
   foreach (const QString &key, _references.keys ())
   {
@@ -269,7 +262,7 @@ StructuralView::save ()
         && _entities.contains (_references.value (key)))
     {
 
-      QDomElement reference = document->createElement ("reference");
+      QDomElement reference = doc->createElement ("reference");
       reference.setAttribute ("uid", key);
       reference.setAttribute ("refer", _references.value (key));
 
@@ -281,18 +274,18 @@ StructuralView::save ()
   {
     foreach (StructuralEntity *e, _entities.values ())
       if (e->getType () == Structural::Body)
-        createDocument (e, document, root);
+        createDocument (e, doc, root);
   }
   else
   {
     foreach (StructuralEntity *e, _entities.values ())
       if (e->getParent () == nullptr)
-        createDocument (e, document, root);
+        createDocument (e, doc, root);
   }
 
-  document->appendChild (root);
+  doc->appendChild (root);
 
-  return document->toString (4);
+  return doc->toString (4);
 }
 
 void
@@ -367,11 +360,12 @@ StructuralView::createDocument (StructuralEntity *entity,
 
     foreach (const QString &key, entity->getProperties ().keys ())
     {
-      QDomElement property = document->createElement ("property");
-      property.setAttribute ("name", key);
-      property.setAttribute ("value", entity->getProperty (key));
+      element.setAttribute (key, entity->getProperty (key));
 
-      element.appendChild (property);
+//      QDomElement property = document->createElement ("property");
+//      property.setAttribute ("name", key);
+//      property.setAttribute ("value", entity->getProperty (key));
+//      element.appendChild (property);
     }
 
     foreach (StructuralEntity *e, entity->getChildren ())
@@ -745,7 +739,7 @@ StructuralView::getNewAngle (StructuralBind *bind)
 void
 StructuralView::remove (QString uid, QMap<QString, QString> settings)
 {
-  CPR_ASSERT (_entities.contains (uid));
+//  CPR_ASSERT (_entities.contains (uid));
 
   if (_entities.contains (uid))
   {

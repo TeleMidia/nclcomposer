@@ -154,7 +154,6 @@ StructuralViewPlugin::updateFromModel ()
       if (!e->getId ().isEmpty ())
       {
         QString cacheId = createCacheId (e);
-
         QMap<QString, QString> properties = e->getProperties ();
 
         foreach (const QString &key, e->getProperties ().keys ())
