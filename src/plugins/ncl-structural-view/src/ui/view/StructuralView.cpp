@@ -223,10 +223,10 @@ StructuralView::load (QDomElement entity, QDomElement parent)
     QDomNodeList entityChildren = entity.childNodes ();
 
     QMap<QString, QString> props;
-    QDomNamedNodeMap attrs = entity.attributes();
-    for (int i = 0; i < attrs.count(); i++)
+    QDomNamedNodeMap attrs = entity.attributes ();
+    for (int i = 0; i < attrs.count (); i++)
     {
-      QDomAttr attr = attrs.item (i).toAttr();
+      QDomAttr attr = attrs.item (i).toAttr ();
       props.insert (attr.name (), attr.value ());
     }
 
@@ -362,10 +362,10 @@ StructuralView::createDocument (StructuralEntity *entity,
     {
       element.setAttribute (key, entity->getProperty (key));
 
-//      QDomElement property = document->createElement ("property");
-//      property.setAttribute ("name", key);
-//      property.setAttribute ("value", entity->getProperty (key));
-//      element.appendChild (property);
+      //      QDomElement property = document->createElement ("property");
+      //      property.setAttribute ("name", key);
+      //      property.setAttribute ("value", entity->getProperty (key));
+      //      element.appendChild (property);
     }
 
     foreach (StructuralEntity *e, entity->getChildren ())
@@ -739,7 +739,7 @@ StructuralView::getNewAngle (StructuralBind *bind)
 void
 StructuralView::remove (QString uid, QMap<QString, QString> settings)
 {
-//  CPR_ASSERT (_entities.contains (uid));
+  //  CPR_ASSERT (_entities.contains (uid));
 
   if (_entities.contains (uid))
   {
@@ -1834,8 +1834,7 @@ StructuralView::performAutostart ()
   else
   {
     QMap<QString, QString> pProperty;
-    pProperty[ST_ATTR_ENT_TYPE]
-        = StructuralUtil::typeToStr (Structural::Port);
+    pProperty[ST_ATTR_ENT_TYPE] = StructuralUtil::typeToStr (Structural::Port);
 
     QString pParent = "";
 
@@ -2151,7 +2150,7 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
 
     if (parent != nullptr || !ST_DEFAULT_WITH_BODY)
     {
-      emit requestedUpdate ();
+      emit updateRequested ();
 
       if (tail->getCategory () == Structural::Interface)
       {
@@ -2398,7 +2397,7 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
 
         if (role.isEmpty ())
         {
-          emit requestedUpdate ();
+          emit updateRequested ();
 
           setMode (Structural::Pointing);
           emit switchedPointer (true);
@@ -2477,7 +2476,7 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
 
         if (role.isEmpty ())
         {
-          emit requestedUpdate ();
+          emit updateRequested ();
 
           setMode (Structural::Pointing);
           emit switchedPointer (true);
@@ -3208,7 +3207,7 @@ StructuralView::clean ()
 void
 StructuralView::performLinkDialog (StructuralLink *entity)
 {
-  emit requestedUpdate ();
+  emit updateRequested ();
 
   _dialog->setMode (entity->getProperty (ST_ATTR_REFERENCE_XCONNECTOR_ID), "",
                     "", StructuralLinkDialog::EditLink);
@@ -3293,7 +3292,7 @@ StructuralView::performBindDialog (StructuralBind *entity)
     }
   }
 
-  emit requestedUpdate ();
+  emit updateRequested ();
 
   if (StructuralUtil::isCondition (entity->getRole ()))
   {

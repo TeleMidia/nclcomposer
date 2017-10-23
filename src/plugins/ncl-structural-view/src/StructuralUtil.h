@@ -48,10 +48,10 @@ public:
 
   static QString getMimeTypeIcon (StructuralMimeType mimetype);
   static QString
-  getMimeTypeTooltip (StructuralMimeType mimetype, const QString &title = "",
-                      const QString &info = "", const QString &warning = "",
-                      const QString &error = "", const QString &extra = "");
-  static StructuralMimeType getMimeTypeByExtension (const QString &extension);
+  getMimeTooltip (StructuralMimeType mimetype, const QString &title = "",
+                  const QString &info = "", const QString &warning = "",
+                  const QString &error = "", const QString &extra = "");
+  static StructuralMimeType getMimeByExtension (const QString &ext);
 
   static QString getIcon (StructuralRole role);
 

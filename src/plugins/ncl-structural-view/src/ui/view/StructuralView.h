@@ -142,7 +142,7 @@ signals:
   void zoomChanged (int zoom);
   void switchedBody (bool state);
 
-  void requestedUpdate ();
+  void updateRequested ();
 
 protected:
   virtual void mouseMoveEvent (QMouseEvent *event);

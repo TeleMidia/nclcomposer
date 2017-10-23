@@ -449,10 +449,10 @@ StructuralUtil::getMimeTypeIcon (StructuralMimeType type)
 }
 
 QString
-StructuralUtil::getMimeTypeTooltip (StructuralMimeType mimetype,
-                                    const QString &title, const QString &info,
-                                    const QString &warning,
-                                    const QString &error, const QString &extra)
+StructuralUtil::getMimeTooltip (StructuralMimeType mimetype,
+                                const QString &title, const QString &info,
+                                const QString &warning, const QString &error,
+                                const QString &extra)
 {
   Q_UNUSED (extra);
 
@@ -499,10 +499,10 @@ const std::map<QString, Structural::MimeType> StructuralUtil::_mimeExtension
         { "ncl", Structural::NCL },     { "lua", Structural::NCLua } };
 
 Structural::MimeType
-StructuralUtil::getMimeTypeByExtension (const QString &extension)
+StructuralUtil::getMimeByExtension (const QString &ext)
 {
-  if (_mimeExtension.count (extension))
-    return _mimeExtension.at (extension);
+  if (_mimeExtension.count (ext))
+    return _mimeExtension.at (ext);
   else
     return Structural::NoMimeType;
 }
@@ -534,25 +534,24 @@ StructuralUtil::getIcon (StructuralRole role)
 }
 
 QVector<StructuralEntity *>
-StructuralUtil::getNeighbors (StructuralEntity *entity)
+StructuralUtil::getNeighbors (StructuralEntity *ent)
 {
   QVector<StructuralEntity *> neighbors;
 
-  StructuralEntity *parent = entity->getParent ();
+  StructuralEntity *parent = ent->getParent ();
 
-  if (parent != NULL)
+  if (parent != nullptr)
   {
     neighbors = parent->getChildren ();
   }
   else if (!ST_DEFAULT_WITH_BODY)
   {
-    if (entity->scene () != NULL)
+    if (ent->scene () != nullptr)
     {
-      StructuralView *view
-          = (StructuralView *)entity->scene ()->views ().at (1);
+      StructuralView *view = (StructuralView *)ent->scene ()->views ().at (1);
 
       foreach (StructuralEntity *current, view->getEntities ().values ())
-        if (current->getParent () == NULL && current != entity)
+        if (current->getParent () == NULL && current != ent)
           neighbors += current;
     }
   }
@@ -561,11 +560,11 @@ StructuralUtil::getNeighbors (StructuralEntity *entity)
 }
 
 QVector<StructuralEntity *>
-StructuralUtil::getUpNeighbors (StructuralEntity *entity)
+StructuralUtil::getUpNeighbors (StructuralEntity *ent)
 {
   QVector<StructuralEntity *> neighbors;
 
-  StructuralEntity *parent = entity->getParent ();
+  StructuralEntity *parent = ent->getParent ();
 
   if (parent != NULL)
   {
@@ -575,13 +574,13 @@ StructuralUtil::getUpNeighbors (StructuralEntity *entity)
     }
     else if (!ST_DEFAULT_WITH_BODY)
     {
-      if (entity->scene () != NULL)
+      if (ent->scene () != NULL)
       {
         StructuralView *view
-            = (StructuralView *)entity->scene ()->views ().at (1);
+            = (StructuralView *)ent->scene ()->views ().at (1);
 
         foreach (StructuralEntity *current, view->getEntities ().values ())
-          if (current->getParent () == NULL && current != entity)
+          if (current->getParent () == NULL && current != ent)
             neighbors += current;
       }
     }
@@ -623,11 +622,10 @@ StructuralUtil::isAction (const QString &role)
 }
 
 void
-StructuralUtil::adjustEdges (StructuralEntity *entity)
+StructuralUtil::adjustEdges (StructuralEntity *ent)
 {
-  QVector<StructuralEntity *> relatives;
-  relatives += getNeighbors (entity);
-  relatives += getUpNeighbors (entity);
+  QVector<StructuralEntity *> relatives = getNeighbors (ent);
+  relatives += getUpNeighbors (ent);
 
   foreach (StructuralEntity *relative, relatives)
   {
@@ -635,7 +633,7 @@ StructuralUtil::adjustEdges (StructuralEntity *entity)
     {
       StructuralEdge *edge = (StructuralEdge *)relative;
 
-      if (edge->getTail () == entity || edge->getHead () == entity)
+      if (edge->getTail () == ent || edge->getHead () == ent)
         edge->adjust (true);
     }
   }

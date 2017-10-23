@@ -90,7 +90,7 @@ StructuralContent::adjust (bool collision, bool recursion)
     QString suffix
         = location.right (location.length () - location.lastIndexOf ('.') - 1);
 
-    setMimeType (StructuralUtil::getMimeTypeByExtension (suffix));
+    setMimeType (StructuralUtil::getMimeByExtension (suffix));
   }
   else
   {
@@ -98,7 +98,7 @@ StructuralContent::adjust (bool collision, bool recursion)
   }
 
   if (_mimetype != Structural::NoMimeType)
-    setToolTip (StructuralUtil::getMimeTypeTooltip (
+    setToolTip (StructuralUtil::getMimeTooltip (
         _mimetype, getId (), getInfo (), getWarning (), getError ()));
 }
 

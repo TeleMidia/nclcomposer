@@ -254,8 +254,8 @@ StructuralEntity::adjust (bool collision, bool recursion)
   setId (_properties[ST_ATTR_ENT_ID]);
   setUid (_properties[ST_ATTR_ENT_UID]);
 
-  setCategory (StructuralUtil::strToCategory (
-      _properties[ST_ATTR_ENT_CATEGORY]));
+  setCategory (
+      StructuralUtil::strToCategory (_properties[ST_ATTR_ENT_CATEGORY]));
   setType (StructuralUtil::strToType (_properties[ST_ATTR_ENT_TYPE]));
 
   setTop (_properties[ST_ATTR_ENT_TOP].toDouble ());

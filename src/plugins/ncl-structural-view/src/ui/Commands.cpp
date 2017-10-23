@@ -60,7 +60,6 @@ Remove::redo ()
   emit remove (_uid, _settings);
 }
 
-
 Change::Change (const QString &uid, const QMap<QString, QString> &properties,
                 const QMap<QString, QString> &previous,
                 const QMap<QString, QString> &settings)

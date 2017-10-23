@@ -72,7 +72,6 @@ public slots:
   void textualFinishSync (QString, void *); /* from textual plugin */
 
 private:
-  void createWidgets ();
   void createConnections ();
 
   QString createCacheId (StructuralEntity *entity);
@@ -94,8 +93,8 @@ private:
 
   StructuralWindow *_window;
 
-  QMap<QString, QString> _mapCoreToView;
-  QMap<QString, QString> _mapViewToCore;
+  QMap<QString, QString> _coreToView;
+  QMap<QString, QString> _viewToCore;
 };
 
 #endif // STRUCTUALVIEWPLUGIN_H
