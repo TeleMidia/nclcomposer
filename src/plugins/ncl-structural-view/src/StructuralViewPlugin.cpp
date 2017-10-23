@@ -346,8 +346,8 @@ StructuralViewPlugin::updateFromModel ()
       {
         if (!properties.value (ST_ATTR_ENT_ID).isEmpty ())
         {
-          StructuralRole role = StructuralUtil::stringToRole (
-              properties.value (ST_ATTR_ENT_ID));
+          StructuralRole role
+              = StructuralUtil::strToRole (properties.value (ST_ATTR_ENT_ID));
 
           QString coreBindUID = _mapViewToCore.value (e->getUid ());
           QString viewLinkUID
@@ -722,8 +722,7 @@ StructuralViewPlugin::insertInView (Entity *entity, bool undo)
     {
       foreach (const QString &key, transls.keys ())
         if (!entity->getAttribute (key).isEmpty ())
-          properties.insert (transls.value (key),
-                             entity->getAttribute (key));
+          properties.insert (transls.value (key), entity->getAttribute (key));
 
       QMap<QString, QString> settings
           = StructuralUtil::createSettings (undo, false);
@@ -765,8 +764,8 @@ StructuralViewPlugin::insertInView (Entity *entity, bool undo)
 
         if (!properties.value (ST_ATTR_ENT_ID).isEmpty ())
         {
-          StructuralRole role = StructuralUtil::stringToRole (
-              properties.value (ST_ATTR_ENT_ID));
+          StructuralRole role
+              = StructuralUtil::strToRole (properties.value (ST_ATTR_ENT_ID));
 
           properties.insert (ST_ATTR_BIND_ROLE,
                              StructuralUtil::roleToString (role));
@@ -972,57 +971,46 @@ StructuralViewPlugin::changeInView (Entity *ent)
       {
         if (!props.value (ST_ATTR_ENT_ID).isEmpty ())
         {
-          StructuralRole role = StructuralUtil::stringToRole (
-              props.value (ST_ATTR_ENT_ID));
+          StructuralRole role
+              = StructuralUtil::strToRole (props.value (ST_ATTR_ENT_ID));
 
           props.insert (ST_ATTR_BIND_ROLE,
-                             StructuralUtil::roleToString (role));
-          props.insert (
-              ST_ATTR_REFERENCE_LINK_UID,
-              _mapCoreToView.value (ent->getParentUniqueId ()));
+                        StructuralUtil::roleToString (role));
+          props.insert (ST_ATTR_REFERENCE_LINK_UID,
+                        _mapCoreToView.value (ent->getParentUniqueId ()));
 
           if (StructuralUtil::isCondition (role))
           {
             if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
             {
-              props.insert (
-                  ST_ATTR_EDGE_TAIL,
-                  props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
-              props.insert (
-                  ST_ATTR_EDGE_HEAD,
-                  _mapCoreToView.value (ent->getParentUniqueId ()));
+              props.insert (ST_ATTR_EDGE_TAIL,
+                            props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
+              props.insert (ST_ATTR_EDGE_HEAD,
+                            _mapCoreToView.value (ent->getParentUniqueId ()));
             }
-            else if (!props.value (ST_ATTR_REFERENCE_COMPONENT_UID)
-                          .isEmpty ())
+            else if (!props.value (ST_ATTR_REFERENCE_COMPONENT_UID).isEmpty ())
             {
-              props.insert (
-                  ST_ATTR_EDGE_TAIL,
-                  props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
-              props.insert (
-                  ST_ATTR_EDGE_HEAD,
-                  _mapCoreToView.value (ent->getParentUniqueId ()));
+              props.insert (ST_ATTR_EDGE_TAIL,
+                            props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
+              props.insert (ST_ATTR_EDGE_HEAD,
+                            _mapCoreToView.value (ent->getParentUniqueId ()));
             }
           }
           else if (StructuralUtil::isAction (role))
           {
             if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
             {
-              props.insert (
-                  ST_ATTR_EDGE_TAIL,
-                  _mapCoreToView.value (ent->getParentUniqueId ()));
-              props.insert (
-                  ST_ATTR_EDGE_HEAD,
-                  props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
+              props.insert (ST_ATTR_EDGE_TAIL,
+                            _mapCoreToView.value (ent->getParentUniqueId ()));
+              props.insert (ST_ATTR_EDGE_HEAD,
+                            props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
             }
-            else if (!props.value (ST_ATTR_REFERENCE_COMPONENT_UID)
-                          .isEmpty ())
+            else if (!props.value (ST_ATTR_REFERENCE_COMPONENT_UID).isEmpty ())
             {
-              props.insert (
-                  ST_ATTR_EDGE_TAIL,
-                  _mapCoreToView.value (ent->getParentUniqueId ()));
-              props.insert (
-                  ST_ATTR_EDGE_HEAD,
-                  props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
+              props.insert (ST_ATTR_EDGE_TAIL,
+                            _mapCoreToView.value (ent->getParentUniqueId ()));
+              props.insert (ST_ATTR_EDGE_HEAD,
+                            props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
             }
           }
         }
@@ -1031,22 +1019,17 @@ StructuralViewPlugin::changeInView (Entity *ent)
       {
         if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
         {
-          props.insert (
-              ST_ATTR_EDGE_TAIL,
-              _mapCoreToView.value (ent->getParentUniqueId ()));
-          props.insert (
-              ST_ATTR_EDGE_HEAD,
-              props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
+          props.insert (ST_ATTR_EDGE_TAIL,
+                        _mapCoreToView.value (ent->getParentUniqueId ()));
+          props.insert (ST_ATTR_EDGE_HEAD,
+                        props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
         }
-        else if (!props.value (ST_ATTR_REFERENCE_COMPONENT_UID)
-                      .isEmpty ())
+        else if (!props.value (ST_ATTR_REFERENCE_COMPONENT_UID).isEmpty ())
         {
-          props.insert (
-              ST_ATTR_EDGE_TAIL,
-              _mapCoreToView.value (ent->getParentUniqueId ()));
-          props.insert (
-              ST_ATTR_EDGE_HEAD,
-              props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
+          props.insert (ST_ATTR_EDGE_TAIL,
+                        _mapCoreToView.value (ent->getParentUniqueId ()));
+          props.insert (ST_ATTR_EDGE_HEAD,
+                        props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
         }
       }
 
@@ -1058,13 +1041,12 @@ StructuralViewPlugin::changeInView (Entity *ent)
       if (_window->getView ()->hasEntity (uid))
       {
         _window->getView ()->change (
-            uid, props,
-            _window->getView ()->getEntity (uid)->getProperties (), settings);
+            uid, props, _window->getView ()->getEntity (uid)->getProperties (),
+            settings);
       }
     }
   }
-  else if (ent->getType () == "linkParam"
-           || ent->getType () == "bindParam")
+  else if (ent->getType () == "linkParam" || ent->getType () == "bindParam")
   {
 
     StructuralEntity *e = _window->getView ()->getEntity (

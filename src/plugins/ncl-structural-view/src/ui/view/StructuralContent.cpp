@@ -31,7 +31,7 @@ StructuralContent::setMimeType (Structural::MimeType type)
   _mimetype = type;
 
   StructuralNode::setProperty (ST_ATTR_NODE_MIMETYPE,
-                               StructuralUtil::mimeTypeToString (type));
+                               StructuralUtil::mimeToStr (type));
 }
 
 void

@@ -26,17 +26,16 @@ public:
   static QMap<QString, QString> createPluginTranslations (StructuralType type);
 
   static QString categoryToStr (StructuralCategory category);
-  static StructuralCategory
-  strToCategory (const QString &category);
+  static StructuralCategory strToCategory (const QString &category);
 
   static QString typeToStr (StructuralType type);
   static StructuralType strToType (const QString &type);
 
   static QString roleToString (StructuralRole role);
-  static StructuralRole stringToRole (const QString &role);
+  static StructuralRole strToRole (const QString &role);
 
-  static QString mimeTypeToString (StructuralMimeType mimetype);
-  static StructuralMimeType stringToMimeType (const QString &mimetype);
+  static QString mimeToStr (StructuralMimeType mimetype);
+  static StructuralMimeType strToMime (const QString &mimetype);
 
   static QString getIcon (StructuralType type);
   static QString getColor (StructuralType type);
@@ -71,24 +70,24 @@ public:
   static bool validateKinship (StructuralType type, StructuralType parent);
 
 private:
-  static const std::map<StructuralCategory, QString> _categoryToString;
-  static const std::map<QString, StructuralCategory> _stringToCategory;
+  static const std::map<StructuralCategory, QString> _categoryToStr;
+  static const std::map<QString, StructuralCategory> _strToCategory;
 
-  static const std::map<QString, StructuralType> _stringToType;
-  static const std::map<StructuralType, QString> _typeToString;
+  static const std::map<QString, StructuralType> _strToType;
+  static const std::map<StructuralType, QString> _typeToStr;
 
-  static const std::map<StructuralRole, QString> _roleToString;
-  static const std::map<QString, StructuralRole> _stringToRole;
+  static const std::map<StructuralRole, QString> _roleToStr;
+  static const std::map<QString, StructuralRole> _strToRole;
 
-  static const std::map<StructuralMimeType, QString> _mimeTypeToString;
-  static const std::map<QString, StructuralMimeType> _stringToMimeType;
+  static const std::map<StructuralMimeType, QString> _mimeToStr;
+  static const std::map<QString, StructuralMimeType> _strToMime;
 
   static const std::map<StructuralType, QString> _entitiesIcon;
   static const std::map<StructuralType, QString> _entitiesColor;
   static const std::map<StructuralType, QString> _entitiesPrefix;
 
-  static const std::map<StructuralMimeType, QString> _mimetypesIcon;
-  static const std::map<QString, StructuralMimeType> _mimetypesExtension;
+  static const std::map<StructuralMimeType, QString> _mimeIcon;
+  static const std::map<QString, StructuralMimeType> _mimeExtension;
 
   static const std::map<StructuralRole, QString> _rolesIcon;
 };
