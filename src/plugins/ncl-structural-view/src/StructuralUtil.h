@@ -25,12 +25,12 @@ public:
   static QMap<QString, QString> createCoreTranslations (StructuralType type);
   static QMap<QString, QString> createPluginTranslations (StructuralType type);
 
-  static QString translateCategoryToString (StructuralCategory category);
+  static QString categoryToStr (StructuralCategory category);
   static StructuralCategory
-  translateStringToCategory (const QString &category);
+  strToCategory (const QString &category);
 
-  static QString typeToString (StructuralType type);
-  static StructuralType stringToType (const QString &type);
+  static QString typeToStr (StructuralType type);
+  static StructuralType strToType (const QString &type);
 
   static QString roleToString (StructuralRole role);
   static StructuralRole stringToRole (const QString &role);

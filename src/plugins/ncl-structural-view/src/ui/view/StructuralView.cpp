@@ -152,7 +152,7 @@ StructuralView::load (const QString &data)
         if (element.nodeName () == "entity")
         {
           if (element.attributeNode ("type").nodeValue ()
-              == StructuralUtil::typeToString (Structural::Body))
+              == StructuralUtil::typeToStr (Structural::Body))
           {
             hasBody = true;
             break;
@@ -392,7 +392,7 @@ StructuralView::insert (QString uid, QString parent,
     // Creating...
     //
     StructuralType type
-        = StructuralUtil::stringToType (properties[ST_ATTR_ENT_TYPE]);
+        = StructuralUtil::strToType (properties[ST_ATTR_ENT_TYPE]);
 
     if (p != nullptr || !ST_DEFAULT_WITH_BODY)
     {
@@ -1514,7 +1514,7 @@ StructuralView::adjustReferences (StructuralEntity *entity)
               {
                 QMap<QString, QString> properties;
                 properties[ST_ATTR_ENT_TYPE]
-                    = StructuralUtil::typeToString (Structural::Reference);
+                    = StructuralUtil::typeToStr (Structural::Reference);
                 properties[ST_ATTR_EDGE_TAIL] = entity->getUid ();
                 properties[ST_ATTR_EDGE_HEAD] = head->getUid ();
 
@@ -1750,7 +1750,7 @@ void
 StructuralView::createEntity (StructuralType type)
 {
   QMap<QString, QString> properties;
-  properties[ST_ATTR_ENT_TYPE] = StructuralUtil::typeToString (type);
+  properties[ST_ATTR_ENT_TYPE] = StructuralUtil::typeToStr (type);
 
   createEntity (type, properties, StructuralUtil::createSettings ());
 }
@@ -1767,7 +1767,7 @@ StructuralView::createEntity (StructuralType type,
     parent = _selected;
 
   if (!properties.contains (ST_ATTR_ENT_TYPE))
-    properties[ST_ATTR_ENT_TYPE] = StructuralUtil::typeToString (type);
+    properties[ST_ATTR_ENT_TYPE] = StructuralUtil::typeToStr (type);
 
   if (!settings.contains (ST_SETTINGS_UNDO))
     settings[ST_SETTINGS_UNDO] = ST_VALUE_TRUE;
@@ -1835,7 +1835,7 @@ StructuralView::performAutostart ()
   {
     QMap<QString, QString> pProperty;
     pProperty[ST_ATTR_ENT_TYPE]
-        = StructuralUtil::typeToString (Structural::Port);
+        = StructuralUtil::typeToStr (Structural::Port);
 
     QString pParent = "";
 
@@ -2237,7 +2237,7 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
 
         QMap<QString, QString> properties;
         properties[ST_ATTR_ENT_TYPE]
-            = StructuralUtil::typeToString (Structural::Link);
+            = StructuralUtil::typeToStr (Structural::Link);
         properties[ST_ATTR_REFERENCE_XCONNECTOR_ID] = _dialog->getConnector ();
 
         qreal x = 0.0, y = 0.0;
@@ -2379,7 +2379,7 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
 
       QMap<QString, QString> properties;
       properties[ST_ATTR_ENT_TYPE]
-          = StructuralUtil::typeToString (Structural::Bind);
+          = StructuralUtil::typeToStr (Structural::Bind);
       properties[ST_ATTR_EDGE_TAIL] = tail->getUid ();
       properties[ST_ATTR_EDGE_HEAD] = head->getUid ();
 
@@ -2628,7 +2628,7 @@ StructuralView::createReference (StructuralEntity *tail,
       else if (tail->getType () == Structural::SwitchPort)
       {
         properties[ST_ATTR_ENT_TYPE]
-            = StructuralUtil::typeToString (Structural::Mapping);
+            = StructuralUtil::typeToStr (Structural::Mapping);
         properties[ST_ATTR_EDGE_TAIL] = tail->getUid ();
         properties[ST_ATTR_EDGE_HEAD] = head->getUid ();
 
@@ -3098,7 +3098,7 @@ StructuralView::dragEnterEvent (QDragEnterEvent *event)
     {
       QList<QUrl> list = event->mimeData ()->urls ();
       StructuralType type
-          = StructuralUtil::stringToType (event->mimeData ()->objectName ());
+          = StructuralUtil::strToType (event->mimeData ()->objectName ());
 
       if (!list.isEmpty ()
           || StructuralUtil::validateKinship (type, Structural::Body))
@@ -3120,7 +3120,7 @@ StructuralView::dragMoveEvent (QDragMoveEvent *event)
     {
       QList<QUrl> list = event->mimeData ()->urls ();
       StructuralType type
-          = StructuralUtil::stringToType (event->mimeData ()->objectName ());
+          = StructuralUtil::strToType (event->mimeData ()->objectName ());
 
       if (!list.isEmpty ()
           || StructuralUtil::validateKinship (type, Structural::Body))
@@ -3142,7 +3142,7 @@ StructuralView::dropEvent (QDropEvent *event)
     {
       QList<QUrl> list = event->mimeData ()->urls ();
       StructuralType type
-          = StructuralUtil::stringToType (event->mimeData ()->objectName ());
+          = StructuralUtil::strToType (event->mimeData ()->objectName ());
 
       if (!list.isEmpty ())
       {
@@ -3152,7 +3152,7 @@ StructuralView::dropEvent (QDropEvent *event)
 
           QMap<QString, QString> properties;
           properties[ST_ATTR_ENT_TYPE]
-              = StructuralUtil::typeToString (Structural::Media);
+              = StructuralUtil::typeToStr (Structural::Media);
           properties[ST_ATTR_ENT_ID]
               = StructuralUtil::formatId (QFileInfo (filename).baseName ());
           properties[ST_ATTR_NODE_SRC] = filename;

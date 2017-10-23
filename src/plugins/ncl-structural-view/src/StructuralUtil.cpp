@@ -211,7 +211,7 @@ const std::map<QString, Structural::Category>
         StructuralUtil::_categoryToString);
 
 QString
-StructuralUtil::translateCategoryToString (StructuralCategory category)
+StructuralUtil::categoryToStr (StructuralCategory category)
 {
   if (_categoryToString.count (category))
     return _categoryToString.at (category);
@@ -220,7 +220,7 @@ StructuralUtil::translateCategoryToString (StructuralCategory category)
 }
 
 StructuralCategory
-StructuralUtil::translateStringToCategory (const QString &category)
+StructuralUtil::strToCategory (const QString &category)
 {
   if (_stringToCategory.count (category))
     return _stringToCategory.at (category);
@@ -247,7 +247,7 @@ const std::map<QString, Structural::Type> StructuralUtil::_stringToType
     = invert<QString, Structural::Type> (StructuralUtil::_typeToString);
 
 QString
-StructuralUtil::typeToString (StructuralType type)
+StructuralUtil::typeToStr (StructuralType type)
 {
   if (_typeToString.count (type))
     return _typeToString.at (type);
@@ -256,7 +256,7 @@ StructuralUtil::typeToString (StructuralType type)
 }
 
 StructuralType
-StructuralUtil::stringToType (const QString &type)
+StructuralUtil::strToType (const QString &type)
 {
   if (_stringToType.count (type))
     return _stringToType.at (type);
@@ -407,7 +407,7 @@ StructuralUtil::getTooltip (StructuralType type, const QString &title,
   QString tooltip;
 
   // Adding type
-  tooltip += typeToString (type);
+  tooltip += typeToStr (type);
   tooltip += " ";
 
   // Adding title
