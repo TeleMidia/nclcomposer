@@ -13,9 +13,6 @@ find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 set(NCL_STRUCTURAL_VIEW_SOURCES
   src/core/Command.h
   src/core/Structural.h
-  src/core/Remove.h
-  src/core/Insert.h
-  src/core/Change.h
   src/core/StructuralUtil.h
   src/StructuralViewPlugin.h
   src/StructuralViewFactory.h
@@ -51,9 +48,6 @@ set(NCL_STRUCTURAL_VIEW_SOURCES
   src/ui/view/StructuralLink.cpp
   src/ui/view/StructuralBind.cpp
   src/ui/view/StructuralComposition.cpp
-  src/core/Remove.cpp
-  src/core/Insert.cpp
-  src/core/Change.cpp
   src/ui/view/StructuralContent.cpp
   src/ui/view/StructuralLinkDialog.cpp
   src/ui/view/StructuralLinkTool.cpp

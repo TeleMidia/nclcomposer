@@ -29,4 +29,61 @@ signals:
   void select (QString uid, QMap<QString, QString> settings);
 };
 
+class Insert : public Command
+{
+public:
+  Insert (const QString &uid, const QString &parent,
+          const QMap<QString, QString> &properties,
+          const QMap<QString, QString> &settings);
+  virtual ~Insert ();
+
+  virtual void undo ();
+  virtual void redo ();
+
+private:
+  QString _uid;
+  QString _parent;
+
+  QMap<QString, QString> _properties;
+  QMap<QString, QString> _settings;
+};
+
+class Remove : public Command
+{
+public:
+  Remove (const QString &uid, const QString &parent,
+          const QMap<QString, QString> &properties,
+          const QMap<QString, QString> &settings);
+  virtual ~Remove ();
+
+  virtual void undo ();
+  virtual void redo ();
+
+private:
+  QString _uid;
+  QString _parent;
+
+  QMap<QString, QString> _properties;
+  QMap<QString, QString> _settings;
+};
+
+class Change : public Command
+{
+public:
+  Change (const QString &uid, const QMap<QString, QString> &properties,
+          const QMap<QString, QString> &previous,
+          const QMap<QString, QString> &settings);
+  virtual ~Change ();
+
+  virtual void undo ();
+  virtual void redo ();
+
+private:
+  QString _uid;
+
+  QMap<QString, QString> _properties;
+  QMap<QString, QString> _previous;
+  QMap<QString, QString> _settings;
+};
+
 #endif // COMMAND_H
