@@ -43,7 +43,7 @@ StructuralEdge::setAngle (qreal angle)
 {
   _angle = angle;
 
-  setProperty (STR_PROPERTY_EDGE_ANGLE, QString::number (angle));
+  setProperty (STR_ATTR_EDGE_ANGLE, QString::number (angle));
 }
 
 qreal
@@ -124,7 +124,7 @@ StructuralEdge::adjust (bool collision, bool recursion)
   StructuralEntity::adjust (collision, recursion);
 
   // Adjusting properties...
-  setAngle (getProperty (STR_PROPERTY_EDGE_ANGLE).toDouble ());
+  setAngle (getProperty (STR_ATTR_EDGE_ANGLE).toDouble ());
 
   // Adjusting position...
   StructuralEntity *parent = getParent ();

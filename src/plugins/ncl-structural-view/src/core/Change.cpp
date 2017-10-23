@@ -15,8 +15,8 @@ Change::~Change () {}
 void
 Change::undo ()
 {
-  _settings[STR_SETTING_UNDO] = STR_VALUE_FALSE;
-  _settings[STR_SETTING_NOTIFY] = STR_VALUE_TRUE;
+  _settings[STR_SETTINGS_UNDO] = STR_VALUE_FALSE;
+  _settings[STR_SETTINGS_NOTIFY] = STR_VALUE_TRUE;
 
   emit change (_uid, _previous, _properties, _settings);
 }
@@ -24,7 +24,7 @@ Change::undo ()
 void
 Change::redo ()
 {
-  _settings[STR_SETTING_UNDO] = STR_VALUE_FALSE;
+  _settings[STR_SETTINGS_UNDO] = STR_VALUE_FALSE;
 
   emit change (_uid, _properties, _previous, _settings);
 }

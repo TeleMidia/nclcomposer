@@ -31,7 +31,7 @@ StructuralContent::setMimeType (Structural::MimeType type)
   _mimetype = type;
 
   StructuralNode::setProperty (
-      STR_PROPERTY_CONTENT_MIMETYPE,
+      STR_ATTR_NODE_MIMETYPE,
       StructuralUtil::mimeTypeToString (type));
 }
 
@@ -41,9 +41,9 @@ StructuralContent::adjust (bool collision, bool recursion)
   StructuralNode::adjust (collision, recursion);
 
   // Adjusting properties
-  if (!getProperty (STR_PROPERTY_CONTENT_TYPE).isEmpty ())
+  if (!getProperty (STR_ATTR_NODE_TYPE).isEmpty ())
   {
-    QString type = getProperty (STR_PROPERTY_CONTENT_TYPE);
+    QString type = getProperty (STR_ATTR_NODE_TYPE);
 
     if (type.startsWith ("image"))
     {
@@ -85,9 +85,9 @@ StructuralContent::adjust (bool collision, bool recursion)
       setMimeType (Structural::NoMimeType);
     }
   }
-  else if (!getProperty (STR_PROPERTY_CONTENT_LOCATION).isEmpty ())
+  else if (!getProperty (STR_ATTR_NODE_SRC).isEmpty ())
   {
-    QString location = getProperty (STR_PROPERTY_CONTENT_LOCATION);
+    QString location = getProperty (STR_ATTR_NODE_SRC);
     QString suffix
         = location.right (location.length () - location.lastIndexOf ('.') - 1);
 
@@ -119,7 +119,7 @@ StructuralContent::draw (QPainter *painter)
 
   if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
   {
-    if (getProperty (STR_PROPERTY_ENTITY_AUTOSTART)
+    if (getProperty (STR_ATTR_ENT_AUTOSTART)
         == STR_VALUE_TRUE)
     {
       painter->drawPixmap ((getWidth () - 2 * STR_DEFAULT_CONTENT_PADDING) / 2

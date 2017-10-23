@@ -138,7 +138,7 @@ StructuralComposition::draw (QPainter *painter)
     {
       if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
       {
-        if (getProperty (STR_PROPERTY_ENTITY_AUTOSTART)
+        if (getProperty (STR_ATTR_ENT_AUTOSTART)
             == STR_VALUE_TRUE)
         {
           painter->setPen (QPen (QBrush (QColor (76, 76, 76)), 2));
@@ -175,7 +175,7 @@ StructuralComposition::draw (QPainter *painter)
 
     if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
     {
-      if (getProperty (STR_PROPERTY_ENTITY_AUTOSTART)
+      if (getProperty (STR_ATTR_ENT_AUTOSTART)
           == STR_VALUE_TRUE)
       {
         painter->fillRect (
@@ -329,15 +329,15 @@ StructuralComposition::dropEvent (QGraphicsSceneDragDropEvent *event)
       QString filename = url.toLocalFile ();
 
       QMap<QString, QString> properties;
-      properties[STR_PROPERTY_ENTITY_TYPE]
+      properties[STR_ATTR_ENT_TYPE]
           = StructuralUtil::typeToString (Structural::Media);
-      properties[STR_PROPERTY_ENTITY_ID]
+      properties[STR_ATTR_ENT_ID]
           = StructuralUtil::formatId (QFileInfo (filename).baseName ());
-      properties[STR_PROPERTY_CONTENT_LOCATION] = filename;
+      properties[STR_ATTR_NODE_SRC] = filename;
 
-      properties[STR_PROPERTY_ENTITY_TOP]
+      properties[STR_ATTR_ENT_TOP]
           = QString::number (event->pos ().y () - STR_DEFAULT_CONTENT_H / 2);
-      properties[STR_PROPERTY_ENTITY_LEFT]
+      properties[STR_ATTR_ENT_LEFT]
           = QString::number (event->pos ().x () - STR_DEFAULT_CONTENT_W / 2);
 
       inserted (StructuralUtil::createUid (), getUid (), properties,

@@ -15,8 +15,8 @@ Insert::~Insert () {}
 void
 Insert::undo ()
 {
-  _settings[STR_SETTING_UNDO] = STR_VALUE_FALSE;
-  _settings[STR_SETTING_NOTIFY] = STR_VALUE_TRUE;
+  _settings[STR_SETTINGS_UNDO] = STR_VALUE_FALSE;
+  _settings[STR_SETTINGS_NOTIFY] = STR_VALUE_TRUE;
 
   emit remove (_uid, _settings);
 }
@@ -24,7 +24,7 @@ Insert::undo ()
 void
 Insert::redo ()
 {
-  _settings[STR_SETTING_UNDO] = STR_VALUE_FALSE;
+  _settings[STR_SETTINGS_UNDO] = STR_VALUE_FALSE;
 
   emit insert (_uid, _parent, _properties, _settings);
 }

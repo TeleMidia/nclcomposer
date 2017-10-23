@@ -12,92 +12,77 @@
 //
 
 // Entity defines
-#define STR_PROPERTY_ENTITY_ID ":structural:property:entity:id"
-#define STR_PROPERTY_ENTITY_UID ":structural:property:entity:uid"
-#define STR_PROPERTY_ENTITY_CATEGORY ":structural:property:entity:category"
-#define STR_PROPERTY_ENTITY_TYPE ":structural:property:entity:type"
+#define STR_ATTR_ENT_ID ":ent:id"
+#define STR_ATTR_ENT_UID ":ent:uid"
+#define STR_ATTR_ENT_CATEGORY ":ent:category"
+#define STR_ATTR_ENT_TYPE ":ent:type"
 
-#define STR_PROPERTY_ENTITY_TOP ":structural:property:entity:top"
-#define STR_PROPERTY_ENTITY_LEFT ":structural:property:entity:left"
-#define STR_PROPERTY_ENTITY_WIDTH ":structural:property:entity:width"
-#define STR_PROPERTY_ENTITY_HEIGHT ":structural:property:entity:height"
-#define STR_PROPERTY_ENTITY_ZINDEX ":structural:property:entity:zindex"
-#define STR_PROPERTY_ENTITY_UNCOLLAPSED_TOP                                   \
-  ":structural:property:entity:uncollaped:top"
-#define STR_PROPERTY_ENTITY_UNCOLLAPSED_LEFT                                  \
-  ":structural:property:entity:uncollaped:left"
-#define STR_PROPERTY_ENTITY_UNCOLLAPSED_WIDTH                                 \
-  ":structural:property:entity:uncollaped:width"
-#define STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT                                \
-  ":structural:property:entity:uncollaped:height"
+#define STR_ATTR_ENT_TOP ":ent:top"
+#define STR_ATTR_ENT_LEFT ":ent:left"
+#define STR_ATTR_ENT_WIDTH ":ent:width"
+#define STR_ATTR_ENT_HEIGHT ":ent:height"
+#define STR_ATTR_ENT_ZINDEX ":ent:zindex"
+#define STR_ATTR_ENT_UNCOLLAPSED_TOP ":ent:uncollapsed:top"
+#define STR_ATTR_ENT_UNCOLLAPSED_LEFT ":ent:uncollapsed:left"
+#define STR_ATTR_ENT_UNCOLLAPSED_WIDTH ":ent:uncollapsed:width"
+#define STR_ATTR_ENT_UNCOLLAPSED_HEIGHT ":ent:uncollapsed:height"
 
-#define STR_PROPERTY_ENTITY_AUTOSTART ":structural:property:entity:autostart"
-#define STR_PROPERTY_ENTITY_HIDDEN ":structural:property:entity:hidden"
-#define STR_PROPERTY_ENTITY_REFERENCE ":structural:property:entity:reference"
-#define STR_PROPERTY_ENTITY_UNCOLLAPSED                                       \
-  ":structural:property:entity:uncollapsed"
+#define STR_ATTR_ENT_AUTOSTART ":ent:autostart"
+#define STR_ATTR_ENT_HIDDEN ":ent:hidden"
+#define STR_ATTR_ENT_REFERENCE ":ent:reference"
+#define STR_ATTR_ENT_UNCOLLAPSED ":ent:uncollapsed"
 
 // Node defines
-#define STR_PROPERTY_CONTENT_LOCATION ":structural:property:content:location"
-#define STR_PROPERTY_CONTENT_TYPE ":structural:property:content:type"
-#define STR_PROPERTY_CONTENT_MIMETYPE ":structural:property:content:mimetype"
-#define STR_PROPERTY_CONTENT_INSTANCE ":structural:property:content:instance"
+#define STR_ATTR_NODE_SRC ":node:src"
+#define STR_ATTR_NODE_TYPE ":node:type"
+#define STR_ATTR_NODE_MIMETYPE ":node:mimetype"
+#define STR_ATTR_NODE_INSTANCE ":node:instance"
 
-#define STR_PROPERTY_LINKPARAM_NAME ":structural:property:linkparam:name"
-#define STR_PROPERTY_LINKPARAM_VALUE ":structural:propertylinkparam:value"
+// Link defines
+#define STR_ATTR_LINKPARAM_NAME ":linkparam:name"
+#define STR_ATTR_LINKPARAM_VALUE ":linkparam:value"
 
 // Edge defines
-#define STR_PROPERTY_EDGE_TAIL ":structural:property:edge:tail"
-#define STR_PROPERTY_EDGE_HEAD ":structural:property:edge:head"
-#define STR_PROPERTY_EDGE_ANGLE ":structural:property:edge:angle"
+#define STR_ATTR_EDGE_TAIL ":edge:tail"
+#define STR_ATTR_EDGE_HEAD ":edge:head"
+#define STR_ATTR_EDGE_ANGLE ":edge:angle"
 
-#define STR_PROPERTY_BIND_ROLE ":structural:property:bind:role"
+#define STR_ATTR_BIND_ROLE ":bind:role"
 
-#define STR_PROPERTY_BINDPARAM_NAME ":structural:property:bindparam:name"
-#define STR_PROPERTY_BINDPARAM_VALUE ":structural:property:bindparam:value"
+#define STR_ATTR_BINDPARAM_NAME ":bindparam:name"
+#define STR_ATTR_BINDPARAM_VALUE ":bindparam:value"
 
 // Interface defines
 // nothing...
 
 // Reference defines
-#define STR_PROPERTY_REFERENCE_LINK_ID ":structural:property:reference:link:id"
-#define STR_PROPERTY_REFERENCE_LINK_UID                                       \
-  ":structural:property:reference:link:uid"
+#define STR_ATTR_REFERENCE_LINK_ID ":ref:link:id"
+#define STR_ATTR_REFERENCE_LINK_UID ":ref:link:uid"
 
-#define STR_PROPERTY_REFERENCE_COMPONENT_ID                                   \
-  ":structural:property:reference:component:id"
-#define STR_PROPERTY_REFERENCE_COMPONENT_UID                                  \
-  ":structural:property:reference:component:uid"
+#define STR_ATTR_REFERENCE_COMPONENT_ID ":ref:component:id"
+#define STR_ATTR_REFERENCE_COMPONENT_UID ":ref:component:uid"
 
-#define STR_PROPERTY_REFERENCE_INTERFACE_ID                                   \
-  ":structural:property:reference:interface:id"
-#define STR_PROPERTY_REFERENCE_INTERFACE_UID                                  \
-  ":structural:property:reference:interface:uid"
+#define STR_ATTR_REFERENCE_INTERFACE_ID ":ref:interface:id"
+#define STR_ATTR_REFERENCE_INTERFACE_UID ":ref:interface:uid"
 
-#define STR_PROPERTY_REFERENCE_XCONNECTOR_ID                                  \
-  ":structural:property:reference:xconnector:id"
-#define STR_PROPERTY_REFERENCE_XCONNECTOR_UID                                 \
-  ":structural:property:reference:xconnector:uid"
+#define STR_ATTR_REFERENCE_XCONNECTOR_ID ":ref:xconnector:id"
+#define STR_ATTR_REFERENCE_XCONNECTOR_UID ":ref:xconnector:uid"
 
-#define STR_PROPERTY_REFERENCE_REFER_ID                                       \
-  ":structural:property:reference:refer:id"
-#define STR_PROPERTY_REFERENCE_REFER_UID                                      \
-  ":structural:property:reference:refer:uid"
+#define STR_ATTR_REFERENCE_REFER_ID ":ref:refer:id"
+#define STR_ATTR_REFERENCE_REFER_UID ":ref:refer:uid"
 
 //
 // Settings
 //
-
-#define STR_SETTING_UNDO ":structural:setting:undo"
-#define STR_SETTING_UNDO_TRACE ":structural:setting:undo:trace"
-#define STR_SETTING_NOTIFY ":structural:setting:notify"
-#define STR_SETTING_CODE ":structural:setting:code"
-#define STR_SETTING_ADJUST_REFERENCE ":structural:setting:adjust:reference"
+#define STR_SETTINGS_UNDO ":settings:undo"
+#define STR_SETTINGS_UNDO_TRACE ":settings:undo:trace"
+#define STR_SETTINGS_NOTIFY ":settings:notify"
+#define STR_SETTINGS_CODE ":settings:code"
+#define STR_SETTINGS_ADJUST_REFERENCE ":settings:adjust:reference"
 
 //
 // Values
 //
-
 #define STR_VALUE_TRUE "1"
 #define STR_VALUE_FALSE "0"
 

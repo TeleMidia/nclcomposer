@@ -24,7 +24,7 @@ StructuralBind::setRole (StructuralRole role)
 {
   _role = role;
 
-  setProperty (STR_PROPERTY_BIND_ROLE,
+  setProperty (STR_ATTR_BIND_ROLE,
                          StructuralUtil::roleToString (role));
 }
 
@@ -35,7 +35,7 @@ StructuralBind::adjust (bool collision, bool recursion)
 
   // Adjusting properties...
   setRole (StructuralUtil::stringToRole (
-      getProperty (STR_PROPERTY_BIND_ROLE)));
+      getProperty (STR_ATTR_BIND_ROLE)));
 }
 
 void

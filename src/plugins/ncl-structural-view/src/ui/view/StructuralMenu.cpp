@@ -23,7 +23,7 @@ StructuralMenu::exec (const QPoint &screenPos, const StructuralEntity *e)
     {
       setAutostartEnabled (true);
 
-      if (props.value (STR_PROPERTY_ENTITY_AUTOSTART) == STR_VALUE_TRUE)
+      if (props.value (STR_ATTR_ENT_AUTOSTART) == STR_VALUE_TRUE)
         setAutoStartChecked (true);
       else
         setAutoStartChecked (false);
@@ -38,7 +38,7 @@ StructuralMenu::exec (const QPoint &screenPos, const StructuralEntity *e)
       {
         setAutostartEnabled (true);
 
-        if (props.value (STR_PROPERTY_ENTITY_AUTOSTART) == STR_VALUE_TRUE)
+        if (props.value (STR_ATTR_ENT_AUTOSTART) == STR_VALUE_TRUE)
           setAutoStartChecked (true);
         else
           setAutoStartChecked (false);

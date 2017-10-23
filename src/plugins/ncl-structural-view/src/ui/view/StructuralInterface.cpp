@@ -146,7 +146,7 @@ StructuralInterface::draw (QPainter *painter)
 
   if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
   {
-    if (getProperty (STR_PROPERTY_ENTITY_AUTOSTART)
+    if (getProperty (STR_ATTR_ENT_AUTOSTART)
         == STR_VALUE_TRUE)
     {
       painter->setPen (QPen (QBrush (QColor (76, 76, 76)), 2));
