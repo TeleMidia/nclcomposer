@@ -94,7 +94,7 @@ public:
   QList<Preference *> preferences (const QString &category) const;
 
 private:
-  Preferences ();
+  Preferences () {}
   ~Preferences ();
 
   QMap<QString, Preference *> _preferences;

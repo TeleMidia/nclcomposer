@@ -34,8 +34,6 @@ Preference::Preference (const QString &name,
 
 INIT_SINGLETON (Preferences)
 
-Preferences::Preferences () {}
-
 Preferences::~Preferences ()
 {
   qDeleteAll (_preferences);

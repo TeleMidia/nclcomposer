@@ -14,7 +14,7 @@ class Command : public QObject, public QUndoCommand
 
 public:
   Command (Command *parent = 0);
-  virtual ~Command ();
+  virtual ~Command () {}
 
   virtual void undo () = 0;
   virtual void redo () = 0;
@@ -35,7 +35,7 @@ public:
   Insert (const QString &uid, const QString &parent,
           const QMap<QString, QString> &properties,
           const QMap<QString, QString> &settings);
-  virtual ~Insert ();
+  virtual ~Insert () {}
 
   virtual void undo ();
   virtual void redo ();
@@ -54,7 +54,7 @@ public:
   Remove (const QString &uid, const QString &parent,
           const QMap<QString, QString> &properties,
           const QMap<QString, QString> &settings);
-  virtual ~Remove ();
+  virtual ~Remove () {}
 
   virtual void undo ();
   virtual void redo ();
@@ -73,7 +73,7 @@ public:
   Change (const QString &uid, const QMap<QString, QString> &properties,
           const QMap<QString, QString> &previous,
           const QMap<QString, QString> &settings);
-  virtual ~Change ();
+  virtual ~Change () {}
 
   virtual void undo ();
   virtual void redo ();

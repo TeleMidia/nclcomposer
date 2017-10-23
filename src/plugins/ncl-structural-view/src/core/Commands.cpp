@@ -5,12 +5,6 @@ Command::Command (Command *parent) : QObject (parent), QUndoCommand (parent)
   // Nothing todo.
 }
 
-Command::~Command ()
-{
-  // Nothing todo.
-}
-
-
 Insert::Insert (const QString &uid, const QString &parent,
                 const QMap<QString, QString> &properties,
                 const QMap<QString, QString> &settings)
@@ -20,8 +14,6 @@ Insert::Insert (const QString &uid, const QString &parent,
   _properties = properties;
   _settings = settings;
 }
-
-Insert::~Insert () {}
 
 void
 Insert::undo ()
@@ -49,8 +41,6 @@ Remove::Remove (const QString &uid, const QString &parent,
   _properties = properties;
   _settings = settings;
 }
-
-Remove::~Remove () {}
 
 void
 Remove::undo ()
@@ -80,8 +70,6 @@ Change::Change (const QString &uid, const QMap<QString, QString> &properties,
   _previous = previous;
   _settings = settings;
 }
-
-Change::~Change () {}
 
 void
 Change::undo ()

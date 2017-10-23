@@ -34,11 +34,10 @@ class StructuralView : public QGraphicsView
   Q_OBJECT
 
 public:
-  // Zoom values are in %
-  constexpr static int ZOOM_MIN = 25;
-  constexpr static int ZOOM_MAX = 150;
-  constexpr static int ZOOM_ORIGINAL = 100;
-  constexpr static int ZOOM_STEP = 5;
+  constexpr static int ZOOM_MIN = ST_DEFAULT_SCENE_ZOOM_MIN;
+  constexpr static int ZOOM_MAX = ST_DEFAULT_SCENE_ZOOM_MAX;
+  constexpr static int ZOOM_ORIGINAL = ST_DEFAULT_SCENE_ZOOM_ORIGINAL;
+  constexpr static int ZOOM_STEP = ST_DEFAULT_SCENE_ZOOM_STEP;
 
   StructuralView (QWidget *parent = 0);
   virtual ~StructuralView ();
