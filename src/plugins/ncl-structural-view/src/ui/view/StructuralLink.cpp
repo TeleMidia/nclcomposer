@@ -50,8 +50,7 @@ StructuralLink::draw (QPainter *painter)
 
     painter->setRenderHint (QPainter::Antialiasing, false);
 
-    painter->drawRect (getMoveLeft () + ST_DEFAULT_ENTITY_PADDING
-                           - getLeft (),
+    painter->drawRect (getMoveLeft () + ST_DEFAULT_ENTITY_PADDING - getLeft (),
                        getMoveTop () + ST_DEFAULT_ENTITY_PADDING - getTop (),
                        getWidth (), getHeight ());
   }

@@ -30,9 +30,8 @@ StructuralContent::setMimeType (Structural::MimeType type)
 {
   _mimetype = type;
 
-  StructuralNode::setProperty (
-      ST_ATTR_NODE_MIMETYPE,
-      StructuralUtil::mimeTypeToString (type));
+  StructuralNode::setProperty (ST_ATTR_NODE_MIMETYPE,
+                               StructuralUtil::mimeTypeToString (type));
 }
 
 void
@@ -100,8 +99,7 @@ StructuralContent::adjust (bool collision, bool recursion)
 
   if (_mimetype != Structural::NoMimeType)
     setToolTip (StructuralUtil::getMimeTypeTooltip (
-        _mimetype, getId (), getInfo (), getWarning (),
-        getError ()));
+        _mimetype, getId (), getInfo (), getWarning (), getError ()));
 }
 
 void
@@ -119,8 +117,7 @@ StructuralContent::draw (QPainter *painter)
 
   if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
   {
-    if (getProperty (ST_ATTR_ENT_AUTOSTART)
-        == ST_VALUE_TRUE)
+    if (getProperty (ST_ATTR_ENT_AUTOSTART) == ST_VALUE_TRUE)
     {
       painter->drawPixmap ((getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
                                + ST_DEFAULT_ALERT_ICON_W,
@@ -197,8 +194,7 @@ StructuralContent::draw (QPainter *painter)
                      ST_DEFAULT_CONTENT_TEXT_H, Qt::AlignCenter, text);
 
   if (isMoving ())
-    painter->drawRect (getMoveLeft () + ST_DEFAULT_ENTITY_PADDING
-                           - getLeft (),
+    painter->drawRect (getMoveLeft () + ST_DEFAULT_ENTITY_PADDING - getLeft (),
                        getMoveTop () + ST_DEFAULT_ENTITY_PADDING - getTop (),
                        getWidth (), getHeight ());
 }

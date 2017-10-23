@@ -24,8 +24,7 @@ StructuralBind::setRole (StructuralRole role)
 {
   _role = role;
 
-  setProperty (ST_ATTR_BIND_ROLE,
-                         StructuralUtil::roleToString (role));
+  setProperty (ST_ATTR_BIND_ROLE, StructuralUtil::roleToString (role));
 }
 
 void
@@ -34,8 +33,7 @@ StructuralBind::adjust (bool collision, bool recursion)
   StructuralEdge::adjust (collision, recursion);
 
   // Adjusting properties...
-  setRole (StructuralUtil::stringToRole (
-      getProperty (ST_ATTR_BIND_ROLE)));
+  setRole (StructuralUtil::stringToRole (getProperty (ST_ATTR_BIND_ROLE)));
 }
 
 void
@@ -53,8 +51,8 @@ StructuralBind::draw (QPainter *painter)
     QLineF drawLine = getDrawLine (ST_DEFAULT_BIND_PADDING);
 
     // Drawing line...
-    painter->setPen (QPen (
-        QBrush (QColor (StructuralUtil::getColor (getType ()))), 1));
+    painter->setPen (
+        QPen (QBrush (QColor (StructuralUtil::getColor (getType ()))), 1));
 
     qreal x;
     qreal y;
@@ -215,8 +213,8 @@ StructuralBind::draw (QPainter *painter)
     // nothing...
 
     // Drawing head...
-    painter->drawPixmap (a, b, ST_DEFAULT_BIND_ROLE_W,
-                         ST_DEFAULT_BIND_ROLE_H, QPixmap (icon));
+    painter->drawPixmap (a, b, ST_DEFAULT_BIND_ROLE_W, ST_DEFAULT_BIND_ROLE_H,
+                         QPixmap (icon));
 
     if (!getError ().isEmpty () || !getWarning ().isEmpty ())
     {
@@ -313,8 +311,7 @@ StructuralBind::delineate (QPainterPath *painter) const
       }
     }
 
-    painter->addEllipse (x, y, ST_DEFAULT_BIND_ROLE_W,
-                         ST_DEFAULT_BIND_ROLE_H);
+    painter->addEllipse (x, y, ST_DEFAULT_BIND_ROLE_W, ST_DEFAULT_BIND_ROLE_H);
   }
 }
 

@@ -26,7 +26,8 @@ public:
   static QMap<QString, QString> createPluginTranslations (StructuralType type);
 
   static QString translateCategoryToString (StructuralCategory category);
-  static StructuralCategory translateStringToCategory (const QString &category);
+  static StructuralCategory
+  translateStringToCategory (const QString &category);
 
   static QString typeToString (StructuralType type);
   static StructuralType stringToType (const QString &type);
@@ -35,8 +36,7 @@ public:
   static StructuralRole stringToRole (const QString &role);
 
   static QString mimeTypeToString (StructuralMimeType mimetype);
-  static StructuralMimeType
-  stringToMimeType (const QString &mimetype);
+  static StructuralMimeType stringToMimeType (const QString &mimetype);
 
   static QString getIcon (StructuralType type);
   static QString getColor (StructuralType type);

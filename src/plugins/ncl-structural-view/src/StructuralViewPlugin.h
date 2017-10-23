@@ -44,7 +44,8 @@ public slots:
 
   virtual void onEntityAdded (const QString &pluginID, Entity *entity);
   virtual void onEntityChanged (const QString &pluginID, Entity *entity);
-  virtual void onEntityRemoved (const QString &pluginID, const QString &entityID);
+  virtual void onEntityRemoved (const QString &pluginID,
+                                const QString &entityID);
   virtual void changeSelectedEntity (const QString &pluginID, void *entityUID);
 
   virtual void errorMessage (const QString &error);
@@ -74,7 +75,7 @@ private:
   void createWidgets ();
   void createConnections ();
 
-  QString createCacheId(StructuralEntity* entity);
+  QString createCacheId (StructuralEntity *entity);
 
   QString getUidById (const QString &id);
   QString getUidById (const QString &id, Entity *entity);

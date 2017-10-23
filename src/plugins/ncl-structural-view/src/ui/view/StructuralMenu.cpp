@@ -2,23 +2,19 @@
 
 #include <QDebug>
 
-StructuralMenu::StructuralMenu (QWidget *parent) :
-  QMenu (parent)
-{
-
-}
+StructuralMenu::StructuralMenu (QWidget *parent) : QMenu (parent) {}
 
 void
 StructuralMenu::exec (const QPoint &screenPos, const StructuralEntity *e)
 {
   StructuralType t = Structural::NoType;
   if (e)
-    t = e->getType();
+    t = e->getType ();
   adjust (t);
 
   if (e)
   {
-    QMap <QString, QString> props = e->getProperties();
+    QMap<QString, QString> props = e->getProperties ();
     if (!ST_DEFAULT_WITH_INTERFACES)
     {
       setAutostartEnabled (true);
@@ -28,13 +24,12 @@ StructuralMenu::exec (const QPoint &screenPos, const StructuralEntity *e)
       else
         setAutoStartChecked (false);
     }
-    else if (!ST_DEFAULT_WITH_BODY &&
-             !ST_DEFAULT_WITH_FLOATING_INTERFACES)
+    else if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
     {
-      if ((e->getParent() != nullptr
-           && e->getParent()->getParent() == nullptr
-           && e->getCategory() == Structural::Interface)
-          || (e->getParent() == nullptr))
+      if ((e->getParent () != nullptr
+           && e->getParent ()->getParent () == nullptr
+           && e->getCategory () == Structural::Interface)
+          || (e->getParent () == nullptr))
       {
         setAutostartEnabled (true);
 
@@ -93,9 +88,9 @@ StructuralMenu::adjust (StructuralType type)
 void
 StructuralMenu::setAutostartEnabled (bool state)
 {
-  foreach (QAction *act, actions())
+  foreach (QAction *act, actions ())
   {
-    if (act->text() == "Set as starting node")
+    if (act->text () == "Set as starting node")
     {
       act->setEnabled (state);
     }
@@ -105,12 +100,11 @@ StructuralMenu::setAutostartEnabled (bool state)
 void
 StructuralMenu::setAutoStartChecked (bool state)
 {
-  foreach (QAction *act, actions())
+  foreach (QAction *act, actions ())
   {
-    if (act->text() == "Set as starting node")
+    if (act->text () == "Set as starting node")
     {
       act->setChecked (state);
     }
   }
 }
-

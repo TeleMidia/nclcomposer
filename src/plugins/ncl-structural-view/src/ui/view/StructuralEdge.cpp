@@ -147,8 +147,7 @@ StructuralEdge::adjust (bool collision, bool recursion)
       if (tail->getCategory () == Structural::Interface)
       {
         if (parent != NULL)
-          line.setP1 (
-              parent->mapFromItem (tail->getParent (), line.p1 ()));
+          line.setP1 (parent->mapFromItem (tail->getParent (), line.p1 ()));
         else if (tail->getParent () != NULL)
           line.setP1 (tail->getParent ()->mapToScene (line.p1 ()));
       }
@@ -156,8 +155,7 @@ StructuralEdge::adjust (bool collision, bool recursion)
       if (head->getCategory () == Structural::Interface)
       {
         if (parent != NULL)
-          line.setP2 (
-              parent->mapFromItem (head->getParent (), line.p2 ()));
+          line.setP2 (parent->mapFromItem (head->getParent (), line.p2 ()));
         else if (head->getParent () != NULL)
           line.setP2 (head->getParent ()->mapToScene (line.p2 ()));
       }
@@ -345,16 +343,15 @@ StructuralEdge::draw (QPainter *painter)
 
   // Drawing line...
   painter->setPen (
-      QPen (QBrush (QColor (StructuralUtil::getColor (getType ()))),
-            1, Qt::DashLine));
+      QPen (QBrush (QColor (StructuralUtil::getColor (getType ()))), 1,
+            Qt::DashLine));
   painter->drawLine (drawLine);
 
   // Drawing tail...
   // nothing...
 
   // Drawing head...
-  painter->setBrush (
-      QBrush (QColor (StructuralUtil::getColor (getType ()))));
+  painter->setBrush (QBrush (QColor (StructuralUtil::getColor (getType ()))));
   painter->setPen (Qt::NoPen);
 
   qreal angle;
@@ -368,9 +365,8 @@ StructuralEdge::draw (QPainter *painter)
 
   QPointF b = a - QPointF (sin (angle + PI / 3) * ST_DEFAULT_EDGE_HEAD_W,
                            cos (angle + PI / 3) * ST_DEFAULT_EDGE_HEAD_H);
-  QPointF c
-      = a - QPointF (sin (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_W,
-                     cos (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_H);
+  QPointF c = a - QPointF (sin (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_W,
+                           cos (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_H);
 
   QVector<QPointF> polygon;
   polygon.append (a);
@@ -407,9 +403,8 @@ StructuralEdge::delineate (QPainterPath *painter) const
 
   QPointF b = a - QPointF (sin (angle + PI / 3) * ST_DEFAULT_EDGE_HEAD_W,
                            cos (angle + PI / 3) * ST_DEFAULT_EDGE_HEAD_H);
-  QPointF c
-      = a - QPointF (sin (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_W,
-                     cos (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_H);
+  QPointF c = a - QPointF (sin (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_W,
+                           cos (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_H);
 
   QVector<QPointF> polygon;
   polygon.append (a);

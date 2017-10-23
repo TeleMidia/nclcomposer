@@ -141,13 +141,12 @@ StructuralInterface::draw (QPainter *painter)
   int w = getWidth () - 2 * ST_DEFAULT_INTERFACE_PADDING;
   int h = getHeight () - 2 * ST_DEFAULT_INTERFACE_PADDING;
 
-  painter->drawPixmap (
-      x, y, w, h, QPixmap (StructuralUtil::getIcon (getType ())));
+  painter->drawPixmap (x, y, w, h,
+                       QPixmap (StructuralUtil::getIcon (getType ())));
 
   if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
   {
-    if (getProperty (ST_ATTR_ENT_AUTOSTART)
-        == ST_VALUE_TRUE)
+    if (getProperty (ST_ATTR_ENT_AUTOSTART) == ST_VALUE_TRUE)
     {
       painter->setPen (QPen (QBrush (QColor (76, 76, 76)), 2));
       painter->drawRect (x, y, w, h);

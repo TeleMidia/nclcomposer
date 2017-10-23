@@ -35,38 +35,21 @@ private:
   void createStatusbar ();
   void createConnections ();
 
-  QToolBar *_editToolbar,
-           *_insertToolbar,
-           *_windowToolbar;
+  QToolBar *_editToolbar, *_insertToolbar, *_windowToolbar;
 
-  QAction *_undoAction,
-          *_redoAction;
+  QAction *_undoAction, *_redoAction;
 
-  QAction *_cutAction,
-          *_copyAction,
-          *_pasteAction,
-          *_deleteAction;
+  QAction *_cutAction, *_copyAction, *_pasteAction, *_deleteAction;
 
-  QAction *_snapshotAction,
-          *_zoominAction,
-          *_zoomoutAction,
-          *_zoomresetAction,
-          *_minimapAction;
+  QAction *_snapshotAction, *_zoominAction, *_zoomoutAction, *_zoomresetAction,
+      *_minimapAction;
 
-  QAction *_pointerAction,
-          *_linkAction;
+  QAction *_pointerAction, *_linkAction;
 
-  QAction *_mediaAction,
-          *_contextAction,
-          *_switchAction,
-          *_bodyAction,
-          *_areaAction,
-          *_propertyAction,
-          *_portAction,
-          *_switchportAction;
+  QAction *_mediaAction, *_contextAction, *_switchAction, *_bodyAction,
+      *_areaAction, *_propertyAction, *_portAction, *_switchportAction;
 
-  QAction *_autostartAction,
-          *_propertiesAction;
+  QAction *_autostartAction, *_propertiesAction;
 
 #ifdef WITH_GRAPHVIZ
   QAction *_autoadjustAction;

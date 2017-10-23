@@ -68,8 +68,7 @@ StructuralComposition::collapse (bool notify)
     setUncollapedWidth (getWidth ());
     setUncollapedHeight (getHeight ());
 
-    setTop (getTop () + getUncollapedHeight () / 2
-            - ST_DEFAULT_CONTENT_H / 2);
+    setTop (getTop () + getUncollapedHeight () / 2 - ST_DEFAULT_CONTENT_H / 2);
     setLeft (getLeft () + getUncollapedWidth () / 2
              - ST_DEFAULT_CONTENT_W / 2);
     setWidth (ST_DEFAULT_CONTENT_W);
@@ -115,8 +114,7 @@ StructuralComposition::draw (QPainter *painter)
     painter->setRenderHint (QPainter::Antialiasing, true);
     painter->setRenderHint (QPainter::SmoothPixmapTransform, false);
 
-    QColor drawColor
-        = QColor (StructuralUtil::getColor (getType ()));
+    QColor drawColor = QColor (StructuralUtil::getColor (getType ()));
     painter->setBrush (drawColor);
 
     if (!getError ().isEmpty () || !getWarning ().isEmpty ())
@@ -138,8 +136,7 @@ StructuralComposition::draw (QPainter *painter)
     {
       if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
       {
-        if (getProperty (ST_ATTR_ENT_AUTOSTART)
-            == ST_VALUE_TRUE)
+        if (getProperty (ST_ATTR_ENT_AUTOSTART) == ST_VALUE_TRUE)
         {
           painter->setPen (QPen (QBrush (QColor (76, 76, 76)), 2));
         }
@@ -150,9 +147,8 @@ StructuralComposition::draw (QPainter *painter)
       }
     }
 
-    painter->drawEllipse (ST_DEFAULT_ENTITY_PADDING,
-                          ST_DEFAULT_ENTITY_PADDING, getWidth (),
-                          getHeight ());
+    painter->drawEllipse (ST_DEFAULT_ENTITY_PADDING, ST_DEFAULT_ENTITY_PADDING,
+                          getWidth (), getHeight ());
 
     painter->setBrush (Qt::NoBrush);
 
@@ -175,8 +171,7 @@ StructuralComposition::draw (QPainter *painter)
 
     if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
     {
-      if (getProperty (ST_ATTR_ENT_AUTOSTART)
-          == ST_VALUE_TRUE)
+      if (getProperty (ST_ATTR_ENT_AUTOSTART) == ST_VALUE_TRUE)
       {
         painter->fillRect (
             ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
@@ -264,18 +259,18 @@ StructuralComposition::draw (QPainter *painter)
     if (text.length () > 5)
       text = text.replace (3, text.length () - 3, "...");
 
-    painter->drawText (
-        ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
-        ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING + getHeight ()
-            - ST_DEFAULT_CONTENT_TEXT_H - 2 * ST_DEFAULT_CONTENT_PADDING,
-        getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING,
-        ST_DEFAULT_CONTENT_TEXT_H, Qt::AlignCenter, text);
+    painter->drawText (ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
+                       ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING
+                           + getHeight () - ST_DEFAULT_CONTENT_TEXT_H
+                           - 2 * ST_DEFAULT_CONTENT_PADDING,
+                       getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING,
+                       ST_DEFAULT_CONTENT_TEXT_H, Qt::AlignCenter, text);
 
     if (isMoving ())
-      painter->drawRect (
-          getMoveLeft () + ST_DEFAULT_ENTITY_PADDING - getLeft (),
-          getMoveTop () + ST_DEFAULT_ENTITY_PADDING - getTop (), getWidth (),
-          getHeight ());
+      painter->drawRect (getMoveLeft () + ST_DEFAULT_ENTITY_PADDING
+                             - getLeft (),
+                         getMoveTop () + ST_DEFAULT_ENTITY_PADDING - getTop (),
+                         getWidth (), getHeight ());
   }
 }
 

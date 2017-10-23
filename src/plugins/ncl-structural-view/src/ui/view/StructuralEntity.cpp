@@ -1,7 +1,7 @@
 #include "StructuralEntity.h"
 
-#include <QMimeData>
 #include "util/Utilities.h"
+#include <QMimeData>
 
 StructuralEntity::StructuralEntity (StructuralEntity *parent)
     : QObject (parent), QGraphicsItem (parent)
@@ -115,8 +115,7 @@ void
 StructuralEntity::setType (StructuralType type)
 {
   _type = type;
-  _properties[ST_ATTR_ENT_TYPE]
-      = StructuralUtil::typeToString (_type);
+  _properties[ST_ATTR_ENT_TYPE] = StructuralUtil::typeToString (_type);
 
   _restrictions.clear ();
 
@@ -208,8 +207,7 @@ StructuralEntity::getProperties () const
 }
 
 void
-StructuralEntity::setProperties (
-    const QMap<QString, QString> &properties)
+StructuralEntity::setProperties (const QMap<QString, QString> &properties)
 {
   if (!_restrictions.isEmpty ())
   {
@@ -235,7 +233,7 @@ StructuralEntity::setProperties (
 QString
 StructuralEntity::getProperty (const QString &name) const
 {
-  if (_properties.contains(name))
+  if (_properties.contains (name))
     return _properties.value (name, "");
   else
     return "";
@@ -258,34 +256,27 @@ StructuralEntity::adjust (bool collision, bool recursion)
 
   setCategory (StructuralUtil::translateStringToCategory (
       _properties[ST_ATTR_ENT_CATEGORY]));
-  setType (StructuralUtil::stringToType (
-      _properties[ST_ATTR_ENT_TYPE]));
+  setType (StructuralUtil::stringToType (_properties[ST_ATTR_ENT_TYPE]));
 
   setTop (_properties[ST_ATTR_ENT_TOP].toDouble ());
   setLeft (_properties[ST_ATTR_ENT_LEFT].toDouble ());
   setWidth (_properties[ST_ATTR_ENT_WIDTH].toDouble ());
   setHeight (_properties[ST_ATTR_ENT_HEIGHT].toDouble ());
 
-  setUncollapedTop (
-      _properties[ST_ATTR_ENT_UNCOLLAPSED_TOP].toDouble ());
-  setUncollapedLeft (
-      _properties[ST_ATTR_ENT_UNCOLLAPSED_LEFT].toDouble ());
-  setUncollapedWidth (
-      _properties[ST_ATTR_ENT_UNCOLLAPSED_WIDTH].toDouble ());
+  setUncollapedTop (_properties[ST_ATTR_ENT_UNCOLLAPSED_TOP].toDouble ());
+  setUncollapedLeft (_properties[ST_ATTR_ENT_UNCOLLAPSED_LEFT].toDouble ());
+  setUncollapedWidth (_properties[ST_ATTR_ENT_UNCOLLAPSED_WIDTH].toDouble ());
   setUncollapedHeight (
       _properties[ST_ATTR_ENT_UNCOLLAPSED_HEIGHT].toDouble ());
 
   setzIndex (_properties[ST_ATTR_ENT_ZINDEX].toInt ());
 
-  setHidden ((_properties[ST_ATTR_ENT_HIDDEN] == ST_VALUE_TRUE
-                  ? true
-                  : false));
-  setReference ((_properties[ST_ATTR_ENT_REFERENCE] == ST_VALUE_TRUE
-                     ? true
-                     : false));
-  setUncollapsed ((
-      _properties[ST_ATTR_ENT_UNCOLLAPSED] == ST_VALUE_TRUE ? true
-                                                                     : false));
+  setHidden (
+      (_properties[ST_ATTR_ENT_HIDDEN] == ST_VALUE_TRUE ? true : false));
+  setReference (
+      (_properties[ST_ATTR_ENT_REFERENCE] == ST_VALUE_TRUE ? true : false));
+  setUncollapsed (
+      (_properties[ST_ATTR_ENT_UNCOLLAPSED] == ST_VALUE_TRUE ? true : false));
 
   setToolTip (StructuralUtil::getTooltip (
       _type, _id, _info, _warnning, _error,
@@ -377,8 +368,7 @@ void
 StructuralEntity::setHidden (bool hidden)
 {
   _hidden = hidden;
-  _properties[ST_ATTR_ENT_HIDDEN]
-      = (hidden ? ST_VALUE_TRUE : ST_VALUE_FALSE);
+  _properties[ST_ATTR_ENT_HIDDEN] = (hidden ? ST_VALUE_TRUE : ST_VALUE_FALSE);
 
   setVisible (!hidden);
 }
@@ -645,8 +635,7 @@ void
 StructuralEntity::setUncollapedTop (qreal uncollapedTop)
 {
   _uncollapsedTop = uncollapedTop;
-  _properties[ST_ATTR_ENT_UNCOLLAPSED_TOP]
-      = QString::number (uncollapedTop);
+  _properties[ST_ATTR_ENT_UNCOLLAPSED_TOP] = QString::number (uncollapedTop);
 }
 
 qreal
@@ -659,8 +648,7 @@ void
 StructuralEntity::setUncollapedLeft (qreal uncollapedLeft)
 {
   _uncollapsedLeft = uncollapedLeft;
-  _properties[ST_ATTR_ENT_UNCOLLAPSED_LEFT]
-      = QString::number (uncollapedLeft);
+  _properties[ST_ATTR_ENT_UNCOLLAPSED_LEFT] = QString::number (uncollapedLeft);
 }
 
 qreal
@@ -1280,7 +1268,7 @@ StructuralEntity::contextMenuEvent (QGraphicsSceneContextMenuEvent *event)
     }
 
     CPR_ASSERT (_menu != nullptr);
-    _menu->exec (event->screenPos(), this);
+    _menu->exec (event->screenPos (), this);
     event->accept ();
   }
 }
@@ -1380,8 +1368,8 @@ StructuralEntity::hoverLeaveEvent (QGraphicsSceneHoverEvent *event)
 void
 StructuralEntity::dragEnterEvent (QGraphicsSceneDragDropEvent *event)
 {
-  StructuralType type = StructuralUtil::stringToType (
-      event->mimeData ()->objectName ());
+  StructuralType type
+      = StructuralUtil::stringToType (event->mimeData ()->objectName ());
 
   if (StructuralUtil::validateKinship (type, _type)
       && event->mimeData ()->text () != _uid)
@@ -1393,8 +1381,8 @@ StructuralEntity::dragEnterEvent (QGraphicsSceneDragDropEvent *event)
 void
 StructuralEntity::dragMoveEvent (QGraphicsSceneDragDropEvent *event)
 {
-  StructuralType type = StructuralUtil::stringToType (
-      event->mimeData ()->objectName ());
+  StructuralType type
+      = StructuralUtil::stringToType (event->mimeData ()->objectName ());
 
   if (StructuralUtil::validateKinship (type, _type)
       && event->mimeData ()->text () != _uid)
@@ -1406,16 +1394,15 @@ StructuralEntity::dragMoveEvent (QGraphicsSceneDragDropEvent *event)
 void
 StructuralEntity::dropEvent (QGraphicsSceneDragDropEvent *event)
 {
-  StructuralType type = StructuralUtil::stringToType (
-      event->mimeData ()->objectName ());
+  StructuralType type
+      = StructuralUtil::stringToType (event->mimeData ()->objectName ());
 
   if (StructuralUtil::validateKinship (type, _type)
       && event->mimeData ()->text () != _uid)
   {
     QMap<QString, QString> properties;
     properties[ST_ATTR_ENT_TOP] = QString::number (event->pos ().y ());
-    properties[ST_ATTR_ENT_LEFT]
-        = QString::number (event->pos ().x ());
+    properties[ST_ATTR_ENT_LEFT] = QString::number (event->pos ().x ());
 
     emit moved (event->mimeData ()->text (), _uid, properties,
                 StructuralUtil::createSettings ());

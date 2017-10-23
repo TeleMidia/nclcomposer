@@ -1,7 +1,7 @@
 #include "StructuralWindow.h"
 
-StructuralWindow::StructuralWindow (QWidget *parent) : QMainWindow (parent),
-  _view (new StructuralView (this))
+StructuralWindow::StructuralWindow (QWidget *parent)
+    : QMainWindow (parent), _view (new StructuralView (this))
 {
   createActions ();
   createToolbar ();
@@ -34,7 +34,7 @@ StructuralWindow::createActions ()
   _undoAction->setText (tr ("Undo"));
   _undoAction->setIcon (QIcon (":/icon/undo"));
   _undoAction->setShortcut (QKeySequence ("Ctrl+Z"));
-  _view->getMenu()->addAction (_undoAction);
+  _view->getMenu ()->addAction (_undoAction);
 
   // redo action
   _redoAction = new QAction (this);
@@ -138,7 +138,7 @@ StructuralWindow::createActions ()
   _view->getMenu ()->addAction (_autostartAction);
 
   QMenu *insertMenu = new QMenu (_view->getMenu ());
-  insertMenu->setTitle (tr("&Insert"));
+  insertMenu->setTitle (tr ("&Insert"));
 
   // media action
   _mediaAction = new QAction (this);
@@ -337,52 +337,84 @@ StructuralWindow::createStatusbar ()
 void
 StructuralWindow::createConnections ()
 {
-  connect (_snapshotAction, &QAction::triggered, _view, &StructuralView::snapshot);
+  connect (_snapshotAction, &QAction::triggered, _view,
+           &StructuralView::snapshot);
   connect (_zoominAction, &QAction::triggered, _view, &StructuralView::zoomIn);
-  connect (_zoomoutAction, &QAction::triggered, _view, &StructuralView::zoomOut);
-  connect (_zoomresetAction, &QAction::triggered, _view, &StructuralView::zoomOriginal);
+  connect (_zoomoutAction, &QAction::triggered, _view,
+           &StructuralView::zoomOut);
+  connect (_zoomresetAction, &QAction::triggered, _view,
+           &StructuralView::zoomOriginal);
 
-  connect (_minimapAction, &QAction::triggered, _view, &StructuralView::toggleMinimapVisibility);
+  connect (_minimapAction, &QAction::triggered, _view,
+           &StructuralView::toggleMinimapVisibility);
 
-  connect (_undoAction, &QAction::triggered, _view, &StructuralView::performUndo);
-  connect (_redoAction, &QAction::triggered, _view, &StructuralView::performRedo);
-  connect (_cutAction, &QAction::triggered, _view, &StructuralView::performCut);
-  connect (_copyAction, &QAction::triggered, _view, &StructuralView::performCopy);
-  connect (_pasteAction, &QAction::triggered, _view, &StructuralView::performPaste);
-  connect (_deleteAction, &QAction::triggered, _view, &StructuralView::performDelete);
+  connect (_undoAction, &QAction::triggered, _view,
+           &StructuralView::performUndo);
+  connect (_redoAction, &QAction::triggered, _view,
+           &StructuralView::performRedo);
+  connect (_cutAction, &QAction::triggered, _view,
+           &StructuralView::performCut);
+  connect (_copyAction, &QAction::triggered, _view,
+           &StructuralView::performCopy);
+  connect (_pasteAction, &QAction::triggered, _view,
+           &StructuralView::performPaste);
+  connect (_deleteAction, &QAction::triggered, _view,
+           &StructuralView::performDelete);
 
-  connect (_pointerAction, &QAction::triggered, _view, &StructuralView::performPointer);
-  connect (_linkAction, &QAction::triggered, _view, &StructuralView::performLink);
+  connect (_pointerAction, &QAction::triggered, _view,
+           &StructuralView::performPointer);
+  connect (_linkAction, &QAction::triggered, _view,
+           &StructuralView::performLink);
 
-  connect (_autostartAction, &QAction::triggered, _view, &StructuralView::performAutostart);
-  connect (_mediaAction, &QAction::triggered, _view, &StructuralView::performMedia);
-  connect (_contextAction, &QAction::triggered, _view, &StructuralView::performContext);
-  connect (_switchAction, &QAction::triggered, _view, &StructuralView::performSwitch);
-  connect (_bodyAction, &QAction::triggered, _view, &StructuralView::performBody);
-  connect (_areaAction, &QAction::triggered, _view, &StructuralView::performArea);
+  connect (_autostartAction, &QAction::triggered, _view,
+           &StructuralView::performAutostart);
+  connect (_mediaAction, &QAction::triggered, _view,
+           &StructuralView::performMedia);
+  connect (_contextAction, &QAction::triggered, _view,
+           &StructuralView::performContext);
+  connect (_switchAction, &QAction::triggered, _view,
+           &StructuralView::performSwitch);
+  connect (_bodyAction, &QAction::triggered, _view,
+           &StructuralView::performBody);
+  connect (_areaAction, &QAction::triggered, _view,
+           &StructuralView::performArea);
 
-  connect (_propertyAction, &QAction::triggered, _view, &StructuralView::performProperty);
-  connect (_portAction, &QAction::triggered, _view, &StructuralView::performPort);
-  connect (_switchportAction, &QAction::triggered, _view, &StructuralView::performSwitchPort);
+  connect (_propertyAction, &QAction::triggered, _view,
+           &StructuralView::performProperty);
+  connect (_portAction, &QAction::triggered, _view,
+           &StructuralView::performPort);
+  connect (_switchportAction, &QAction::triggered, _view,
+           &StructuralView::performSwitchPort);
 
 #ifdef WITH_GRAPHVIZ
-  connect (_autostartAction, &QAction::triggered, this, &StructuralView::performAutoAdjust);
+  connect (_autostartAction, &QAction::triggered, this,
+           &StructuralView::performAutoAdjust);
 #endif
 
-  connect (_view, &StructuralView::switchedUndo, _undoAction, &QAction::setEnabled);
-  connect (_view, &StructuralView::switchedRedo, _redoAction, &QAction::setEnabled);
-  connect (_view, &StructuralView::switchedCut, _cutAction, &QAction::setEnabled);
-  connect (_view, &StructuralView::switchedCopy, _copyAction, &QAction::setEnabled);
-  connect (_view, &StructuralView::switchedPaste, _pasteAction, &QAction::setEnabled);
-  connect (_view, &StructuralView::switchedDelete, _deleteAction, &QAction::setEnabled);
-  connect (_view, &StructuralView::switchedSnapshot, _snapshotAction, &QAction::setEnabled);
+  connect (_view, &StructuralView::switchedUndo, _undoAction,
+           &QAction::setEnabled);
+  connect (_view, &StructuralView::switchedRedo, _redoAction,
+           &QAction::setEnabled);
+  connect (_view, &StructuralView::switchedCut, _cutAction,
+           &QAction::setEnabled);
+  connect (_view, &StructuralView::switchedCopy, _copyAction,
+           &QAction::setEnabled);
+  connect (_view, &StructuralView::switchedPaste, _pasteAction,
+           &QAction::setEnabled);
+  connect (_view, &StructuralView::switchedDelete, _deleteAction,
+           &QAction::setEnabled);
+  connect (_view, &StructuralView::switchedSnapshot, _snapshotAction,
+           &QAction::setEnabled);
 
+  connect (_view, &StructuralView::zoomChanged, this,
+           &StructuralWindow::handleZoomChanged);
 
-  connect (_view, &StructuralView::zoomChanged, this, &StructuralWindow::handleZoomChanged);
-
-  connect (_view, &StructuralView::switchedPointer, this, &StructuralWindow::switchPointer);
-  connect (_view, &StructuralView::switchedLink, this, &StructuralWindow::switchLink);
-  connect (_view, &StructuralView::switchedBody, this, &StructuralWindow::switchBody);
+  connect (_view, &StructuralView::switchedPointer, this,
+           &StructuralWindow::switchPointer);
+  connect (_view, &StructuralView::switchedLink, this,
+           &StructuralWindow::switchLink);
+  connect (_view, &StructuralView::switchedBody, this,
+           &StructuralWindow::switchBody);
 
   connect (_view, &StructuralView::selected, this, &StructuralWindow::select);
 }
