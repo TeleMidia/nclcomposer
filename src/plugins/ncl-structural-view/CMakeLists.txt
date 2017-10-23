@@ -11,11 +11,11 @@ configure_file(ncl-structural-view.json.in ncl-structural-view.json)
 find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 
 set(NCL_STRUCTURAL_VIEW_SOURCES
-  src/core/Commands.h
-  src/core/Structural.h
-  src/core/StructuralUtil.h
+  src/Structural.h
+  src/StructuralUtil.h
   src/StructuralViewPlugin.h
   src/StructuralViewFactory.h
+  src/ui/Commands.h
   src/ui/StructuralWindow.h
   src/ui/view/StructuralView.h
   src/ui/view/StructuralScene.h
@@ -32,10 +32,10 @@ set(NCL_STRUCTURAL_VIEW_SOURCES
   src/ui/view/StructuralLinkDialog.h
   src/ui/view/StructuralLinkTool.h
 
-  src/core/Commands.cpp
-  src/core/StructuralUtil.cpp
+  src/StructuralUtil.cpp
   src/StructuralViewPlugin.cpp
   src/StructuralViewFactory.cpp
+  src/ui/Commands.cpp
   src/ui/StructuralWindow.cpp
   src/ui/view/StructuralView.cpp
   src/ui/view/StructuralScene.cpp
