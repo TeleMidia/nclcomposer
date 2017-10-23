@@ -10,10 +10,10 @@ StructuralInterface::StructuralInterface (StructuralEntity *parent)
 
   setTop (0);
   setLeft (0);
-  setWidth (STR_DEFAULT_INTERFACE_W);
-  setHeight (STR_DEFAULT_INTERFACE_H);
+  setWidth (ST_DEFAULT_INTERFACE_W);
+  setHeight (ST_DEFAULT_INTERFACE_H);
 
-  if (!STR_DEFAULT_WITH_INTERFACES)
+  if (!ST_DEFAULT_WITH_INTERFACES)
   {
     setHidden (true);
   }
@@ -29,7 +29,7 @@ StructuralInterface::adjust (bool collision, bool recursion)
   // Adjusting position...
   StructuralEntity *parent = getParent ();
 
-  if (parent != NULL || !STR_DEFAULT_WITH_BODY)
+  if (parent != NULL || !ST_DEFAULT_WITH_BODY)
   {
     if (!collision)
     {
@@ -136,18 +136,18 @@ StructuralInterface::constrain ()
 void
 StructuralInterface::draw (QPainter *painter)
 {
-  int x = STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_INTERFACE_PADDING;
-  int y = STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_INTERFACE_PADDING;
-  int w = getWidth () - 2 * STR_DEFAULT_INTERFACE_PADDING;
-  int h = getHeight () - 2 * STR_DEFAULT_INTERFACE_PADDING;
+  int x = ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_INTERFACE_PADDING;
+  int y = ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_INTERFACE_PADDING;
+  int w = getWidth () - 2 * ST_DEFAULT_INTERFACE_PADDING;
+  int h = getHeight () - 2 * ST_DEFAULT_INTERFACE_PADDING;
 
   painter->drawPixmap (
       x, y, w, h, QPixmap (StructuralUtil::getIcon (getType ())));
 
-  if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+  if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
   {
-    if (getProperty (STR_ATTR_ENT_AUTOSTART)
-        == STR_VALUE_TRUE)
+    if (getProperty (ST_ATTR_ENT_AUTOSTART)
+        == ST_VALUE_TRUE)
     {
       painter->setPen (QPen (QBrush (QColor (76, 76, 76)), 2));
       painter->drawRect (x, y, w, h);
@@ -161,17 +161,17 @@ StructuralInterface::draw (QPainter *painter)
 
     if (!getError ().isEmpty ())
     {
-      icon = QString (STR_DEFAULT_ALERT_ERROR_ICON);
+      icon = QString (ST_DEFAULT_ALERT_ERROR_ICON);
     }
     else
     {
-      icon = QString (STR_DEFAULT_ALERT_WARNING_ICON);
+      icon = QString (ST_DEFAULT_ALERT_WARNING_ICON);
     }
 
-    painter->drawPixmap (x + w / 2 - (STR_DEFAULT_ALERT_ICON_W - 3) / 2,
-                         y + h / 2 - (STR_DEFAULT_ALERT_ICON_H - 3) / 2,
-                         STR_DEFAULT_ALERT_ICON_W - 3,
-                         STR_DEFAULT_ALERT_ICON_H - 3, QPixmap (icon));
+    painter->drawPixmap (x + w / 2 - (ST_DEFAULT_ALERT_ICON_W - 3) / 2,
+                         y + h / 2 - (ST_DEFAULT_ALERT_ICON_H - 3) / 2,
+                         ST_DEFAULT_ALERT_ICON_W - 3,
+                         ST_DEFAULT_ALERT_ICON_H - 3, QPixmap (icon));
   }
 
   if (isMoving ())

@@ -4,7 +4,7 @@ StructuralScene::StructuralScene (StructuralMenu *menu, QObject *parent) :
   QGraphicsScene (parent),
   _menu (menu)
 {
-  setSceneRect (0, 0, STR_DEFAULT_SCENE_W, STR_DEFAULT_SCENE_H);
+  setSceneRect (0, 0, ST_DEFAULT_SCENE_W, ST_DEFAULT_SCENE_H);
 }
 
 StructuralScene::~StructuralScene () {}

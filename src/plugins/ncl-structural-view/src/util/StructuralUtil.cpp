@@ -16,8 +16,8 @@ StructuralUtil::createProperties (qreal top, qreal left)
 {
   QMap<QString, QString> properties;
 
-  properties[STR_ATTR_ENT_TOP] = QString::number (top);
-  properties[STR_ATTR_ENT_LEFT] = QString::number (left);
+  properties[ST_ATTR_ENT_TOP] = QString::number (top);
+  properties[ST_ATTR_ENT_LEFT] = QString::number (left);
 
   return properties;
 }
@@ -28,10 +28,10 @@ StructuralUtil::createProperties (qreal top, qreal left, qreal width,
 {
   QMap<QString, QString> properties;
 
-  properties[STR_ATTR_ENT_TOP] = QString::number (top);
-  properties[STR_ATTR_ENT_LEFT] = QString::number (left);
-  properties[STR_ATTR_ENT_WIDTH] = QString::number (width);
-  properties[STR_ATTR_ENT_HEIGHT] = QString::number (height);
+  properties[ST_ATTR_ENT_TOP] = QString::number (top);
+  properties[ST_ATTR_ENT_LEFT] = QString::number (left);
+  properties[ST_ATTR_ENT_WIDTH] = QString::number (width);
+  properties[ST_ATTR_ENT_HEIGHT] = QString::number (height);
 
   return properties;
 }
@@ -45,8 +45,8 @@ StructuralUtil::createSettings ()
 QMap<QString, QString>
 StructuralUtil::createSettings (bool undo, bool notify)
 {
-  return createSettings ((undo ? STR_VALUE_TRUE : STR_VALUE_FALSE),
-                         (notify ? STR_VALUE_TRUE : STR_VALUE_FALSE),
+  return createSettings ((undo ? ST_VALUE_TRUE : ST_VALUE_FALSE),
+                         (notify ? ST_VALUE_TRUE : ST_VALUE_FALSE),
                          createUid ());
 }
 
@@ -57,19 +57,19 @@ StructuralUtil::createSettings (const QString &undo, const QString &notify,
   QMap<QString, QString> settings;
 
   if (undo.isEmpty ())
-    settings.insert (STR_SETTINGS_UNDO, STR_VALUE_TRUE);
+    settings.insert (ST_SETTINGS_UNDO, ST_VALUE_TRUE);
   else
-    settings.insert (STR_SETTINGS_UNDO, undo);
+    settings.insert (ST_SETTINGS_UNDO, undo);
 
   if (notify.isEmpty ())
-    settings.insert (STR_SETTINGS_NOTIFY, STR_VALUE_TRUE);
+    settings.insert (ST_SETTINGS_NOTIFY, ST_VALUE_TRUE);
   else
-    settings.insert (STR_SETTINGS_NOTIFY, notify);
+    settings.insert (ST_SETTINGS_NOTIFY, notify);
 
   if (code.isEmpty ())
-    settings.insert (STR_SETTINGS_CODE, createUid ());
+    settings.insert (ST_SETTINGS_CODE, createUid ());
   else
-    settings.insert (STR_SETTINGS_CODE, code);
+    settings.insert (ST_SETTINGS_CODE, code);
 
   return settings;
 }
@@ -83,7 +83,7 @@ StructuralUtil::createCoreTranslations (StructuralType type)
   {
     case Structural::Body:
     {
-      translations[NCL_ATTR_ID] = STR_ATTR_ENT_ID;
+      translations[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
 
       break;
     }
@@ -91,19 +91,19 @@ StructuralUtil::createCoreTranslations (StructuralType type)
     case Structural::Context:
     case Structural::Switch:
     {
-      translations[NCL_ATTR_ID] = STR_ATTR_ENT_ID;
-      translations[NCL_ATTR_REFER] = STR_ATTR_REFERENCE_REFER_ID;
+      translations[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
+      translations[NCL_ATTR_REFER] = ST_ATTR_REFERENCE_REFER_ID;
 
       break;
     }
 
     case Structural::Media:
     {
-      translations[NCL_ATTR_ID] = STR_ATTR_ENT_ID;
-      translations[NCL_ATTR_REFER] = STR_ATTR_REFERENCE_REFER_ID;
-      translations[NCL_ATTR_INSTANCE] = STR_ATTR_NODE_INSTANCE;
-      translations[NCL_ATTR_TYPE] = STR_ATTR_NODE_TYPE;
-      translations[NCL_ATTR_SRC] = STR_ATTR_NODE_SRC;
+      translations[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
+      translations[NCL_ATTR_REFER] = ST_ATTR_REFERENCE_REFER_ID;
+      translations[NCL_ATTR_INSTANCE] = ST_ATTR_NODE_INSTANCE;
+      translations[NCL_ATTR_TYPE] = ST_ATTR_NODE_TYPE;
+      translations[NCL_ATTR_SRC] = ST_ATTR_NODE_SRC;
       translations[NCL_ATTR_DESCRIPTOR] = NCL_ATTR_DESCRIPTOR;
 
       break;
@@ -111,18 +111,18 @@ StructuralUtil::createCoreTranslations (StructuralType type)
 
     case Structural::Port:
     {
-      translations[NCL_ATTR_ID] = STR_ATTR_ENT_ID;
+      translations[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
       translations[NCL_ATTR_COMPONENT]
-          = STR_ATTR_REFERENCE_COMPONENT_ID;
+          = ST_ATTR_REFERENCE_COMPONENT_ID;
       translations[NCL_ATTR_INTERFACE]
-          = STR_ATTR_REFERENCE_INTERFACE_ID;
+          = ST_ATTR_REFERENCE_INTERFACE_ID;
 
       break;
     }
 
     case Structural::Property:
     {
-      translations[NCL_ATTR_NAME] = STR_ATTR_ENT_ID;
+      translations[NCL_ATTR_NAME] = ST_ATTR_ENT_ID;
       translations[NCL_ATTR_VALUE] = NCL_ATTR_VALUE;
       translations[NCL_ATTR_EXTERNABLE] = NCL_ATTR_EXTERNABLE;
       break;
@@ -130,7 +130,7 @@ StructuralUtil::createCoreTranslations (StructuralType type)
 
     case Structural::Area:
     {
-      translations[NCL_ATTR_ID] = STR_ATTR_ENT_ID;
+      translations[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
 
       translations[NCL_ATTR_COORDS] = NCL_ATTR_COORDS;
       translations[NCL_ATTR_BEGIN] = NCL_ATTR_BEGIN;
@@ -149,29 +149,29 @@ StructuralUtil::createCoreTranslations (StructuralType type)
 
     case Structural::SwitchPort:
     {
-      translations[NCL_ATTR_ID] = STR_ATTR_ENT_ID;
+      translations[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
 
       break;
     }
 
     case Structural::Link:
     {
-      translations[NCL_ATTR_ID] = STR_ATTR_ENT_ID;
+      translations[NCL_ATTR_ID] = ST_ATTR_ENT_ID;
       translations[NCL_ATTR_XCONNECTOR]
-          = STR_ATTR_REFERENCE_XCONNECTOR_ID;
+          = ST_ATTR_REFERENCE_XCONNECTOR_ID;
 
       break;
     }
 
     case Structural::Bind:
     {
-      translations[NCL_ATTR_ROLE] = STR_ATTR_ENT_ID;
+      translations[NCL_ATTR_ROLE] = ST_ATTR_ENT_ID;
       translations[NCL_ATTR_XCONNECTOR]
-          = STR_ATTR_REFERENCE_XCONNECTOR_ID;
+          = ST_ATTR_REFERENCE_XCONNECTOR_ID;
       translations[NCL_ATTR_COMPONENT]
-          = STR_ATTR_REFERENCE_COMPONENT_ID;
+          = ST_ATTR_REFERENCE_COMPONENT_ID;
       translations[NCL_ATTR_INTERFACE]
-          = STR_ATTR_REFERENCE_INTERFACE_ID;
+          = ST_ATTR_REFERENCE_INTERFACE_ID;
       translations[NCL_ATTR_DESCRIPTOR] = NCL_ATTR_DESCRIPTOR;
 
       break;
@@ -180,9 +180,9 @@ StructuralUtil::createCoreTranslations (StructuralType type)
     case Structural::Mapping:
     {
       translations[NCL_ATTR_COMPONENT]
-          = STR_ATTR_REFERENCE_COMPONENT_ID;
+          = ST_ATTR_REFERENCE_COMPONENT_ID;
       translations[NCL_ATTR_INTERFACE]
-          = STR_ATTR_REFERENCE_INTERFACE_ID;
+          = ST_ATTR_REFERENCE_INTERFACE_ID;
 
       break;
     }
@@ -592,7 +592,7 @@ StructuralUtil::getNeighbors (StructuralEntity *entity)
   {
     neighbors = parent->getChildren ();
   }
-  else if (!STR_DEFAULT_WITH_BODY)
+  else if (!ST_DEFAULT_WITH_BODY)
   {
     if (entity->scene () != NULL)
     {
@@ -621,7 +621,7 @@ StructuralUtil::getUpNeighbors (StructuralEntity *entity)
     {
       neighbors += parent->getParent ()->getChildren ();
     }
-    else if (!STR_DEFAULT_WITH_BODY)
+    else if (!ST_DEFAULT_WITH_BODY)
     {
       if (entity->scene () != NULL)
       {

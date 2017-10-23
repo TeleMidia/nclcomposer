@@ -43,7 +43,7 @@ StructuralEdge::setAngle (qreal angle)
 {
   _angle = angle;
 
-  setProperty (STR_ATTR_EDGE_ANGLE, QString::number (angle));
+  setProperty (ST_ATTR_EDGE_ANGLE, QString::number (angle));
 }
 
 qreal
@@ -124,12 +124,12 @@ StructuralEdge::adjust (bool collision, bool recursion)
   StructuralEntity::adjust (collision, recursion);
 
   // Adjusting properties...
-  setAngle (getProperty (STR_ATTR_EDGE_ANGLE).toDouble ());
+  setAngle (getProperty (ST_ATTR_EDGE_ANGLE).toDouble ());
 
   // Adjusting position...
   StructuralEntity *parent = getParent ();
 
-  if (parent != NULL || !STR_DEFAULT_WITH_BODY)
+  if (parent != NULL || !ST_DEFAULT_WITH_BODY)
   {
     qreal angle = getAngle ();
 
@@ -301,31 +301,31 @@ StructuralEdge::getDrawLine (qreal padding) const
 
   if (ptail.x () <= phead.x () && ptail.y () <= phead.y ())
   {
-    x = STR_DEFAULT_ENTITY_PADDING;
-    y = STR_DEFAULT_ENTITY_PADDING;
-    z = getWidth () + STR_DEFAULT_ENTITY_PADDING;
-    w = getHeight () + STR_DEFAULT_ENTITY_PADDING;
+    x = ST_DEFAULT_ENTITY_PADDING;
+    y = ST_DEFAULT_ENTITY_PADDING;
+    z = getWidth () + ST_DEFAULT_ENTITY_PADDING;
+    w = getHeight () + ST_DEFAULT_ENTITY_PADDING;
   }
   else if (ptail.x () > phead.x () && ptail.y () <= phead.y ())
   {
-    x = getWidth () + STR_DEFAULT_ENTITY_PADDING;
-    y = STR_DEFAULT_ENTITY_PADDING;
-    z = STR_DEFAULT_ENTITY_PADDING;
-    w = getHeight () + STR_DEFAULT_ENTITY_PADDING;
+    x = getWidth () + ST_DEFAULT_ENTITY_PADDING;
+    y = ST_DEFAULT_ENTITY_PADDING;
+    z = ST_DEFAULT_ENTITY_PADDING;
+    w = getHeight () + ST_DEFAULT_ENTITY_PADDING;
   }
   else if (ptail.x () <= phead.x () && ptail.y () > phead.y ())
   {
-    x = STR_DEFAULT_ENTITY_PADDING;
-    y = getHeight () + STR_DEFAULT_ENTITY_PADDING;
-    z = getWidth () + STR_DEFAULT_ENTITY_PADDING;
-    w = STR_DEFAULT_ENTITY_PADDING;
+    x = ST_DEFAULT_ENTITY_PADDING;
+    y = getHeight () + ST_DEFAULT_ENTITY_PADDING;
+    z = getWidth () + ST_DEFAULT_ENTITY_PADDING;
+    w = ST_DEFAULT_ENTITY_PADDING;
   }
   else if (ptail.x () > phead.x () && ptail.y () > phead.y ())
   {
-    x = getWidth () + STR_DEFAULT_ENTITY_PADDING;
-    y = getHeight () + STR_DEFAULT_ENTITY_PADDING;
-    z = STR_DEFAULT_ENTITY_PADDING;
-    w = STR_DEFAULT_ENTITY_PADDING;
+    x = getWidth () + ST_DEFAULT_ENTITY_PADDING;
+    y = getHeight () + ST_DEFAULT_ENTITY_PADDING;
+    z = ST_DEFAULT_ENTITY_PADDING;
+    w = ST_DEFAULT_ENTITY_PADDING;
   }
 
   drawLine.setPoints (QPointF (x, y), QPointF (z, w));
@@ -341,7 +341,7 @@ StructuralEdge::draw (QPainter *painter)
   painter->setRenderHint (QPainter::Antialiasing, true);
 
   // Setting...
-  QLineF drawLine = getDrawLine (STR_DEFAULT_EDGE_PADDING);
+  QLineF drawLine = getDrawLine (ST_DEFAULT_EDGE_PADDING);
 
   // Drawing line...
   painter->setPen (
@@ -366,11 +366,11 @@ StructuralEdge::draw (QPainter *painter)
 
   QPointF a = drawLine.p2 ();
 
-  QPointF b = a - QPointF (sin (angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
-                           cos (angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
+  QPointF b = a - QPointF (sin (angle + PI / 3) * ST_DEFAULT_EDGE_HEAD_W,
+                           cos (angle + PI / 3) * ST_DEFAULT_EDGE_HEAD_H);
   QPointF c
-      = a - QPointF (sin (angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
-                     cos (angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
+      = a - QPointF (sin (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_W,
+                     cos (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_H);
 
   QVector<QPointF> polygon;
   polygon.append (a);
@@ -385,7 +385,7 @@ StructuralEdge::delineate (QPainterPath *painter) const
 {
   // Setting...
   QLineF boxLine = getDrawLine (0);
-  QLineF drawLine = getDrawLine (STR_DEFAULT_EDGE_PADDING);
+  QLineF drawLine = getDrawLine (ST_DEFAULT_EDGE_PADDING);
 
   // Delineating line
   // nothing
@@ -405,11 +405,11 @@ StructuralEdge::delineate (QPainterPath *painter) const
 
   QPointF a = drawLine.p2 ();
 
-  QPointF b = a - QPointF (sin (angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
-                           cos (angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
+  QPointF b = a - QPointF (sin (angle + PI / 3) * ST_DEFAULT_EDGE_HEAD_W,
+                           cos (angle + PI / 3) * ST_DEFAULT_EDGE_HEAD_H);
   QPointF c
-      = a - QPointF (sin (angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
-                     cos (angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
+      = a - QPointF (sin (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_W,
+                     cos (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_H);
 
   QVector<QPointF> polygon;
   polygon.append (a);

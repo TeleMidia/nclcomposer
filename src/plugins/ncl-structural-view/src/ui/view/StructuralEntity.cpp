@@ -75,7 +75,7 @@ void
 StructuralEntity::setUid (const QString &uid)
 {
   _uid = uid;
-  _properties[STR_ATTR_ENT_UID] = _uid;
+  _properties[ST_ATTR_ENT_UID] = _uid;
 }
 
 QString
@@ -88,7 +88,7 @@ void
 StructuralEntity::setId (const QString &id)
 {
   _id = id;
-  _properties.insert (STR_ATTR_ENT_ID, _id);
+  _properties.insert (ST_ATTR_ENT_ID, _id);
 }
 
 StructuralCategory
@@ -101,7 +101,7 @@ void
 StructuralEntity::setCategory (StructuralCategory category)
 {
   _category = category;
-  _properties[STR_ATTR_ENT_CATEGORY]
+  _properties[ST_ATTR_ENT_CATEGORY]
       = StructuralUtil::translateCategoryToString (_category);
 }
 
@@ -115,12 +115,12 @@ void
 StructuralEntity::setType (StructuralType type)
 {
   _type = type;
-  _properties[STR_ATTR_ENT_TYPE]
+  _properties[ST_ATTR_ENT_TYPE]
       = StructuralUtil::typeToString (_type);
 
   _restrictions.clear ();
 
-  //  addStructuralRestriction(STR_ATTR_ENT_AUTOSTART);
+  //  addStructuralRestriction(ST_ATTR_ENT_AUTOSTART);
 
   switch (type)
   {
@@ -130,13 +130,13 @@ StructuralEntity::setType (StructuralType type)
     {
       if (type == Structural::Media)
       {
-        addRestriction (STR_ATTR_NODE_TYPE);
-        addRestriction (STR_ATTR_NODE_SRC);
-        addRestriction (STR_ATTR_NODE_INSTANCE);
+        addRestriction (ST_ATTR_NODE_TYPE);
+        addRestriction (ST_ATTR_NODE_SRC);
+        addRestriction (ST_ATTR_NODE_INSTANCE);
       }
 
-      addRestriction (STR_ATTR_REFERENCE_REFER_ID);
-      addRestriction (STR_ATTR_REFERENCE_REFER_UID);
+      addRestriction (ST_ATTR_REFERENCE_REFER_ID);
+      addRestriction (ST_ATTR_REFERENCE_REFER_UID);
 
       break;
     }
@@ -144,33 +144,33 @@ StructuralEntity::setType (StructuralType type)
     case Structural::Port:
     case Structural::Mapping:
     {
-      addRestriction (STR_ATTR_REFERENCE_COMPONENT_ID);
-      addRestriction (STR_ATTR_REFERENCE_COMPONENT_UID);
-      addRestriction (STR_ATTR_REFERENCE_INTERFACE_ID);
-      addRestriction (STR_ATTR_REFERENCE_INTERFACE_UID);
+      addRestriction (ST_ATTR_REFERENCE_COMPONENT_ID);
+      addRestriction (ST_ATTR_REFERENCE_COMPONENT_UID);
+      addRestriction (ST_ATTR_REFERENCE_INTERFACE_ID);
+      addRestriction (ST_ATTR_REFERENCE_INTERFACE_UID);
 
       break;
     }
 
     case Structural::Bind:
     {
-      addRestriction (STR_ATTR_REFERENCE_COMPONENT_ID);
-      addRestriction (STR_ATTR_REFERENCE_COMPONENT_UID);
-      addRestriction (STR_ATTR_REFERENCE_INTERFACE_ID);
-      addRestriction (STR_ATTR_REFERENCE_INTERFACE_UID);
+      addRestriction (ST_ATTR_REFERENCE_COMPONENT_ID);
+      addRestriction (ST_ATTR_REFERENCE_COMPONENT_UID);
+      addRestriction (ST_ATTR_REFERENCE_INTERFACE_ID);
+      addRestriction (ST_ATTR_REFERENCE_INTERFACE_UID);
 
-      addRestriction (STR_ATTR_LINKPARAM_NAME);
-      addRestriction (STR_ATTR_LINKPARAM_VALUE);
-      addRestriction (STR_ATTR_BINDPARAM_NAME);
-      addRestriction (STR_ATTR_BINDPARAM_VALUE);
+      addRestriction (ST_ATTR_LINKPARAM_NAME);
+      addRestriction (ST_ATTR_LINKPARAM_VALUE);
+      addRestriction (ST_ATTR_BINDPARAM_NAME);
+      addRestriction (ST_ATTR_BINDPARAM_VALUE);
 
       break;
     }
 
     case Structural::Link:
     {
-      addRestriction (STR_ATTR_LINKPARAM_NAME);
-      addRestriction (STR_ATTR_LINKPARAM_VALUE);
+      addRestriction (ST_ATTR_LINKPARAM_NAME);
+      addRestriction (ST_ATTR_LINKPARAM_VALUE);
 
       break;
     }
@@ -253,43 +253,43 @@ StructuralEntity::adjust (bool collision, bool recursion)
   Q_UNUSED (collision);
   Q_UNUSED (recursion);
 
-  setId (_properties[STR_ATTR_ENT_ID]);
-  setUid (_properties[STR_ATTR_ENT_UID]);
+  setId (_properties[ST_ATTR_ENT_ID]);
+  setUid (_properties[ST_ATTR_ENT_UID]);
 
   setCategory (StructuralUtil::translateStringToCategory (
-      _properties[STR_ATTR_ENT_CATEGORY]));
+      _properties[ST_ATTR_ENT_CATEGORY]));
   setType (StructuralUtil::stringToType (
-      _properties[STR_ATTR_ENT_TYPE]));
+      _properties[ST_ATTR_ENT_TYPE]));
 
-  setTop (_properties[STR_ATTR_ENT_TOP].toDouble ());
-  setLeft (_properties[STR_ATTR_ENT_LEFT].toDouble ());
-  setWidth (_properties[STR_ATTR_ENT_WIDTH].toDouble ());
-  setHeight (_properties[STR_ATTR_ENT_HEIGHT].toDouble ());
+  setTop (_properties[ST_ATTR_ENT_TOP].toDouble ());
+  setLeft (_properties[ST_ATTR_ENT_LEFT].toDouble ());
+  setWidth (_properties[ST_ATTR_ENT_WIDTH].toDouble ());
+  setHeight (_properties[ST_ATTR_ENT_HEIGHT].toDouble ());
 
   setUncollapedTop (
-      _properties[STR_ATTR_ENT_UNCOLLAPSED_TOP].toDouble ());
+      _properties[ST_ATTR_ENT_UNCOLLAPSED_TOP].toDouble ());
   setUncollapedLeft (
-      _properties[STR_ATTR_ENT_UNCOLLAPSED_LEFT].toDouble ());
+      _properties[ST_ATTR_ENT_UNCOLLAPSED_LEFT].toDouble ());
   setUncollapedWidth (
-      _properties[STR_ATTR_ENT_UNCOLLAPSED_WIDTH].toDouble ());
+      _properties[ST_ATTR_ENT_UNCOLLAPSED_WIDTH].toDouble ());
   setUncollapedHeight (
-      _properties[STR_ATTR_ENT_UNCOLLAPSED_HEIGHT].toDouble ());
+      _properties[ST_ATTR_ENT_UNCOLLAPSED_HEIGHT].toDouble ());
 
-  setzIndex (_properties[STR_ATTR_ENT_ZINDEX].toInt ());
+  setzIndex (_properties[ST_ATTR_ENT_ZINDEX].toInt ());
 
-  setHidden ((_properties[STR_ATTR_ENT_HIDDEN] == STR_VALUE_TRUE
+  setHidden ((_properties[ST_ATTR_ENT_HIDDEN] == ST_VALUE_TRUE
                   ? true
                   : false));
-  setReference ((_properties[STR_ATTR_ENT_REFERENCE] == STR_VALUE_TRUE
+  setReference ((_properties[ST_ATTR_ENT_REFERENCE] == ST_VALUE_TRUE
                      ? true
                      : false));
   setUncollapsed ((
-      _properties[STR_ATTR_ENT_UNCOLLAPSED] == STR_VALUE_TRUE ? true
+      _properties[ST_ATTR_ENT_UNCOLLAPSED] == ST_VALUE_TRUE ? true
                                                                      : false));
 
   setToolTip (StructuralUtil::getTooltip (
       _type, _id, _info, _warnning, _error,
-      _properties[STR_ATTR_REFERENCE_XCONNECTOR_ID]));
+      _properties[ST_ATTR_REFERENCE_XCONNECTOR_ID]));
 
   if (scene () != NULL)
     scene ()->update ();
@@ -377,8 +377,8 @@ void
 StructuralEntity::setHidden (bool hidden)
 {
   _hidden = hidden;
-  _properties[STR_ATTR_ENT_HIDDEN]
-      = (hidden ? STR_VALUE_TRUE : STR_VALUE_FALSE);
+  _properties[ST_ATTR_ENT_HIDDEN]
+      = (hidden ? ST_VALUE_TRUE : ST_VALUE_FALSE);
 
   setVisible (!hidden);
 }
@@ -441,8 +441,8 @@ void
 StructuralEntity::setUncollapsed (bool uncollapsed)
 {
   _uncollapsed = uncollapsed;
-  _properties[STR_ATTR_ENT_UNCOLLAPSED]
-      = (uncollapsed ? STR_VALUE_TRUE : STR_VALUE_FALSE);
+  _properties[ST_ATTR_ENT_UNCOLLAPSED]
+      = (uncollapsed ? ST_VALUE_TRUE : ST_VALUE_FALSE);
 }
 
 bool
@@ -455,8 +455,8 @@ void
 StructuralEntity::setReference (bool reference)
 {
   _reference = reference;
-  _properties[STR_ATTR_ENT_REFERENCE]
-      = (reference ? STR_VALUE_TRUE : STR_VALUE_FALSE);
+  _properties[ST_ATTR_ENT_REFERENCE]
+      = (reference ? ST_VALUE_TRUE : ST_VALUE_FALSE);
 }
 
 qreal
@@ -469,7 +469,7 @@ void
 StructuralEntity::setTop (qreal top)
 {
   _top = top;
-  _properties[STR_ATTR_ENT_TOP] = QString::number (top);
+  _properties[ST_ATTR_ENT_TOP] = QString::number (top);
 
   setY (top - 4);
 }
@@ -520,7 +520,7 @@ void
 StructuralEntity::setLeft (qreal left)
 {
   _left = left;
-  _properties[STR_ATTR_ENT_LEFT] = QString::number (left);
+  _properties[ST_ATTR_ENT_LEFT] = QString::number (left);
 
   setX (left - 4);
 }
@@ -571,7 +571,7 @@ void
 StructuralEntity::setWidth (qreal width)
 {
   _width = width;
-  _properties[STR_ATTR_ENT_WIDTH] = QString::number (width);
+  _properties[ST_ATTR_ENT_WIDTH] = QString::number (width);
 }
 
 qreal
@@ -608,7 +608,7 @@ void
 StructuralEntity::setHeight (qreal height)
 {
   _height = height;
-  _properties[STR_ATTR_ENT_HEIGHT] = QString::number (height);
+  _properties[ST_ATTR_ENT_HEIGHT] = QString::number (height);
 }
 
 qreal
@@ -645,7 +645,7 @@ void
 StructuralEntity::setUncollapedTop (qreal uncollapedTop)
 {
   _uncollapsedTop = uncollapedTop;
-  _properties[STR_ATTR_ENT_UNCOLLAPSED_TOP]
+  _properties[ST_ATTR_ENT_UNCOLLAPSED_TOP]
       = QString::number (uncollapedTop);
 }
 
@@ -659,7 +659,7 @@ void
 StructuralEntity::setUncollapedLeft (qreal uncollapedLeft)
 {
   _uncollapsedLeft = uncollapedLeft;
-  _properties[STR_ATTR_ENT_UNCOLLAPSED_LEFT]
+  _properties[ST_ATTR_ENT_UNCOLLAPSED_LEFT]
       = QString::number (uncollapedLeft);
 }
 
@@ -673,7 +673,7 @@ void
 StructuralEntity::setUncollapedWidth (qreal uncollapedWidth)
 {
   _uncollapsedWidth = uncollapedWidth;
-  _properties[STR_ATTR_ENT_UNCOLLAPSED_WIDTH]
+  _properties[ST_ATTR_ENT_UNCOLLAPSED_WIDTH]
       = QString::number (uncollapedWidth);
 }
 
@@ -687,7 +687,7 @@ void
 StructuralEntity::setUncollapedHeight (qreal uncollapedHeight)
 {
   _uncollapsedHeight = uncollapedHeight;
-  _properties[STR_ATTR_ENT_UNCOLLAPSED_HEIGHT]
+  _properties[ST_ATTR_ENT_UNCOLLAPSED_HEIGHT]
       = QString::number (uncollapedHeight);
 }
 
@@ -701,7 +701,7 @@ void
 StructuralEntity::setzIndex (qreal zIndex)
 {
   _zindex = zIndex;
-  _properties[STR_ATTR_ENT_ZINDEX] = QString::number (zIndex);
+  _properties[ST_ATTR_ENT_ZINDEX] = QString::number (zIndex);
 
   setZValue (zIndex);
 }
@@ -829,7 +829,7 @@ StructuralEntity::removeRestriction (const QString &restriction)
 void
 StructuralEntity::delineate (QPainterPath *painter) const
 {
-  painter->addRect (STR_DEFAULT_ENTITY_PADDING, STR_DEFAULT_ENTITY_PADDING,
+  painter->addRect (ST_DEFAULT_ENTITY_PADDING, ST_DEFAULT_ENTITY_PADDING,
                     getWidth (), getHeight ());
 }
 
@@ -976,8 +976,8 @@ StructuralEntity::shape () const
   {
     painter.setFillRule (Qt::WindingFill);
 
-    qreal w = STR_DEFAULT_ENTITY_ANCHOR_W;
-    qreal h = STR_DEFAULT_ENTITY_ANCHOR_H;
+    qreal w = ST_DEFAULT_ENTITY_ANCHOR_W;
+    qreal h = ST_DEFAULT_ENTITY_ANCHOR_H;
 
     painter.addRect (0, 0, w, h);                        // topleft
     painter.addRect ((_width + w) / 2 - w / 2, 0, w, h); // top
@@ -1001,8 +1001,8 @@ StructuralEntity::boundingRect () const
 
   bounds.setX (0);
   bounds.setY (0);
-  bounds.setWidth (_width + STR_DEFAULT_ENTITY_ANCHOR_W);
-  bounds.setHeight (_height + STR_DEFAULT_ENTITY_ANCHOR_H);
+  bounds.setWidth (_width + ST_DEFAULT_ENTITY_ANCHOR_W);
+  bounds.setHeight (_height + ST_DEFAULT_ENTITY_ANCHOR_H);
 
   return bounds;
 }
@@ -1027,8 +1027,8 @@ StructuralEntity::paint (QPainter *painter,
     painter->setBrush (Qt::NoBrush);
     painter->setPen (QPen (QBrush (Qt::black), 0, Qt::DashLine));
 
-    painter->drawRect (STR_DEFAULT_ENTITY_ANCHOR_W / 2,
-                       STR_DEFAULT_ENTITY_ANCHOR_H / 2, getWidth (),
+    painter->drawRect (ST_DEFAULT_ENTITY_ANCHOR_W / 2,
+                       ST_DEFAULT_ENTITY_ANCHOR_H / 2, getWidth (),
                        getHeight ());
 
     if (_resizable)
@@ -1036,8 +1036,8 @@ StructuralEntity::paint (QPainter *painter,
       painter->setBrush (QBrush (Qt::white));
       painter->setPen (QPen (QBrush (Qt::black), 0));
 
-      qreal w = STR_DEFAULT_ENTITY_ANCHOR_W;
-      qreal h = STR_DEFAULT_ENTITY_ANCHOR_H;
+      qreal w = ST_DEFAULT_ENTITY_ANCHOR_W;
+      qreal h = ST_DEFAULT_ENTITY_ANCHOR_H;
 
       painter->drawRect (0, 0, w, h);                        // topleft
       painter->drawRect ((_width + w) / 2 - w / 2, 0, w, h); // top
@@ -1057,7 +1057,7 @@ StructuralEntity::paint (QPainter *painter,
     painter->setBrush (Qt::NoBrush);
     painter->setPen (QPen (QBrush (QColor ("#999999")), 0, Qt::DashLine));
 
-    painter->drawRect (STR_DEFAULT_ENTITY_PADDING, STR_DEFAULT_ENTITY_PADDING,
+    painter->drawRect (ST_DEFAULT_ENTITY_PADDING, ST_DEFAULT_ENTITY_PADDING,
                        getWidth (), getHeight ());
   }
 }
@@ -1106,8 +1106,8 @@ StructuralEntity::mousePressEvent (QGraphicsSceneMouseEvent *event)
     setPressWidth (_width);
     setPressHeight (_height);
 
-    qreal w = STR_DEFAULT_ENTITY_ANCHOR_W;
-    qreal h = STR_DEFAULT_ENTITY_ANCHOR_H;
+    qreal w = ST_DEFAULT_ENTITY_ANCHOR_W;
+    qreal h = ST_DEFAULT_ENTITY_ANCHOR_H;
 
     if (_draggable)
     {
@@ -1292,8 +1292,8 @@ StructuralEntity::hoverMoveEvent (QGraphicsSceneHoverEvent *event)
   {
     if (_resizable)
     {
-      qreal w = STR_DEFAULT_ENTITY_ANCHOR_W;
-      qreal h = STR_DEFAULT_ENTITY_ANCHOR_H;
+      qreal w = ST_DEFAULT_ENTITY_ANCHOR_W;
+      qreal h = ST_DEFAULT_ENTITY_ANCHOR_H;
 
       if (QRectF (0, 0, w, h).contains (event->pos ()))
       {
@@ -1413,8 +1413,8 @@ StructuralEntity::dropEvent (QGraphicsSceneDragDropEvent *event)
       && event->mimeData ()->text () != _uid)
   {
     QMap<QString, QString> properties;
-    properties[STR_ATTR_ENT_TOP] = QString::number (event->pos ().y ());
-    properties[STR_ATTR_ENT_LEFT]
+    properties[ST_ATTR_ENT_TOP] = QString::number (event->pos ().y ());
+    properties[ST_ATTR_ENT_LEFT]
         = QString::number (event->pos ().x ());
 
     emit moved (event->mimeData ()->text (), _uid, properties,

@@ -19,17 +19,17 @@ StructuralMenu::exec (const QPoint &screenPos, const StructuralEntity *e)
   if (e)
   {
     QMap <QString, QString> props = e->getProperties();
-    if (!STR_DEFAULT_WITH_INTERFACES)
+    if (!ST_DEFAULT_WITH_INTERFACES)
     {
       setAutostartEnabled (true);
 
-      if (props.value (STR_ATTR_ENT_AUTOSTART) == STR_VALUE_TRUE)
+      if (props.value (ST_ATTR_ENT_AUTOSTART) == ST_VALUE_TRUE)
         setAutoStartChecked (true);
       else
         setAutoStartChecked (false);
     }
-    else if (!STR_DEFAULT_WITH_BODY &&
-             !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+    else if (!ST_DEFAULT_WITH_BODY &&
+             !ST_DEFAULT_WITH_FLOATING_INTERFACES)
     {
       if ((e->getParent() != nullptr
            && e->getParent()->getParent() == nullptr
@@ -38,7 +38,7 @@ StructuralMenu::exec (const QPoint &screenPos, const StructuralEntity *e)
       {
         setAutostartEnabled (true);
 
-        if (props.value (STR_ATTR_ENT_AUTOSTART) == STR_VALUE_TRUE)
+        if (props.value (ST_ATTR_ENT_AUTOSTART) == ST_VALUE_TRUE)
           setAutoStartChecked (true);
         else
           setAutoStartChecked (false);

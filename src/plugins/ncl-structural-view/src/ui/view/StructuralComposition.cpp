@@ -10,8 +10,8 @@
 StructuralComposition::StructuralComposition (StructuralEntity *parent)
     : StructuralNode (parent)
 {
-  setWidth (STR_DEFAULT_COMPOSITION_W);
-  setHeight (STR_DEFAULT_COMPOSITION_H);
+  setWidth (ST_DEFAULT_COMPOSITION_W);
+  setHeight (ST_DEFAULT_COMPOSITION_H);
 
   setHoverable (false);
   setUncollapsed (true);
@@ -30,9 +30,9 @@ StructuralComposition::collapse (bool notify)
     setResizable (true);
 
     setTop (getTop ()
-            - (getUncollapedHeight () / 2 - STR_DEFAULT_CONTENT_H / 2));
+            - (getUncollapedHeight () / 2 - ST_DEFAULT_CONTENT_H / 2));
     setLeft (getLeft ()
-             - (getUncollapedWidth () / 2 - STR_DEFAULT_CONTENT_W / 2));
+             - (getUncollapedWidth () / 2 - ST_DEFAULT_CONTENT_W / 2));
     setWidth (getUncollapedWidth ());
     setHeight (getUncollapedHeight ());
 
@@ -41,9 +41,9 @@ StructuralComposition::collapse (bool notify)
       if (entity->getCategory () == Structural::Interface)
       {
         entity->setTop (entity->getTop () * getUncollapedHeight ()
-                        / STR_DEFAULT_CONTENT_H);
+                        / ST_DEFAULT_CONTENT_H);
         entity->setLeft (entity->getLeft () * getUncollapedWidth ()
-                         / STR_DEFAULT_CONTENT_W);
+                         / ST_DEFAULT_CONTENT_W);
       }
       else
       {
@@ -69,11 +69,11 @@ StructuralComposition::collapse (bool notify)
     setUncollapedHeight (getHeight ());
 
     setTop (getTop () + getUncollapedHeight () / 2
-            - STR_DEFAULT_CONTENT_H / 2);
+            - ST_DEFAULT_CONTENT_H / 2);
     setLeft (getLeft () + getUncollapedWidth () / 2
-             - STR_DEFAULT_CONTENT_W / 2);
-    setWidth (STR_DEFAULT_CONTENT_W);
-    setHeight (STR_DEFAULT_CONTENT_H);
+             - ST_DEFAULT_CONTENT_W / 2);
+    setWidth (ST_DEFAULT_CONTENT_W);
+    setHeight (ST_DEFAULT_CONTENT_H);
 
     foreach (StructuralEntity *entity, getChildren ())
     {
@@ -82,9 +82,9 @@ StructuralComposition::collapse (bool notify)
 
       if (entity->getCategory () == Structural::Interface)
       {
-        entity->setTop (((entity->getTop () * STR_DEFAULT_CONTENT_H)
+        entity->setTop (((entity->getTop () * ST_DEFAULT_CONTENT_H)
                          / getUncollapedHeight ()));
-        entity->setLeft (((entity->getLeft () * STR_DEFAULT_CONTENT_W)
+        entity->setLeft (((entity->getLeft () * ST_DEFAULT_CONTENT_W)
                           / getUncollapedWidth ()));
       }
       else
@@ -125,21 +125,21 @@ StructuralComposition::draw (QPainter *painter)
 
       if (!getError ().isEmpty ())
       {
-        color = QString (STR_DEFAULT_ALERT_ERROR_COLOR);
+        color = QString (ST_DEFAULT_ALERT_ERROR_COLOR);
       }
       else
       {
-        color = QString (STR_DEFAULT_ALERT_WARNING_COLOR);
+        color = QString (ST_DEFAULT_ALERT_WARNING_COLOR);
       }
 
       painter->setPen (QPen (QBrush (QColor (color)), 2));
     }
     else
     {
-      if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+      if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
       {
-        if (getProperty (STR_ATTR_ENT_AUTOSTART)
-            == STR_VALUE_TRUE)
+        if (getProperty (ST_ATTR_ENT_AUTOSTART)
+            == ST_VALUE_TRUE)
         {
           painter->setPen (QPen (QBrush (QColor (76, 76, 76)), 2));
         }
@@ -150,22 +150,22 @@ StructuralComposition::draw (QPainter *painter)
       }
     }
 
-    painter->drawEllipse (STR_DEFAULT_ENTITY_PADDING,
-                          STR_DEFAULT_ENTITY_PADDING, getWidth (),
+    painter->drawEllipse (ST_DEFAULT_ENTITY_PADDING,
+                          ST_DEFAULT_ENTITY_PADDING, getWidth (),
                           getHeight ());
 
     painter->setBrush (Qt::NoBrush);
 
     if (isMoving ())
       painter->drawEllipse (
-          getMoveLeft () + STR_DEFAULT_ENTITY_PADDING - getLeft (),
-          getMoveTop () + STR_DEFAULT_ENTITY_PADDING - getTop (), getWidth (),
+          getMoveLeft () + ST_DEFAULT_ENTITY_PADDING - getLeft (),
+          getMoveTop () + ST_DEFAULT_ENTITY_PADDING - getTop (), getWidth (),
           getHeight ());
 
     else if (isResizing ())
       painter->drawEllipse (
-          getResizeLeft () + STR_DEFAULT_ENTITY_PADDING - getLeft (),
-          getResizeTop () + STR_DEFAULT_ENTITY_PADDING - getTop (),
+          getResizeLeft () + ST_DEFAULT_ENTITY_PADDING - getLeft (),
+          getResizeTop () + ST_DEFAULT_ENTITY_PADDING - getTop (),
           getResizeWidth (), getResizeHeight ());
   }
   else
@@ -173,36 +173,36 @@ StructuralComposition::draw (QPainter *painter)
     painter->setRenderHint (QPainter::Antialiasing, false);
     painter->setRenderHint (QPainter::SmoothPixmapTransform, true);
 
-    if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+    if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
     {
-      if (getProperty (STR_ATTR_ENT_AUTOSTART)
-          == STR_VALUE_TRUE)
+      if (getProperty (ST_ATTR_ENT_AUTOSTART)
+          == ST_VALUE_TRUE)
       {
         painter->fillRect (
-            STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
-            STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
-            getWidth () - 2 * STR_DEFAULT_CONTENT_PADDING,
-            getHeight () - 2 * STR_DEFAULT_CONTENT_PADDING
-                - 4 * STR_DEFAULT_CONTENT_PADDING,
+            ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
+            ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
+            getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING,
+            getHeight () - 2 * ST_DEFAULT_CONTENT_PADDING
+                - 4 * ST_DEFAULT_CONTENT_PADDING,
             QBrush (QColor (76, 76, 76, 95)));
 
         painter->setPen (QPen (QBrush (QColor (76, 76, 76)), 2));
 
         painter->drawRect (
-            STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
-            STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
-            getWidth () - 2 * STR_DEFAULT_CONTENT_PADDING,
-            getHeight () - 2 * STR_DEFAULT_CONTENT_PADDING
-                - 4 * STR_DEFAULT_CONTENT_PADDING);
+            ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
+            ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
+            getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING,
+            getHeight () - 2 * ST_DEFAULT_CONTENT_PADDING
+                - 4 * ST_DEFAULT_CONTENT_PADDING);
       }
     }
 
     painter->drawPixmap (
-        STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
-        STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
-        getWidth () - 2 * STR_DEFAULT_CONTENT_PADDING,
-        getHeight () - 2 * STR_DEFAULT_CONTENT_PADDING
-            - 4 * STR_DEFAULT_CONTENT_PADDING,
+        ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
+        ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
+        getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING,
+        getHeight () - 2 * ST_DEFAULT_CONTENT_PADDING
+            - 4 * ST_DEFAULT_CONTENT_PADDING,
         QPixmap (StructuralUtil::getIcon (getType ())));
 
     if (!getError ().isEmpty () || !getWarning ().isEmpty ())
@@ -212,20 +212,20 @@ StructuralComposition::draw (QPainter *painter)
 
       if (!getError ().isEmpty ())
       {
-        icon = QString (STR_DEFAULT_ALERT_ERROR_ICON);
-        color = QString (STR_DEFAULT_ALERT_ERROR_COLOR);
+        icon = QString (ST_DEFAULT_ALERT_ERROR_ICON);
+        color = QString (ST_DEFAULT_ALERT_ERROR_COLOR);
       }
       else
       {
-        icon = QString (STR_DEFAULT_ALERT_WARNING_ICON);
-        color = QString (STR_DEFAULT_ALERT_WARNING_COLOR);
+        icon = QString (ST_DEFAULT_ALERT_WARNING_ICON);
+        color = QString (ST_DEFAULT_ALERT_WARNING_COLOR);
       }
 
-      painter->drawPixmap ((getWidth () - 2 * STR_DEFAULT_CONTENT_PADDING) / 2
-                               + STR_DEFAULT_ALERT_ICON_W,
-                           (getHeight () - 2 * STR_DEFAULT_CONTENT_PADDING) / 2
-                               + STR_DEFAULT_CONTENT_PADDING,
-                           STR_DEFAULT_ALERT_ICON_W, STR_DEFAULT_ALERT_ICON_H,
+      painter->drawPixmap ((getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
+                               + ST_DEFAULT_ALERT_ICON_W,
+                           (getHeight () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
+                               + ST_DEFAULT_CONTENT_PADDING,
+                           ST_DEFAULT_ALERT_ICON_W, ST_DEFAULT_ALERT_ICON_H,
                            QPixmap (icon));
 
       int max = 20;
@@ -265,16 +265,16 @@ StructuralComposition::draw (QPainter *painter)
       text = text.replace (3, text.length () - 3, "...");
 
     painter->drawText (
-        STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
-        STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING + getHeight ()
-            - STR_DEFAULT_CONTENT_TEXT_H - 2 * STR_DEFAULT_CONTENT_PADDING,
-        getWidth () - 2 * STR_DEFAULT_CONTENT_PADDING,
-        STR_DEFAULT_CONTENT_TEXT_H, Qt::AlignCenter, text);
+        ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
+        ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING + getHeight ()
+            - ST_DEFAULT_CONTENT_TEXT_H - 2 * ST_DEFAULT_CONTENT_PADDING,
+        getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING,
+        ST_DEFAULT_CONTENT_TEXT_H, Qt::AlignCenter, text);
 
     if (isMoving ())
       painter->drawRect (
-          getMoveLeft () + STR_DEFAULT_ENTITY_PADDING - getLeft (),
-          getMoveTop () + STR_DEFAULT_ENTITY_PADDING - getTop (), getWidth (),
+          getMoveLeft () + ST_DEFAULT_ENTITY_PADDING - getLeft (),
+          getMoveTop () + ST_DEFAULT_ENTITY_PADDING - getTop (), getWidth (),
           getHeight ());
   }
 }
@@ -282,8 +282,8 @@ StructuralComposition::draw (QPainter *painter)
 void
 StructuralComposition::delineate (QPainterPath *painter) const
 {
-  int x = STR_DEFAULT_ENTITY_PADDING;
-  int y = STR_DEFAULT_ENTITY_PADDING;
+  int x = ST_DEFAULT_ENTITY_PADDING;
+  int y = ST_DEFAULT_ENTITY_PADDING;
   int w = getWidth ();
   int h = getHeight ();
 
@@ -329,16 +329,16 @@ StructuralComposition::dropEvent (QGraphicsSceneDragDropEvent *event)
       QString filename = url.toLocalFile ();
 
       QMap<QString, QString> properties;
-      properties[STR_ATTR_ENT_TYPE]
+      properties[ST_ATTR_ENT_TYPE]
           = StructuralUtil::typeToString (Structural::Media);
-      properties[STR_ATTR_ENT_ID]
+      properties[ST_ATTR_ENT_ID]
           = StructuralUtil::formatId (QFileInfo (filename).baseName ());
-      properties[STR_ATTR_NODE_SRC] = filename;
+      properties[ST_ATTR_NODE_SRC] = filename;
 
-      properties[STR_ATTR_ENT_TOP]
-          = QString::number (event->pos ().y () - STR_DEFAULT_CONTENT_H / 2);
-      properties[STR_ATTR_ENT_LEFT]
-          = QString::number (event->pos ().x () - STR_DEFAULT_CONTENT_W / 2);
+      properties[ST_ATTR_ENT_TOP]
+          = QString::number (event->pos ().y () - ST_DEFAULT_CONTENT_H / 2);
+      properties[ST_ATTR_ENT_LEFT]
+          = QString::number (event->pos ().x () - ST_DEFAULT_CONTENT_W / 2);
 
       inserted (StructuralUtil::createUid (), getUid (), properties,
                 StructuralUtil::createSettings ());

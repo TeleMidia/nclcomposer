@@ -67,7 +67,7 @@ StructuralNode::adjust (bool collision, bool recursion)
 
   StructuralEntity *parent = getParent ();
 
-  if (parent != NULL || !STR_DEFAULT_WITH_BODY)
+  if (parent != NULL || !ST_DEFAULT_WITH_BODY)
   {
 
     if (!collision)

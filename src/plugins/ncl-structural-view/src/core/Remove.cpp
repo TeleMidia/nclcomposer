@@ -15,8 +15,8 @@ Remove::~Remove () {}
 void
 Remove::undo ()
 {
-  _settings[STR_SETTINGS_UNDO] = STR_VALUE_FALSE;
-  _settings[STR_SETTINGS_NOTIFY] = STR_VALUE_TRUE;
+  _settings[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
+  _settings[ST_SETTINGS_NOTIFY] = ST_VALUE_TRUE;
 
   emit insert (_uid, _parent, _properties, _settings);
 }
@@ -24,8 +24,8 @@ Remove::undo ()
 void
 Remove::redo ()
 {
-  _settings[STR_SETTINGS_UNDO] = STR_VALUE_FALSE;
-  _settings[STR_SETTINGS_UNDO_TRACE] = STR_VALUE_TRUE;
+  _settings[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
+  _settings[ST_SETTINGS_UNDO_TRACE] = ST_VALUE_TRUE;
 
   emit remove (_uid, _settings);
 }

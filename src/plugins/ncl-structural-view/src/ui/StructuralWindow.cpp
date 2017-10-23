@@ -290,12 +290,12 @@ StructuralWindow::createToolbar ()
   _insertToolbar->addAction (_contextAction);
   _insertToolbar->addAction (_switchAction);
 
-  if (STR_DEFAULT_WITH_BODY)
+  if (ST_DEFAULT_WITH_BODY)
   {
     _insertToolbar->addAction (_bodyAction);
   }
 
-  if (STR_DEFAULT_WITH_INTERFACES)
+  if (ST_DEFAULT_WITH_INTERFACES)
   {
     _insertToolbar->addSeparator ();
     _insertToolbar->addAction (_areaAction);
@@ -529,7 +529,7 @@ StructuralWindow::select (QString uid, QMap<QString, QString> settings)
   {
     _switchportAction->setEnabled (false);
 
-    if (STR_DEFAULT_WITH_BODY)
+    if (ST_DEFAULT_WITH_BODY)
     {
       _mediaAction->setEnabled (false);
       _contextAction->setEnabled (false);
@@ -547,7 +547,7 @@ StructuralWindow::select (QString uid, QMap<QString, QString> settings)
       _bodyAction->setEnabled (false);
       _areaAction->setEnabled (false);
 
-      if (STR_DEFAULT_WITH_FLOATING_INTERFACES)
+      if (ST_DEFAULT_WITH_FLOATING_INTERFACES)
       {
         _propertyAction->setEnabled (true);
         _portAction->setEnabled (true);

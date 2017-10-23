@@ -36,9 +36,9 @@ StructuralView::StructuralView (QWidget *parent) : QGraphicsView (parent),
 
   // Initialize minimap...
   _minimap->init (this);
-  _minimap->setMinimumSize (STR_DEFAULT_MINIMAP_W, STR_DEFAULT_MINIMAP_H);
-  _minimap->setMaximumSize (STR_DEFAULT_MINIMAP_W * 2,
-                            STR_DEFAULT_MINIMAP_H * 2);
+  _minimap->setMinimumSize (ST_DEFAULT_MINIMAP_W, ST_DEFAULT_MINIMAP_H);
+  _minimap->setMaximumSize (ST_DEFAULT_MINIMAP_W * 2,
+                            ST_DEFAULT_MINIMAP_H * 2);
   _minimap->show ();
 
   // Setting...
@@ -139,7 +139,7 @@ StructuralView::load (const QString &data)
 
   // Cheking if exist a 'body' entity when 'body'
   // is enabled in view. If don't, adds one.
-  if (STR_DEFAULT_WITH_BODY)
+  if (ST_DEFAULT_WITH_BODY)
   {
     bool hasBody = false;
 
@@ -239,7 +239,7 @@ StructuralView::load (QDomElement entity, QDomElement parent)
 
     QMap<QString, QString> settings
         = StructuralUtil::createSettings (false, false);
-    settings[STR_SETTINGS_ADJUST_REFERENCE] = STR_VALUE_FALSE;
+    settings[ST_SETTINGS_ADJUST_REFERENCE] = ST_VALUE_FALSE;
 
     insert (entityUid, parentUid, properties, settings);
 
@@ -277,7 +277,7 @@ StructuralView::save ()
     }
   }
 
-  if (STR_DEFAULT_WITH_BODY)
+  if (ST_DEFAULT_WITH_BODY)
   {
     foreach (StructuralEntity *e, _entities.values ())
       if (e->getType () == Structural::Body)
@@ -398,9 +398,9 @@ StructuralView::insert (QString uid, QString parent,
     // Creating...
     //
     StructuralType type = StructuralUtil::stringToType (
-        properties[STR_ATTR_ENT_TYPE]);
+        properties[ST_ATTR_ENT_TYPE]);
 
-    if (p != nullptr || !STR_DEFAULT_WITH_BODY)
+    if (p != nullptr || !ST_DEFAULT_WITH_BODY)
     {
       switch (type)
       {
@@ -499,8 +499,8 @@ StructuralView::insert (QString uid, QString parent,
             e->setType (type);
 
             // Setting...
-            e->setWidth (STR_DEFAULT_BODY_W);
-            e->setHeight (STR_DEFAULT_BODY_H);
+            e->setWidth (ST_DEFAULT_BODY_W);
+            e->setHeight (ST_DEFAULT_BODY_H);
 
             // Connecting...
             // nothing
@@ -529,7 +529,7 @@ StructuralView::insert (QString uid, QString parent,
       e->setUid (uid);
 
       // Setting 'id'...
-      if (!properties.contains (STR_ATTR_ENT_ID))
+      if (!properties.contains (ST_ATTR_ENT_ID))
         e->setId (getNewId (e));
 
       // Setting 'parent'...
@@ -539,7 +539,7 @@ StructuralView::insert (QString uid, QString parent,
         _scene->addItem (e);
 
       // Setting 'top'...
-      if (!properties.contains (STR_ATTR_ENT_TOP))
+      if (!properties.contains (ST_ATTR_ENT_TOP))
       {
         if (p != nullptr)
           e->setTop (p->getHeight () / 2 - e->getHeight () / 2);
@@ -551,7 +551,7 @@ StructuralView::insert (QString uid, QString parent,
       }
 
       // Setting 'left'...
-      if (!properties.contains (STR_ATTR_ENT_LEFT))
+      if (!properties.contains (ST_ATTR_ENT_LEFT))
       {
         if (p != nullptr)
           e->setLeft (p->getWidth () / 2 - e->getWidth () / 2);
@@ -591,25 +591,25 @@ StructuralView::insert (QString uid, QString parent,
       }
 
       // Adjust 'references'
-      if (settings[STR_SETTINGS_ADJUST_REFERENCE] != STR_VALUE_FALSE)
+      if (settings[ST_SETTINGS_ADJUST_REFERENCE] != ST_VALUE_FALSE)
       {
         adjustReferences (e);
       }
 
       // Adjust 'angles'
       if (e->getType () == Structural::Bind)
-        if (!properties.contains (STR_ATTR_EDGE_ANGLE))
+        if (!properties.contains (ST_ATTR_EDGE_ANGLE))
           ((StructuralBind *)e)->setAngle (getNewAngle ((StructuralBind *)e));
 
       // Adjust 'others'
-      if (!properties.contains (STR_ATTR_ENT_TOP)
-          || !properties.contains (STR_ATTR_ENT_LEFT))
+      if (!properties.contains (ST_ATTR_ENT_TOP)
+          || !properties.contains (ST_ATTR_ENT_LEFT))
         e->adjust (false);
       else
         e->adjust (true);
 
       //
-      if (settings[STR_SETTINGS_ADJUST_REFERENCE] != STR_VALUE_FALSE)
+      if (settings[ST_SETTINGS_ADJUST_REFERENCE] != ST_VALUE_FALSE)
       {
         if (e->getCategory () == Structural::Interface)
         {
@@ -646,10 +646,10 @@ StructuralView::insert (QString uid, QString parent,
       //
       // Saving...
       //
-      if (settings[STR_SETTINGS_UNDO] == STR_VALUE_TRUE)
+      if (settings[ST_SETTINGS_UNDO] == ST_VALUE_TRUE)
       {
         Insert *cmd = new Insert (uid, parent, e->getProperties (), settings);
-        cmd->setText (settings[STR_SETTINGS_CODE]);
+        cmd->setText (settings[ST_SETTINGS_CODE]);
 
         connect (cmd, &Insert::insert, this, &StructuralView::insert);
         connect (cmd, &Insert::remove, this, &StructuralView::remove);
@@ -664,12 +664,12 @@ StructuralView::insert (QString uid, QString parent,
       // Notifing...
       //
 
-      if (settings[STR_SETTINGS_NOTIFY] == STR_VALUE_TRUE)
+      if (settings[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
       {
         emit inserted (uid, parent, e->getProperties (), settings);
       }
 
-      if (!STR_DEFAULT_WITH_INTERFACES)
+      if (!ST_DEFAULT_WITH_INTERFACES)
       {
         // Since interfaces are hidden, no update related with that entities
         // are notified. However, the structural view create a new id when this
@@ -760,7 +760,7 @@ StructuralView::remove (QString uid, QMap<QString, QString> settings)
     //
     // Saving...
     //
-    if (settings[STR_SETTINGS_UNDO] == STR_VALUE_TRUE
+    if (settings[ST_SETTINGS_UNDO] == ST_VALUE_TRUE
         && (!e->isReference ()
             || e->getCategory () != Structural::Interface))
     {
@@ -771,7 +771,7 @@ StructuralView::remove (QString uid, QMap<QString, QString> settings)
 
       Remove *cmd = new Remove (_entities[uid]->getUid (), parent,
                                 _entities[uid]->getProperties (), settings);
-      cmd->setText (settings[STR_SETTINGS_CODE]);
+      cmd->setText (settings[ST_SETTINGS_CODE]);
 
       connect (cmd, &Remove::insert, this, &StructuralView::insert);
       connect (cmd, &Remove::remove, this, &StructuralView::remove);
@@ -792,8 +792,8 @@ StructuralView::remove (QString uid, QMap<QString, QString> settings)
     {
       foreach (const QString &key, _references.keys (e->getUid ()))
         remove (key, StructuralUtil::createSettings (
-                         STR_VALUE_FALSE, STR_VALUE_FALSE,
-                         settings.value (STR_SETTINGS_CODE)));
+                         ST_VALUE_FALSE, ST_VALUE_FALSE,
+                         settings.value (ST_SETTINGS_CODE)));
 
       // Only remove interface -> interface references. Keeping
       // Media -> Media references to enable undo. All "trash" references
@@ -813,8 +813,8 @@ StructuralView::remove (QString uid, QMap<QString, QString> settings)
     }
 
     // Removing 'children'...
-    if (settings.value (STR_SETTINGS_UNDO_TRACE) != STR_VALUE_FALSE)
-      settings[STR_SETTINGS_UNDO] = STR_VALUE_TRUE;
+    if (settings.value (ST_SETTINGS_UNDO_TRACE) != ST_VALUE_FALSE)
+      settings[ST_SETTINGS_UNDO] = ST_VALUE_TRUE;
 
     while (!e->getChildren ().isEmpty ())
       remove (e->getChildren ().first ()->getUid (),
@@ -839,12 +839,12 @@ StructuralView::remove (QString uid, QMap<QString, QString> settings)
             {
               remove (edge->getUid (),
                       StructuralUtil::createSettings (
-                          STR_VALUE_TRUE, settings.value (STR_SETTINGS_NOTIFY),
-                          settings.value (STR_SETTINGS_CODE)));
+                          ST_VALUE_TRUE, settings.value (ST_SETTINGS_NOTIFY),
+                          settings.value (ST_SETTINGS_CODE)));
             }
             else
             {
-              if (STR_DEFAULT_WITH_INTERFACES)
+              if (ST_DEFAULT_WITH_INTERFACES)
               {
                 // In case of 'Structural::Reference' edge, just change
                 // 'Structural::Port' properties.
@@ -857,16 +857,16 @@ StructuralView::remove (QString uid, QMap<QString, QString> settings)
                 QMap<QString, QString> properties
                     = edge->getTail ()->getProperties ();
 
-                properties[STR_ATTR_REFERENCE_COMPONENT_ID] = "";
-                properties[STR_ATTR_REFERENCE_COMPONENT_UID] = "";
-                properties[STR_ATTR_REFERENCE_INTERFACE_ID] = "";
-                properties[STR_ATTR_REFERENCE_INTERFACE_UID] = "";
+                properties[ST_ATTR_REFERENCE_COMPONENT_ID] = "";
+                properties[ST_ATTR_REFERENCE_COMPONENT_UID] = "";
+                properties[ST_ATTR_REFERENCE_INTERFACE_ID] = "";
+                properties[ST_ATTR_REFERENCE_INTERFACE_UID] = "";
 
                 change (edge->getTail ()->getUid (), properties,
                         previous,
                         StructuralUtil::createSettings (
-                            STR_VALUE_TRUE, settings.value (STR_SETTINGS_NOTIFY),
-                            settings.value (STR_SETTINGS_CODE)));
+                            ST_VALUE_TRUE, settings.value (ST_SETTINGS_NOTIFY),
+                            settings.value (ST_SETTINGS_CODE)));
               }
             }
           }
@@ -879,10 +879,10 @@ StructuralView::remove (QString uid, QMap<QString, QString> settings)
     {
       foreach (const QString &key, e->getProperties ().keys ())
       {
-        if (key.contains (STR_ATTR_LINKPARAM_NAME)
-            || key.contains (STR_ATTR_BINDPARAM_NAME))
+        if (key.contains (ST_ATTR_LINKPARAM_NAME)
+            || key.contains (ST_ATTR_BINDPARAM_NAME))
         {
-          if (settings[STR_SETTINGS_NOTIFY] == STR_VALUE_TRUE)
+          if (settings[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
           {
             emit removed (
                 key.right (key.length () - key.lastIndexOf (':') - 1),
@@ -892,29 +892,29 @@ StructuralView::remove (QString uid, QMap<QString, QString> settings)
       }
     }
 
-    if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+    if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
     {
       if (e->getType () == Structural::Port)
       {
         StructuralEntity *target = nullptr;
 
         if (_entities.contains (e->getProperty (
-                STR_ATTR_REFERENCE_COMPONENT_UID)))
+                ST_ATTR_REFERENCE_COMPONENT_UID)))
         {
           target = _entities.value (
-              e->getProperty (STR_ATTR_REFERENCE_COMPONENT_UID));
+              e->getProperty (ST_ATTR_REFERENCE_COMPONENT_UID));
 
           if (_entities.contains (e->getProperty (
-                  STR_ATTR_REFERENCE_INTERFACE_UID)))
+                  ST_ATTR_REFERENCE_INTERFACE_UID)))
           {
             target = _entities.value (e->getProperty (
-                STR_ATTR_REFERENCE_INTERFACE_UID));
+                ST_ATTR_REFERENCE_INTERFACE_UID));
           }
         }
 
         if (target != nullptr)
-          target->setProperty (STR_ATTR_ENT_AUTOSTART,
-                                         STR_VALUE_FALSE);
+          target->setProperty (ST_ATTR_ENT_AUTOSTART,
+                                         ST_VALUE_FALSE);
       }
     }
 
@@ -941,7 +941,7 @@ StructuralView::remove (QString uid, QMap<QString, QString> settings)
       emit switchedBody (true);
     }
 
-    if (settings[STR_SETTINGS_NOTIFY] == STR_VALUE_TRUE)
+    if (settings[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
     {
       emit removed (uid, settings);
     }
@@ -958,10 +958,10 @@ StructuralView::change (QString uid, QMap<QString, QString> properties,
     //
     // Saving...
     //
-    if (settings[STR_SETTINGS_UNDO] == STR_VALUE_TRUE)
+    if (settings[ST_SETTINGS_UNDO] == ST_VALUE_TRUE)
     {
       Change *cmd = new Change (uid, properties, previous, settings);
-      cmd->setText (settings[STR_SETTINGS_CODE]);
+      cmd->setText (settings[ST_SETTINGS_CODE]);
 
       connect (cmd, &Change::insert, this, &StructuralView::insert);
       connect (cmd, &Change::remove, this, &StructuralView::remove);
@@ -982,37 +982,37 @@ StructuralView::change (QString uid, QMap<QString, QString> properties,
     // Setting...
     //
     if (entity->isUncollapsed ())
-      if (properties.value (STR_ATTR_ENT_UNCOLLAPSED)
-          == STR_VALUE_FALSE)
+      if (properties.value (ST_ATTR_ENT_UNCOLLAPSED)
+          == ST_VALUE_FALSE)
         ((StructuralComposition *)entity)->collapse ();
 
     if (!entity->isUncollapsed ())
-      if (properties.value (STR_ATTR_ENT_UNCOLLAPSED) == STR_VALUE_TRUE)
+      if (properties.value (ST_ATTR_ENT_UNCOLLAPSED) == ST_VALUE_TRUE)
         ((StructuralComposition *)entity)->collapse ();
 
-    if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+    if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
     {
       if (entity->getType () == Structural::Port)
       {
         StructuralEntity *lasttarget = nullptr;
 
         if (_entities.contains (
-                previous.value (STR_ATTR_REFERENCE_COMPONENT_UID)))
+                previous.value (ST_ATTR_REFERENCE_COMPONENT_UID)))
         {
           lasttarget = _entities.value (
-              previous.value (STR_ATTR_REFERENCE_COMPONENT_UID));
+              previous.value (ST_ATTR_REFERENCE_COMPONENT_UID));
 
           if (_entities.contains (
-                  previous.value (STR_ATTR_REFERENCE_INTERFACE_UID)))
+                  previous.value (ST_ATTR_REFERENCE_INTERFACE_UID)))
           {
             lasttarget = _entities.value (
-                previous.value (STR_ATTR_REFERENCE_INTERFACE_UID));
+                previous.value (ST_ATTR_REFERENCE_INTERFACE_UID));
           }
         }
 
         if (lasttarget != nullptr)
-          lasttarget->setProperty (STR_ATTR_ENT_AUTOSTART,
-                                             STR_VALUE_FALSE);
+          lasttarget->setProperty (ST_ATTR_ENT_AUTOSTART,
+                                             ST_VALUE_FALSE);
       }
     }
 
@@ -1033,7 +1033,7 @@ StructuralView::change (QString uid, QMap<QString, QString> properties,
     // Notifing...
     //
 
-    if (settings[STR_SETTINGS_NOTIFY] == STR_VALUE_TRUE)
+    if (settings[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
     {
       emit changed (uid, properties, previous, settings);
     }
@@ -1058,15 +1058,15 @@ StructuralView::adjustReferences (StructuralEntity *entity)
         // the current one
         bool hasChange = false;
 
-        if (!entity->getProperty (STR_ATTR_REFERENCE_REFER_ID)
+        if (!entity->getProperty (ST_ATTR_REFERENCE_REFER_ID)
                  .isEmpty ())
         {
           if (_entities.contains (entity->getProperty (
-                  STR_ATTR_REFERENCE_REFER_UID)))
+                  ST_ATTR_REFERENCE_REFER_UID)))
           {
             StructuralEntity *refer
                 = _entities.value (entity->getProperty (
-                    STR_ATTR_REFERENCE_REFER_UID));
+                    ST_ATTR_REFERENCE_REFER_UID));
 
             if (entity != refer && !refer->isReference ())
             {
@@ -1076,18 +1076,18 @@ StructuralView::adjustReferences (StructuralEntity *entity)
 
                 if (!entity
                          ->getProperty (
-                             STR_ATTR_NODE_INSTANCE)
+                             ST_ATTR_NODE_INSTANCE)
                          .isEmpty ())
                   instance = entity->getProperty (
-                      STR_ATTR_NODE_INSTANCE);
+                      ST_ATTR_NODE_INSTANCE);
 
                 foreach (StructuralEntity *e, entity->getChildren ())
                   if (e->isReference ())
                     if (_entities.contains (e->getProperty (
-                            STR_ATTR_REFERENCE_REFER_UID)))
+                            ST_ATTR_REFERENCE_REFER_UID)))
                       if (_entities
                               .value (e->getProperty (
-                                  STR_ATTR_REFERENCE_REFER_UID))
+                                  ST_ATTR_REFERENCE_REFER_UID))
                               ->getParent ()
                           != refer)
                         remove (e->getUid (),
@@ -1104,9 +1104,9 @@ StructuralView::adjustReferences (StructuralEntity *entity)
                   {
                     mapChildToRefer[e->getUid ()]
                         = e->getProperty (
-                            STR_ATTR_REFERENCE_REFER_UID);
+                            ST_ATTR_REFERENCE_REFER_UID);
                     mapReferToChild[e->getProperty (
-                        STR_ATTR_REFERENCE_REFER_UID)]
+                        ST_ATTR_REFERENCE_REFER_UID)]
                         = e->getUid ();
                   }
 
@@ -1126,17 +1126,17 @@ StructuralView::adjustReferences (StructuralEntity *entity)
 
                         QMap<QString, QString> properties
                             = e->getProperties ();
-                        properties[STR_ATTR_ENT_UID] = uid;
-                        properties[STR_ATTR_ENT_REFERENCE]
-                            = STR_VALUE_TRUE;
+                        properties[ST_ATTR_ENT_UID] = uid;
+                        properties[ST_ATTR_ENT_REFERENCE]
+                            = ST_VALUE_TRUE;
 
-                        properties[STR_ATTR_REFERENCE_REFER_ID]
+                        properties[ST_ATTR_REFERENCE_REFER_ID]
                             = e->getId ();
-                        properties[STR_ATTR_REFERENCE_REFER_UID]
+                        properties[ST_ATTR_REFERENCE_REFER_UID]
                             = e->getUid ();
 
-                        properties.remove (STR_ATTR_ENT_TOP);
-                        properties.remove (STR_ATTR_ENT_LEFT);
+                        properties.remove (ST_ATTR_ENT_TOP);
+                        properties.remove (ST_ATTR_ENT_LEFT);
 
                         mapChildToRefer[uid] = e->getUid ();
                         mapChildToRefer[e->getUid ()] = uid;
@@ -1145,8 +1145,8 @@ StructuralView::adjustReferences (StructuralEntity *entity)
 
                         QMap<QString, QString> settings
                             = StructuralUtil::createSettings (false, false);
-                        settings[STR_SETTINGS_ADJUST_REFERENCE]
-                            = STR_VALUE_FALSE;
+                        settings[ST_SETTINGS_ADJUST_REFERENCE]
+                            = ST_VALUE_FALSE;
 
                         insert (uid, entity->getUid (), properties,
                                 settings);
@@ -1194,24 +1194,24 @@ StructuralView::adjustReferences (StructuralEntity *entity)
 
                           QMap<QString, QString> properties
                               = e->getProperties ();
-                          properties[STR_ATTR_ENT_UID] = uid;
-                          properties[STR_ATTR_ENT_REFERENCE]
-                              = STR_VALUE_TRUE;
+                          properties[ST_ATTR_ENT_UID] = uid;
+                          properties[ST_ATTR_ENT_REFERENCE]
+                              = ST_VALUE_TRUE;
 
-                          properties.remove (STR_ATTR_ENT_TOP);
-                          properties.remove (STR_ATTR_ENT_LEFT);
+                          properties.remove (ST_ATTR_ENT_TOP);
+                          properties.remove (ST_ATTR_ENT_LEFT);
 
-                          properties[STR_ATTR_REFERENCE_REFER_ID]
+                          properties[ST_ATTR_REFERENCE_REFER_ID]
                               = e->getId ();
-                          properties[STR_ATTR_REFERENCE_REFER_UID]
+                          properties[ST_ATTR_REFERENCE_REFER_UID]
                               = e->getUid ();
 
                           _references[uid] = e->getUid ();
 
                           QMap<QString, QString> settings
                               = StructuralUtil::createSettings (false, false);
-                          settings[STR_SETTINGS_ADJUST_REFERENCE]
-                              = STR_VALUE_FALSE;
+                          settings[ST_SETTINGS_ADJUST_REFERENCE]
+                              = ST_VALUE_FALSE;
 
                           insert (uid, refer->getUid (), properties,
                                   settings);
@@ -1289,12 +1289,12 @@ StructuralView::adjustReferences (StructuralEntity *entity)
               StructuralEdge *bind = (StructuralEdge *) edge;
 
               if (!bind->getProperty (
-                    STR_ATTR_REFERENCE_COMPONENT_ID).isEmpty () &&
+                    ST_ATTR_REFERENCE_COMPONENT_ID).isEmpty () &&
                   bind->getProperty (
-                    STR_ATTR_REFERENCE_INTERFACE_ID).isEmpty ())
+                    ST_ATTR_REFERENCE_INTERFACE_ID).isEmpty ())
               {
                 if (entity->getId () ==
-                    bind->getProperty (STR_ATTR_REFERENCE_COMPONENT_ID))
+                    bind->getProperty (ST_ATTR_REFERENCE_COMPONENT_ID))
                 {
                   if (bind->getHead () != nullptr &&
                       bind->getHead ()->getType () == Structural::Link)
@@ -1302,11 +1302,11 @@ StructuralView::adjustReferences (StructuralEntity *entity)
                     bind->setTail (entity);
 
                     bind->setProperty (
-                          STR_ATTR_EDGE_TAIL,
+                          ST_ATTR_EDGE_TAIL,
                           entity->getUid());
 
                     bind->setProperty (
-                          STR_ATTR_REFERENCE_COMPONENT_UID,
+                          ST_ATTR_REFERENCE_COMPONENT_UID,
                           entity->getUid());
                   }
                   else if (bind->getTail () != nullptr &&
@@ -1315,11 +1315,11 @@ StructuralView::adjustReferences (StructuralEntity *entity)
                     bind->setHead (entity);
 
                     bind->setProperty (
-                          STR_ATTR_EDGE_HEAD,
+                          ST_ATTR_EDGE_HEAD,
                           entity->getUid());
 
                     bind->setProperty (
-                          STR_ATTR_REFERENCE_COMPONENT_UID,
+                          ST_ATTR_REFERENCE_COMPONENT_UID,
                           entity->getUid());
                   }
 
@@ -1334,15 +1334,15 @@ StructuralView::adjustReferences (StructuralEntity *entity)
           {
             StructuralInterface *interface = (StructuralInterface *) relative;
 
-            if (!STR_DEFAULT_WITH_INTERFACES)
+            if (!ST_DEFAULT_WITH_INTERFACES)
             {
               if (interface->getType() == Structural::Port)
               {
                 if (interface->getProperty (
-                      STR_ATTR_REFERENCE_COMPONENT_ID) == entity->getId())
+                      ST_ATTR_REFERENCE_COMPONENT_ID) == entity->getId())
                 {
                   entity->setProperty (
-                        STR_ATTR_ENT_AUTOSTART, STR_VALUE_TRUE);
+                        ST_ATTR_ENT_AUTOSTART, ST_VALUE_TRUE);
                 }
               }
             }
@@ -1357,16 +1357,16 @@ StructuralView::adjustReferences (StructuralEntity *entity)
       case Structural::Bind:
       {
         if (_entities.contains (
-                entity->getProperty (STR_ATTR_EDGE_TAIL)))
+                entity->getProperty (ST_ATTR_EDGE_TAIL)))
           ((StructuralEdge *)entity)
               ->setTail (_entities.value (
-                  entity->getProperty (STR_ATTR_EDGE_TAIL)));
+                  entity->getProperty (ST_ATTR_EDGE_TAIL)));
 
         if (_entities.contains (
-                entity->getProperty (STR_ATTR_EDGE_HEAD)))
+                entity->getProperty (ST_ATTR_EDGE_HEAD)))
           ((StructuralEdge *)entity)
               ->setHead (_entities.value (
-                  entity->getProperty (STR_ATTR_EDGE_HEAD)));
+                  entity->getProperty (ST_ATTR_EDGE_HEAD)));
 
         bool isVisible = true;
 
@@ -1375,7 +1375,7 @@ StructuralView::adjustReferences (StructuralEntity *entity)
 
         if (tail != nullptr && head != nullptr)
         {
-          if (!STR_DEFAULT_WITH_INTERFACES)
+          if (!ST_DEFAULT_WITH_INTERFACES)
           {
             if (tail->getCategory () == Structural::Interface)
             {
@@ -1397,46 +1397,46 @@ StructuralView::adjustReferences (StructuralEntity *entity)
 
           if (!entity
                    ->getProperty (
-                       STR_ATTR_REFERENCE_INTERFACE_ID)
+                       ST_ATTR_REFERENCE_INTERFACE_ID)
                    .isEmpty ())
           {
             if (head->getId ()
                     != entity->getProperty (
-                           STR_ATTR_REFERENCE_INTERFACE_ID)
+                           ST_ATTR_REFERENCE_INTERFACE_ID)
                 && tail->getId ()
                        != entity->getProperty (
-                              STR_ATTR_REFERENCE_INTERFACE_ID))
+                              ST_ATTR_REFERENCE_INTERFACE_ID))
               isVisible = false;
 
             if (_entities.contains (entity->getProperty (
-                    STR_ATTR_REFERENCE_INTERFACE_UID)))
+                    ST_ATTR_REFERENCE_INTERFACE_UID)))
               interface = _entities.value (entity->getProperty (
-                  STR_ATTR_REFERENCE_INTERFACE_UID));
+                  ST_ATTR_REFERENCE_INTERFACE_UID));
             else
               isVisible = false;
           }
 
           if (!entity
                    ->getProperty (
-                       STR_ATTR_REFERENCE_COMPONENT_ID)
+                       ST_ATTR_REFERENCE_COMPONENT_ID)
                    .isEmpty ())
           {
             if (entity
                     ->getProperty (
-                        STR_ATTR_REFERENCE_INTERFACE_ID)
+                        ST_ATTR_REFERENCE_INTERFACE_ID)
                     .isEmpty ())
               if (head->getId ()
                       != entity->getProperty (
-                             STR_ATTR_REFERENCE_COMPONENT_ID)
+                             ST_ATTR_REFERENCE_COMPONENT_ID)
                   && tail->getId ()
                          != entity->getProperty (
-                                STR_ATTR_REFERENCE_COMPONENT_ID))
+                                ST_ATTR_REFERENCE_COMPONENT_ID))
                 isVisible = false;
 
             if (_entities.contains (entity->getProperty (
-                    STR_ATTR_REFERENCE_COMPONENT_UID)))
+                    ST_ATTR_REFERENCE_COMPONENT_UID)))
               component = _entities.value (entity->getProperty (
-                  STR_ATTR_REFERENCE_COMPONENT_UID));
+                  ST_ATTR_REFERENCE_COMPONENT_UID));
             else
               isVisible = false;
           }
@@ -1456,8 +1456,8 @@ StructuralView::adjustReferences (StructuralEntity *entity)
               isVisible = false;
           }
 
-          //          if (!STR_DEFAULT_WITH_BODY &&
-          //              !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+          //          if (!ST_DEFAULT_WITH_BODY &&
+          //              !ST_DEFAULT_WITH_FLOATING_INTERFACES)
           //          {
           //            if (tail->isHidden())
           //              isVisible = false;
@@ -1498,10 +1498,10 @@ StructuralView::adjustReferences (StructuralEntity *entity)
               StructuralEdge *bind = (StructuralEdge *) edge;
 
               if (!bind->getProperty (
-                    STR_ATTR_REFERENCE_INTERFACE_ID).isEmpty())
+                    ST_ATTR_REFERENCE_INTERFACE_ID).isEmpty())
               {
                 if (entity->getId () ==
-                    bind->getProperty (STR_ATTR_REFERENCE_INTERFACE_ID))
+                    bind->getProperty (ST_ATTR_REFERENCE_INTERFACE_ID))
                 {
                   if (bind->getHead () != nullptr &&
                       bind->getHead ()->getType () == Structural::Link)
@@ -1509,7 +1509,7 @@ StructuralView::adjustReferences (StructuralEntity *entity)
                     bind->setTail (entity);
 
                     bind->setProperty (
-                          STR_ATTR_EDGE_TAIL,
+                          ST_ATTR_EDGE_TAIL,
                           entity->getUid());
                   }
                   else if (bind->getTail () != nullptr &&
@@ -1518,20 +1518,20 @@ StructuralView::adjustReferences (StructuralEntity *entity)
                     bind->setHead (entity);
 
                     bind->setProperty (
-                          STR_ATTR_EDGE_HEAD,
+                          ST_ATTR_EDGE_HEAD,
                           entity->getUid());
                   }
 
                   bind->setProperty (
-                        STR_ATTR_REFERENCE_INTERFACE_UID,
+                        ST_ATTR_REFERENCE_INTERFACE_UID,
                         entity->getUid());
 
                   bind->setProperty (
-                        STR_ATTR_REFERENCE_COMPONENT_ID,
+                        ST_ATTR_REFERENCE_COMPONENT_ID,
                         entity->getParent()->getId());
 
                   bind->setProperty (
-                        STR_ATTR_REFERENCE_COMPONENT_UID,
+                        ST_ATTR_REFERENCE_COMPONENT_UID,
                         entity->getParent()->getUid());
 
                   adjustReferences (bind);
@@ -1543,11 +1543,11 @@ StructuralView::adjustReferences (StructuralEntity *entity)
 
         if (type == Structural::Port)
         {
-          if (STR_DEFAULT_WITH_INTERFACES)
+          if (ST_DEFAULT_WITH_INTERFACES)
           {
             foreach (StructuralEntity *e, _entities.values ())
               if (e->getType () == Structural::Reference)
-                if (e->getProperty (STR_ATTR_EDGE_TAIL)
+                if (e->getProperty (ST_ATTR_EDGE_TAIL)
                     == entity->getUid ())
                   remove (e->getUid (),
                           StructuralUtil::createSettings (false, false));
@@ -1556,14 +1556,14 @@ StructuralView::adjustReferences (StructuralEntity *entity)
             StructuralEntity *interface = nullptr;
 
             if (_entities.contains (entity->getProperty (
-                    STR_ATTR_REFERENCE_INTERFACE_UID)))
+                    ST_ATTR_REFERENCE_INTERFACE_UID)))
               interface = _entities.value (entity->getProperty (
-                  STR_ATTR_REFERENCE_INTERFACE_UID));
+                  ST_ATTR_REFERENCE_INTERFACE_UID));
 
             if (_entities.contains (entity->getProperty (
-                    STR_ATTR_REFERENCE_COMPONENT_UID)))
+                    ST_ATTR_REFERENCE_COMPONENT_UID)))
               component = _entities.value (entity->getProperty (
-                  STR_ATTR_REFERENCE_COMPONENT_UID));
+                  ST_ATTR_REFERENCE_COMPONENT_UID));
 
             StructuralEntity *head = nullptr;
 
@@ -1578,24 +1578,24 @@ StructuralView::adjustReferences (StructuralEntity *entity)
               if (head != nullptr)
               {
                 QMap<QString, QString> properties;
-                properties[STR_ATTR_ENT_TYPE]
+                properties[ST_ATTR_ENT_TYPE]
                     = StructuralUtil::typeToString (
                         Structural::Reference);
-                properties[STR_ATTR_EDGE_TAIL] = entity->getUid ();
-                properties[STR_ATTR_EDGE_HEAD] = head->getUid ();
+                properties[ST_ATTR_EDGE_TAIL] = entity->getUid ();
+                properties[ST_ATTR_EDGE_HEAD] = head->getUid ();
 
-                properties[STR_ATTR_REFERENCE_COMPONENT_ID]
+                properties[ST_ATTR_REFERENCE_COMPONENT_ID]
                     = entity->getProperty (
-                        STR_ATTR_REFERENCE_COMPONENT_ID);
-                properties[STR_ATTR_REFERENCE_COMPONENT_UID]
+                        ST_ATTR_REFERENCE_COMPONENT_ID);
+                properties[ST_ATTR_REFERENCE_COMPONENT_UID]
                     = entity->getProperty (
-                        STR_ATTR_REFERENCE_COMPONENT_UID);
-                properties[STR_ATTR_REFERENCE_INTERFACE_ID]
+                        ST_ATTR_REFERENCE_COMPONENT_UID);
+                properties[ST_ATTR_REFERENCE_INTERFACE_ID]
                     = entity->getProperty (
-                        STR_ATTR_REFERENCE_INTERFACE_ID);
-                properties[STR_ATTR_REFERENCE_INTERFACE_UID]
+                        ST_ATTR_REFERENCE_INTERFACE_ID);
+                properties[ST_ATTR_REFERENCE_INTERFACE_UID]
                     = entity->getProperty (
-                        STR_ATTR_REFERENCE_INTERFACE_UID);
+                        ST_ATTR_REFERENCE_INTERFACE_UID);
 
                 QString parentUid;
 
@@ -1604,17 +1604,17 @@ StructuralView::adjustReferences (StructuralEntity *entity)
                 else
                   parentUid = "";
 
-                if (!STR_DEFAULT_WITH_BODY
-                    && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+                if (!ST_DEFAULT_WITH_BODY
+                    && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
                 {
                   if (entity->getParent () == nullptr)
                   {
                     entity->setHidden (true);
 
-                    head->setProperty (STR_ATTR_ENT_AUTOSTART,
-                                                 STR_VALUE_TRUE);
+                    head->setProperty (ST_ATTR_ENT_AUTOSTART,
+                                                 ST_VALUE_TRUE);
 
-                    properties[STR_ATTR_ENT_HIDDEN] = STR_VALUE_TRUE;
+                    properties[ST_ATTR_ENT_HIDDEN] = ST_VALUE_TRUE;
                   }
                 }
 
@@ -1623,23 +1623,23 @@ StructuralView::adjustReferences (StructuralEntity *entity)
               }
             }
           }
-          else if (!STR_DEFAULT_WITH_FLOATING_INTERFACES)
+          else if (!ST_DEFAULT_WITH_FLOATING_INTERFACES)
           {
             StructuralEntity* component = nullptr;
             StructuralEntity* interface = nullptr;
 
             if (_entities.contains(
-                  entity->getProperty (STR_ATTR_REFERENCE_COMPONENT_UID)))
+                  entity->getProperty (ST_ATTR_REFERENCE_COMPONENT_UID)))
             {
               component = _entities[
-                  entity->getProperty (STR_ATTR_REFERENCE_COMPONENT_UID)];
+                  entity->getProperty (ST_ATTR_REFERENCE_COMPONENT_UID)];
             }
 
             if (_entities.contains(
-                  entity->getProperty (STR_ATTR_REFERENCE_INTERFACE_UID)))
+                  entity->getProperty (ST_ATTR_REFERENCE_INTERFACE_UID)))
             {
               interface = _entities[
-                  entity->getProperty (STR_ATTR_REFERENCE_INTERFACE_UID)];
+                  entity->getProperty (ST_ATTR_REFERENCE_INTERFACE_UID)];
             }
 
             QMap<QString, QString> properties;
@@ -1653,7 +1653,7 @@ StructuralView::adjustReferences (StructuralEntity *entity)
                   interface->getParent () == component)
               {
                 properties = interface->getProperties();
-                properties[STR_ATTR_ENT_AUTOSTART] = STR_VALUE_TRUE;
+                properties[ST_ATTR_ENT_AUTOSTART] = ST_VALUE_TRUE;
 
                 change (interface->getUid (),
                         properties,
@@ -1664,7 +1664,7 @@ StructuralView::adjustReferences (StructuralEntity *entity)
             else if (component != nullptr)
             {
               properties = component->getProperties();
-              properties[STR_ATTR_ENT_AUTOSTART] = STR_VALUE_TRUE;
+              properties[ST_ATTR_ENT_AUTOSTART] = ST_VALUE_TRUE;
 
               change (component->getUid (),
                       properties,
@@ -1727,7 +1727,7 @@ StructuralView::select (QString uid, QMap<QString, QString> settings)
       emit switchedCopy (true);
       emit switchedPaste (enablePaste);
 
-      if (settings[STR_SETTINGS_NOTIFY] == STR_VALUE_TRUE)
+      if (settings[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
       {
         emit selected (uid, settings);
       }
@@ -1756,7 +1756,7 @@ StructuralView::select (QString uid, QMap<QString, QString> settings)
 
     bool enablePaste = false;
 
-    if (!STR_DEFAULT_WITH_BODY)
+    if (!ST_DEFAULT_WITH_BODY)
       if (_clipboard != nullptr)
         if (StructuralUtil::validateKinship (_clipboard->getType (),
                                              Structural::Body))
@@ -1764,7 +1764,7 @@ StructuralView::select (QString uid, QMap<QString, QString> settings)
 
     emit switchedPaste (enablePaste);
 
-    if (settings[STR_SETTINGS_NOTIFY] == STR_VALUE_TRUE)
+    if (settings[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
     {
       emit selected (uid, settings);
     }
@@ -1809,16 +1809,16 @@ StructuralView::move (QString uid, QString parent,
 
     copy->adjust ();
 
-    if (properties.contains (STR_ATTR_ENT_TOP))
+    if (properties.contains (ST_ATTR_ENT_TOP))
       copy->setTop (copy->getTop () - copy->getHeight () / 2);
 
-    if (properties.contains (STR_ATTR_ENT_LEFT))
+    if (properties.contains (ST_ATTR_ENT_LEFT))
       copy->setLeft (copy->getLeft () - copy->getWidth () / 2);
 
     //
     // Moving...
     //
-    paste (copy, p, settings.value (STR_SETTINGS_CODE), false);
+    paste (copy, p, settings.value (ST_SETTINGS_CODE), false);
     remove (uid, settings);
   }
 }
@@ -1827,7 +1827,7 @@ void
 StructuralView::createEntity (StructuralType type)
 {
   QMap<QString, QString> properties;
-  properties[STR_ATTR_ENT_TYPE]
+  properties[ST_ATTR_ENT_TYPE]
       = StructuralUtil::typeToString (type);
 
   createEntity (type, properties, StructuralUtil::createSettings ());
@@ -1844,17 +1844,17 @@ StructuralView::createEntity (StructuralType type,
   if (_entities.contains (_selected))
     parent = _selected;
 
-  if (!properties.contains (STR_ATTR_ENT_TYPE))
-    properties[STR_ATTR_ENT_TYPE] = StructuralUtil::typeToString (type);
+  if (!properties.contains (ST_ATTR_ENT_TYPE))
+    properties[ST_ATTR_ENT_TYPE] = StructuralUtil::typeToString (type);
 
-  if (!settings.contains (STR_SETTINGS_UNDO))
-    settings[STR_SETTINGS_UNDO] = STR_VALUE_TRUE;
+  if (!settings.contains (ST_SETTINGS_UNDO))
+    settings[ST_SETTINGS_UNDO] = ST_VALUE_TRUE;
 
-  if (!settings.contains (STR_SETTINGS_NOTIFY))
-    settings[STR_SETTINGS_NOTIFY] = STR_VALUE_TRUE;
+  if (!settings.contains (ST_SETTINGS_NOTIFY))
+    settings[ST_SETTINGS_NOTIFY] = ST_VALUE_TRUE;
 
-  if (!settings.contains (STR_SETTINGS_CODE))
-    settings[STR_SETTINGS_CODE] = StructuralUtil::createUid ();
+  if (!settings.contains (ST_SETTINGS_CODE))
+    settings[ST_SETTINGS_CODE] = StructuralUtil::createUid ();
 
   insert (uid, parent, properties, settings);
 }
@@ -1862,7 +1862,7 @@ StructuralView::createEntity (StructuralType type,
 void
 StructuralView::performAutostart ()
 {
-  CPR_ASSERT_X (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES,
+  CPR_ASSERT_X (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES,
                 "performAutostart",
                 "Autostart is only available when when body and floating"
                 "interfaces are disabled in build");
@@ -1876,28 +1876,28 @@ StructuralView::performAutostart ()
       = StructuralUtil::createSettings (true, true);
 
   // Case 1: media already has an autostart property
-  if (props.contains (STR_ATTR_ENT_AUTOSTART) &&
-      props[STR_ATTR_ENT_AUTOSTART] == STR_VALUE_TRUE)
+  if (props.contains (ST_ATTR_ENT_AUTOSTART) &&
+      props[ST_ATTR_ENT_AUTOSTART] == ST_VALUE_TRUE)
   {
     QVector<StructuralEntity *> neighbors
         = StructuralUtil::getNeighbors (e);
 
-    if (STR_DEFAULT_WITH_INTERFACES)
+    if (ST_DEFAULT_WITH_INTERFACES)
     {
       if (e->getCategory() == Structural::Interface)
         neighbors += StructuralUtil::getUpNeighbors (e);
     }
 
-    // If STR_DEFAULT_WITH_INTERFACES is disabled, interface entities are
+    // If ST_DEFAULT_WITH_INTERFACES is disabled, interface entities are
     // just hidden. So, it is OK to iterate through interfaces, since they
-    // exist even with STR_DEFAULT_WITH_INTERFACES disabled.
+    // exist even with ST_DEFAULT_WITH_INTERFACES disabled.
     foreach (StructuralEntity* neighbor, neighbors)
     {
       if (neighbor->getCategory() == Structural::Interface)
       {
-        if (neighbor->getProperty(STR_ATTR_REFERENCE_COMPONENT_UID)
-            == e->getUid() || (STR_DEFAULT_WITH_INTERFACES &&
-            neighbor->getProperty(STR_ATTR_REFERENCE_INTERFACE_UID)
+        if (neighbor->getProperty(ST_ATTR_REFERENCE_COMPONENT_UID)
+            == e->getUid() || (ST_DEFAULT_WITH_INTERFACES &&
+            neighbor->getProperty(ST_ATTR_REFERENCE_INTERFACE_UID)
             == e->getUid()))
         {
           remove (neighbor->getUid(), settings);
@@ -1906,13 +1906,13 @@ StructuralView::performAutostart ()
       }
     }
 
-    props[STR_ATTR_ENT_AUTOSTART] = STR_VALUE_FALSE;
+    props[ST_ATTR_ENT_AUTOSTART] = ST_VALUE_FALSE;
   }
   // Case 2: media does not has autostart property
   else
   {
     QMap<QString, QString> pProperty;
-    pProperty[STR_ATTR_ENT_TYPE]
+    pProperty[ST_ATTR_ENT_TYPE]
         = StructuralUtil::typeToString (Structural::Port);
 
     QString pParent = "";
@@ -1921,14 +1921,14 @@ StructuralView::performAutostart ()
     {
       if (e->getParent () != nullptr)
       {
-        pProperty.insert (STR_ATTR_REFERENCE_COMPONENT_UID,
+        pProperty.insert (ST_ATTR_REFERENCE_COMPONENT_UID,
                           e->getParent()->getUid());
-        pProperty.insert (STR_ATTR_REFERENCE_COMPONENT_ID,
+        pProperty.insert (ST_ATTR_REFERENCE_COMPONENT_ID,
                           e->getParent()->getId());
 
-        pProperty.insert (STR_ATTR_REFERENCE_INTERFACE_UID,
+        pProperty.insert (ST_ATTR_REFERENCE_INTERFACE_UID,
                           e->getUid());
-        pProperty.insert (STR_ATTR_REFERENCE_INTERFACE_ID,
+        pProperty.insert (ST_ATTR_REFERENCE_INTERFACE_ID,
                           e->getId());
 
         pParent = e->getParent ()->getParent () != nullptr ?
@@ -1937,9 +1937,9 @@ StructuralView::performAutostart ()
     }
     else
     {
-      pProperty.insert (STR_ATTR_REFERENCE_COMPONENT_UID,
+      pProperty.insert (ST_ATTR_REFERENCE_COMPONENT_UID,
                         e->getUid());
-      pProperty.insert (STR_ATTR_REFERENCE_COMPONENT_ID,
+      pProperty.insert (ST_ATTR_REFERENCE_COMPONENT_ID,
                         e->getId());
 
       pParent = e->getParent () != nullptr ? e->getParent ()->getUid () : "";
@@ -1947,7 +1947,7 @@ StructuralView::performAutostart ()
 
     insert (StructuralUtil::createUid (), pParent, pProperty, settings);
 
-    props[STR_ATTR_ENT_AUTOSTART] = STR_VALUE_TRUE;
+    props[ST_ATTR_ENT_AUTOSTART] = ST_VALUE_TRUE;
   }
 
   change (e->getUid (), props,
@@ -1989,9 +1989,9 @@ StructuralView::performUndo ()
       if (e->getCategory () == Structural::Edge)
       {
         StructuralEntity *c = _entities.value (
-            e->getProperty (STR_ATTR_REFERENCE_COMPONENT_UID));
+            e->getProperty (ST_ATTR_REFERENCE_COMPONENT_UID));
         StructuralEntity *i = _entities.value (
-            e->getProperty (STR_ATTR_REFERENCE_INTERFACE_UID));
+            e->getProperty (ST_ATTR_REFERENCE_INTERFACE_UID));
 
         if (c != nullptr)
         {
@@ -2001,16 +2001,16 @@ StructuralView::performUndo ()
             {
               if (r->getId ()
                   == e->getProperty (
-                         STR_ATTR_REFERENCE_INTERFACE_ID))
+                         ST_ATTR_REFERENCE_INTERFACE_ID))
               {
-                e->setProperty (STR_ATTR_REFERENCE_INTERFACE_UID,
+                e->setProperty (ST_ATTR_REFERENCE_INTERFACE_UID,
                                           r->getUid ());
 
                 if (((StructuralEdge *)e)->getTail () != nullptr)
-                  e->setProperty (STR_ATTR_EDGE_HEAD,
+                  e->setProperty (ST_ATTR_EDGE_HEAD,
                                             r->getUid ());
                 else
-                  e->setProperty (STR_ATTR_EDGE_TAIL,
+                  e->setProperty (ST_ATTR_EDGE_TAIL,
                                             r->getUid ());
 
                 adjustReferences (e);
@@ -2097,7 +2097,7 @@ StructuralView::performPaste ()
 
     bool isAValidPaste = false;
 
-    if (!STR_DEFAULT_WITH_BODY)
+    if (!ST_DEFAULT_WITH_BODY)
     {
       if (StructuralUtil::validateKinship (_clipboard->getType (),
                                            Structural::Body))
@@ -2150,7 +2150,7 @@ StructuralView::performPaste ()
 
         QMap<QString, QString> properties
             = _clipboard->getProperties ();
-        properties[STR_ATTR_ENT_UID] = uid;
+        properties[ST_ATTR_ENT_UID] = uid;
 
         QString refID = _clipboard->getId ();
         refID = refID.section ('_', 1, 1);
@@ -2166,15 +2166,15 @@ StructuralView::performPaste ()
         else
           refID = "r_" + refID;
 
-        properties[STR_ATTR_ENT_ID] = refID;
+        properties[ST_ATTR_ENT_ID] = refID;
 
-        properties[STR_ATTR_REFERENCE_REFER_ID]
+        properties[ST_ATTR_REFERENCE_REFER_ID]
             = _clipboard->getId ().section ('_', 1, 1);
-        properties[STR_ATTR_REFERENCE_REFER_UID]
+        properties[ST_ATTR_REFERENCE_REFER_UID]
             = _clipboard->getUid ();
 
-        properties.remove (STR_ATTR_ENT_TOP);
-        properties.remove (STR_ATTR_ENT_LEFT);
+        properties.remove (ST_ATTR_ENT_TOP);
+        properties.remove (ST_ATTR_ENT_LEFT);
 
         insert (uid, (parent != nullptr ? parent->getUid () : ""),
                 properties, StructuralUtil::createSettings ());
@@ -2195,7 +2195,7 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
   StructuralEntity *parentHead
       = (StructuralEntity *)head->getParent ();
 
-  if ((parentTail != nullptr && parentHead != nullptr) || !STR_DEFAULT_WITH_BODY)
+  if ((parentTail != nullptr && parentHead != nullptr) || !ST_DEFAULT_WITH_BODY)
   {
     StructuralEntity *parent = nullptr;
 
@@ -2242,7 +2242,7 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
     setMode (Structural::Pointing);
     emit switchedPointer (true);
 
-    if (parent != nullptr || !STR_DEFAULT_WITH_BODY)
+    if (parent != nullptr || !ST_DEFAULT_WITH_BODY)
     {
       emit requestedUpdate ();
 
@@ -2331,9 +2331,9 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
         QString uid = StructuralUtil::createUid ();
 
         QMap<QString, QString> properties;
-        properties[STR_ATTR_ENT_TYPE]
+        properties[ST_ATTR_ENT_TYPE]
             = StructuralUtil::typeToString (Structural::Link);
-        properties[STR_ATTR_REFERENCE_XCONNECTOR_ID]
+        properties[ST_ATTR_REFERENCE_XCONNECTOR_ID]
             = _dialog->getConnector ();
 
         qreal x = 0.0, y = 0.0;
@@ -2411,8 +2411,8 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
             y = phead.y () + (ptail.y () - phead.y ()) / 2;
         }
 
-        properties[STR_ATTR_ENT_TOP] = QString::number (y);
-        properties[STR_ATTR_ENT_LEFT] = QString::number (x);
+        properties[ST_ATTR_ENT_TOP] = QString::number (y);
+        properties[ST_ATTR_ENT_LEFT] = QString::number (x);
 
         QMap<QString, QString> params = _dialog->getConnectorParams ();
 
@@ -2422,9 +2422,9 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
           {
             QString uid = StructuralUtil::createUid ();
 
-            properties[QString (STR_ATTR_LINKPARAM_NAME) + ":" + uid]
+            properties[QString (ST_ATTR_LINKPARAM_NAME) + ":" + uid]
                 = key;
-            properties[QString (STR_ATTR_LINKPARAM_VALUE) + ":" + uid]
+            properties[QString (ST_ATTR_LINKPARAM_VALUE) + ":" + uid]
                 = params.value (key);
           }
         }
@@ -2438,9 +2438,9 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
         if (_entities.contains (uid))
         {
           createBind (tail, _entities.value (uid), _dialog->getCondition (),
-                      settings.value (STR_SETTINGS_CODE));
+                      settings.value (ST_SETTINGS_CODE));
           createBind (_entities.value (uid), head, _dialog->getAction (),
-                      settings.value (STR_SETTINGS_CODE));
+                      settings.value (ST_SETTINGS_CODE));
         }
       }
     }
@@ -2454,7 +2454,7 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
   StructuralEntity *parentTail = tail->getParent ();
   StructuralEntity *parentHead = head->getParent ();
 
-  if ((parentTail != nullptr && parentHead != nullptr) || !STR_DEFAULT_WITH_BODY)
+  if ((parentTail != nullptr && parentHead != nullptr) || !ST_DEFAULT_WITH_BODY)
   {
     StructuralEntity *parent = nullptr;
 
@@ -2471,18 +2471,18 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
              && head->getCategory () == Structural::Interface)
       parent = parentTail;
 
-    if (parent != nullptr || !STR_DEFAULT_WITH_BODY)
+    if (parent != nullptr || !ST_DEFAULT_WITH_BODY)
     {
       QString uid = StructuralUtil::createUid ();
 
       QMap<QString, QString> properties;
-      properties[STR_ATTR_ENT_TYPE]
+      properties[ST_ATTR_ENT_TYPE]
           = StructuralUtil::typeToString (Structural::Bind);
-      properties[STR_ATTR_EDGE_TAIL] = tail->getUid ();
-      properties[STR_ATTR_EDGE_HEAD] = head->getUid ();
+      properties[ST_ATTR_EDGE_TAIL] = tail->getUid ();
+      properties[ST_ATTR_EDGE_HEAD] = head->getUid ();
 
-      properties[STR_ATTR_BIND_ROLE] = role;
-      properties[STR_ATTR_ENT_ID] = role;
+      properties[ST_ATTR_BIND_ROLE] = role;
+      properties[ST_ATTR_ENT_ID] = role;
 
       StructuralEntity *entityLink = nullptr;
       StructuralEntity *entityNonLink = nullptr;
@@ -2525,7 +2525,7 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
           }
 
           _dialog->setMode (entityLink->getProperty (
-                                STR_ATTR_REFERENCE_XCONNECTOR_ID),
+                                ST_ATTR_REFERENCE_XCONNECTOR_ID),
                             "", "", StructuralLinkDialog::CreateAction);
 
           if (_dialog->exec ())
@@ -2539,14 +2539,14 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
                 entityNonLink = _entities.value (uid);
                 parentNonLink = entityNonLink->getParent ();
 
-                properties[STR_ATTR_EDGE_HEAD]
+                properties[ST_ATTR_EDGE_HEAD]
                     = entityNonLink->getUid ();
               }
             }
 
-            properties[STR_ATTR_BIND_ROLE] = _dialog->getAction ();
+            properties[ST_ATTR_BIND_ROLE] = _dialog->getAction ();
             ;
-            properties[STR_ATTR_ENT_ID] = _dialog->getAction ();
+            properties[ST_ATTR_ENT_ID] = _dialog->getAction ();
             ;
           }
           else
@@ -2564,8 +2564,8 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
             QString uid = StructuralUtil::createUid ();
 
             properties.insert (
-                QString (STR_ATTR_BINDPARAM_NAME) + ":" + uid, key);
-            properties.insert (QString (STR_ATTR_BINDPARAM_VALUE) + ":"
+                QString (ST_ATTR_BINDPARAM_NAME) + ":" + uid, key);
+            properties.insert (QString (ST_ATTR_BINDPARAM_VALUE) + ":"
                                    + uid,
                                params.value (key));
           }
@@ -2608,7 +2608,7 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
           }
 
           _dialog->setMode (entityLink->getProperty (
-                                STR_ATTR_REFERENCE_XCONNECTOR_ID),
+                                ST_ATTR_REFERENCE_XCONNECTOR_ID),
                             "", "", StructuralLinkDialog::CreateCondition);
 
           if (_dialog->exec ())
@@ -2622,13 +2622,13 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
                 entityNonLink = _entities.value (uid);
                 parentNonLink = entityNonLink->getParent ();
 
-                properties[STR_ATTR_EDGE_TAIL]
+                properties[ST_ATTR_EDGE_TAIL]
                     = entityNonLink->getUid ();
               }
             }
 
-            properties[STR_ATTR_BIND_ROLE] = _dialog->getCondition ();
-            properties[STR_ATTR_ENT_ID] = _dialog->getCondition ();
+            properties[ST_ATTR_BIND_ROLE] = _dialog->getCondition ();
+            properties[ST_ATTR_ENT_ID] = _dialog->getCondition ();
           }
           else
           {
@@ -2645,8 +2645,8 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
             QString uid = StructuralUtil::createUid ();
 
             properties.insert (
-                QString (STR_ATTR_BINDPARAM_NAME) + ":" + uid, key);
-            properties.insert (QString (STR_ATTR_BINDPARAM_VALUE) + ":"
+                QString (ST_ATTR_BINDPARAM_NAME) + ":" + uid, key);
+            properties.insert (QString (ST_ATTR_BINDPARAM_VALUE) + ":"
                                    + uid,
                                params.value (key));
           }
@@ -2655,28 +2655,28 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
 
       if (entityLink != nullptr && entityNonLink != nullptr)
       {
-        properties[STR_ATTR_REFERENCE_LINK_UID]
+        properties[ST_ATTR_REFERENCE_LINK_UID]
             = entityLink->getUid ();
 
         if (entityNonLink->getCategory () == Structural::Interface)
         {
-          properties[STR_ATTR_REFERENCE_INTERFACE_ID]
+          properties[ST_ATTR_REFERENCE_INTERFACE_ID]
               = entityNonLink->getId ();
-          properties[STR_ATTR_REFERENCE_INTERFACE_UID]
+          properties[ST_ATTR_REFERENCE_INTERFACE_UID]
               = entityNonLink->getUid ();
-          properties[STR_ATTR_REFERENCE_COMPONENT_ID]
+          properties[ST_ATTR_REFERENCE_COMPONENT_ID]
               = parentNonLink->getId ();
-          properties[STR_ATTR_REFERENCE_COMPONENT_UID]
+          properties[ST_ATTR_REFERENCE_COMPONENT_UID]
               = parentNonLink->getUid ();
         }
         else
         {
-          properties[STR_ATTR_REFERENCE_COMPONENT_ID]
+          properties[ST_ATTR_REFERENCE_COMPONENT_ID]
               = entityNonLink->getId ();
-          properties[STR_ATTR_REFERENCE_COMPONENT_UID]
+          properties[ST_ATTR_REFERENCE_COMPONENT_UID]
               = entityNonLink->getUid ();
-          properties[STR_ATTR_REFERENCE_INTERFACE_ID] = "";
-          properties[STR_ATTR_REFERENCE_INTERFACE_UID] = "";
+          properties[ST_ATTR_REFERENCE_INTERFACE_ID] = "";
+          properties[ST_ATTR_REFERENCE_INTERFACE_UID] = "";
         }
       }
 
@@ -2684,7 +2684,7 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
           = StructuralUtil::createSettings (true, true);
 
       if (!code.isEmpty ())
-        settings[STR_SETTINGS_CODE] = code;
+        settings[ST_SETTINGS_CODE] = code;
 
       insert (uid, (parent != nullptr ? parent->getUid () : ""),
               properties, settings);
@@ -2715,23 +2715,23 @@ StructuralView::createReference (StructuralEntity *tail,
 
       if (head->getCategory () == Structural::Interface)
       {
-        properties[STR_ATTR_REFERENCE_INTERFACE_ID]
+        properties[ST_ATTR_REFERENCE_INTERFACE_ID]
             = head->getId ();
-        properties[STR_ATTR_REFERENCE_INTERFACE_UID]
+        properties[ST_ATTR_REFERENCE_INTERFACE_UID]
             = head->getUid ();
-        properties[STR_ATTR_REFERENCE_COMPONENT_ID]
+        properties[ST_ATTR_REFERENCE_COMPONENT_ID]
             = parentHead->getId ();
-        properties[STR_ATTR_REFERENCE_COMPONENT_UID]
+        properties[ST_ATTR_REFERENCE_COMPONENT_UID]
             = parentHead->getUid ();
       }
       else
       {
-        properties[STR_ATTR_REFERENCE_COMPONENT_ID]
+        properties[ST_ATTR_REFERENCE_COMPONENT_ID]
             = head->getId ();
-        properties[STR_ATTR_REFERENCE_COMPONENT_UID]
+        properties[ST_ATTR_REFERENCE_COMPONENT_UID]
             = head->getUid ();
-        properties[STR_ATTR_REFERENCE_INTERFACE_ID] = "";
-        properties[STR_ATTR_REFERENCE_INTERFACE_UID] = "";
+        properties[ST_ATTR_REFERENCE_INTERFACE_ID] = "";
+        properties[ST_ATTR_REFERENCE_INTERFACE_UID] = "";
       }
 
       setMode (Structural::Pointing);
@@ -2744,10 +2744,10 @@ StructuralView::createReference (StructuralEntity *tail,
       }
       else if (tail->getType () == Structural::SwitchPort)
       {
-        properties[STR_ATTR_ENT_TYPE]
+        properties[ST_ATTR_ENT_TYPE]
             = StructuralUtil::typeToString (Structural::Mapping);
-        properties[STR_ATTR_EDGE_TAIL] = tail->getUid ();
-        properties[STR_ATTR_EDGE_HEAD] = head->getUid ();
+        properties[ST_ATTR_EDGE_TAIL] = tail->getUid ();
+        properties[ST_ATTR_EDGE_HEAD] = head->getUid ();
 
         insert (StructuralUtil::createUid (), parentTail->getUid (),
                 properties, StructuralUtil::createSettings (true, true));
@@ -3210,7 +3210,7 @@ StructuralView::dragEnterEvent (QDragEnterEvent *event)
 {
   QGraphicsView::dragEnterEvent (event);
 
-  if (!STR_DEFAULT_WITH_BODY)
+  if (!ST_DEFAULT_WITH_BODY)
   {
     if (!event->isAccepted ())
     {
@@ -3232,7 +3232,7 @@ StructuralView::dragMoveEvent (QDragMoveEvent *event)
 {
   QGraphicsView::dragMoveEvent (event);
 
-  if (!STR_DEFAULT_WITH_BODY)
+  if (!ST_DEFAULT_WITH_BODY)
   {
     if (!event->isAccepted ())
     {
@@ -3254,7 +3254,7 @@ StructuralView::dropEvent (QDropEvent *event)
 {
   QGraphicsView::dropEvent (event);
 
-  if (!STR_DEFAULT_WITH_BODY)
+  if (!ST_DEFAULT_WITH_BODY)
   {
     if (event->isAccepted ())
     {
@@ -3269,18 +3269,18 @@ StructuralView::dropEvent (QDropEvent *event)
           QString filename = url.toLocalFile ();
 
           QMap<QString, QString> properties;
-          properties[STR_ATTR_ENT_TYPE]
+          properties[ST_ATTR_ENT_TYPE]
               = StructuralUtil::typeToString (Structural::Media);
-          properties[STR_ATTR_ENT_ID]
+          properties[ST_ATTR_ENT_ID]
               = StructuralUtil::formatId (QFileInfo (filename).baseName ());
-          properties[STR_ATTR_NODE_SRC] = filename;
+          properties[ST_ATTR_NODE_SRC] = filename;
 
           QPointF p = mapToScene (event->pos ());
 
-          properties[STR_ATTR_ENT_TOP]
-              = QString::number (p.y () - STR_DEFAULT_CONTENT_H / 2);
-          properties[STR_ATTR_ENT_LEFT]
-              = QString::number (p.x () - STR_DEFAULT_CONTENT_W / 2);
+          properties[ST_ATTR_ENT_TOP]
+              = QString::number (p.y () - ST_DEFAULT_CONTENT_H / 2);
+          properties[ST_ATTR_ENT_LEFT]
+              = QString::number (p.x () - ST_DEFAULT_CONTENT_W / 2);
 
           insert (StructuralUtil::createUid (), "", properties,
                   StructuralUtil::createSettings ());
@@ -3291,8 +3291,8 @@ StructuralView::dropEvent (QDropEvent *event)
         QPointF p = mapToScene (event->pos ());
 
         QMap<QString, QString> properties;
-        properties[STR_ATTR_ENT_TOP] = QString::number (p.y ());
-        properties[STR_ATTR_ENT_LEFT] = QString::number (p.x ());
+        properties[ST_ATTR_ENT_TOP] = QString::number (p.y ());
+        properties[ST_ATTR_ENT_LEFT] = QString::number (p.x ());
 
         move (event->mimeData ()->text (), "", properties,
               StructuralUtil::createSettings ());
@@ -3310,7 +3310,7 @@ StructuralView::clean ()
   {
     QMap<QString, QString> settings
         = StructuralUtil::createSettings (true, false);
-    settings[STR_SETTINGS_UNDO_TRACE] = "0";
+    settings[ST_SETTINGS_UNDO_TRACE] = "0";
 
     remove (uid, settings);
   }
@@ -3329,18 +3329,18 @@ StructuralView::performLinkDialog (StructuralLink *entity)
   emit requestedUpdate ();
 
   _dialog->setMode (
-      entity->getProperty (STR_ATTR_REFERENCE_XCONNECTOR_ID), "",
+      entity->getProperty (ST_ATTR_REFERENCE_XCONNECTOR_ID), "",
       "", StructuralLinkDialog::EditLink);
 
   QMap<QString, QString> pLink;
   foreach (const QString &name, entity->getProperties ().keys ())
   {
-    if (name.contains (STR_ATTR_LINKPARAM_NAME))
+    if (name.contains (ST_ATTR_LINKPARAM_NAME))
     {
       QString lpUid = name.right (name.length () - name.lastIndexOf (':') - 1);
       QString lpName = entity->getProperties ().value (name);
       QString lpValue = entity->getProperties ().value (
-          QString (STR_ATTR_LINKPARAM_VALUE) + ":" + lpUid);
+          QString (ST_ATTR_LINKPARAM_VALUE) + ":" + lpUid);
 
       pLink.insert (lpName, lpValue);
     }
@@ -3353,31 +3353,31 @@ StructuralView::performLinkDialog (StructuralLink *entity)
     QMap<QString, QString> prev = entity->getProperties ();
     QMap<QString, QString> properties = entity->getProperties ();
 
-    properties.insert (STR_ATTR_REFERENCE_XCONNECTOR_ID,
+    properties.insert (ST_ATTR_REFERENCE_XCONNECTOR_ID,
                        _dialog->getConnector ());
 
     QMap<QString, QString> p = _dialog->getConnectorParams ();
 
     foreach (const QString &name, p.keys ())
     {
-      if (properties.key (name).contains (STR_ATTR_LINKPARAM_NAME))
+      if (properties.key (name).contains (ST_ATTR_LINKPARAM_NAME))
       {
         QString key = properties.key (name);
         QString uid = key.right (key.length () - key.lastIndexOf (':') - 1);
 
         if (!p.value (name).isEmpty ())
         {
-          properties.insert (QString (STR_ATTR_LINKPARAM_NAME) + ":" + uid,
+          properties.insert (QString (ST_ATTR_LINKPARAM_NAME) + ":" + uid,
                              name);
-          properties.insert (QString (STR_ATTR_LINKPARAM_VALUE) + ":"
+          properties.insert (QString (ST_ATTR_LINKPARAM_VALUE) + ":"
                                  + uid,
                              p.value (name));
         }
         else
         {
-          properties.remove (QString (STR_ATTR_LINKPARAM_NAME) + ":"
+          properties.remove (QString (ST_ATTR_LINKPARAM_NAME) + ":"
                              + uid);
-          properties.remove (QString (STR_ATTR_LINKPARAM_VALUE) + ":"
+          properties.remove (QString (ST_ATTR_LINKPARAM_VALUE) + ":"
                              + uid);
         }
       }
@@ -3385,9 +3385,9 @@ StructuralView::performLinkDialog (StructuralLink *entity)
       {
         QString uid = StructuralUtil::createUid ();
 
-        properties.insert (QString (STR_ATTR_LINKPARAM_NAME) + ":" + uid,
+        properties.insert (QString (ST_ATTR_LINKPARAM_NAME) + ":" + uid,
                            name);
-        properties.insert (QString (STR_ATTR_LINKPARAM_VALUE) + ":" + uid,
+        properties.insert (QString (ST_ATTR_LINKPARAM_VALUE) + ":" + uid,
                            p.value (name));
       }
     }
@@ -3405,12 +3405,12 @@ StructuralView::performBindDialog (StructuralBind *entity)
   QMap<QString, QString> pBind;
   foreach (const QString &name, entity->getProperties ().keys ())
   {
-    if (name.contains (STR_ATTR_BINDPARAM_NAME))
+    if (name.contains (ST_ATTR_BINDPARAM_NAME))
     {
       QString bpUid = name.right (name.length () - name.lastIndexOf (':') - 1);
       QString bpName = entity->getProperties ().value (name);
       QString bpValue = entity->getProperties ().value (
-          QString (STR_ATTR_BINDPARAM_VALUE) + ":" + bpUid);
+          QString (ST_ATTR_BINDPARAM_VALUE) + ":" + bpUid);
 
       pBind.insert (bpName, bpValue);
     }
@@ -3421,7 +3421,7 @@ StructuralView::performBindDialog (StructuralBind *entity)
   if (StructuralUtil::isCondition (entity->getRole ()))
   {
     _dialog->setMode (entity->getHead ()->getProperty (
-                          STR_ATTR_REFERENCE_XCONNECTOR_ID),
+                          ST_ATTR_REFERENCE_XCONNECTOR_ID),
                       "", "", StructuralLinkDialog::EditCondition);
 
     _dialog->setCondition (entity->getId ());
@@ -3439,7 +3439,7 @@ StructuralView::performBindDialog (StructuralBind *entity)
       }
 
       _dialog->setConditionInterface (
-          entity->getProperty (STR_ATTR_REFERENCE_INTERFACE_ID));
+          entity->getProperty (ST_ATTR_REFERENCE_INTERFACE_ID));
     }
     else
     {
@@ -3451,17 +3451,17 @@ StructuralView::performBindDialog (StructuralBind *entity)
             StructuralUtil::getIcon (e->getType ()));
       }
 
-      if (!STR_DEFAULT_WITH_INTERFACES)
+      if (!ST_DEFAULT_WITH_INTERFACES)
       {
         if (!entity
-                 ->getProperty (STR_ATTR_REFERENCE_INTERFACE_UID)
+                 ->getProperty (ST_ATTR_REFERENCE_INTERFACE_UID)
                  .isEmpty ()
             && _entities.contains (entity->getProperty (
-                   STR_ATTR_REFERENCE_INTERFACE_UID)))
+                   ST_ATTR_REFERENCE_INTERFACE_UID)))
         {
           StructuralEntity *interface = _entities.value (
               entity->getProperty (
-                  STR_ATTR_REFERENCE_INTERFACE_UID));
+                  ST_ATTR_REFERENCE_INTERFACE_UID));
 
           _dialog->setConditionInterface (interface->getId ());
         }
@@ -3472,7 +3472,7 @@ StructuralView::performBindDialog (StructuralBind *entity)
   {
 
     _dialog->setMode (entity->getTail ()->getProperty (
-                          STR_ATTR_REFERENCE_XCONNECTOR_ID),
+                          ST_ATTR_REFERENCE_XCONNECTOR_ID),
                       "", "", StructuralLinkDialog::EditAction);
 
     _dialog->setAction (entity->getId ());
@@ -3490,7 +3490,7 @@ StructuralView::performBindDialog (StructuralBind *entity)
       }
 
       _dialog->setActionInterface (
-          entity->getProperty (STR_ATTR_REFERENCE_INTERFACE_ID));
+          entity->getProperty (ST_ATTR_REFERENCE_INTERFACE_ID));
     }
     else
     {
@@ -3502,17 +3502,17 @@ StructuralView::performBindDialog (StructuralBind *entity)
             StructuralUtil::getIcon (e->getType ()));
       }
 
-      if (!STR_DEFAULT_WITH_INTERFACES)
+      if (!ST_DEFAULT_WITH_INTERFACES)
       {
         if (!entity
-                 ->getProperty (STR_ATTR_REFERENCE_INTERFACE_UID)
+                 ->getProperty (ST_ATTR_REFERENCE_INTERFACE_UID)
                  .isEmpty ()
             && _entities.contains (entity->getProperty (
-                   STR_ATTR_REFERENCE_INTERFACE_UID)))
+                   ST_ATTR_REFERENCE_INTERFACE_UID)))
         {
           StructuralEntity *interface = _entities.value (
               entity->getProperty (
-                  STR_ATTR_REFERENCE_INTERFACE_UID));
+                  ST_ATTR_REFERENCE_INTERFACE_UID));
 
           _dialog->setActionInterface (interface->getId ());
         }
@@ -3533,49 +3533,49 @@ StructuralView::performBindDialog (StructuralBind *entity)
     if (StructuralUtil::isCondition (entity->getRole ()))
     {
       role = _dialog->getCondition ();
-      property = STR_ATTR_EDGE_TAIL;
+      property = ST_ATTR_EDGE_TAIL;
       interface = _dialog->getConditionInterface ();
       p = _dialog->getConditionParams ();
     }
     else if (StructuralUtil::isAction (entity->getRole ()))
     {
       role = _dialog->getAction ();
-      property = STR_ATTR_EDGE_HEAD;
+      property = ST_ATTR_EDGE_HEAD;
       interface = _dialog->getActionInterface ();
       p = _dialog->getActionParams ();
     }
 
-    properties[STR_ATTR_BIND_ROLE] = role;
-    properties[STR_ATTR_ENT_ID] = role;
+    properties[ST_ATTR_BIND_ROLE] = role;
+    properties[ST_ATTR_ENT_ID] = role;
 
     if (!interface.isEmpty () && _entities.contains (interface))
     {
       properties[property] = interface;
-      properties[STR_ATTR_REFERENCE_INTERFACE_UID] = interface;
-      properties[STR_ATTR_REFERENCE_INTERFACE_ID]
+      properties[ST_ATTR_REFERENCE_INTERFACE_UID] = interface;
+      properties[ST_ATTR_REFERENCE_INTERFACE_ID]
           = _entities.value (interface)->getId ();
     }
 
     foreach (const QString &name, p.keys ())
     {
-      if (properties.key (name).contains (STR_ATTR_BINDPARAM_NAME))
+      if (properties.key (name).contains (ST_ATTR_BINDPARAM_NAME))
       {
         QString key = properties.key (name);
         QString uid = key.right (key.length () - key.lastIndexOf (':') - 1);
 
         if (!p.value (name).isEmpty ())
         {
-          properties.insert (QString (STR_ATTR_BINDPARAM_NAME) + ":" + uid,
+          properties.insert (QString (ST_ATTR_BINDPARAM_NAME) + ":" + uid,
                              name);
-          properties.insert (QString (STR_ATTR_BINDPARAM_VALUE) + ":"
+          properties.insert (QString (ST_ATTR_BINDPARAM_VALUE) + ":"
                                  + uid,
                              p.value (name));
         }
         else
         {
-          properties.remove (QString (STR_ATTR_BINDPARAM_NAME) + ":"
+          properties.remove (QString (ST_ATTR_BINDPARAM_NAME) + ":"
                              + uid);
-          properties.remove (QString (STR_ATTR_BINDPARAM_VALUE) + ":"
+          properties.remove (QString (ST_ATTR_BINDPARAM_VALUE) + ":"
                              + uid);
         }
       }
@@ -3583,9 +3583,9 @@ StructuralView::performBindDialog (StructuralBind *entity)
       {
         QString uid = StructuralUtil::createUid ();
 
-        properties.insert (QString (STR_ATTR_BINDPARAM_NAME) + ":" + uid,
+        properties.insert (QString (ST_ATTR_BINDPARAM_NAME) + ":" + uid,
                            name);
-        properties.insert (QString (STR_ATTR_BINDPARAM_VALUE) + ":" + uid,
+        properties.insert (QString (ST_ATTR_BINDPARAM_VALUE) + ":" + uid,
                            p.value (name));
       }
     }
@@ -3693,16 +3693,16 @@ StructuralView::paste (StructuralEntity *entity, StructuralEntity *parent,
     QString uid = StructuralUtil::createUid ();
 
     QMap<QString, QString> properties = entity->getProperties ();
-    properties[STR_ATTR_ENT_UID] = uid;
+    properties[ST_ATTR_ENT_UID] = uid;
 
     if (adjust)
     {
-      properties.remove (STR_ATTR_ENT_TOP);
-      properties.remove (STR_ATTR_ENT_LEFT);
+      properties.remove (ST_ATTR_ENT_TOP);
+      properties.remove (ST_ATTR_ENT_LEFT);
     }
 
     QMap<QString, QString> setting = StructuralUtil::createSettings (
-        STR_VALUE_TRUE, STR_VALUE_TRUE, code);
+        ST_VALUE_TRUE, ST_VALUE_TRUE, code);
 
     insert (uid, (parent != nullptr ? parent->getUid () : ""),
             properties, setting);
@@ -3731,42 +3731,42 @@ StructuralView::paste (StructuralEntity *entity, StructuralEntity *parent,
 
           QMap<QString, QString> p = e->getProperties ();
 
-          QString property = STR_ATTR_EDGE_TAIL;
+          QString property = ST_ATTR_EDGE_TAIL;
 
           if (p.contains (property))
             if (_clipboardReferences.contains (p.value (property)))
               e->setProperty (
                   property, _clipboardReferences.value (p.value (property)));
 
-          property = STR_ATTR_EDGE_HEAD;
+          property = ST_ATTR_EDGE_HEAD;
 
           if (p.contains (property))
             if (_clipboardReferences.contains (p.value (property)))
               e->setProperty (
                   property, _clipboardReferences.value (p.value (property)));
 
-          property = STR_ATTR_REFERENCE_COMPONENT_UID;
+          property = ST_ATTR_REFERENCE_COMPONENT_UID;
 
           if (p.contains (property))
             if (_clipboardReferences.contains (p.value (property)))
               e->setProperty (
                   property, _clipboardReferences.value (p.value (property)));
 
-          property = STR_ATTR_REFERENCE_INTERFACE_UID;
+          property = ST_ATTR_REFERENCE_INTERFACE_UID;
 
           if (p.contains (property))
             if (_clipboardReferences.contains (p.value (property)))
               e->setProperty (
                   property, _clipboardReferences.value (p.value (property)));
 
-          property = STR_ATTR_REFERENCE_LINK_UID;
+          property = ST_ATTR_REFERENCE_LINK_UID;
 
           if (p.contains (property))
             if (_clipboardReferences.contains (p.value (property)))
               e->setProperty (
                   property, _clipboardReferences.value (p.value (property)));
 
-          property = STR_ATTR_REFERENCE_XCONNECTOR_UID;
+          property = ST_ATTR_REFERENCE_XCONNECTOR_UID;
 
           if (p.contains (property))
             if (_clipboardReferences.contains (p.value (property)))
@@ -3774,10 +3774,10 @@ StructuralView::paste (StructuralEntity *entity, StructuralEntity *parent,
                   property, _clipboardReferences.value (p.value (property)));
 
           foreach (const QString &k, p.keys ())
-            if (k.contains (STR_ATTR_LINKPARAM_NAME)
-                || k.contains (STR_ATTR_LINKPARAM_VALUE)
-                || k.contains (STR_ATTR_BINDPARAM_NAME)
-                || k.contains (STR_ATTR_BINDPARAM_VALUE))
+            if (k.contains (ST_ATTR_LINKPARAM_NAME)
+                || k.contains (ST_ATTR_LINKPARAM_VALUE)
+                || k.contains (ST_ATTR_BINDPARAM_NAME)
+                || k.contains (ST_ATTR_BINDPARAM_VALUE))
             {
 
               property = k.left (k.length () - k.lastIndexOf (':') - 1);
@@ -3820,7 +3820,7 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
   {
     children = entity->getStructuralEntities ();
   }
-  else if (!STR_DEFAULT_WITH_BODY)
+  else if (!ST_DEFAULT_WITH_BODY)
   {
     foreach (StructuralEntity *current, _entities.values ())
       if (current->getStructuralParent () == nullptr)
@@ -4034,7 +4034,7 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
             StructuralUtil::createProperties (nextTop, nextLeft, nextWidth,
                                               nextHeight),
             entity->getStructuralProperties (),
-            StructuralUtil::createSettings (STR_VALUE_TRUE, STR_VALUE_FALSE,
+            StructuralUtil::createSettings (ST_VALUE_TRUE, ST_VALUE_FALSE,
                                             code));
   }
 
@@ -4046,7 +4046,7 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
     parentWidth = entity->getWidth ();
     parentHeight = entity->getHeight ();
   }
-  else if (!STR_DEFAULT_WITH_BODY)
+  else if (!ST_DEFAULT_WITH_BODY)
   {
     parentWidth = _scene->width ();
     parentHeight = _scene->height ();
@@ -4064,11 +4064,11 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
                - e->getWidth () / 2;
 
     QMap<QString, QString> properties = e->getStructuralProperties ();
-    properties[STR_ATTR_ENT_TOP] = QString::number (nextTop);
-    properties[STR_ATTR_ENT_LEFT] = QString::number (nextLeft);
+    properties[ST_ATTR_ENT_TOP] = QString::number (nextTop);
+    properties[ST_ATTR_ENT_LEFT] = QString::number (nextLeft);
 
     change (e->getStructuralUid (), properties, e->getStructuralProperties (),
-            StructuralUtil::createSettings (STR_VALUE_TRUE, STR_VALUE_FALSE,
+            StructuralUtil::createSettings (ST_VALUE_TRUE, ST_VALUE_FALSE,
                                             code));
   }
 
@@ -4131,7 +4131,7 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
     change(link->getStructuralUid(),
            StructuralUtil::createProperties(nextTop, nextLeft),
            link->getStructuralProperties(),
-           StructuralUtil::createSettings(STR_VALUE_TRUE, STR_VALUE_FALSE,
+           StructuralUtil::createSettings(ST_VALUE_TRUE, ST_VALUE_FALSE,
   code));
   }
   */
@@ -4218,13 +4218,13 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
                      - link->getWidth () / 2;
 
           QMap<QString, QString> properties = link->getStructuralProperties ();
-          properties[STR_ATTR_ENT_TOP] = QString::number (nextTop);
-          properties[STR_ATTR_ENT_LEFT] = QString::number (nextLeft);
+          properties[ST_ATTR_ENT_TOP] = QString::number (nextTop);
+          properties[ST_ATTR_ENT_LEFT] = QString::number (nextLeft);
 
           change (link->getStructuralUid (), properties,
                   link->getStructuralProperties (),
-                  StructuralUtil::createSettings (STR_VALUE_TRUE,
-                                                  STR_VALUE_FALSE, code));
+                  StructuralUtil::createSettings (ST_VALUE_TRUE,
+                                                  ST_VALUE_FALSE, code));
 
           break;
         }

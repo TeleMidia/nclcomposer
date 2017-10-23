@@ -11,8 +11,8 @@ StructuralContent::StructuralContent (StructuralEntity *parent)
 
   setMimeType (Structural::NoMimeType);
 
-  setWidth (STR_DEFAULT_CONTENT_W);
-  setHeight (STR_DEFAULT_CONTENT_H);
+  setWidth (ST_DEFAULT_CONTENT_W);
+  setHeight (ST_DEFAULT_CONTENT_H);
 
   setResizable (false);
 }
@@ -31,7 +31,7 @@ StructuralContent::setMimeType (Structural::MimeType type)
   _mimetype = type;
 
   StructuralNode::setProperty (
-      STR_ATTR_NODE_MIMETYPE,
+      ST_ATTR_NODE_MIMETYPE,
       StructuralUtil::mimeTypeToString (type));
 }
 
@@ -41,9 +41,9 @@ StructuralContent::adjust (bool collision, bool recursion)
   StructuralNode::adjust (collision, recursion);
 
   // Adjusting properties
-  if (!getProperty (STR_ATTR_NODE_TYPE).isEmpty ())
+  if (!getProperty (ST_ATTR_NODE_TYPE).isEmpty ())
   {
-    QString type = getProperty (STR_ATTR_NODE_TYPE);
+    QString type = getProperty (ST_ATTR_NODE_TYPE);
 
     if (type.startsWith ("image"))
     {
@@ -85,9 +85,9 @@ StructuralContent::adjust (bool collision, bool recursion)
       setMimeType (Structural::NoMimeType);
     }
   }
-  else if (!getProperty (STR_ATTR_NODE_SRC).isEmpty ())
+  else if (!getProperty (ST_ATTR_NODE_SRC).isEmpty ())
   {
-    QString location = getProperty (STR_ATTR_NODE_SRC);
+    QString location = getProperty (ST_ATTR_NODE_SRC);
     QString suffix
         = location.right (location.length () - location.lastIndexOf ('.') - 1);
 
@@ -110,23 +110,23 @@ StructuralContent::draw (QPainter *painter)
   painter->setRenderHint (QPainter::SmoothPixmapTransform, true);
 
   painter->drawPixmap (
-      STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
-      STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
-      getWidth () - 2 * STR_DEFAULT_CONTENT_PADDING,
-      getHeight () - 2 * STR_DEFAULT_CONTENT_PADDING
-          - 4 * STR_DEFAULT_CONTENT_PADDING,
+      ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
+      ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
+      getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING,
+      getHeight () - 2 * ST_DEFAULT_CONTENT_PADDING
+          - 4 * ST_DEFAULT_CONTENT_PADDING,
       QPixmap (StructuralUtil::getMimeTypeIcon (getMimeType ())));
 
-  if (!STR_DEFAULT_WITH_BODY && !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+  if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
   {
-    if (getProperty (STR_ATTR_ENT_AUTOSTART)
-        == STR_VALUE_TRUE)
+    if (getProperty (ST_ATTR_ENT_AUTOSTART)
+        == ST_VALUE_TRUE)
     {
-      painter->drawPixmap ((getWidth () - 2 * STR_DEFAULT_CONTENT_PADDING) / 2
-                               + STR_DEFAULT_ALERT_ICON_W,
-                           (getHeight () - 2 * STR_DEFAULT_CONTENT_PADDING) / 2
-                               + STR_DEFAULT_CONTENT_PADDING,
-                           STR_DEFAULT_ALERT_ICON_W, STR_DEFAULT_ALERT_ICON_H,
+      painter->drawPixmap ((getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
+                               + ST_DEFAULT_ALERT_ICON_W,
+                           (getHeight () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
+                               + ST_DEFAULT_CONTENT_PADDING,
+                           ST_DEFAULT_ALERT_ICON_W, ST_DEFAULT_ALERT_ICON_H,
                            QPixmap (":/icon/autostart"));
     }
   }
@@ -138,20 +138,20 @@ StructuralContent::draw (QPainter *painter)
 
     if (!getError ().isEmpty ())
     {
-      icon = QString (STR_DEFAULT_ALERT_ERROR_ICON);
-      color = QString (STR_DEFAULT_ALERT_ERROR_COLOR);
+      icon = QString (ST_DEFAULT_ALERT_ERROR_ICON);
+      color = QString (ST_DEFAULT_ALERT_ERROR_COLOR);
     }
     else
     {
-      icon = QString (STR_DEFAULT_ALERT_WARNING_ICON);
-      color = QString (STR_DEFAULT_ALERT_WARNING_COLOR);
+      icon = QString (ST_DEFAULT_ALERT_WARNING_ICON);
+      color = QString (ST_DEFAULT_ALERT_WARNING_COLOR);
     }
 
-    painter->drawPixmap ((getWidth () - 2 * STR_DEFAULT_CONTENT_PADDING) / 2
-                             + STR_DEFAULT_ALERT_ICON_W,
-                         (getHeight () - 2 * STR_DEFAULT_CONTENT_PADDING) / 2
-                             + STR_DEFAULT_CONTENT_PADDING,
-                         STR_DEFAULT_ALERT_ICON_W, STR_DEFAULT_ALERT_ICON_H,
+    painter->drawPixmap ((getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
+                             + ST_DEFAULT_ALERT_ICON_W,
+                         (getHeight () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
+                             + ST_DEFAULT_CONTENT_PADDING,
+                         ST_DEFAULT_ALERT_ICON_W, ST_DEFAULT_ALERT_ICON_H,
                          QPixmap (icon));
 
     int max = 20;
@@ -189,16 +189,16 @@ StructuralContent::draw (QPainter *painter)
   if (text.length () > 5)
     text = text.replace (3, text.length () - 3, "...");
 
-  painter->drawText (STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
-                     STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING
-                         + getHeight () - STR_DEFAULT_CONTENT_TEXT_H
-                         - 2 * STR_DEFAULT_CONTENT_PADDING,
-                     getWidth () - 2 * STR_DEFAULT_CONTENT_PADDING,
-                     STR_DEFAULT_CONTENT_TEXT_H, Qt::AlignCenter, text);
+  painter->drawText (ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
+                     ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING
+                         + getHeight () - ST_DEFAULT_CONTENT_TEXT_H
+                         - 2 * ST_DEFAULT_CONTENT_PADDING,
+                     getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING,
+                     ST_DEFAULT_CONTENT_TEXT_H, Qt::AlignCenter, text);
 
   if (isMoving ())
-    painter->drawRect (getMoveLeft () + STR_DEFAULT_ENTITY_PADDING
+    painter->drawRect (getMoveLeft () + ST_DEFAULT_ENTITY_PADDING
                            - getLeft (),
-                       getMoveTop () + STR_DEFAULT_ENTITY_PADDING - getTop (),
+                       getMoveTop () + ST_DEFAULT_ENTITY_PADDING - getTop (),
                        getWidth (), getHeight ());
 }

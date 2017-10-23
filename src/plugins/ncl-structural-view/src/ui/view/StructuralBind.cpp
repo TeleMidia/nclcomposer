@@ -24,7 +24,7 @@ StructuralBind::setRole (StructuralRole role)
 {
   _role = role;
 
-  setProperty (STR_ATTR_BIND_ROLE,
+  setProperty (ST_ATTR_BIND_ROLE,
                          StructuralUtil::roleToString (role));
 }
 
@@ -35,7 +35,7 @@ StructuralBind::adjust (bool collision, bool recursion)
 
   // Adjusting properties...
   setRole (StructuralUtil::stringToRole (
-      getProperty (STR_ATTR_BIND_ROLE)));
+      getProperty (ST_ATTR_BIND_ROLE)));
 }
 
 void
@@ -50,7 +50,7 @@ StructuralBind::draw (QPainter *painter)
     painter->setRenderHint (QPainter::SmoothPixmapTransform, true);
 
     // Setting...
-    QLineF drawLine = getDrawLine (STR_DEFAULT_BIND_PADDING);
+    QLineF drawLine = getDrawLine (ST_DEFAULT_BIND_PADDING);
 
     // Drawing line...
     painter->setPen (QPen (
@@ -98,16 +98,16 @@ StructuralBind::draw (QPainter *painter)
     {
       if (tail->getType () == Structural::Link)
       {
-        z -= STR_DEFAULT_BIND_ROLE_W / 2;
-        w -= STR_DEFAULT_BIND_ROLE_H / 2;
+        z -= ST_DEFAULT_BIND_ROLE_W / 2;
+        w -= ST_DEFAULT_BIND_ROLE_H / 2;
 
-        a -= STR_DEFAULT_BIND_ROLE_W;
-        b -= STR_DEFAULT_BIND_ROLE_H;
+        a -= ST_DEFAULT_BIND_ROLE_W;
+        b -= ST_DEFAULT_BIND_ROLE_H;
       }
       else
       {
-        x += STR_DEFAULT_BIND_ROLE_W / 2;
-        y += STR_DEFAULT_BIND_ROLE_H / 2;
+        x += ST_DEFAULT_BIND_ROLE_W / 2;
+        y += ST_DEFAULT_BIND_ROLE_H / 2;
       }
     }
     else if (drawLine.p1 ().x () > drawLine.p2 ().x ()
@@ -115,17 +115,17 @@ StructuralBind::draw (QPainter *painter)
     {
       if (tail->getType () == Structural::Link)
       {
-        z += STR_DEFAULT_BIND_ROLE_W / 2;
-        w -= STR_DEFAULT_BIND_ROLE_H / 2;
+        z += ST_DEFAULT_BIND_ROLE_W / 2;
+        w -= ST_DEFAULT_BIND_ROLE_H / 2;
 
-        b -= STR_DEFAULT_BIND_ROLE_H;
+        b -= ST_DEFAULT_BIND_ROLE_H;
       }
       else
       {
-        x -= STR_DEFAULT_BIND_ROLE_W / 2;
-        y += STR_DEFAULT_BIND_ROLE_H / 2;
+        x -= ST_DEFAULT_BIND_ROLE_W / 2;
+        y += ST_DEFAULT_BIND_ROLE_H / 2;
 
-        a -= STR_DEFAULT_BIND_ROLE_H;
+        a -= ST_DEFAULT_BIND_ROLE_H;
       }
     }
     else if (drawLine.p1 ().x () <= drawLine.p2 ().x ()
@@ -133,17 +133,17 @@ StructuralBind::draw (QPainter *painter)
     {
       if (tail->getType () == Structural::Link)
       {
-        z -= STR_DEFAULT_BIND_ROLE_W / 2;
-        w += STR_DEFAULT_BIND_ROLE_H / 2;
+        z -= ST_DEFAULT_BIND_ROLE_W / 2;
+        w += ST_DEFAULT_BIND_ROLE_H / 2;
 
-        a -= STR_DEFAULT_BIND_ROLE_W;
+        a -= ST_DEFAULT_BIND_ROLE_W;
       }
       else
       {
-        x += STR_DEFAULT_BIND_ROLE_W / 2;
-        y -= STR_DEFAULT_BIND_ROLE_H / 2;
+        x += ST_DEFAULT_BIND_ROLE_W / 2;
+        y -= ST_DEFAULT_BIND_ROLE_H / 2;
 
-        b -= STR_DEFAULT_BIND_ROLE_W;
+        b -= ST_DEFAULT_BIND_ROLE_W;
       }
     }
     else if (drawLine.p1 ().x () > drawLine.p2 ().x ()
@@ -151,16 +151,16 @@ StructuralBind::draw (QPainter *painter)
     {
       if (tail->getType () == Structural::Link)
       {
-        z += STR_DEFAULT_BIND_ROLE_W / 2;
-        w += STR_DEFAULT_BIND_ROLE_H / 2;
+        z += ST_DEFAULT_BIND_ROLE_W / 2;
+        w += ST_DEFAULT_BIND_ROLE_H / 2;
       }
       else
       {
-        x -= STR_DEFAULT_BIND_ROLE_W / 2;
-        y -= STR_DEFAULT_BIND_ROLE_H / 2;
+        x -= ST_DEFAULT_BIND_ROLE_W / 2;
+        y -= ST_DEFAULT_BIND_ROLE_H / 2;
 
-        a -= STR_DEFAULT_BIND_ROLE_W;
-        b -= STR_DEFAULT_BIND_ROLE_H;
+        a -= ST_DEFAULT_BIND_ROLE_W;
+        b -= ST_DEFAULT_BIND_ROLE_H;
       }
     }
 
@@ -215,8 +215,8 @@ StructuralBind::draw (QPainter *painter)
     // nothing...
 
     // Drawing head...
-    painter->drawPixmap (a, b, STR_DEFAULT_BIND_ROLE_W,
-                         STR_DEFAULT_BIND_ROLE_H, QPixmap (icon));
+    painter->drawPixmap (a, b, ST_DEFAULT_BIND_ROLE_W,
+                         ST_DEFAULT_BIND_ROLE_H, QPixmap (icon));
 
     if (!getError ().isEmpty () || !getWarning ().isEmpty ())
     {
@@ -225,11 +225,11 @@ StructuralBind::draw (QPainter *painter)
 
       if (!getError ().isEmpty ())
       {
-        color = QColor (QString (STR_DEFAULT_ALERT_ERROR_COLOR));
+        color = QColor (QString (ST_DEFAULT_ALERT_ERROR_COLOR));
       }
       else
       {
-        color = QColor (QString (STR_DEFAULT_ALERT_WARNING_COLOR));
+        color = QColor (QString (ST_DEFAULT_ALERT_WARNING_COLOR));
       }
 
       color.setAlphaF (0.75);
@@ -237,8 +237,8 @@ StructuralBind::draw (QPainter *painter)
       painter->setBrush (color);
       painter->setPen (QPen (QBrush (color), 0));
 
-      painter->drawEllipse (a, b, STR_DEFAULT_BIND_ROLE_W,
-                            STR_DEFAULT_BIND_ROLE_H);
+      painter->drawEllipse (a, b, ST_DEFAULT_BIND_ROLE_W,
+                            ST_DEFAULT_BIND_ROLE_H);
     }
   }
 }
@@ -252,7 +252,7 @@ StructuralBind::delineate (QPainterPath *painter) const
   if (tail != NULL && head != NULL)
   {
     // Setting...
-    QLineF drawLine = getDrawLine (STR_DEFAULT_BIND_PADDING);
+    QLineF drawLine = getDrawLine (ST_DEFAULT_BIND_PADDING);
 
     qreal x = 0.0, y = 0.0;
 
@@ -261,8 +261,8 @@ StructuralBind::delineate (QPainterPath *painter) const
     {
       if (tail->getType () == Structural::Link)
       {
-        x = drawLine.p2 ().x () - STR_DEFAULT_BIND_ROLE_W;
-        y = drawLine.p2 ().y () - STR_DEFAULT_BIND_ROLE_H;
+        x = drawLine.p2 ().x () - ST_DEFAULT_BIND_ROLE_W;
+        y = drawLine.p2 ().y () - ST_DEFAULT_BIND_ROLE_H;
       }
       else
       {
@@ -276,11 +276,11 @@ StructuralBind::delineate (QPainterPath *painter) const
       if (tail->getType () == Structural::Link)
       {
         x = drawLine.p2 ().x ();
-        y = drawLine.p2 ().y () - STR_DEFAULT_BIND_ROLE_H;
+        y = drawLine.p2 ().y () - ST_DEFAULT_BIND_ROLE_H;
       }
       else
       {
-        x = drawLine.p1 ().x () - STR_DEFAULT_BIND_ROLE_W;
+        x = drawLine.p1 ().x () - ST_DEFAULT_BIND_ROLE_W;
         y = drawLine.p1 ().y ();
       }
     }
@@ -289,13 +289,13 @@ StructuralBind::delineate (QPainterPath *painter) const
     {
       if (tail->getType () == Structural::Link)
       {
-        x = drawLine.p2 ().x () - STR_DEFAULT_BIND_ROLE_W;
+        x = drawLine.p2 ().x () - ST_DEFAULT_BIND_ROLE_W;
         y = drawLine.p2 ().y ();
       }
       else
       {
         x = drawLine.p1 ().x ();
-        y = drawLine.p1 ().y () - STR_DEFAULT_BIND_ROLE_H;
+        y = drawLine.p1 ().y () - ST_DEFAULT_BIND_ROLE_H;
       }
     }
     else if (drawLine.p1 ().x () > drawLine.p2 ().x ()
@@ -308,13 +308,13 @@ StructuralBind::delineate (QPainterPath *painter) const
       }
       else
       {
-        x = drawLine.p1 ().x () - STR_DEFAULT_BIND_ROLE_W;
-        y = drawLine.p1 ().y () - STR_DEFAULT_BIND_ROLE_H;
+        x = drawLine.p1 ().x () - ST_DEFAULT_BIND_ROLE_W;
+        y = drawLine.p1 ().y () - ST_DEFAULT_BIND_ROLE_H;
       }
     }
 
-    painter->addEllipse (x, y, STR_DEFAULT_BIND_ROLE_W,
-                         STR_DEFAULT_BIND_ROLE_H);
+    painter->addEllipse (x, y, ST_DEFAULT_BIND_ROLE_W,
+                         ST_DEFAULT_BIND_ROLE_H);
   }
 }
 

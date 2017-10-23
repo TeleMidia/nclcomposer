@@ -12,151 +12,151 @@
 //
 
 // Entity defines
-#define STR_ATTR_ENT_ID ":ent:id"
-#define STR_ATTR_ENT_UID ":ent:uid"
-#define STR_ATTR_ENT_CATEGORY ":ent:category"
-#define STR_ATTR_ENT_TYPE ":ent:type"
+#define ST_ATTR_ENT_ID ":ent:id"
+#define ST_ATTR_ENT_UID ":ent:uid"
+#define ST_ATTR_ENT_CATEGORY ":ent:category"
+#define ST_ATTR_ENT_TYPE ":ent:type"
 
-#define STR_ATTR_ENT_TOP ":ent:top"
-#define STR_ATTR_ENT_LEFT ":ent:left"
-#define STR_ATTR_ENT_WIDTH ":ent:width"
-#define STR_ATTR_ENT_HEIGHT ":ent:height"
-#define STR_ATTR_ENT_ZINDEX ":ent:zindex"
-#define STR_ATTR_ENT_UNCOLLAPSED_TOP ":ent:uncollapsed:top"
-#define STR_ATTR_ENT_UNCOLLAPSED_LEFT ":ent:uncollapsed:left"
-#define STR_ATTR_ENT_UNCOLLAPSED_WIDTH ":ent:uncollapsed:width"
-#define STR_ATTR_ENT_UNCOLLAPSED_HEIGHT ":ent:uncollapsed:height"
+#define ST_ATTR_ENT_TOP ":ent:top"
+#define ST_ATTR_ENT_LEFT ":ent:left"
+#define ST_ATTR_ENT_WIDTH ":ent:width"
+#define ST_ATTR_ENT_HEIGHT ":ent:height"
+#define ST_ATTR_ENT_ZINDEX ":ent:zindex"
+#define ST_ATTR_ENT_UNCOLLAPSED_TOP ":ent:uncollapsed:top"
+#define ST_ATTR_ENT_UNCOLLAPSED_LEFT ":ent:uncollapsed:left"
+#define ST_ATTR_ENT_UNCOLLAPSED_WIDTH ":ent:uncollapsed:width"
+#define ST_ATTR_ENT_UNCOLLAPSED_HEIGHT ":ent:uncollapsed:height"
 
-#define STR_ATTR_ENT_AUTOSTART ":ent:autostart"
-#define STR_ATTR_ENT_HIDDEN ":ent:hidden"
-#define STR_ATTR_ENT_REFERENCE ":ent:reference"
-#define STR_ATTR_ENT_UNCOLLAPSED ":ent:uncollapsed"
+#define ST_ATTR_ENT_AUTOSTART ":ent:autostart"
+#define ST_ATTR_ENT_HIDDEN ":ent:hidden"
+#define ST_ATTR_ENT_REFERENCE ":ent:reference"
+#define ST_ATTR_ENT_UNCOLLAPSED ":ent:uncollapsed"
 
 // Node defines
-#define STR_ATTR_NODE_SRC ":node:src"
-#define STR_ATTR_NODE_TYPE ":node:type"
-#define STR_ATTR_NODE_MIMETYPE ":node:mimetype"
-#define STR_ATTR_NODE_INSTANCE ":node:instance"
+#define ST_ATTR_NODE_SRC ":node:src"
+#define ST_ATTR_NODE_TYPE ":node:type"
+#define ST_ATTR_NODE_MIMETYPE ":node:mimetype"
+#define ST_ATTR_NODE_INSTANCE ":node:instance"
 
 // Link defines
-#define STR_ATTR_LINKPARAM_NAME ":linkparam:name"
-#define STR_ATTR_LINKPARAM_VALUE ":linkparam:value"
+#define ST_ATTR_LINKPARAM_NAME ":linkparam:name"
+#define ST_ATTR_LINKPARAM_VALUE ":linkparam:value"
 
 // Edge defines
-#define STR_ATTR_EDGE_TAIL ":edge:tail"
-#define STR_ATTR_EDGE_HEAD ":edge:head"
-#define STR_ATTR_EDGE_ANGLE ":edge:angle"
+#define ST_ATTR_EDGE_TAIL ":edge:tail"
+#define ST_ATTR_EDGE_HEAD ":edge:head"
+#define ST_ATTR_EDGE_ANGLE ":edge:angle"
 
-#define STR_ATTR_BIND_ROLE ":bind:role"
+#define ST_ATTR_BIND_ROLE ":bind:role"
 
-#define STR_ATTR_BINDPARAM_NAME ":bindparam:name"
-#define STR_ATTR_BINDPARAM_VALUE ":bindparam:value"
+#define ST_ATTR_BINDPARAM_NAME ":bindparam:name"
+#define ST_ATTR_BINDPARAM_VALUE ":bindparam:value"
 
 // Interface defines
 // nothing...
 
 // Reference defines
-#define STR_ATTR_REFERENCE_LINK_ID ":ref:link:id"
-#define STR_ATTR_REFERENCE_LINK_UID ":ref:link:uid"
+#define ST_ATTR_REFERENCE_LINK_ID ":ref:link:id"
+#define ST_ATTR_REFERENCE_LINK_UID ":ref:link:uid"
 
-#define STR_ATTR_REFERENCE_COMPONENT_ID ":ref:component:id"
-#define STR_ATTR_REFERENCE_COMPONENT_UID ":ref:component:uid"
+#define ST_ATTR_REFERENCE_COMPONENT_ID ":ref:component:id"
+#define ST_ATTR_REFERENCE_COMPONENT_UID ":ref:component:uid"
 
-#define STR_ATTR_REFERENCE_INTERFACE_ID ":ref:interface:id"
-#define STR_ATTR_REFERENCE_INTERFACE_UID ":ref:interface:uid"
+#define ST_ATTR_REFERENCE_INTERFACE_ID ":ref:interface:id"
+#define ST_ATTR_REFERENCE_INTERFACE_UID ":ref:interface:uid"
 
-#define STR_ATTR_REFERENCE_XCONNECTOR_ID ":ref:xconnector:id"
-#define STR_ATTR_REFERENCE_XCONNECTOR_UID ":ref:xconnector:uid"
+#define ST_ATTR_REFERENCE_XCONNECTOR_ID ":ref:xconnector:id"
+#define ST_ATTR_REFERENCE_XCONNECTOR_UID ":ref:xconnector:uid"
 
-#define STR_ATTR_REFERENCE_REFER_ID ":ref:refer:id"
-#define STR_ATTR_REFERENCE_REFER_UID ":ref:refer:uid"
+#define ST_ATTR_REFERENCE_REFER_ID ":ref:refer:id"
+#define ST_ATTR_REFERENCE_REFER_UID ":ref:refer:uid"
 
 //
 // Settings
 //
-#define STR_SETTINGS_UNDO ":settings:undo"
-#define STR_SETTINGS_UNDO_TRACE ":settings:undo:trace"
-#define STR_SETTINGS_NOTIFY ":settings:notify"
-#define STR_SETTINGS_CODE ":settings:code"
-#define STR_SETTINGS_ADJUST_REFERENCE ":settings:adjust:reference"
+#define ST_SETTINGS_UNDO ":settings:undo"
+#define ST_SETTINGS_UNDO_TRACE ":settings:undo:trace"
+#define ST_SETTINGS_NOTIFY ":settings:notify"
+#define ST_SETTINGS_CODE ":settings:code"
+#define ST_SETTINGS_ADJUST_REFERENCE ":settings:adjust:reference"
 
 //
 // Values
 //
-#define STR_VALUE_TRUE "1"
-#define STR_VALUE_FALSE "0"
+#define ST_VALUE_TRUE "1"
+#define ST_VALUE_FALSE "0"
 
 //
 // Defaults
 //
 
 // Minimap defines
-#define STR_DEFAULT_MINIMAP_W 240
-#define STR_DEFAULT_MINIMAP_H 160
+#define ST_DEFAULT_MINIMAP_W 240
+#define ST_DEFAULT_MINIMAP_H 160
 
 // Scene defines
-#define STR_DEFAULT_SCENE_W 3600
-#define STR_DEFAULT_SCENE_H 2400
+#define ST_DEFAULT_SCENE_W 3600
+#define ST_DEFAULT_SCENE_H 2400
 
 // Entities defines
-#define STR_DEFAULT_ENTITY_PADDING 4
+#define ST_DEFAULT_ENTITY_PADDING 4
 
-#define STR_DEFAULT_ENTITY_ANCHOR_W 8
-#define STR_DEFAULT_ENTITY_ANCHOR_H 8
+#define ST_DEFAULT_ENTITY_ANCHOR_W 8
+#define ST_DEFAULT_ENTITY_ANCHOR_H 8
 
 // Nodes defines
-#define STR_DEFAULT_COMPOSITION_W 250
-#define STR_DEFAULT_COMPOSITION_H 200
+#define ST_DEFAULT_COMPOSITION_W 250
+#define ST_DEFAULT_COMPOSITION_H 200
 
-#define STR_DEFAULT_BODY_W 750
-#define STR_DEFAULT_BODY_H 500
+#define ST_DEFAULT_BODY_W 750
+#define ST_DEFAULT_BODY_H 500
 
-#define STR_DEFAULT_CONTENT_PADDING 4
+#define ST_DEFAULT_CONTENT_PADDING 4
 
-#define STR_DEFAULT_CONTENT_W 48
-#define STR_DEFAULT_CONTENT_H 64
+#define ST_DEFAULT_CONTENT_W 48
+#define ST_DEFAULT_CONTENT_H 64
 
-#define STR_DEFAULT_CONTENT_TEXT_H 16
-#define STR_DEFAULT_CONTENT_TEXT_W 16
+#define ST_DEFAULT_CONTENT_TEXT_H 16
+#define ST_DEFAULT_CONTENT_TEXT_W 16
 
-#define STR_DEFAULT_LINK_PADDING 4
+#define ST_DEFAULT_LINK_PADDING 4
 
-#define STR_DEFAULT_LINK_W 14
-#define STR_DEFAULT_LINK_H 14
+#define ST_DEFAULT_LINK_W 14
+#define ST_DEFAULT_LINK_H 14
 
 // Interfaces defines
-#define STR_DEFAULT_INTERFACE_PADDING 1
+#define ST_DEFAULT_INTERFACE_PADDING 1
 
-#define STR_DEFAULT_INTERFACE_W 18
-#define STR_DEFAULT_INTERFACE_H 18
+#define ST_DEFAULT_INTERFACE_W 18
+#define ST_DEFAULT_INTERFACE_H 18
 
 // Edges defines
-#define STR_DEFAULT_EDGE_PADDING 8
+#define ST_DEFAULT_EDGE_PADDING 8
 
-#define STR_DEFAULT_EDGE_TAIL_W 2
-#define STR_DEFAULT_EDGE_TAIL_H 2
+#define ST_DEFAULT_EDGE_TAIL_W 2
+#define ST_DEFAULT_EDGE_TAIL_H 2
 
-#define STR_DEFAULT_EDGE_HEAD_W 12
-#define STR_DEFAULT_EDGE_HEAD_H 12
+#define ST_DEFAULT_EDGE_HEAD_W 12
+#define ST_DEFAULT_EDGE_HEAD_H 12
 
-#define STR_DEFAULT_BIND_PADDING 0
+#define ST_DEFAULT_BIND_PADDING 0
 
-#define STR_DEFAULT_BIND_ROLE_W 16
-#define STR_DEFAULT_BIND_ROLE_H 16
+#define ST_DEFAULT_BIND_ROLE_W 16
+#define ST_DEFAULT_BIND_ROLE_H 16
 
 // Others defines
-#define STR_DEFAULT_ALERT_ICON_W 16
-#define STR_DEFAULT_ALERT_ICON_H 16
+#define ST_DEFAULT_ALERT_ICON_W 16
+#define ST_DEFAULT_ALERT_ICON_H 16
 
-#define STR_DEFAULT_ALERT_ERROR_ICON ":/icon/error"
-#define STR_DEFAULT_ALERT_ERROR_COLOR "#BD0300"
+#define ST_DEFAULT_ALERT_ERROR_ICON ":/icon/error"
+#define ST_DEFAULT_ALERT_ERROR_COLOR "#BD0300"
 
-#define STR_DEFAULT_ALERT_WARNING_ICON ":/icon/warning"
-#define STR_DEFAULT_ALERT_WARNING_COLOR "#E5E500"
+#define ST_DEFAULT_ALERT_WARNING_ICON ":/icon/warning"
+#define ST_DEFAULT_ALERT_WARNING_COLOR "#E5E500"
 
-#define STR_DEFAULT_WITH_BODY 0
-#define STR_DEFAULT_WITH_INTERFACES 0
-#define STR_DEFAULT_WITH_FLOATING_INTERFACES 0
+#define ST_DEFAULT_WITH_BODY 0
+#define ST_DEFAULT_WITH_INTERFACES 0
+#define ST_DEFAULT_WITH_FLOATING_INTERFACES 0
 
 /*
  *
