@@ -40,7 +40,7 @@ public:
   constexpr static int ZOOM_STEP = ST_DEFAULT_SCENE_ZOOM_STEP;
 
   StructuralView (QWidget *parent = 0);
-  virtual ~StructuralView ();
+  virtual ~StructuralView () {}
 
   StructuralScene *getScene ();
   StructuralEntity *getBody ();

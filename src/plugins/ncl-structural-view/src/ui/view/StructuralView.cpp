@@ -46,11 +46,6 @@ StructuralView::StructuralView (QWidget *parent)
   centerOn (0, 0);
 }
 
-StructuralView::~StructuralView ()
-{
-  // TODO
-}
-
 StructuralScene *
 StructuralView::getScene ()
 {
@@ -60,18 +55,18 @@ StructuralView::getScene ()
 StructuralEntity *
 StructuralView::getBody ()
 {
-  StructuralEntity *ent = nullptr;
+  StructuralEntity *body = nullptr;
 
-  for (StructuralEntity *e : _entities.values ())
+  for (StructuralEntity *ent : _entities.values ())
   {
-    if (e->getType () == Structural::Body)
+    if (ent->getType () == Structural::Body)
     {
-      ent = e;
+      body = ent;
       break;
     }
   }
 
-  return ent;
+  return body;
 }
 
 StructuralLinkDialog *
@@ -113,12 +108,11 @@ StructuralView::setMode (StructuralMode mode)
 void
 StructuralView::setError (const QString &uid, const QString &error)
 {
-  if (_entities.contains (uid))
-  {
-    StructuralEntity *entity = _entities.value (uid);
-    entity->setError (error);
-    entity->adjust (true);
-  }
+  CPR_ASSERT (_entities.contains (uid));
+
+  StructuralEntity *entity = _entities.value (uid);
+  entity->setError (error);
+  entity->adjust (true);
 }
 
 void
@@ -137,8 +131,8 @@ StructuralView::load (const QString &data)
   QDomElement root = dom->firstChildElement ();
   QDomNodeList rootChildren = root.childNodes ();
 
-  // Cheking if exist a 'body' entity when 'body'
-  // is enabled in view. If don't, adds one.
+  // Cheking if exist a 'body' entity when 'body' is enabled in view.
+  // If don't, adds one.
   if (ST_DEFAULT_WITH_BODY)
   {
     bool hasBody = false;
@@ -163,10 +157,8 @@ StructuralView::load (const QString &data)
 
     if (!hasBody)
     {
-      // Creating
       createEntity (Structural::Body);
 
-      // Setting
       root.setAttribute ("uid", _entities.firstKey ());
     }
   }
@@ -211,16 +203,15 @@ StructuralView::load (QDomElement ent, QDomElement parent)
 {
   if (!ent.attributeNode ("uid").nodeValue ().isEmpty ())
   {
-    QString entUid, parentUid;
+    QString entUid = ent.attributeNode ("uid").nodeValue ();
 
-    entUid = ent.attributeNode ("uid").nodeValue ();
-
+    QString parentUid;
     if (!parent.attributeNode ("uid").nodeValue ().isEmpty ())
       parentUid = parent.attributeNode ("uid").nodeValue ();
     else
       parentUid = "";
 
-    QDomNodeList entityChildren = ent.childNodes ();
+    QDomNodeList entChildren = ent.childNodes ();
 
     QMap<QString, QString> props;
     QDomNamedNodeMap attrs = ent.attributes ();
@@ -230,17 +221,16 @@ StructuralView::load (QDomElement ent, QDomElement parent)
       props.insert (attr.name (), attr.value ());
     }
 
-    QMap<QString, QString> settings
-        = StructuralUtil::createSettings (false, false);
-    settings[ST_SETTINGS_ADJUST_REFERENCE] = ST_VALUE_FALSE;
+    QMap<QString, QString> stgs = StructuralUtil::createSettings (false, false);
+    stgs[ST_SETTINGS_ADJUST_REFERENCE] = ST_VALUE_FALSE;
 
-    insert (entUid, parentUid, props, settings);
+    insert (entUid, parentUid, props, stgs);
 
-    for (int i = 0; i < entityChildren.length (); i++)
+    for (int i = 0; i < entChildren.length (); i++)
     {
-      if (entityChildren.item (i).isElement ())
+      if (entChildren.item (i).isElement ())
       {
-        QDomElement child = entityChildren.item (i).toElement ();
+        QDomElement child = entChildren.item (i).toElement ();
 
         if (child.nodeName () == "entity")
           load (child, ent);
@@ -258,29 +248,30 @@ StructuralView::save ()
 
   for (const QString &key : _references.keys ())
   {
-    if (_entities.contains (key)
-        && _entities.contains (_references.value (key)))
-    {
+    CPR_ASSERT (_entities.contains (key)
+                && _entities.contains (_references.value (key)));
+    QDomElement reference = doc->createElement ("reference");
+    reference.setAttribute ("uid", key);
+    reference.setAttribute ("refer", _references.value (key));
 
-      QDomElement reference = doc->createElement ("reference");
-      reference.setAttribute ("uid", key);
-      reference.setAttribute ("refer", _references.value (key));
-
-      root.appendChild (reference);
-    }
+    root.appendChild (reference);
   }
 
   if (ST_DEFAULT_WITH_BODY)
   {
     for (StructuralEntity *e : _entities.values ())
+    {
       if (e->getType () == Structural::Body)
         createDocument (e, doc, root);
+    }
   }
   else
   {
     for (StructuralEntity *e : _entities.values ())
+    {
       if (e->getParent () == nullptr)
         createDocument (e, doc, root);
+    }
   }
 
   doc->appendChild (root);
@@ -359,14 +350,7 @@ StructuralView::createDocument (StructuralEntity *ent, QDomDocument *doc,
     elt.setAttribute ("type", ent->getType ());
 
     for (const QString &key : ent->getProperties ().keys ())
-    {
       elt.setAttribute (key, ent->getProperty (key));
-
-      //      QDomElement property = document->createElement ("property");
-      //      property.setAttribute ("name", key);
-      //      property.setAttribute ("value", entity->getProperty (key));
-      //      element.appendChild (property);
-    }
 
     for (StructuralEntity *e : ent->getChildren ())
       createDocument (e, doc, elt);
@@ -380,17 +364,15 @@ StructuralView::insert (QString uid, QString parent,
                         QMap<QString, QString> props,
                         QMap<QString, QString> settings)
 {
+  CPR_ASSERT (!_entities.contains (uid));
+
   if (!_entities.contains (uid))
   {
-    //
     // Initializing....
-    //
     StructuralEntity *e = nullptr;
     StructuralEntity *p = _entities.value (parent, nullptr);
 
-    //
     // Creating...
-    //
     StructuralType type = StructuralUtil::strToType (props[ST_ATTR_ENT_TYPE]);
 
     if (p != nullptr || !ST_DEFAULT_WITH_BODY)
@@ -398,30 +380,20 @@ StructuralView::insert (QString uid, QString parent,
       switch (type)
       {
         case Structural::Media:
-          // Creating...
           e = new StructuralContent ();
-
-          // Connecting...
-          // nothing
           break;
 
         case Structural::Context:
         case Structural::Switch:
-          // Creating...
           e = new StructuralComposition ();
           e->setType (type);
-
-          // Connecting...
-          // nothing
           break;
 
         case Structural::Link:
         {
-          // Creating...
           e = new StructuralLink ();
           e->setType (type);
 
-          // Connecting...
           connect ((StructuralLink *)e, &StructuralLink::performedEdit, this,
                    &StructuralView::performLinkDialog);
 
@@ -433,43 +405,26 @@ StructuralView::insert (QString uid, QString parent,
         case Structural::Port:
         case Structural::SwitchPort:
         {
-          // Creating...
           e = new StructuralInterface ();
           e->setType (type);
-
-          // Connecting...
-          // nothing
           break;
         }
 
         case Structural::Reference:
         case Structural::Mapping:
         {
-          // Creating...
           e = new StructuralEdge ();
           e->setType (type);
-
-          // Setting...
-          // nothing
-
-          // Connecting...
-          // Nothing
           break;
         }
 
         case Structural::Bind:
         {
-          // Creating...
           e = new StructuralBind ();
           e->setType (type);
 
-          // Setting...
-          // nothing
-
-          // Connecting...
           connect ((StructuralBind *)e, &StructuralBind::performedEdit, this,
                    &StructuralView::performBindDialog);
-
           break;
         }
 
@@ -487,18 +442,12 @@ StructuralView::insert (QString uid, QString parent,
         {
           if (getBody () == nullptr)
           {
-            // Creating...
             e = new StructuralComposition ();
             e->setType (type);
 
-            // Setting...
             e->setWidth (ST_DEFAULT_BODY_W);
             e->setHeight (ST_DEFAULT_BODY_H);
 
-            // Connecting...
-            // nothing
-
-            // Notifing...
             switchedBody (false);
           }
           break;
@@ -513,25 +462,16 @@ StructuralView::insert (QString uid, QString parent,
 
     if (e != nullptr)
     {
-
-      //
-      // Setting...
-      //
-
-      // Setting 'uid'...
       e->setUid (uid);
 
-      // Setting 'id'...
       if (!props.contains (ST_ATTR_ENT_ID))
         e->setId (getNewId (e));
 
-      // Setting 'parent'...
       if (p != nullptr)
         e->setParent (p);
       else
         _scene->addItem (e);
 
-      // Setting 'top'...
       if (!props.contains (ST_ATTR_ENT_TOP))
       {
         if (p != nullptr)
@@ -543,7 +483,6 @@ StructuralView::insert (QString uid, QString parent,
         }
       }
 
-      // Setting 'left'...
       if (!props.contains (ST_ATTR_ENT_LEFT))
       {
         if (p != nullptr)
@@ -556,16 +495,9 @@ StructuralView::insert (QString uid, QString parent,
       }
 
       e->setMenu (_menu);
-
-      // Setting 'others'...
       e->setProperties (props);
 
-      //
       _entities[uid] = e;
-
-      //
-      // Adjusting...
-      //
 
       // Adjust 'compositions'
       if (p != nullptr)
@@ -600,7 +532,7 @@ StructuralView::insert (QString uid, QString parent,
       else
         e->adjust (true);
 
-      //
+
       if (settings[ST_SETTINGS_ADJUST_REFERENCE] != ST_VALUE_FALSE)
       {
         if (e->getCategory () == Structural::Interface)
@@ -626,35 +558,26 @@ StructuralView::insert (QString uid, QString parent,
         }
       }
 
-      //
-      // Connecting...
-      //
       connect (e, &StructuralEntity::inserted, this, &StructuralView::insert);
       connect (e, &StructuralEntity::removed, this, &StructuralView::remove);
       connect (e, &StructuralEntity::changed, this, &StructuralView::change);
       connect (e, &StructuralEntity::selected, this, &StructuralView::select);
       connect (e, &StructuralEntity::moved, this, &StructuralView::move);
 
-      //
-      // Saving...
-      //
       if (settings[ST_SETTINGS_UNDO] == ST_VALUE_TRUE)
       {
         Insert *cmd = new Insert (uid, parent, e->getProperties (), settings);
         cmd->setText (settings[ST_SETTINGS_CODE]);
+
+        _commands.push (cmd);
 
         connect (cmd, &Insert::insert, this, &StructuralView::insert);
         connect (cmd, &Insert::remove, this, &StructuralView::remove);
         connect (cmd, &Insert::change, this, &StructuralView::change);
         connect (cmd, &Insert::select, this, &StructuralView::select);
 
-        _commands.push (cmd);
         emit switchedUndo (true);
       }
-
-      //
-      // Notifing...
-      //
 
       if (settings[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
       {
@@ -665,10 +588,8 @@ StructuralView::insert (QString uid, QString parent,
       {
         // Since interfaces are hidden, no update related with that entities
         // are notified. However, the structural view create a new id when this
-        // property
-        // is empty, then the change must be explicit notified for the hidden
-        // entities
-        // (interface in this case).
+        // property is empty, then the change must be explicit notified for the
+        // hidden entities (interface in this case).
         emit changed (uid, e->getProperties (),
                       e->getProperties (), // this param is not used
                                            // in this case
@@ -738,20 +659,14 @@ StructuralView::getNewAngle (StructuralBind *bind)
 void
 StructuralView::remove (QString uid, QMap<QString, QString> settings)
 {
-  //  CPR_ASSERT (_entities.contains (uid));
+  CPR_ASSERT (_entities.contains (uid));
 
   if (_entities.contains (uid))
   {
-    //
-    // Initializing...
-    //
     StructuralEntity *e = _entities.value (uid);
     StructuralEntity *p = e->getParent ();
     StructuralType type = e->getType ();
 
-    //
-    // Saving...
-    //
     if (settings[ST_SETTINGS_UNDO] == ST_VALUE_TRUE
         && (!e->isReference () || e->getCategory () != Structural::Interface))
     {
@@ -773,10 +688,6 @@ StructuralView::remove (QString uid, QMap<QString, QString> settings)
       emit switchedUndo (true);
       return;
     }
-
-    //
-    // Removing...
-    //
 
     // Removing 'references'...
     if (e->getCategory () == Structural::Interface)
@@ -940,11 +851,10 @@ StructuralView::change (QString uid, QMap<QString, QString> props,
                         QMap<QString, QString> previous,
                         QMap<QString, QString> settings)
 {
+  CPR_ASSERT (_entities.contains (uid));
+
   if (_entities.contains (uid))
   {
-    //
-    // Saving...
-    //
     if (settings[ST_SETTINGS_UNDO] == ST_VALUE_TRUE)
     {
       Change *cmd = new Change (uid, props, previous, settings);
@@ -960,14 +870,8 @@ StructuralView::change (QString uid, QMap<QString, QString> props,
       return;
     }
 
-    //
-    // Initializing...
-    //
     StructuralEntity *ent = _entities[uid];
 
-    //
-    // Setting...
-    //
     if (ent->isUncollapsed ())
       if (props.value (ST_ATTR_ENT_UNCOLLAPSED) == ST_VALUE_FALSE)
         ((StructuralComposition *)ent)->collapse ();
@@ -1001,12 +905,7 @@ StructuralView::change (QString uid, QMap<QString, QString> props,
       }
     }
 
-    // Setting 'others'...
     ent->setProperties (props);
-
-    //
-    // Adjusting...
-    //
 
     // Adjust 'references'
     adjustReferences (ent);
@@ -1014,10 +913,7 @@ StructuralView::change (QString uid, QMap<QString, QString> props,
     // Adjust 'others'
     ent->adjust (true);
 
-    //
     // Notifing...
-    //
-
     if (settings[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
     {
       emit changed (uid, props, previous, settings);
@@ -1655,22 +1551,13 @@ StructuralView::select (QString uid, QMap<QString, QString> settings)
   }
   else
   {
-    //
-    // Initializing...
-    //
     StructuralEntity *ent = _entities.value (_selected);
 
     if (ent != nullptr)
       ent->setSelected (false);
 
-    //
-    // Unselecting...
-    //
-    _selected = "";
+    _selected = ""; // unselect
 
-    //
-    // Notifing...
-    //
     emit switchedCut (false);
     emit switchedCopy (false);
 
@@ -1700,9 +1587,6 @@ StructuralView::move (QString uid, QString parent,
 {
   CPR_ASSERT (_entities.contains (uid));
 
-  //
-  // Initializing...
-  //
   StructuralEntity *e = _entities.value (uid);
   StructuralEntity *p = _entities.value (parent);
 
@@ -1714,9 +1598,6 @@ StructuralView::move (QString uid, QString parent,
   CPR_ASSERT (StructuralUtil::validateKinship (e->getType (), type));
   if (e->getParent () != p)
   {
-    //
-    // Setting...
-    //
     for (StructuralEntity *ent : _entities.values ())
       ent->setDraggable (false);
 
@@ -1735,9 +1616,6 @@ StructuralView::move (QString uid, QString parent,
     if (props.contains (ST_ATTR_ENT_LEFT))
       copy->setLeft (copy->getLeft () - copy->getWidth () / 2);
 
-    //
-    // Moving...
-    //
     paste (copy, p, settings.value (ST_SETTINGS_CODE), false);
     remove (uid, settings);
   }
