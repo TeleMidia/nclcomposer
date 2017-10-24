@@ -4,11 +4,8 @@ StructuralMinimap::StructuralMinimap (QWidget *parent)
     : QGraphicsView (parent), mEditorView (NULL), mMode (None)
 {
   setWindowFlags (Qt::FramelessWindowHint | Qt::WindowSystemMenuHint);
-
   setAttribute (Qt::WA_TranslucentBackground);
-
   setFrameShape (QFrame::NoFrame);
-
   setStyleSheet ("background: transparent");
 
   viewport ()->setAutoFillBackground (false);
@@ -26,7 +23,7 @@ StructuralMinimap::init (StructuralView *mEditorView)
   setVerticalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
 
   StructuralScene *editorViewScene = mEditorView->getScene ();
-  if (editorViewScene != NULL)
+  if (editorViewScene != nullptr)
   {
     setScene (editorViewScene);
     // can affect zoom - need to change it if we make another desision about it
@@ -45,7 +42,7 @@ StructuralMinimap::setScene (QGraphicsScene *scene)
 void
 StructuralMinimap::showScene ()
 {
-  if (scene () != NULL)
+  if (scene () != nullptr)
   {
     setSceneRect (scene ()->sceneRect ());
     fitInView (sceneRect (), Qt::KeepAspectRatio);
@@ -55,7 +52,7 @@ StructuralMinimap::showScene ()
 void
 StructuralMinimap::ensureVisible (QList<QRectF> region)
 {
-  foreach (QRectF rect, region)
+  for (const QRectF &rect : region)
   {
     fitInView (rect, Qt::KeepAspectRatio);
   }
@@ -65,7 +62,7 @@ void
 StructuralMinimap::clear ()
 {
   mEditorViewRect = QRectF ();
-  mEditorView = NULL;
+  mEditorView = nullptr;
 }
 
 QRectF
@@ -91,7 +88,7 @@ StructuralMinimap::wheelEvent (QWheelEvent *event)
 void
 StructuralMinimap::mousePressEvent (QMouseEvent *event)
 {
-  if (mEditorView != NULL)
+  if (mEditorView != nullptr)
   {
     mMode = Drag;
     mEditorView->centerOn (mapToScene (event->pos ()));
@@ -102,7 +99,7 @@ StructuralMinimap::mousePressEvent (QMouseEvent *event)
 void
 StructuralMinimap::mouseMoveEvent (QMouseEvent *event)
 {
-  if (mEditorView != NULL && mMode == Drag)
+  if (mEditorView != nullptr && mMode == Drag)
   {
     mEditorView->centerOn (mapToScene (event->pos ()));
   }
@@ -143,7 +140,7 @@ void
 StructuralMinimap::drawNonExistentAreas (QPainter *painter, QRectF const &rect)
 {
   QList<QRectF> areas = getNonExistentAreas (rect);
-  foreach (QRectF area, areas)
+  for (const QRectF &area : areas)
   {
     painter->fillRect (area, Qt::gray);
   }

@@ -61,9 +61,11 @@ StructuralNode::adjust (bool collision, bool recursion)
   setSelectable (false);
 
   if (recursion)
-    foreach (StructuralEntity *entity, getChildren ())
-      if (entity->getCategory () != Structural::Edge)
-        entity->adjust (true, false);
+  {
+    for (StructuralEntity *ent : getChildren ())
+      if (ent->getCategory () != Structural::Edge)
+        ent->adjust (true, false);
+  }
 
   StructuralEntity *parent = getParent ();
 
@@ -78,9 +80,9 @@ StructuralNode::adjust (bool collision, bool recursion)
       {
         bool colliding = false;
 
-        foreach (StructuralEntity *entity, StructuralUtil::getNeighbors (this))
+        for (StructuralEntity *ent : StructuralUtil::getNeighbors (this))
         {
-          if (this != entity)
+          if (ent != this)
           {
 
             int max = 1000;
@@ -88,13 +90,13 @@ StructuralNode::adjust (bool collision, bool recursion)
 
             qreal current = 0.0;
 
-            entity->setSelectable (false);
+            ent->setSelectable (false);
 
-            while (collidesWithItem (entity, Qt::IntersectsItemBoundingRect))
+            while (collidesWithItem (ent, Qt::IntersectsItemBoundingRect))
             {
               QLineF line = QLineF (
                   getLeft () + getWidth () / 2, getTop () + getHeight () / 2,
-                  entity->getWidth () / 2, entity->getHeight () / 2);
+                  ent->getWidth () / 2, ent->getHeight () / 2);
 
               line.setAngle (qrand () % 360);
 
@@ -111,12 +113,12 @@ StructuralNode::adjust (bool collision, bool recursion)
 
             inside ();
 
-            entity->setSelectable (true);
+            ent->setSelectable (true);
           }
         }
 
-        foreach (StructuralEntity *entity, StructuralUtil::getNeighbors (this))
-          if (collidesWithItem (entity, Qt::IntersectsItemBoundingRect))
+        for (StructuralEntity *ent : StructuralUtil::getNeighbors (this))
+          if (collidesWithItem (ent, Qt::IntersectsItemBoundingRect))
             colliding = true;
 
         if (!colliding)

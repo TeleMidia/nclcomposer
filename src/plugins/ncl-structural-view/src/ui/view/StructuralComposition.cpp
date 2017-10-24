@@ -17,8 +17,6 @@ StructuralComposition::StructuralComposition (StructuralEntity *parent)
   setUncollapsed (true);
 }
 
-StructuralComposition::~StructuralComposition () {}
-
 void
 StructuralComposition::collapse (bool notify)
 {
@@ -36,26 +34,26 @@ StructuralComposition::collapse (bool notify)
     setWidth (getUncollapedWidth ());
     setHeight (getUncollapedHeight ());
 
-    foreach (StructuralEntity *entity, getChildren ())
+    for (StructuralEntity *ent : getChildren ())
     {
-      if (entity->getCategory () == Structural::Interface)
+      if (ent->getCategory () == Structural::Interface)
       {
-        entity->setTop (entity->getTop () * getUncollapedHeight ()
-                        / ST_DEFAULT_CONTENT_H);
-        entity->setLeft (entity->getLeft () * getUncollapedWidth ()
-                         / ST_DEFAULT_CONTENT_W);
+        ent->setTop (ent->getTop () * getUncollapedHeight ()
+                     / ST_DEFAULT_CONTENT_H);
+        ent->setLeft (ent->getLeft () * getUncollapedWidth ()
+                      / ST_DEFAULT_CONTENT_W);
       }
       else
       {
-        entity->setTop (entity->getUncollapedTop ());
-        entity->setLeft (entity->getUncollapedLeft ());
+        ent->setTop (ent->getUncollapedTop ());
+        ent->setLeft (ent->getUncollapedLeft ());
 
-        entity->setHidden (false);
+        ent->setHidden (false);
 
-        if (entity->isUncollapsed ())
+        if (ent->isUncollapsed ())
         {
-          entity->setWidth (entity->getUncollapedWidth ());
-          entity->setHeight (entity->getUncollapedHeight ());
+          ent->setWidth (ent->getUncollapedWidth ());
+          ent->setHeight (ent->getUncollapedHeight ());
         }
       }
     }
@@ -74,26 +72,26 @@ StructuralComposition::collapse (bool notify)
     setWidth (ST_DEFAULT_CONTENT_W);
     setHeight (ST_DEFAULT_CONTENT_H);
 
-    foreach (StructuralEntity *entity, getChildren ())
+    for (StructuralEntity *ent : getChildren ())
     {
-      entity->setUncollapedTop (entity->getTop ());
-      entity->setUncollapedLeft (entity->getLeft ());
+      ent->setUncollapedTop (ent->getTop ());
+      ent->setUncollapedLeft (ent->getLeft ());
 
-      if (entity->getCategory () == Structural::Interface)
+      if (ent->getCategory () == Structural::Interface)
       {
-        entity->setTop (((entity->getTop () * ST_DEFAULT_CONTENT_H)
-                         / getUncollapedHeight ()));
-        entity->setLeft (((entity->getLeft () * ST_DEFAULT_CONTENT_W)
-                          / getUncollapedWidth ()));
+        ent->setTop (((ent->getTop () * ST_DEFAULT_CONTENT_H)
+                      / getUncollapedHeight ()));
+        ent->setLeft (((ent->getLeft () * ST_DEFAULT_CONTENT_W)
+                       / getUncollapedWidth ()));
       }
       else
       {
-        entity->setHidden (true);
+        ent->setHidden (true);
 
-        if (entity->isUncollapsed ())
+        if (ent->isUncollapsed ())
         {
-          entity->setUncollapedWidth (entity->getWidth ());
-          entity->setUncollapedHeight (entity->getHeight ());
+          ent->setUncollapedWidth (ent->getWidth ());
+          ent->setUncollapedHeight (ent->getHeight ());
         }
       }
     }
@@ -319,7 +317,7 @@ StructuralComposition::dropEvent (QGraphicsSceneDragDropEvent *event)
   {
     event->setAccepted (false);
 
-    foreach (QUrl url, list)
+    for (const QUrl &url : list)
     {
       QString filename = url.toLocalFile ();
 

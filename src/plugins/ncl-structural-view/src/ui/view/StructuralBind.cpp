@@ -11,8 +11,6 @@ StructuralBind::StructuralBind (StructuralEntity *parent)
   setRole (Structural::NoRole);
 }
 
-StructuralBind::~StructuralBind () {}
-
 StructuralRole
 StructuralBind::getRole () const
 {
@@ -42,7 +40,7 @@ StructuralBind::draw (QPainter *painter)
   StructuralEntity *tail = getTail ();
   StructuralEntity *head = getHead ();
 
-  if (tail != NULL && head != NULL)
+  if (tail != nullptr && head != nullptr)
   {
     painter->setRenderHint (QPainter::Antialiasing, true);
     painter->setRenderHint (QPainter::SmoothPixmapTransform, true);
@@ -54,19 +52,12 @@ StructuralBind::draw (QPainter *painter)
     painter->setPen (
         QPen (QBrush (QColor (StructuralUtil::getColor (getType ()))), 1));
 
-    qreal x;
-    qreal y;
-    qreal z;
-    qreal w;
-    qreal a;
-    qreal b;
+    qreal x, y, z, w;
+    qreal a, b;
 
     qreal r;
 
-    qreal alfa;
-    qreal beta;
-    qreal delta;
-
+    qreal alfa, beta, delta;
     qreal angle;
 
     QPointF center;

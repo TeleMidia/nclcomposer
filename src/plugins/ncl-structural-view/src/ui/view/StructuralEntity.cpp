@@ -207,25 +207,25 @@ StructuralEntity::getProperties () const
 }
 
 void
-StructuralEntity::setProperties (const QMap<QString, QString> &properties)
+StructuralEntity::setProperties (const QMap<QString, QString> &props)
 {
   if (!_restrictions.isEmpty ())
   {
     QMap<QString, QString> previous = _properties;
 
-    foreach (const QString &key, previous.keys ())
+    for (const QString &key : previous.keys ())
     {
-      foreach (const QString &restriction, _restrictions)
+      for (const QString &restriction : _restrictions)
       {
         if (key.contains (restriction))
-          if (!properties.contains (key))
+          if (!props.contains (key))
             _properties.remove (key);
       }
     }
   }
 
-  foreach (const QString &name, properties.keys ())
-    _properties[name] = properties.value (name);
+  for (const QString &name : props.keys ())
+    _properties[name] = props.value (name);
 
   adjust (true);
 }
@@ -750,7 +750,7 @@ StructuralEntity::setParent (StructuralEntity *parent)
   QObject::setParent (parent);
   QGraphicsItem::setParentItem (parent);
 
-  if (parent != NULL)
+  if (parent != nullptr)
     parent->addChild (this);
 }
 
@@ -772,7 +772,6 @@ StructuralEntity::addChild (StructuralEntity *entity)
            || entity->getType () == Structural::Switch)
   {
     entity->setzIndex (_zindex + 2);
-    ;
   }
   else
   {
@@ -792,7 +791,7 @@ StructuralEntity::removeChild (StructuralEntity *entity)
   if (index >= 0)
     _children.remove (index);
 
-  entity->setParent (NULL);
+  entity->setParent (nullptr);
 }
 
 QVector<QString>
@@ -1233,10 +1232,10 @@ StructuralEntity::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
         setResizeHeight (-_resizeHeight);
       }
 
-      foreach (StructuralEntity *entity, _children)
+      for (StructuralEntity *ent : _children)
       {
-        entity->setTop (entity->getTop () - (_resizeTop - _top));
-        entity->setLeft (entity->getLeft () - (_resizeLeft - _left));
+        ent->setTop (ent->getTop () - (_resizeTop - _top));
+        ent->setLeft (ent->getLeft () - (_resizeLeft - _left));
       }
 
       setTop (_resizeTop);
@@ -1400,11 +1399,11 @@ StructuralEntity::dropEvent (QGraphicsSceneDragDropEvent *event)
   if (StructuralUtil::validateKinship (type, _type)
       && event->mimeData ()->text () != _uid)
   {
-    QMap<QString, QString> properties;
-    properties[ST_ATTR_ENT_TOP] = QString::number (event->pos ().y ());
-    properties[ST_ATTR_ENT_LEFT] = QString::number (event->pos ().x ());
+    QMap<QString, QString> props;
+    props[ST_ATTR_ENT_TOP] = QString::number (event->pos ().y ());
+    props[ST_ATTR_ENT_LEFT] = QString::number (event->pos ().x ());
 
-    emit moved (event->mimeData ()->text (), _uid, properties,
+    emit moved (event->mimeData ()->text (), _uid, props,
                 StructuralUtil::createSettings ());
   }
 }

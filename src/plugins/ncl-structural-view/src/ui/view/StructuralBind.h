@@ -9,7 +9,7 @@ class StructuralBind : public StructuralEdge
 
 public:
   StructuralBind (StructuralEntity *parent = 0);
-  virtual ~StructuralBind ();
+  virtual ~StructuralBind () {}
 
   StructuralRole getRole () const;
   void setRole (StructuralRole role);

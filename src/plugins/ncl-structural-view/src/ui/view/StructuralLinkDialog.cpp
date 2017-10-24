@@ -596,17 +596,17 @@ StructuralLinkDialog::changeContent (const QString &connector)
   if (_mode == CreateCondition || _mode == EditCondition
       || _mode == CreateLink)
   {
-    foreach (const QString &condition, _conditions.value (connector))
+    for (const QString &cond : _conditions.value (connector))
     {
       QString icon = ":/icon/bind-unknow-condition";
 
-      if (StructuralUtil::isCondition (condition))
-        icon = ":/icon/bind-" + condition.toLower ();
+      if (StructuralUtil::isCondition (cond))
+        icon = ":/icon/bind-" + cond.toLower ();
 
       if (icon.contains ("attribution"))
         icon = ":/icon/bind-unknow-condition";
 
-      _form.cbCondition->addItem (QIcon (icon), condition);
+      _form.cbCondition->addItem (QIcon (icon), cond);
     }
   }
 
@@ -620,17 +620,17 @@ StructuralLinkDialog::changeContent (const QString &connector)
 
   if (_mode == CreateAction || _mode == EditAction || _mode == CreateLink)
   {
-    foreach (const QString &action, _actions.value (connector))
+    for (const QString &act : _actions.value (connector))
     {
       QString icon = ":/icon/bind-unknow-action";
 
-      if (StructuralUtil::isAction (action))
-        icon = ":/icon/bind-" + action.toLower ();
+      if (StructuralUtil::isAction (act))
+        icon = ":/icon/bind-" + act.toLower ();
 
       if (icon.contains ("attribution"))
         icon = ":/icon/bind-unknow-action";
 
-      _form.cbAction->addItem (QIcon (icon), action);
+      _form.cbAction->addItem (QIcon (icon), act);
     }
   }
 
@@ -694,7 +694,7 @@ StructuralLinkDialog::changeContent (const QString &connector)
 
   int i = 0;
 
-  foreach (const QString &name, _params.value (connector))
+  for (const QString &name : _params.value (connector))
   {
     QStandardItem *linkItem = new QStandardItem (name);
     linkItem->setEditable (false);

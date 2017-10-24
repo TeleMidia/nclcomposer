@@ -302,19 +302,19 @@ const std::map<QString, Structural::MimeType> StructuralUtil::_strToMime
     = invert<QString, Structural::MimeType> (StructuralUtil::_mimeToStr);
 
 QString
-StructuralUtil::mimeToStr (StructuralMimeType mimetype)
+StructuralUtil::mimeToStr (StructuralMimeType mime)
 {
-  if (_mimeToStr.count (mimetype))
-    return _mimeToStr.at (mimetype);
+  if (_mimeToStr.count (mime))
+    return _mimeToStr.at (mime);
   else
     return "media";
 }
 
 StructuralMimeType
-StructuralUtil::strToMime (const QString &mimetype)
+StructuralUtil::strToMime (const QString &mime)
 {
-  if (_strToMime.count (mimetype))
-    return _strToMime.at (mimetype);
+  if (_strToMime.count (mime))
+    return _strToMime.at (mime);
   else
     return Structural::NoMimeType;
 }
@@ -451,20 +451,14 @@ StructuralUtil::getMimeTypeIcon (StructuralMimeType type)
 }
 
 QString
-StructuralUtil::getMimeTooltip (StructuralMimeType mimetype,
-                                const QString &title, const QString &info,
-                                const QString &warning, const QString &error,
-                                const QString &extra)
+StructuralUtil::getMimeTooltip (StructuralMimeType mime, const QString &title,
+                                const QString &info, const QString &warning,
+                                const QString &error, const QString &extra)
 {
   Q_UNUSED (extra);
 
-  QString tooltip;
+  QString tooltip = mimeToStr (mime) + " ";
 
-  // Adding type
-  tooltip += mimeToStr (mimetype);
-  tooltip += " ";
-
-  // Adding title
   if (!title.isEmpty ())
     tooltip += "(" + title + ")";
   else
@@ -472,10 +466,6 @@ StructuralUtil::getMimeTooltip (StructuralMimeType mimetype,
 
   tooltip += " ";
 
-  // Adding extra
-  // nothing...
-
-  // Adding messages
   if (!error.isEmpty ())
     tooltip += "- Error: " + error;
   else if (!warning.isEmpty ())
@@ -483,7 +473,6 @@ StructuralUtil::getMimeTooltip (StructuralMimeType mimetype,
   else if (!info.isEmpty ())
     tooltip += "- Info: " + info;
 
-  // Formating
   tooltip[0] = tooltip[0].toUpper ();
 
   return tooltip;
@@ -554,7 +543,7 @@ StructuralUtil::getNeighbors (StructuralEntity *ent)
 
       for (StructuralEntity *cur : view->getEntities ().values ())
       {
-        if (cur->getParent () == NULL && cur != ent)
+        if (cur->getParent () == nullptr && cur != ent)
           neighbors += cur;
       }
     }
@@ -582,10 +571,10 @@ StructuralUtil::getUpNeighbors (StructuralEntity *ent)
         StructuralView *view
             = (StructuralView *)ent->scene ()->views ().at (1);
 
-        for (StructuralEntity *current : view->getEntities ().values ())
+        for (StructuralEntity *cur : view->getEntities ().values ())
         {
-          if (current->getParent () == nullptr && current != ent)
-            neighbors += current;
+          if (cur->getParent () == nullptr && cur != ent)
+            neighbors += cur;
         }
       }
     }
@@ -622,7 +611,7 @@ StructuralUtil::isAction (StructuralRole role)
 bool
 StructuralUtil::isAction (const QString &role)
 {
-  return _strToRole.count (role) && isAction (_strToRole.at (role));
+  return (_strToRole.count (role) && isAction (_strToRole.at (role)));
 }
 
 void
