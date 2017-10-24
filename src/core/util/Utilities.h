@@ -109,8 +109,14 @@ COMPOSERCORESHARED_EXPORT
 
 
 // Assert macros.
-#define CPR_ASSERT(cond) ((!(cond)) ? qt_assert(#cond,__FILE__,__LINE__) : qt_noop())
-#define CPR_ASSERT_X(cond, where, what) ((!(cond)) ? qt_assert_x(where, what,__FILE__,__LINE__) : qt_noop())
+#define CPR_ASSERT(cond) \
+  ((!(cond)) ? qt_assert(#cond,__FILE__,__LINE__) : qt_noop())
+
+#define CPR_ASSERT_X(cond, where, what) \
+  ((!(cond)) ? qt_assert_x(where, what,__FILE__,__LINE__) : qt_noop())
+
+#define CPR_ASSERT_NOT_REACHED() \
+  CPR_ASSERT_X(false,"","Should not reach here.")
 
 CPR_CORE_END_NAMESPACE
 
