@@ -5,6 +5,7 @@
 #include "StructuralEdge.h"
 #include "StructuralView.h"
 
+#include "util/Utilities.h"
 QString
 StructuralUtil::createUid ()
 {
@@ -46,24 +47,24 @@ QMap<QString, QString>
 StructuralUtil::createSettings (const QString &undo, const QString &notify,
                                 const QString &code)
 {
-  QMap<QString, QString> settings;
+  QMap<QString, QString> sts;
 
   if (undo.isEmpty ())
-    settings.insert (ST_SETTINGS_UNDO, ST_VALUE_TRUE);
+    sts.insert (ST_SETTINGS_UNDO, ST_VALUE_TRUE);
   else
-    settings.insert (ST_SETTINGS_UNDO, undo);
+    sts.insert (ST_SETTINGS_UNDO, undo);
 
   if (notify.isEmpty ())
-    settings.insert (ST_SETTINGS_NOTIFY, ST_VALUE_TRUE);
+    sts.insert (ST_SETTINGS_NOTIFY, ST_VALUE_TRUE);
   else
-    settings.insert (ST_SETTINGS_NOTIFY, notify);
+    sts.insert (ST_SETTINGS_NOTIFY, notify);
 
   if (code.isEmpty ())
-    settings.insert (ST_SETTINGS_CODE, createUid ());
+    sts.insert (ST_SETTINGS_CODE, createUid ());
   else
-    settings.insert (ST_SETTINGS_CODE, code);
+    sts.insert (ST_SETTINGS_CODE, code);
 
-  return settings;
+  return sts;
 }
 
 QMap<QString, QString>
@@ -170,6 +171,7 @@ StructuralUtil::createCoreTranslations (StructuralType type)
     }
 
     default:
+      CPR_ASSERT_NOT_REACHED ();
       break;
   }
 
@@ -182,7 +184,7 @@ StructuralUtil::createPluginTranslations (StructuralType type)
   QMap<QString, QString> transl;
   QMap<QString, QString> inverted = createCoreTranslations (type);
 
-  foreach (const QString &key, inverted.keys ())
+  for (const QString &key : inverted.keys ())
     transl[inverted.value (key)] = key;
 
   return transl;
@@ -550,9 +552,11 @@ StructuralUtil::getNeighbors (StructuralEntity *ent)
     {
       StructuralView *view = (StructuralView *)ent->scene ()->views ().at (1);
 
-      foreach (StructuralEntity *current, view->getEntities ().values ())
-        if (current->getParent () == NULL && current != ent)
-          neighbors += current;
+      for (StructuralEntity *cur : view->getEntities ().values ())
+      {
+        if (cur->getParent () == NULL && cur != ent)
+          neighbors += cur;
+      }
     }
   }
 
@@ -565,10 +569,9 @@ StructuralUtil::getUpNeighbors (StructuralEntity *ent)
   QVector<StructuralEntity *> neighbors;
 
   StructuralEntity *parent = ent->getParent ();
-
-  if (parent != NULL)
+  if (parent != nullptr)
   {
-    if (parent->getParent () != NULL)
+    if (parent->getParent () != nullptr)
     {
       neighbors += parent->getParent ()->getChildren ();
     }
@@ -579,9 +582,11 @@ StructuralUtil::getUpNeighbors (StructuralEntity *ent)
         StructuralView *view
             = (StructuralView *)ent->scene ()->views ().at (1);
 
-        foreach (StructuralEntity *current, view->getEntities ().values ())
-          if (current->getParent () == NULL && current != ent)
+        for (StructuralEntity *current : view->getEntities ().values ())
+        {
+          if (current->getParent () == nullptr && current != ent)
             neighbors += current;
+        }
       }
     }
   }
@@ -592,7 +597,6 @@ StructuralUtil::getUpNeighbors (StructuralEntity *ent)
 bool
 StructuralUtil::isCondition (StructuralRole role)
 {
-
   return (role == Structural::onBegin || role == Structural::onBeginAttribution
           || role == Structural::onEnd || role == Structural::onEndAttribution
           || role == Structural::onPause
@@ -627,11 +631,11 @@ StructuralUtil::adjustEdges (StructuralEntity *ent)
   QVector<StructuralEntity *> relatives = getNeighbors (ent);
   relatives += getUpNeighbors (ent);
 
-  foreach (StructuralEntity *relative, relatives)
+  for (StructuralEntity *rel : relatives)
   {
-    if (relative->getCategory () == Structural::Edge)
+    if (rel->getCategory () == Structural::Edge)
     {
-      StructuralEdge *edge = (StructuralEdge *)relative;
+      StructuralEdge *edge = (StructuralEdge *)rel;
 
       if (edge->getTail () == ent || edge->getHead () == ent)
         edge->adjust (true);
@@ -652,80 +656,24 @@ StructuralUtil::formatId (const QString &id)
 }
 
 bool
-StructuralUtil::validateKinship (StructuralType entityType,
-                                 StructuralType parentType)
+StructuralUtil::validateKinship (StructuralType entT, StructuralType parentT)
 {
-  switch (entityType)
-  {
-    case Structural::Body:
-    {
-      return false;
-    }
+#define _COMPOSITE_CHILDREN                                                   \
+  Structural::Switch, Structural::Context, Structural::Media,                 \
+      Structural::Port, Structural::Property, Structural::Link,               \
+      Structural::Bind, Structural::Reference
 
-    case Structural::Switch:
-    case Structural::Context:
-    case Structural::Media:
-    case Structural::Port:
-    case Structural::Property:
-    case Structural::Link:
-    case Structural::Bind:
-    case Structural::Reference:
-    {
-      switch (parentType)
-      {
-        case Structural::Body:
-        case Structural::Switch:
-        case Structural::Context:
-        {
-          return true;
-        }
+  // ParentType -> allowed children types
+  const static QMap<StructuralType, QList<StructuralType> > kinship = {
+    { Structural::Body, { _COMPOSITE_CHILDREN } },
+    { Structural::Context, { _COMPOSITE_CHILDREN } },
+    { Structural::Switch,
+      { _COMPOSITE_CHILDREN, Structural::SwitchPort, Structural::Mapping } },
+    { Structural::Media, { Structural::Area } }
+  };
 
-        default:
-        {
-          return false;
-        }
-      }
-      break;
-    }
+  if (kinship.count (parentT))
+    return kinship[parentT].count (entT);
 
-    case Structural::SwitchPort:
-    case Structural::Mapping:
-    {
-      switch (parentType)
-      {
-        case Structural::Switch:
-        {
-          return true;
-        }
-
-        default:
-        {
-          return false;
-        }
-      }
-      break;
-    }
-
-    case Structural::Area:
-    {
-      switch (parentType)
-      {
-        case Structural::Media:
-        {
-          return true;
-        }
-
-        default:
-        {
-          return false;
-        }
-      }
-      break;
-    }
-
-    default:
-    {
-      return false;
-    }
-  }
+  return false;
 }

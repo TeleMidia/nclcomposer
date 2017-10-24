@@ -20,10 +20,10 @@ public:
   virtual void redo () = 0;
 
 signals:
-  void insert (QString uid, QString parent, QMap<QString, QString> properties,
+  void insert (QString uid, QString parent, QMap<QString, QString> props,
                QMap<QString, QString> settings);
   void remove (QString uid, QMap<QString, QString> settings);
-  void change (QString uid, QMap<QString, QString> properties,
+  void change (QString uid, QMap<QString, QString> props,
                QMap<QString, QString> previous,
                QMap<QString, QString> settings);
   void select (QString uid, QMap<QString, QString> settings);
@@ -33,7 +33,7 @@ class Insert : public Command
 {
 public:
   Insert (const QString &uid, const QString &parent,
-          const QMap<QString, QString> &properties,
+          const QMap<QString, QString> &props,
           const QMap<QString, QString> &settings);
   virtual ~Insert () {}
 
@@ -52,7 +52,7 @@ class Remove : public Command
 {
 public:
   Remove (const QString &uid, const QString &parent,
-          const QMap<QString, QString> &properties,
+          const QMap<QString, QString> &props,
           const QMap<QString, QString> &settings);
   virtual ~Remove () {}
 
@@ -70,7 +70,7 @@ private:
 class Change : public Command
 {
 public:
-  Change (const QString &uid, const QMap<QString, QString> &properties,
+  Change (const QString &uid, const QMap<QString, QString> &props,
           const QMap<QString, QString> &previous,
           const QMap<QString, QString> &settings);
   virtual ~Change () {}

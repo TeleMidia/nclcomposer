@@ -6,12 +6,12 @@ Command::Command (Command *parent) : QObject (parent), QUndoCommand (parent)
 }
 
 Insert::Insert (const QString &uid, const QString &parent,
-                const QMap<QString, QString> &properties,
+                const QMap<QString, QString> &props,
                 const QMap<QString, QString> &settings)
 {
   _uid = uid;
   _parent = parent;
-  _properties = properties;
+  _properties = props;
   _settings = settings;
 }
 
@@ -33,12 +33,12 @@ Insert::redo ()
 }
 
 Remove::Remove (const QString &uid, const QString &parent,
-                const QMap<QString, QString> &properties,
+                const QMap<QString, QString> &props,
                 const QMap<QString, QString> &settings)
 {
   _uid = uid;
   _parent = parent;
-  _properties = properties;
+  _properties = props;
   _settings = settings;
 }
 
@@ -60,12 +60,12 @@ Remove::redo ()
   emit remove (_uid, _settings);
 }
 
-Change::Change (const QString &uid, const QMap<QString, QString> &properties,
+Change::Change (const QString &uid, const QMap<QString, QString> &props,
                 const QMap<QString, QString> &previous,
                 const QMap<QString, QString> &settings)
 {
   _uid = uid;
-  _properties = properties;
+  _properties = props;
   _previous = previous;
   _settings = settings;
 }
