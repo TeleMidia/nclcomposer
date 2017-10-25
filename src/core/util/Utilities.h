@@ -115,6 +115,9 @@ COMPOSERCORESHARED_EXPORT
 #define CPR_ASSERT_X(cond, where, what) \
   ((!(cond)) ? qt_assert_x(where, what,__FILE__,__LINE__) : qt_noop())
 
+#define CPR_ASSERT_NON_NULL(var) \
+  CPR_ASSERT(var != nullptr)
+
 #define CPR_ASSERT_NOT_REACHED() \
   CPR_ASSERT_X(false,"","Should not reach here.")
 
