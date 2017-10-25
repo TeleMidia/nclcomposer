@@ -161,9 +161,12 @@ protected:
   virtual void resizeEvent (QResizeEvent *event);
 
 private:
-  void createEntity (StructuralType type);
-  void createEntity (StructuralType type, QMap<QString, QString> properties,
-                     QMap<QString, QString> settings);
+  StructuralEntity *createEntity (StructuralType type,
+                                  StructuralEntity *parent);
+  void createEntity (StructuralType type,
+                     QMap<QString, QString> prop = QMap<QString, QString>(),
+                     QMap<QString, QString> stgs = QMap<QString, QString>());
+
   void createDocument (StructuralEntity *entity, QDomDocument *document,
                        QDomElement parent);
   void createLink (StructuralEntity *tail, StructuralEntity *head);
