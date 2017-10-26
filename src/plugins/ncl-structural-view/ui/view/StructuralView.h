@@ -76,6 +76,8 @@ public slots:
   void changeEntity (QString uid, QMap<QString, QString> props,
                      QMap<QString, QString> prev, QMap<QString, QString> stgs);
 
+  void removeEntity (QString uid, QMap<QString, QString> settings);
+
   void insert (QString uid, QString parent, QMap<QString, QString> properties,
                QMap<QString, QString> settings);
   void remove (QString uid, QMap<QString, QString> settings);

@@ -650,107 +650,87 @@ StructuralView::remove (QString uid, QMap<QString, QString> stgs)
 {
   CPR_ASSERT (_entities.contains (uid));
 
-  if (_entities.contains (uid))
+  StructuralEntity *e = _entities.value (uid);
+  StructuralEntity *p = e->getParent ();
+  StructuralType type = e->getType ();
+
+  // Removing 'references'...
+  if (e->getCategory () == Structural::Interface)
   {
-    StructuralEntity *e = _entities.value (uid);
-    StructuralEntity *p = e->getParent ();
-    StructuralType type = e->getType ();
+    for (const QString &key : _references.keys (e->getUid ()))
+      remove (key, StructuralUtil::createSettings (
+                ST_VALUE_FALSE, ST_VALUE_FALSE,
+                stgs.value (ST_SETTINGS_CODE)));
 
-    if (stgs[ST_SETTINGS_UNDO] == ST_VALUE_TRUE
-        && (!e->isReference () || e->getCategory () != Structural::Interface))
+    // Only remove interface -> interface references. Keeping
+    // Media -> Media references to enable undo. All "trash" references
+    // are ignore when saving the project.
+    _references.remove (e->getUid ());
+  }
+  else if (e->getType () == Structural::Media)
+  {
+    for (const QString &key : _references.keys (e->getUid ()))
     {
-      QString parent = "";
-
-      if (p != nullptr)
-        parent = p->getUid ();
-
-      Remove *cmd
-          = new Remove (this, e->getUid (), parent, e->getProperties (), stgs);
-      cmd->setText (stgs[ST_SETTINGS_CODE]);
-
-      _commands.push (cmd);
-      emit switchedUndo (true);
-      return;
-    }
-
-    // Removing 'references'...
-    if (e->getCategory () == Structural::Interface)
-    {
-      for (const QString &key : _references.keys (e->getUid ()))
-        remove (key, StructuralUtil::createSettings (
-                         ST_VALUE_FALSE, ST_VALUE_FALSE,
-                         stgs.value (ST_SETTINGS_CODE)));
-
-      // Only remove interface -> interface references. Keeping
-      // Media -> Media references to enable undo. All "trash" references
-      // are ignore when saving the project.
-      _references.remove (e->getUid ());
-    }
-    else if (e->getType () == Structural::Media)
-    {
-      for (const QString &key : _references.keys (e->getUid ()))
+      if (_entities.contains (key))
       {
-        if (_entities.contains (key))
-        {
-          _entities.value (key)->setReference (false);
-          _entities.value (key)->adjust (true);
-        }
+        _entities.value (key)->setReference (false);
+        _entities.value (key)->adjust (true);
       }
     }
+  }
 
-    // Removing 'children'...
-    if (stgs.value (ST_SETTINGS_UNDO_TRACE) != ST_VALUE_FALSE)
-      stgs[ST_SETTINGS_UNDO] = ST_VALUE_TRUE;
+  // Removing 'children'...
+  if (stgs.value (ST_SETTINGS_UNDO_TRACE) != ST_VALUE_FALSE)
+    stgs[ST_SETTINGS_UNDO] = ST_VALUE_TRUE;
 
-    while (!e->getChildren ().isEmpty ())
-      remove (e->getChildren ().first ()->getUid (), stgs);
+  while (!e->getChildren ().isEmpty ())
+    remove (e->getChildren ().first ()->getUid (), stgs);
 
-    // Removing 'edges'...
-    if (e->getCategory () != Structural::Edge)
+  // Removing 'edges'...
+  if (e->getCategory () != Structural::Edge)
+  {
+    QVector<StructuralEntity *> relatives = StructuralUtil::getNeighbors (e);
+    relatives += StructuralUtil::getUpNeighbors (e);
+
+    for (StructuralEntity *rel : relatives)
     {
-      QVector<StructuralEntity *> relatives = StructuralUtil::getNeighbors (e);
-      relatives += StructuralUtil::getUpNeighbors (e);
-
-      for (StructuralEntity *rel : relatives)
+      if (rel->getCategory () == Structural::Edge)
       {
-        if (rel->getCategory () == Structural::Edge)
+        StructuralEdge *edge = (StructuralEdge *)rel;
+
+        if (edge->getTail () == e || edge->getHead () == e)
         {
-          StructuralEdge *edge = (StructuralEdge *)rel;
-
-          if (edge->getTail () == e || edge->getHead () == e)
+          if (edge->getType () != Structural::Reference)
           {
-            if (edge->getType () != Structural::Reference)
+            remove (edge->getUid (),
+                    StructuralUtil::createSettings (
+                      ST_VALUE_TRUE, stgs.value (ST_SETTINGS_NOTIFY),
+                      stgs.value (ST_SETTINGS_CODE)));
+          }
+          else
+          {
+            if (ST_DEFAULT_WITH_INTERFACES)
             {
-              remove (edge->getUid (),
+              // In case of 'Structural::Reference' edge, just change
+              // 'Structural::Port' properties.
+              //
+              // Note:
+              // The 'tail' of a 'Structural::Reference' edge
+              // is always a 'Structural::Port' entity.
+              QMap<QString, QString> previous
+                  = edge->getTail ()->getProperties ();
+              QMap<QString, QString> props
+                  = edge->getTail ()->getProperties ();
+
+              props[ST_ATTR_REFERENCE_COMPONENT_ID] = "";
+              props[ST_ATTR_REFERENCE_COMPONENT_UID] = "";
+              props[ST_ATTR_REFERENCE_INTERFACE_ID] = "";
+              props[ST_ATTR_REFERENCE_INTERFACE_UID] = "";
+
+              change (edge->getTail ()->getUid (), props, previous,
                       StructuralUtil::createSettings (
-                          ST_VALUE_TRUE, stgs.value (ST_SETTINGS_NOTIFY),
-                          stgs.value (ST_SETTINGS_CODE)));
-            }
-            else
-            {
-              if (ST_DEFAULT_WITH_INTERFACES)
-              {
-                // In case of 'Structural::Reference' edge, just change
-                // 'Structural::Port' properties.
-                //
-                // Note:
-                // The 'tail' of a 'Structural::Reference' edge
-                // is always a 'Structural::Port' entity.
-                QMap<QString, QString> previous
-                    = edge->getTail ()->getProperties ();
-                QMap<QString, QString> props
-                    = edge->getTail ()->getProperties ();
-
-                props[ST_ATTR_REFERENCE_COMPONENT_ID] = "";
-                props[ST_ATTR_REFERENCE_COMPONENT_UID] = "";
-                props[ST_ATTR_REFERENCE_INTERFACE_ID] = "";
-                props[ST_ATTR_REFERENCE_INTERFACE_UID] = "";
-
-                change (edge->getTail ()->getUid (), props, previous,
-                        StructuralUtil::createSettings (
-                            ST_VALUE_TRUE, stgs.value (ST_SETTINGS_NOTIFY),
-                            stgs.value (ST_SETTINGS_CODE)));
-              }
+                        ST_VALUE_TRUE, stgs.value (ST_SETTINGS_NOTIFY),
+                        stgs.value (ST_SETTINGS_CODE)));
             }
           }
         }
@@ -1618,6 +1598,30 @@ StructuralView::changeEntity (QString uid, QMap<QString, QString> props,
   cmd->setText (stgs[ST_SETTINGS_CODE]);
   _commands.push (cmd);
   emit switchedUndo (true);
+}
+
+void
+StructuralView::removeEntity(QString uid, QMap<QString, QString> stgs)
+{
+  CPR_ASSERT (_entities.contains (uid));
+
+  StructuralEntity *e = _entities.value (uid);
+  StructuralEntity *p = e->getParent ();
+
+  if (!e->isReference () || e->getCategory () != Structural::Interface)
+  {
+    QString parent = "";
+
+    if ( p!= nullptr)
+      parent = p->getUid ();
+
+    Remove *cmd
+        = new Remove (this, e->getUid (), parent, e->getProperties (), stgs);
+    cmd->setText (stgs[ST_SETTINGS_CODE]);
+
+    _commands.push (cmd);
+    emit switchedUndo (true);
+  }
 }
 
 void
@@ -2512,8 +2516,9 @@ StructuralView::getNewId (StructuralEntity *ent)
 void
 StructuralView::performDelete ()
 {
-  if (_entities.contains (_selected))
-    remove (_selected, StructuralUtil::createSettings ());
+  CPR_ASSERT (_selected == "" || _entities.contains (_selected));
+
+  removeEntity (_selected, StructuralUtil::createSettings());
 }
 
 void
