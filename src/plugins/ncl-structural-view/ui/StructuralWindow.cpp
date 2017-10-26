@@ -402,13 +402,14 @@ StructuralWindow::createConnections ()
            &QAction::setEnabled);
   connect (_view, &StructuralView::canRedoChanged, _redoAction,
            &QAction::setEnabled);
-  connect (_view, &StructuralView::switchedCut, _cutAction,
+
+  connect (_view, &StructuralView::canCutChanged, _cutAction,
            &QAction::setEnabled);
-  connect (_view, &StructuralView::switchedCopy, _copyAction,
+  connect (_view, &StructuralView::canCopyChanged, _copyAction,
            &QAction::setEnabled);
-  connect (_view, &StructuralView::switchedPaste, _pasteAction,
+  connect (_view, &StructuralView::canPasteChanged, _pasteAction,
            &QAction::setEnabled);
-  connect (_view, &StructuralView::switchedDelete, _deleteAction,
+  connect (_view, &StructuralView::canDeleteChanged, _deleteAction,
            &QAction::setEnabled);
   connect (_view, &StructuralView::switchedSnapshot, _snapshotAction,
            &QAction::setEnabled);

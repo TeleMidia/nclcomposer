@@ -6,8 +6,6 @@ StructuralScene::StructuralScene (StructuralMenu *menu, QObject *parent)
   setSceneRect (0, 0, ST_DEFAULT_SCENE_W, ST_DEFAULT_SCENE_H);
 }
 
-StructuralScene::~StructuralScene () {}
-
 void
 StructuralScene::contextMenuEvent (QGraphicsSceneContextMenuEvent *event)
 {
@@ -18,4 +16,27 @@ StructuralScene::contextMenuEvent (QGraphicsSceneContextMenuEvent *event)
     _menu->exec (event->screenPos ());
     event->accept ();
   }
+}
+
+QMap <QString, StructuralEntity *> &
+StructuralScene::getEntities ()
+{
+  return _entities;
+}
+
+StructuralEntity *
+StructuralScene::getBody ()
+{
+  StructuralEntity *body = nullptr;
+
+  for (StructuralEntity *ent : _entities.values ())
+  {
+    if (ent->getType () == Structural::Body)
+    {
+      body = ent;
+      break;
+    }
+  }
+
+  return body;
 }

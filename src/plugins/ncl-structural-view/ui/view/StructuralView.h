@@ -137,13 +137,15 @@ signals:
   void canUndoChanged (bool state);
   void canRedoChanged (bool state);
 
-  void switchedCut (bool state);
-  void switchedCopy (bool state);
-  void switchedPaste (bool state);
-  void switchedDelete (bool state);
+  void canCutChanged (bool state);
+  void canCopyChanged (bool state);
+  void canPasteChanged (bool state);
+  void canDeleteChanged (bool state);
+
   void switchedSnapshot (bool state);
   void switchedPointer (bool state);
   void switchedLink (bool state);
+
   void zoomChanged (int zoom);
   void switchedBody (bool state);
 
@@ -218,7 +220,6 @@ private:
 
   QMap<StructuralType, int> _counter;
   QMap<QString, QString> _references;
-  QMap<QString, StructuralEntity *> _entities;
 };
 
 #endif // STRUCTURALVIEW_H

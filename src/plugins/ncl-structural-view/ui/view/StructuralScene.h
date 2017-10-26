@@ -10,13 +10,17 @@ class StructuralScene : public QGraphicsScene
 {
 public:
   StructuralScene (StructuralMenu *menu, QObject *parent = 0);
-  virtual ~StructuralScene ();
+  virtual ~StructuralScene () {}
+
+  StructuralEntity *getBody();
+  QMap <QString, StructuralEntity *> &getEntities ();
 
 protected:
   virtual void contextMenuEvent (QGraphicsSceneContextMenuEvent *event);
 
 private:
   StructuralMenu *_menu;
+  QMap<QString, StructuralEntity *> _entities;
 };
 
 #endif // STRUCTURALSCENE_H
