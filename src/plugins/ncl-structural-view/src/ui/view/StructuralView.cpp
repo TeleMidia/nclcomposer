@@ -1625,10 +1625,8 @@ StructuralView::createEntity (StructuralType type,
                               QMap<QString, QString> props,
                               QMap<QString, QString> stgs)
 {
-  // Update type in the map. FIXME: Do we need that?
   props.insert (ST_ATTR_ENT_TYPE, StructuralUtil::typeToStr (type));
 
-  // FIXME: Do we need that?
   if (stgs.empty())
     stgs = StructuralUtil::createSettings();
 
@@ -2627,54 +2625,6 @@ StructuralView::toggleMinimapVisibility ()
     _minimap->show ();
   else
     _minimap->hide ();
-}
-
-void
-StructuralView::performBody ()
-{
-  createEntity (Structural::Body);
-}
-
-void
-StructuralView::performContext ()
-{
-  createEntity (Structural::Context);
-}
-
-void
-StructuralView::performSwitch ()
-{
-  createEntity (Structural::Switch);
-}
-
-void
-StructuralView::performMedia ()
-{
-  createEntity (Structural::Media);
-}
-
-void
-StructuralView::performPort ()
-{
-  createEntity (Structural::Port);
-}
-
-void
-StructuralView::performArea ()
-{
-  createEntity (Structural::Area);
-}
-
-void
-StructuralView::performProperty ()
-{
-  createEntity (Structural::Property);
-}
-
-void
-StructuralView::performSwitchPort ()
-{
-  createEntity (Structural::SwitchPort);
 }
 
 #ifdef WITH_GRAPHVIZ

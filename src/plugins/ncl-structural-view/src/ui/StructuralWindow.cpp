@@ -368,23 +368,38 @@ StructuralWindow::createConnections ()
 
   connect (_autostartAction, &QAction::triggered, _view,
            &StructuralView::performAutostart);
-  connect (_mediaAction, &QAction::triggered, _view,
-           &StructuralView::performMedia);
-  connect (_contextAction, &QAction::triggered, _view,
-           &StructuralView::performContext);
-  connect (_switchAction, &QAction::triggered, _view,
-           &StructuralView::performSwitch);
-  connect (_bodyAction, &QAction::triggered, _view,
-           &StructuralView::performBody);
-  connect (_areaAction, &QAction::triggered, _view,
-           &StructuralView::performArea);
 
-  connect (_propertyAction, &QAction::triggered, _view,
-           &StructuralView::performProperty);
-  connect (_portAction, &QAction::triggered, _view,
-           &StructuralView::performPort);
-  connect (_switchportAction, &QAction::triggered, _view,
-           &StructuralView::performSwitchPort);
+  connect (_mediaAction, &QAction::triggered, [&]() {
+    _view->createEntity (StructuralType::Media);
+  });
+
+  connect (_contextAction, &QAction::triggered, [&]() {
+    _view->createEntity (StructuralType::Context);
+  });
+
+  connect (_switchAction, &QAction::triggered, [&]() {
+    _view->createEntity (StructuralType::Switch);
+  });
+
+  connect (_bodyAction, &QAction::triggered, [&]() {
+    _view->createEntity (StructuralType::Body);
+  });
+
+  connect (_areaAction, &QAction::triggered, [&]() {
+    _view->createEntity (StructuralType::Area);
+  });
+
+  connect (_propertyAction, &QAction::triggered, [&]() {
+    _view->createEntity (StructuralType::Property);
+  });
+
+  connect (_portAction, &QAction::triggered, [&]() {
+    _view->createEntity (StructuralType::Port);
+  });
+
+  connect (_switchportAction, &QAction::triggered, [&]() {
+    _view->createEntity (StructuralType::SwitchPort);
+  });
 
 #ifdef WITH_GRAPHVIZ
   connect (_autostartAction, &QAction::triggered, this,

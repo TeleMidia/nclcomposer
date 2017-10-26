@@ -68,6 +68,10 @@ public:
     return _menu;
   }
 
+  void createEntity (StructuralType type,
+                     QMap<QString, QString> prop = QMap<QString, QString>(),
+                     QMap<QString, QString> stgs = QMap<QString, QString>());
+
 public slots:
   void insert (QString uid, QString parent, QMap<QString, QString> properties,
                QMap<QString, QString> settings);
@@ -96,14 +100,6 @@ public slots:
   void performPointer ();
   void performLink ();
   void performDelete ();
-  void performMedia ();
-  void performContext ();
-  void performSwitch ();
-  void performBody ();
-  void performArea ();
-  void performProperty ();
-  void performPort ();
-  void performSwitchPort ();
 
 #ifdef WITH_GRAPHVIZ
   void performAutoAdjust ();
@@ -163,9 +159,6 @@ protected:
 private:
   StructuralEntity *createEntity (StructuralType type,
                                   StructuralEntity *parent);
-  void createEntity (StructuralType type,
-                     QMap<QString, QString> prop = QMap<QString, QString>(),
-                     QMap<QString, QString> stgs = QMap<QString, QString>());
 
   void createDocument (StructuralEntity *entity, QDomDocument *document,
                        QDomElement parent);
