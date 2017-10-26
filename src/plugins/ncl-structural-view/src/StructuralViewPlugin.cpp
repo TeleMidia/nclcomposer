@@ -677,7 +677,6 @@ void
 StructuralViewPlugin::insertInView (Entity *ent, bool undo)
 {
   QMap<QString, QString> props;
-
   Structural::Type type = StructuralUtil::strToType (ent->getType ());
 
   if (type != Structural::NoType)
@@ -1466,7 +1465,8 @@ StructuralViewPlugin::validationError (QString pluginID, void *param)
   {
     pair<QString, QString> *p = (pair<QString, QString> *)param;
 
-    if (_coreToView.contains (p->first))
+    if (_coreToView.contains (p->first)
+        && _window->getView ()->hasEntity (p->first))
       _window->getView ()->setError (_coreToView.value (p->first), p->second);
   }
 }
