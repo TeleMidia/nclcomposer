@@ -1452,7 +1452,7 @@ StructuralViewPlugin::clearValidationMessages (QString, void *param)
 {
   Q_UNUSED (param);
 
-  _window->getView ()->cleanErrors ();
+  _window->getView ()->clearErrors ();
 }
 
 void

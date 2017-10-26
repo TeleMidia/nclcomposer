@@ -50,7 +50,7 @@ public:
 
   void setError (const QString &uid, const QString &error);
 
-  void cleanErrors ();
+  void clearErrors ();
 
   StructuralMenu *
   getMenu ()
