@@ -44,6 +44,11 @@ StructuralView::StructuralView (QWidget *parent)
   // Setting...
   setScene (_scene);
   centerOn (0, 0);
+
+  connect (&_commands, &QUndoStack::canUndoChanged, this,
+           &StructuralView::canUndoChanged);
+  connect (&_commands, &QUndoStack::canRedoChanged, this,
+           &StructuralView::canRedoChanged);
 }
 
 StructuralScene *
@@ -663,7 +668,7 @@ StructuralView::remove (QString uid, QMap<QString, QString> stgs)
                 stgs.value (ST_SETTINGS_CODE)));
 
     // Only remove interface -> interface references. Keeping
-    // Media -> Media references to enable undo. All "trash" references
+    // Media -> Media references to enable undo.  All "trash" references
     // are ignore when saving the project.
     _references.remove (e->getUid ());
   }
@@ -684,7 +689,7 @@ StructuralView::remove (QString uid, QMap<QString, QString> stgs)
     stgs[ST_SETTINGS_UNDO] = ST_VALUE_TRUE;
 
   while (!e->getChildren ().isEmpty ())
-    remove (e->getChildren ().first ()->getUid (), stgs);
+    removeEntity (e->getChildren ().first ()->getUid (), stgs);
 
   // Removing 'edges'...
   if (e->getCategory () != Structural::Edge)
@@ -702,10 +707,10 @@ StructuralView::remove (QString uid, QMap<QString, QString> stgs)
         {
           if (edge->getType () != Structural::Reference)
           {
-            remove (edge->getUid (),
-                    StructuralUtil::createSettings (
-                      ST_VALUE_TRUE, stgs.value (ST_SETTINGS_NOTIFY),
-                      stgs.value (ST_SETTINGS_CODE)));
+            removeEntity (edge->getUid (),
+                          StructuralUtil::createSettings (
+                            ST_VALUE_TRUE, stgs.value (ST_SETTINGS_NOTIFY),
+                            stgs.value (ST_SETTINGS_CODE)));
           }
           else
           {
@@ -877,8 +882,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
   {
     case Structural::Media:
     {
-
-      // Ajusting others media entities that refer
+      // Adjusting others media entities that refer
       // the current one
       bool hasChange = false;
 
@@ -980,13 +984,23 @@ StructuralView::adjustReferences (StructuralEntity *ent)
               else if (instance == "instSame" || instance == "gradSame")
               {
                 for (StructuralEntity *child : ent->getChildren ())
+                {
                   if (!child->isReference ())
+                  {
                     for (const QString &key :
                          _references.keys (child->getUid ()))
+                    {
                       if (_entities.contains (key))
+                      {
                         if (_entities.value (key)->getParent () != refer)
+                        {
                           remove (key, StructuralUtil::createSettings (false,
                                                                        false));
+                        }
+                      }
+                    }
+                  }
+                }
 
                 bool hasNewEntity = false;
 
@@ -1451,17 +1465,11 @@ StructuralView::select (QString uid, QMap<QString, QString> settings)
       if (ent != nullptr)
         ent->setSelected (false);
 
-      //
-      // Selecting...
-      //
       ent = _entities.value (uid);
       ent->setSelected (true);
 
       _selected = ent->getUid ();
 
-      //
-      // Notifing...
-      //
       bool enablePaste = false;
 
       if (_clipboard != nullptr)
@@ -1496,10 +1504,14 @@ StructuralView::select (QString uid, QMap<QString, QString> settings)
     bool enablePaste = false;
 
     if (!ST_DEFAULT_WITH_BODY)
+    {
       if (_clipboard != nullptr)
+      {
         if (StructuralUtil::validateKinship (_clipboard->getType (),
                                              Structural::Body))
           enablePaste = true;
+      }
+    }
 
     emit switchedPaste (enablePaste);
 
@@ -1585,8 +1597,6 @@ StructuralView::createEntity (StructuralType type,
   Insert *cmd = new Insert (this, uid, parent, props, stgs);
   cmd->setText (stgs[ST_SETTINGS_CODE]);
   _commands.push (cmd);
-
-  emit switchedUndo (true);
 }
 
 void
@@ -1597,11 +1607,10 @@ StructuralView::changeEntity (QString uid, QMap<QString, QString> props,
   Change *cmd = new Change (this, uid, props, prev, stgs);
   cmd->setText (stgs[ST_SETTINGS_CODE]);
   _commands.push (cmd);
-  emit switchedUndo (true);
 }
 
 void
-StructuralView::removeEntity(QString uid, QMap<QString, QString> stgs)
+StructuralView::removeEntity (QString uid, QMap<QString, QString> stgs)
 {
   CPR_ASSERT (_entities.contains (uid));
 
@@ -1612,7 +1621,7 @@ StructuralView::removeEntity(QString uid, QMap<QString, QString> stgs)
   {
     QString parent = "";
 
-    if ( p!= nullptr)
+    if (p!= nullptr)
       parent = p->getUid ();
 
     Remove *cmd
@@ -1620,7 +1629,6 @@ StructuralView::removeEntity(QString uid, QMap<QString, QString> stgs)
     cmd->setText (stgs[ST_SETTINGS_CODE]);
 
     _commands.push (cmd);
-    emit switchedUndo (true);
   }
 }
 
@@ -1723,21 +1731,15 @@ StructuralView::performUndo ()
     QString code = _commands.undoText ();
 
     while (code == _commands.undoText ())
-    {
       _commands.undo ();
-    }
-
-    emit switchedRedo (true);
   }
-
-  if (!_commands.canUndo ())
-    emit switchedUndo (false);
 
   for (const QString &key : _references.keys ())
   {
-    if (_entities.contains (key))
-      if (_entities.value (key)->getType () == Structural::Media)
-        adjustReferences (_entities.value (key));
+    CPR_ASSERT (_entities.contains (key));
+
+    if (_entities.value (key)->getType () == Structural::Media)
+      adjustReferences (_entities.value (key));
   }
 
   for (const QString &key : _entities.keys ())
@@ -1753,27 +1755,23 @@ StructuralView::performUndo ()
         StructuralEntity *i = _entities.value (
             e->getProperty (ST_ATTR_REFERENCE_INTERFACE_UID));
 
-        if (c != nullptr)
+        if (c != nullptr && i != nullptr)
         {
-          if (i == nullptr)
+          for (StructuralEntity *r : c->getChildren ())
           {
-            for (StructuralEntity *r : c->getChildren ())
+            if (r->getId () == e->getProperty (ST_ATTR_REFERENCE_INTERFACE_ID))
             {
-              if (r->getId ()
-                  == e->getProperty (ST_ATTR_REFERENCE_INTERFACE_ID))
-              {
-                e->setProperty (ST_ATTR_REFERENCE_INTERFACE_UID, r->getUid ());
+              e->setProperty (ST_ATTR_REFERENCE_INTERFACE_UID, r->getUid ());
 
-                if (((StructuralEdge *)e)->getTail () != nullptr)
-                  e->setProperty (ST_ATTR_EDGE_HEAD, r->getUid ());
-                else
-                  e->setProperty (ST_ATTR_EDGE_TAIL, r->getUid ());
+              if (((StructuralEdge *)e)->getTail () != nullptr)
+                e->setProperty (ST_ATTR_EDGE_HEAD, r->getUid ());
+              else
+                e->setProperty (ST_ATTR_EDGE_TAIL, r->getUid ());
 
-                adjustReferences (e);
-                e->adjust (true);
+              adjustReferences (e);
+              e->adjust (true);
 
-                break;
-              }
+              break;
             }
           }
         }
@@ -1791,12 +1789,7 @@ StructuralView::performRedo ()
 
     while (code == _commands.redoText ())
       _commands.redo ();
-
-    emit switchedUndo (true);
   }
-
-  if (!_commands.canRedo ())
-    emit switchedRedo (false);
 }
 
 void
@@ -2983,9 +2976,6 @@ StructuralView::clean ()
   _references.clear ();
   _entities.clear ();
   _commands.clear ();
-
-  emit switchedRedo (false);
-  emit switchedUndo (false);
 }
 
 void
@@ -3307,10 +3297,11 @@ StructuralView::clone (StructuralEntity *ent, StructuralEntity *newparent)
 bool
 StructuralView::isChild (StructuralEntity *ent, StructuralEntity *parent)
 {
-  if (ent != parent)
-    for (StructuralEntity *e : parent->getChildren ())
-      if (e->getUid () == ent->getUid () || isChild (ent, e))
-        return true;
+  CPR_ASSERT (ent != parent);
+
+  for (StructuralEntity *e : parent->getChildren ())
+    if (e->getUid () == ent->getUid () || isChild (ent, e))
+      return true;
 
   return false;
 }

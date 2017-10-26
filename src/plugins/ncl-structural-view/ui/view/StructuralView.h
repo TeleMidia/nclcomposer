@@ -69,6 +69,7 @@ public:
   }
 
 public slots:
+  // External methods
   void createEntity (StructuralType type,
                      QMap<QString, QString> prop = QMap<QString, QString> (),
                      QMap<QString, QString> stgs = QMap<QString, QString> ());
@@ -78,6 +79,7 @@ public slots:
 
   void removeEntity (QString uid, QMap<QString, QString> settings);
 
+  // "Internal" methods
   void insert (QString uid, QString parent, QMap<QString, QString> properties,
                QMap<QString, QString> settings);
   void remove (QString uid, QMap<QString, QString> settings);
@@ -132,8 +134,9 @@ signals:
                 QMap<QString, QString> settings);
   void selected (QString uid, QMap<QString, QString> settings);
 
-  void switchedUndo (bool state);
-  void switchedRedo (bool state);
+  void canUndoChanged (bool state);
+  void canRedoChanged (bool state);
+
   void switchedCut (bool state);
   void switchedCopy (bool state);
   void switchedPaste (bool state);

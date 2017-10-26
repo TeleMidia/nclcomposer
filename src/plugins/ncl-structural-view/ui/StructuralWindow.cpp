@@ -398,9 +398,9 @@ StructuralWindow::createConnections ()
            &StructuralView::performAutoAdjust);
 #endif
 
-  connect (_view, &StructuralView::switchedUndo, _undoAction,
+  connect (_view, &StructuralView::canUndoChanged, _undoAction,
            &QAction::setEnabled);
-  connect (_view, &StructuralView::switchedRedo, _redoAction,
+  connect (_view, &StructuralView::canRedoChanged, _redoAction,
            &QAction::setEnabled);
   connect (_view, &StructuralView::switchedCut, _cutAction,
            &QAction::setEnabled);
