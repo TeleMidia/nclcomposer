@@ -13,8 +13,13 @@ public:
   virtual ~StructuralScene () {}
 
   StructuralEntity *getBody();
+  bool hasEntity (const QString &uid);
+  StructuralEntity *getEntity (const QString &uid);
   QMap<QString, StructuralEntity *> &getEntities ();
   QMap<QString, QString> &getRefs ();
+
+public slots:
+  void clear (); // override?
 
 protected:
   virtual void contextMenuEvent (QGraphicsSceneContextMenuEvent *event);

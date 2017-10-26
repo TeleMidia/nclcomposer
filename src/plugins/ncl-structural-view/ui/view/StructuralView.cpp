@@ -61,18 +61,6 @@ StructuralView::getDialog ()
   return _dialog;
 }
 
-bool
-StructuralView::hasEntity (const QString &uid)
-{
-  return _scene->getEntities ().contains (uid);
-}
-
-StructuralEntity *
-StructuralView::getEntity (const QString &uid)
-{
-  return _scene->getEntities ().value (uid, nullptr);
-}
-
 QMap<QString, StructuralEntity *>
 StructuralView::getEntities ()
 {
@@ -2943,6 +2931,7 @@ StructuralView::clean ()
 {
   select ("", StructuralUtil::createSettings ());
 
+  // todo: the following code should be in StructuralScene
   for (const QString &uid : _scene->getEntities ().keys ())
   {
     QMap<QString, QString> settings
@@ -2951,10 +2940,10 @@ StructuralView::clean ()
 
     remove (uid, settings);
   }
+  // endtodo
 
-  _scene->getRefs ().clear ();
-  _scene->getEntities ().clear ();
-  _commands.clear ();
+  _scene->clear ();
+  _commands.clear (); // why?
 }
 
 void

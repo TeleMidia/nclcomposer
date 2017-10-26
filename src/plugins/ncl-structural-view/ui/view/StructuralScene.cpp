@@ -1,5 +1,7 @@
 #include "StructuralScene.h"
 
+#include "util/Utilities.h"
+
 StructuralScene::StructuralScene (StructuralMenu *menu, QObject *parent)
     : QGraphicsScene (parent), _menu (menu)
 {
@@ -18,6 +20,19 @@ StructuralScene::contextMenuEvent (QGraphicsSceneContextMenuEvent *event)
   }
 }
 
+bool
+StructuralScene::hasEntity (const QString &uid)
+{
+  return _entities.contains (uid);
+}
+
+StructuralEntity *
+StructuralScene::getEntity (const QString &uid)
+{
+//  CPR_ASSERT (hasEntity (uid));
+  return _entities.value (uid, nullptr);
+}
+
 QMap <QString, StructuralEntity *> &
 StructuralScene::getEntities ()
 {
@@ -28,6 +43,17 @@ QMap <QString, QString> &
 StructuralScene::getRefs ()
 {
   return _refs;
+}
+
+void
+StructuralScene::clear ()
+{
+  // TODO: remove entities
+
+  _refs.clear ();
+  _entities.clear ();
+
+  QGraphicsScene::clear ();
 }
 
 StructuralEntity *

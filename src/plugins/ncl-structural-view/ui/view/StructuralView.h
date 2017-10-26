@@ -45,8 +45,6 @@ public:
   StructuralScene *getScene ();
   StructuralLinkDialog *getDialog ();
 
-  bool hasEntity (const QString &uid);
-  StructuralEntity *getEntity (const QString &uid);
   QMap<QString, StructuralEntity *> getEntities ();
 
   StructuralMode getMode () const;
