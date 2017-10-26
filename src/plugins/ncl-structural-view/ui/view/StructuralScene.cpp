@@ -24,6 +24,12 @@ StructuralScene::getEntities ()
   return _entities;
 }
 
+QMap <QString, QString> &
+StructuralScene::getRefs ()
+{
+  return _refs;
+}
+
 StructuralEntity *
 StructuralScene::getBody ()
 {

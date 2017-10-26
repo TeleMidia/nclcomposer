@@ -13,7 +13,8 @@ public:
   virtual ~StructuralScene () {}
 
   StructuralEntity *getBody();
-  QMap <QString, StructuralEntity *> &getEntities ();
+  QMap<QString, StructuralEntity *> &getEntities ();
+  QMap<QString, QString> &getRefs ();
 
 protected:
   virtual void contextMenuEvent (QGraphicsSceneContextMenuEvent *event);
@@ -21,6 +22,7 @@ protected:
 private:
   StructuralMenu *_menu;
   QMap<QString, StructuralEntity *> _entities;
+  QMap<QString, QString> _refs;
 };
 
 #endif // STRUCTURALSCENE_H

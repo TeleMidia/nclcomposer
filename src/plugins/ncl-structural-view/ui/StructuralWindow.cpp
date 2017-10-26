@@ -574,7 +574,7 @@ StructuralWindow::select (QString uid, QMap<QString, QString> settings)
       _mediaAction->setEnabled (false);
       _contextAction->setEnabled (false);
       _switchAction->setEnabled (false);
-      _bodyAction->setEnabled ((_view->getBody () == NULL));
+      _bodyAction->setEnabled ((_view->getScene()->getBody () == NULL));
       _areaAction->setEnabled (false);
       _propertyAction->setEnabled (false);
       _portAction->setEnabled (false);

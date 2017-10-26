@@ -43,7 +43,6 @@ public:
   virtual ~StructuralView () {}
 
   StructuralScene *getScene ();
-  StructuralEntity *getBody ();
   StructuralLinkDialog *getDialog ();
 
   bool hasEntity (const QString &uid);

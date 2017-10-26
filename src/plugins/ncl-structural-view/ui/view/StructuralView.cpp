@@ -55,23 +55,6 @@ StructuralView::getScene ()
   return _scene;
 }
 
-StructuralEntity *
-StructuralView::getBody ()
-{
-  StructuralEntity *body = nullptr;
-
-  for (StructuralEntity *ent : _scene->getEntities ().values ())
-  {
-    if (ent->getType () == Structural::Body)
-    {
-      body = ent;
-      break;
-    }
-  }
-
-  return body;
-}
-
 StructuralLinkDialog *
 StructuralView::getDialog ()
 {
@@ -178,7 +161,7 @@ StructuralView::load (const QString &data)
       }
       else if (elt.nodeName () == "reference")
       {
-        _references[elt.attributeNode ("uid").nodeValue ()]
+        _scene->getRefs ()[elt.attributeNode ("uid").nodeValue ()]
             = elt.attributeNode ("refer").nodeValue ();
       }
     }
@@ -249,13 +232,13 @@ StructuralView::save ()
   QDomDocument *doc = new QDomDocument ();
   QDomElement root = doc->createElement ("structural");
 
-  for (const QString &key : _references.keys ())
+  for (const QString &key : _scene->getRefs ().keys ())
   {
     CPR_ASSERT (_scene->getEntities ().contains (key)
-                && _scene->getEntities ().contains (_references.value (key)));
+                && _scene->getEntities ().contains (_scene->getRefs ().value (key)));
     QDomElement reference = doc->createElement ("reference");
     reference.setAttribute ("uid", key);
-    reference.setAttribute ("refer", _references.value (key));
+    reference.setAttribute ("refer", _scene->getRefs ().value (key));
 
     root.appendChild (reference);
   }
@@ -432,7 +415,7 @@ StructuralView::createEntity (StructuralType type, StructuralEntity *parent)
     {
       case Structural::Body:
       {
-        if (getBody () == nullptr)
+        if (_scene->getBody () == nullptr)
         {
           e = new StructuralComposition ();
           e->setType (type);
@@ -549,10 +532,10 @@ StructuralView::insert (QString uid, QString parent,
         if (p->isReference ())
           adjustReferences (p);
         else
-          for (const QString &key : _references.keys ())
+          for (const QString &key : _scene->getRefs ().keys ())
           {
-            if (_references.contains (key)
-                && _references.value (key) == p->getUid ()
+            if (_scene->getRefs ().contains (key)
+                && _scene->getRefs ().value (key) == p->getUid ()
                 && _scene->getEntities ().contains (key))
             {
               adjustReferences (_scene->getEntities ().value (key));
@@ -656,7 +639,7 @@ StructuralView::remove (QString uid, QMap<QString, QString> stgs)
   // Removing 'references'...
   if (e->getCategory () == Structural::Interface)
   {
-    for (const QString &key : _references.keys (e->getUid ()))
+    for (const QString &key : _scene->getRefs ().keys (e->getUid ()))
       remove (key, StructuralUtil::createSettings (
                 ST_VALUE_FALSE, ST_VALUE_FALSE,
                 stgs.value (ST_SETTINGS_CODE)));
@@ -664,11 +647,11 @@ StructuralView::remove (QString uid, QMap<QString, QString> stgs)
     // Only remove interface -> interface references. Keeping
     // Media -> Media references to enable undo.  All "trash" references
     // are ignore when saving the project.
-    _references.remove (e->getUid ());
+    _scene->getRefs ().remove (e->getUid ());
   }
   else if (e->getType () == Structural::Media)
   {
-    for (const QString &key : _references.keys (e->getUid ()))
+    for (const QString &key : _scene->getRefs ().keys (e->getUid ()))
     {
       if (_scene->getEntities ().contains (key))
       {
@@ -934,7 +917,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                   if (!referToChild.contains (child->getUid ()))
                   {
                     if (!entities.contains (
-                            _references.value (child->getUid ())))
+                            _scene->getRefs ().value (child->getUid ())))
                     {
                       QString uid = StructuralUtil::createUid ();
 
@@ -951,7 +934,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                       childToRefer[uid] = child->getUid ();
                       childToRefer[child->getUid ()] = uid;
 
-                      _references[uid] = child->getUid ();
+                      _scene->getRefs ()[uid] = child->getUid ();
 
                       QMap<QString, QString> settings
                           = StructuralUtil::createSettings (false, false);
@@ -969,7 +952,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                   if (!child->isReference ())
                   {
                     for (const QString &key :
-                         _references.keys (child->getUid ()))
+                         _scene->getRefs ().keys (child->getUid ()))
                       remove (key,
                               StructuralUtil::createSettings (false, false));
                   }
@@ -981,7 +964,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                   if (!child->isReference ())
                   {
                     for (const QString &key :
-                         _references.keys (child->getUid ()))
+                         _scene->getRefs ().keys (child->getUid ()))
                     {
                       if (_scene->getEntities ().contains (key))
                       {
@@ -1003,7 +986,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                   {
                     if (!childToRefer.contains (child->getUid ()))
                     {
-                      if (!_references.values ().contains (child->getUid ()))
+                      if (!_scene->getRefs ().values ().contains (child->getUid ()))
                       {
                         QString uid = StructuralUtil::createUid ();
 
@@ -1017,7 +1000,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                         props[ST_ATTR_REFERENCE_REFER_ID] = child->getId ();
                         props[ST_ATTR_REFERENCE_REFER_UID] = child->getUid ();
 
-                        _references[uid] = child->getUid ();
+                        _scene->getRefs ()[uid] = child->getUid ();
 
                         QMap<QString, QString> settings
                             = StructuralUtil::createSettings (false, false);
@@ -1034,13 +1017,13 @@ StructuralView::adjustReferences (StructuralEntity *ent)
 
                 if (hasNewEntity)
                   for (const QString &key :
-                       _references.keys (refer->getUid ()))
+                       _scene->getRefs ().keys (refer->getUid ()))
                     if (_scene->getEntities ().contains (key))
                       if (key != ent->getUid ())
                         adjustReferences (_scene->getEntities ().value (key));
               }
 
-              _references[ent->getUid ()] = refer->getUid ();
+              _scene->getRefs ()[ent->getUid ()] = refer->getUid ();
               ent->setReference (true);
               hasChange = true;
             }
@@ -1048,7 +1031,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
         }
       }
 
-      if (_references.contains (ent->getUid ()))
+      if (_scene->getRefs ().contains (ent->getUid ()))
       {
         if (!hasChange)
         {
@@ -1061,7 +1044,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
             }
             else
             {
-              for (const QString &key : _references.keys (child->getUid ()))
+              for (const QString &key : _scene->getRefs ().keys (child->getUid ()))
                 remove (key, StructuralUtil::createSettings (false, false));
             }
           }
@@ -1730,7 +1713,7 @@ StructuralView::performUndo ()
       _commands.undo ();
   }
 
-  for (const QString &key : _references.keys ())
+  for (const QString &key : _scene->getRefs ().keys ())
   {
     CPR_ASSERT (_scene->getEntities ().contains (key));
 
@@ -2969,7 +2952,7 @@ StructuralView::clean ()
     remove (uid, settings);
   }
 
-  _references.clear ();
+  _scene->getRefs ().clear ();
   _scene->getEntities ().clear ();
   _commands.clear ();
 }
