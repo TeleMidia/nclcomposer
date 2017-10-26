@@ -570,21 +570,6 @@ StructuralView::insert (QString uid, QString parent,
     connect (e, &StructuralEntity::selected, this, &StructuralView::select);
     connect (e, &StructuralEntity::moved, this, &StructuralView::move);
 
-    if (settings[ST_SETTINGS_UNDO] == ST_VALUE_TRUE)
-    {
-      Insert *cmd = new Insert (uid, parent, e->getProperties (), settings);
-      cmd->setText (settings[ST_SETTINGS_CODE]);
-
-      _commands.push (cmd);
-
-      connect (cmd, &Insert::insert, this, &StructuralView::insert);
-      connect (cmd, &Insert::remove, this, &StructuralView::remove);
-      connect (cmd, &Insert::change, this, &StructuralView::change);
-      connect (cmd, &Insert::select, this, &StructuralView::select);
-
-      emit switchedUndo (true);
-    }
-
     if (settings[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
     {
       emit inserted (uid, parent, e->getProperties (), settings);
@@ -680,15 +665,9 @@ StructuralView::remove (QString uid, QMap<QString, QString> settings)
       if (_entities[uid]->getParent () != nullptr)
         parent = _entities[uid]->getParent ()->getUid ();
 
-      Remove *cmd = new Remove (_entities[uid]->getUid (), parent,
+      Remove *cmd = new Remove (this, _entities[uid]->getUid (), parent,
                                 _entities[uid]->getProperties (), settings);
       cmd->setText (settings[ST_SETTINGS_CODE]);
-
-      connect (cmd, &Remove::insert, this, &StructuralView::insert);
-      connect (cmd, &Remove::remove, this, &StructuralView::remove);
-      connect (cmd, &Remove::change, this, &StructuralView::change);
-      connect (cmd, &Remove::select, this, &StructuralView::select);
-
       _commands.push (cmd);
       emit switchedUndo (true);
       return;
@@ -862,13 +841,8 @@ StructuralView::change (QString uid, QMap<QString, QString> props,
   {
     if (settings[ST_SETTINGS_UNDO] == ST_VALUE_TRUE)
     {
-      Change *cmd = new Change (uid, props, previous, settings);
+      Change *cmd = new Change (this, uid, props, previous, settings);
       cmd->setText (settings[ST_SETTINGS_CODE]);
-
-      connect (cmd, &Change::insert, this, &StructuralView::insert);
-      connect (cmd, &Change::remove, this, &StructuralView::remove);
-      connect (cmd, &Change::change, this, &StructuralView::change);
-      connect (cmd, &Change::select, this, &StructuralView::select);
 
       _commands.push (cmd);
       emit switchedUndo (true);
@@ -1648,7 +1622,11 @@ StructuralView::createEntity (StructuralType type,
   if (!stgs.contains (ST_SETTINGS_CODE))
     stgs[ST_SETTINGS_CODE] = StructuralUtil::createUid ();
 
-  insert (uid, parent, props, stgs);
+  Insert *cmd = new Insert (this, uid, parent, props, stgs);
+  cmd->setText (stgs[ST_SETTINGS_CODE]);
+  _commands.push (cmd);
+
+    emit switchedUndo (true);
 }
 
 void

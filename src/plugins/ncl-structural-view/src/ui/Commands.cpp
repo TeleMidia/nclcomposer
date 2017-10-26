@@ -1,13 +1,17 @@
 #include "Commands.h"
+#include "StructuralView.h"
 
-Command::Command (Command *parent) : QObject (parent), QUndoCommand (parent)
+Command::Command (StructuralView *view, Command *parent)
+  : QObject (parent), QUndoCommand (parent)
 {
-  // Nothing todo.
+  _view = view;
 }
 
-Insert::Insert (const QString &uid, const QString &parent,
+Insert::Insert (StructuralView *view,
+                const QString &uid, const QString &parent,
                 const QMap<QString, QString> &props,
                 const QMap<QString, QString> &settings)
+  : Command (view)
 {
   _uid = uid;
   _parent = parent;
@@ -21,7 +25,7 @@ Insert::undo ()
   _settings[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
   _settings[ST_SETTINGS_NOTIFY] = ST_VALUE_TRUE;
 
-  emit remove (_uid, _settings);
+  _view->remove (_uid, _settings);
 }
 
 void
@@ -29,12 +33,14 @@ Insert::redo ()
 {
   _settings[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
 
-  emit insert (_uid, _parent, _properties, _settings);
+  _view->insert (_uid, _parent, _properties, _settings);
 }
 
-Remove::Remove (const QString &uid, const QString &parent,
+Remove::Remove (StructuralView *view,
+                const QString &uid, const QString &parent,
                 const QMap<QString, QString> &props,
                 const QMap<QString, QString> &settings)
+  : Command (view)
 {
   _uid = uid;
   _parent = parent;
@@ -48,7 +54,7 @@ Remove::undo ()
   _settings[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
   _settings[ST_SETTINGS_NOTIFY] = ST_VALUE_TRUE;
 
-  emit insert (_uid, _parent, _properties, _settings);
+  _view->insert (_uid, _parent, _properties, _settings);
 }
 
 void
@@ -57,12 +63,14 @@ Remove::redo ()
   _settings[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
   _settings[ST_SETTINGS_UNDO_TRACE] = ST_VALUE_TRUE;
 
-  emit remove (_uid, _settings);
+  _view->remove (_uid, _settings);
 }
 
-Change::Change (const QString &uid, const QMap<QString, QString> &props,
+Change::Change (StructuralView *view,
+                const QString &uid, const QMap<QString, QString> &props,
                 const QMap<QString, QString> &previous,
                 const QMap<QString, QString> &settings)
+  : Command (view)
 {
   _uid = uid;
   _properties = props;
@@ -76,7 +84,7 @@ Change::undo ()
   _settings[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
   _settings[ST_SETTINGS_NOTIFY] = ST_VALUE_TRUE;
 
-  emit change (_uid, _previous, _properties, _settings);
+  _view->change (_uid, _previous, _properties, _settings);
 }
 
 void
@@ -84,5 +92,5 @@ Change::redo ()
 {
   _settings[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
 
-  emit change (_uid, _properties, _previous, _settings);
+  _view->change (_uid, _properties, _previous, _settings);
 }
