@@ -93,9 +93,10 @@ public slots:
   void toggleMinimapVisibility ();
 
   // FIXME: These methods should not be part of StructuralView
+  void undo ();
+  void redo ();
+
   void performAutostart ();
-  void performUndo ();
-  void performRedo ();
   void performPointer ();
   void performLink ();
   void performDelete ();

@@ -349,9 +349,9 @@ StructuralWindow::createConnections ()
            &StructuralView::toggleMinimapVisibility);
 
   connect (_undoAction, &QAction::triggered, _view,
-           &StructuralView::performUndo);
+           &StructuralView::undo);
   connect (_redoAction, &QAction::triggered, _view,
-           &StructuralView::performRedo);
+           &StructuralView::redo);
   connect (_cutAction, &QAction::triggered, _view,
            &StructuralView::performCut);
   connect (_copyAction, &QAction::triggered, _view,

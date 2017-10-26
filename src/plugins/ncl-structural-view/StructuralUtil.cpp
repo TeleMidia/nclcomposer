@@ -564,7 +564,7 @@ StructuralUtil::getUpNeighbors (StructuralEntity *ent)
     }
     else if (!ST_DEFAULT_WITH_BODY)
     {
-      StructuralScene *scn = (StructuralScene *)ent->scene ();
+      StructuralScene *scn = (StructuralScene *) ent->scene ();
       CPR_ASSERT_NON_NULL (scn);
 
       for (StructuralEntity *cur : scn->getEntities ().values ())

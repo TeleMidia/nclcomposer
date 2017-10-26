@@ -126,7 +126,6 @@ StructuralView::load (const QString &data)
     if (!hasBody)
     {
       createEntity (Structural::Body);
-
       root.setAttribute ("uid", _scene->getEntities ().firstKey ());
     }
   }
@@ -772,14 +771,19 @@ StructuralView::change (QString uid, QMap<QString, QString> props,
   CPR_ASSERT (_scene->getEntities ().contains (uid));
 
   StructuralEntity *ent = _scene->getEntities ()[uid];
+  auto *comp = dynamic_cast <StructuralComposition*> (ent);
 
-  if (ent->isUncollapsed ())
-    if (props.value (ST_ATTR_ENT_UNCOLLAPSED) == ST_VALUE_FALSE)
-      ((StructuralComposition *)ent)->collapse ();
+  if (ent->isUncollapsed ()
+      && props.value (ST_ATTR_ENT_UNCOLLAPSED) == ST_VALUE_FALSE)
+  {
+    comp->collapse();
+  }
 
-  if (!ent->isUncollapsed ())
-    if (props.value (ST_ATTR_ENT_UNCOLLAPSED) == ST_VALUE_TRUE)
-      ((StructuralComposition *)ent)->collapse ();
+  if (!ent->isUncollapsed ()
+      && props.value (ST_ATTR_ENT_UNCOLLAPSED) == ST_VALUE_TRUE)
+  {
+    comp->collapse ();
+  }
 
   if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
   {
@@ -1684,7 +1688,7 @@ StructuralView::performAutostart ()
 }
 
 void
-StructuralView::performUndo ()
+StructuralView::undo ()
 {
   if (_commands.canUndo ())
   {
@@ -1741,7 +1745,7 @@ StructuralView::performUndo ()
 }
 
 void
-StructuralView::performRedo ()
+StructuralView::redo ()
 {
   if (_commands.canRedo ())
   {
