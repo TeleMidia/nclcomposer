@@ -2,16 +2,15 @@
 #include "StructuralView.h"
 
 Command::Command (StructuralView *view, Command *parent)
-  : QObject (parent), QUndoCommand (parent)
+    : QObject (parent), QUndoCommand (parent)
 {
   _view = view;
 }
 
-Insert::Insert (StructuralView *view,
-                const QString &uid, const QString &parent,
-                const QMap<QString, QString> &props,
+Insert::Insert (StructuralView *view, const QString &uid,
+                const QString &parent, const QMap<QString, QString> &props,
                 const QMap<QString, QString> &settings)
-  : Command (view)
+    : Command (view)
 {
   _uid = uid;
   _parent = parent;
@@ -36,11 +35,10 @@ Insert::redo ()
   _view->insert (_uid, _parent, _properties, _settings);
 }
 
-Remove::Remove (StructuralView *view,
-                const QString &uid, const QString &parent,
-                const QMap<QString, QString> &props,
+Remove::Remove (StructuralView *view, const QString &uid,
+                const QString &parent, const QMap<QString, QString> &props,
                 const QMap<QString, QString> &settings)
-  : Command (view)
+    : Command (view)
 {
   _uid = uid;
   _parent = parent;
@@ -66,11 +64,11 @@ Remove::redo ()
   _view->remove (_uid, _settings);
 }
 
-Change::Change (StructuralView *view,
-                const QString &uid, const QMap<QString, QString> &props,
+Change::Change (StructuralView *view, const QString &uid,
+                const QMap<QString, QString> &props,
                 const QMap<QString, QString> &previous,
                 const QMap<QString, QString> &settings)
-  : Command (view)
+    : Command (view)
 {
   _uid = uid;
   _properties = props;

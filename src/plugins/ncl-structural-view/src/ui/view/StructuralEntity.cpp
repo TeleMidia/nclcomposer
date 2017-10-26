@@ -211,9 +211,9 @@ StructuralEntity::setProperties (const QMap<QString, QString> &props)
 {
   if (!_restrictions.isEmpty ())
   {
-    QMap<QString, QString> previous = _properties;
+    QMap<QString, QString> prev = _properties;
 
-    for (const QString &key : previous.keys ())
+    for (const QString &key : prev.keys ())
     {
       for (const QString &restriction : _restrictions)
       {
@@ -1085,7 +1085,7 @@ StructuralEntity::mousePressEvent (QGraphicsSceneMouseEvent *event)
     if (_selectable && !_selected)
     {
       setSelected (true);
-      emit selected (getUid (), StructuralUtil::createSettings ());
+      emit selectAsked (getUid (), StructuralUtil::createSettings ());
     }
 
     setPressTop (event->pos ().y ());
@@ -1195,8 +1195,8 @@ StructuralEntity::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
       setTop (_moveTop);
       setLeft (_moveLeft);
 
-      emit changed (getUid (), getProperties (), previous,
-                    StructuralUtil::createSettings ());
+      emit changeAsked (getUid (), getProperties (), previous,
+                        StructuralUtil::createSettings ());
     }
   }
   else if (_resizing)
@@ -1243,8 +1243,8 @@ StructuralEntity::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
       setWidth (_resizeWidth);
       setHeight (_resizeHeight);
 
-      emit changed (getUid (), getProperties (), previous,
-                    StructuralUtil::createSettings ());
+      emit changeAsked (getUid (), getProperties (), previous,
+                        StructuralUtil::createSettings ());
     }
   }
 
@@ -1263,7 +1263,7 @@ StructuralEntity::contextMenuEvent (QGraphicsSceneContextMenuEvent *event)
     if (!isSelected ())
     {
       setSelected (true);
-      emit selected (getUid (), StructuralUtil::createSettings ());
+      emit selectAsked (getUid (), StructuralUtil::createSettings ());
     }
 
     CPR_ASSERT (_menu != nullptr);
@@ -1403,7 +1403,7 @@ StructuralEntity::dropEvent (QGraphicsSceneDragDropEvent *event)
     props[ST_ATTR_ENT_TOP] = QString::number (event->pos ().y ());
     props[ST_ATTR_ENT_LEFT] = QString::number (event->pos ().x ());
 
-    emit moved (event->mimeData ()->text (), _uid, props,
-                StructuralUtil::createSettings ());
+    emit moveAsked (event->mimeData ()->text (), _uid, props,
+                    StructuralUtil::createSettings ());
   }
 }

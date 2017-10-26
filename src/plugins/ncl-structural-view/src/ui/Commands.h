@@ -23,7 +23,6 @@ public:
 
 protected:
   StructuralView *_view;
-
 };
 
 class Insert : public Command

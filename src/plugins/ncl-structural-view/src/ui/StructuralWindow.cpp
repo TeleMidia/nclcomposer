@@ -369,37 +369,29 @@ StructuralWindow::createConnections ()
   connect (_autostartAction, &QAction::triggered, _view,
            &StructuralView::performAutostart);
 
-  connect (_mediaAction, &QAction::triggered, [&]() {
-    _view->createEntity (StructuralType::Media);
-  });
+  connect (_mediaAction, &QAction::triggered,
+           [&]() { _view->createEntity (StructuralType::Media); });
 
-  connect (_contextAction, &QAction::triggered, [&]() {
-    _view->createEntity (StructuralType::Context);
-  });
+  connect (_contextAction, &QAction::triggered,
+           [&]() { _view->createEntity (StructuralType::Context); });
 
-  connect (_switchAction, &QAction::triggered, [&]() {
-    _view->createEntity (StructuralType::Switch);
-  });
+  connect (_switchAction, &QAction::triggered,
+           [&]() { _view->createEntity (StructuralType::Switch); });
 
-  connect (_bodyAction, &QAction::triggered, [&]() {
-    _view->createEntity (StructuralType::Body);
-  });
+  connect (_bodyAction, &QAction::triggered,
+           [&]() { _view->createEntity (StructuralType::Body); });
 
-  connect (_areaAction, &QAction::triggered, [&]() {
-    _view->createEntity (StructuralType::Area);
-  });
+  connect (_areaAction, &QAction::triggered,
+           [&]() { _view->createEntity (StructuralType::Area); });
 
-  connect (_propertyAction, &QAction::triggered, [&]() {
-    _view->createEntity (StructuralType::Property);
-  });
+  connect (_propertyAction, &QAction::triggered,
+           [&]() { _view->createEntity (StructuralType::Property); });
 
-  connect (_portAction, &QAction::triggered, [&]() {
-    _view->createEntity (StructuralType::Port);
-  });
+  connect (_portAction, &QAction::triggered,
+           [&]() { _view->createEntity (StructuralType::Port); });
 
-  connect (_switchportAction, &QAction::triggered, [&]() {
-    _view->createEntity (StructuralType::SwitchPort);
-  });
+  connect (_switchportAction, &QAction::triggered,
+           [&]() { _view->createEntity (StructuralType::SwitchPort); });
 
 #ifdef WITH_GRAPHVIZ
   connect (_autostartAction, &QAction::triggered, this,

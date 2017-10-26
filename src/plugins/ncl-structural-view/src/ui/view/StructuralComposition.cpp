@@ -100,8 +100,10 @@ StructuralComposition::collapse (bool notify)
   setUncollapsed (!isUncollapsed ());
 
   if (notify)
-    emit changed (getUid (), getProperties (), previous,
-                  StructuralUtil::createSettings (true, false));
+  {
+    emit changeAsked (getUid (), getProperties (), previous,
+                      StructuralUtil::createSettings (true, false));
+  }
 }
 
 void
@@ -321,20 +323,19 @@ StructuralComposition::dropEvent (QGraphicsSceneDragDropEvent *event)
     {
       QString filename = url.toLocalFile ();
 
-      QMap<QString, QString> properties;
-      properties[ST_ATTR_ENT_TYPE]
-          = StructuralUtil::typeToStr (Structural::Media);
-      properties[ST_ATTR_ENT_ID]
+      QMap<QString, QString> props;
+      props[ST_ATTR_ENT_TYPE] = StructuralUtil::typeToStr (Structural::Media);
+      props[ST_ATTR_ENT_ID]
           = StructuralUtil::formatId (QFileInfo (filename).baseName ());
-      properties[ST_ATTR_NODE_SRC] = filename;
+      props[ST_ATTR_NODE_SRC] = filename;
 
-      properties[ST_ATTR_ENT_TOP]
+      props[ST_ATTR_ENT_TOP]
           = QString::number (event->pos ().y () - ST_DEFAULT_CONTENT_H / 2);
-      properties[ST_ATTR_ENT_LEFT]
+      props[ST_ATTR_ENT_LEFT]
           = QString::number (event->pos ().x () - ST_DEFAULT_CONTENT_W / 2);
 
-      inserted (StructuralUtil::createUid (), getUid (), properties,
-                StructuralUtil::createSettings ());
+      insertAsked (StructuralUtil::createUid (), getUid (), props,
+                   StructuralUtil::createSettings ());
     }
   }
   else

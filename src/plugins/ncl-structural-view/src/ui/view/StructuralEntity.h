@@ -88,7 +88,7 @@ public:
   void setDragging (bool dragging);
 
   bool isSelected () const;
-  void setSelected (bool selected);
+  void setSelected (bool selectAsked);
 
   bool isUncollapsed () const;
   void setUncollapsed (bool uncollapsed);
@@ -167,16 +167,19 @@ public:
   virtual void adjust (bool collision = false, bool recursion = true);
 
 signals:
-  void inserted (QString uid, QString parent,
-                 QMap<QString, QString> properties,
-                 QMap<QString, QString> settings);
-  void removed (QString uid, QMap<QString, QString> settings);
-  void changed (QString uid, QMap<QString, QString> properties,
-                QMap<QString, QString> previous,
-                QMap<QString, QString> settings);
-  void selected (QString uid, QMap<QString, QString> settings);
-  void moved (QString uid, QString parent, QMap<QString, QString> properties,
-              QMap<QString, QString> settings);
+  void insertAsked (QString uid, QString parent,
+                    QMap<QString, QString> properties,
+                    QMap<QString, QString> settings);
+
+  //  void removed (QString uid, QMap<QString, QString> settings);
+
+  void changeAsked (QString uid, QMap<QString, QString> props,
+                    QMap<QString, QString> previous,
+                    QMap<QString, QString> settings);
+
+  void selectAsked (QString uid, QMap<QString, QString> stgs);
+  void moveAsked (QString uid, QString parent, QMap<QString, QString> props,
+                  QMap<QString, QString> stgs);
 
 protected:
   virtual void draw (QPainter *painter) = 0;

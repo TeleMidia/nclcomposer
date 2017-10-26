@@ -68,11 +68,16 @@ public:
     return _menu;
   }
 
-  void createEntity (StructuralType type,
-                     QMap<QString, QString> prop = QMap<QString, QString>(),
-                     QMap<QString, QString> stgs = QMap<QString, QString>());
-
 public slots:
+  void createEntity (StructuralType type,
+                     QMap<QString, QString> prop = QMap<QString, QString> (),
+                     QMap<QString, QString> stgs = QMap<QString, QString> ());
+
+  void changeEntity (QString uid, QMap<QString, QString> props,
+                     QMap<QString, QString> prev, QMap<QString, QString> stgs);
+
+  void deleteEntity (const QString &uid);
+
   void insert (QString uid, QString parent, QMap<QString, QString> properties,
                QMap<QString, QString> settings);
   void remove (QString uid, QMap<QString, QString> settings);
@@ -90,16 +95,17 @@ public slots:
   void snapshot ();
   void toggleMinimapVisibility ();
 
-  // FIXME: This methods should not be part of StructuralView
+  // FIXME: These methods should not be part of StructuralView
   void performAutostart ();
   void performUndo ();
   void performRedo ();
-  void performCut ();
-  void performCopy ();
-  void performPaste ();
   void performPointer ();
   void performLink ();
   void performDelete ();
+
+  void performCut ();
+  void performCopy ();
+  void performPaste ();
 
 #ifdef WITH_GRAPHVIZ
   void performAutoAdjust ();
