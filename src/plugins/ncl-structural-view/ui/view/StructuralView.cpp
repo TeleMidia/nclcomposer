@@ -99,7 +99,7 @@ StructuralView::load (const QString &data)
   QDomElement root = dom->firstChildElement ();
   QDomNodeList rootChildren = root.childNodes ();
 
-  // Cheking if exist a 'body' entity when 'body' is enabled in view.
+  // Checking if exist a 'body' entity when 'body' is enabled in view.
   // If don't, adds one.
   if (ST_DEFAULT_WITH_BODY)
   {
@@ -406,7 +406,7 @@ StructuralView::createEntity (StructuralType type, StructuralEntity *parent)
           e->setWidth (ST_DEFAULT_BODY_W);
           e->setHeight (ST_DEFAULT_BODY_H);
 
-          switchedBody (false);
+          canAddBody (false);
         }
         break;
       }
@@ -753,23 +753,14 @@ StructuralView::remove (QString uid, QMap<QString, QString> stgs)
     delete e;
     e = nullptr;
 
-    //
-    // Notifing...
-    //
     if (uid == _selected)
-    {
       emit select ("", stgs);
-    }
 
     if (type == Structural::Body)
-    {
-      emit switchedBody (true);
-    }
+      emit canAddBody (true);
 
     if (stgs[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
-    {
       emit removed (uid, stgs);
-    }
   }
 }
 

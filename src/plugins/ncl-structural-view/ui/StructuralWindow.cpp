@@ -421,7 +421,7 @@ StructuralWindow::createConnections ()
            &StructuralWindow::switchPointer);
   connect (_view, &StructuralView::switchedLink, this,
            &StructuralWindow::switchLink);
-  connect (_view, &StructuralView::switchedBody, this,
+  connect (_view, &StructuralView::canAddBody, this,
            &StructuralWindow::switchBody);
 
   connect (_view, &StructuralView::selected, this, &StructuralWindow::select);

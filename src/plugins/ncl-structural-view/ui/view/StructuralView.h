@@ -142,7 +142,7 @@ signals:
   void switchedLink (bool state);
 
   void zoomChanged (int zoom);
-  void switchedBody (bool state);
+  void canAddBody (bool state);
 
   void updateRequested ();
 
