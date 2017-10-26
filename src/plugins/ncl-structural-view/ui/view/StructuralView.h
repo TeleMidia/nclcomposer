@@ -52,11 +52,6 @@ public:
 
   void cleanErrors ();
 
-  void load (const QString &data);
-  void load (QDomElement entity, QDomElement parent);
-
-  QString save ();
-
   StructuralMenu *
   getMenu ()
   {
@@ -167,8 +162,6 @@ private:
   StructuralEntity *createEntity (StructuralType type,
                                   StructuralEntity *parent);
 
-  void createDocument (StructuralEntity *entity, QDomDocument *document,
-                       QDomElement parent);
   void createLink (StructuralEntity *tail, StructuralEntity *head);
   void createBind (StructuralEntity *tail, StructuralEntity *head,
                    const QString &role = "", const QString &code = "");

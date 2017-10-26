@@ -474,9 +474,11 @@ StructuralWindow::select (QString uid, QMap<QString, QString> settings)
 {
   Q_UNUSED (settings);
 
-  StructuralEntity *entity = _view->getScene ()->getEntity (uid);
+  StructuralEntity *ent = nullptr;
+  if (_view->getScene()->hasEntity (uid))
+    ent = _view->getScene ()->getEntity (uid);
 
-  if (entity != NULL)
+  if (ent != nullptr)
   {
     StructuralType type = _view->getScene ()->getEntity (uid)->getType ();
 

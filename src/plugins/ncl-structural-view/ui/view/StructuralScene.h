@@ -3,13 +3,17 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneContextMenuEvent>
+#include <QDomDocument>
 
 #include "StructuralMenu.h"
+
+class StructuralView;
 
 class StructuralScene : public QGraphicsScene
 {
 public:
-  StructuralScene (StructuralMenu *menu, QObject *parent = 0);
+  StructuralScene (StructuralView *view, StructuralMenu *menu,
+                   QObject *parent = 0);
   virtual ~StructuralScene () {}
 
   StructuralEntity *getBody ();
@@ -18,6 +22,10 @@ public:
   QMap<QString, StructuralEntity *> &getEntities ();
   QMap<QString, QString> &getRefs ();
 
+  void load (const QString &data);
+  void load (QDomElement entity, QDomElement parent);
+  QString save ();
+
 public slots:
   void clear (); // override?
 
@@ -25,9 +33,13 @@ protected:
   virtual void contextMenuEvent (QGraphicsSceneContextMenuEvent *event);
 
 private:
+  StructuralView *_view;
   StructuralMenu *_menu;
   QMap<QString, StructuralEntity *> _entities;
   QMap<QString, QString> _refs;
+
+  void createDocument (StructuralEntity *ent, QDomDocument *doc,
+                       QDomElement parent);
 };
 
 #endif // STRUCTURALSCENE_H

@@ -96,8 +96,8 @@ StructuralViewPlugin::init ()
 
   c = data.mid (ci, ei - ci);
 
-  StructuralView *view = _window->getView ();
-  view->load (c);
+  if (!c.isEmpty())
+    _struct_scene->load (c);
 }
 
 QWidget *
@@ -114,7 +114,7 @@ StructuralViewPlugin::saveSubsession ()
   data.append ("-- BEGIN OF PLUGIN DATA");
 
   data.append ("-- VIEW DATA");
-  data.append (_window->getView ()->save ());
+  data.append (_struct_scene->save ());
 
   data.append ("-- EXTRA DATA");
   for (const QString &key : _coreToView.keys ())

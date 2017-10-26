@@ -16,7 +16,7 @@ StructuralView::StructuralView (QWidget *parent)
     : QGraphicsView (parent), _minimap (new StructuralMinimap (this)),
       _menu (new StructuralMenu (this)),
       _dialog (new StructuralLinkDialog (this)),
-      _scene (new StructuralScene (_menu, this))
+      _scene (new StructuralScene (this, _menu, this))
 {
   _mode = Structural::Pointing;
   _zoom = ZOOM_ORIGINAL;
@@ -91,163 +91,6 @@ StructuralView::cleanErrors ()
 }
 
 void
-StructuralView::load (const QString &data)
-{
-  QDomDocument *dom = new QDomDocument ();
-  dom->setContent (data);
-
-  QDomElement root = dom->firstChildElement ();
-  QDomNodeList rootChildren = root.childNodes ();
-
-  // Checking if exist a 'body' entity when 'body' is enabled in view.
-  // If don't, adds one.
-  if (ST_DEFAULT_WITH_BODY)
-  {
-    bool hasBody = false;
-
-    for (int i = 0; i < rootChildren.length (); i++)
-    {
-      if (rootChildren.item (i).isElement ())
-      {
-        QDomElement elt = rootChildren.item (i).toElement ();
-
-        if (elt.nodeName () == "entity")
-        {
-          if (elt.attributeNode ("type").nodeValue ()
-              == StructuralUtil::typeToStr (Structural::Body))
-          {
-            hasBody = true;
-            break;
-          }
-        }
-      }
-    }
-
-    if (!hasBody)
-    {
-      createEntity (Structural::Body);
-      root.setAttribute ("uid", _scene->getEntities ().firstKey ());
-    }
-  }
-
-  for (int i = 0; i < rootChildren.length (); i++)
-  {
-    if (rootChildren.item (i).isElement ())
-    {
-      QDomElement elt = rootChildren.item (i).toElement ();
-
-      if (elt.nodeName () == "entity")
-      {
-        load (elt, root);
-      }
-      else if (elt.nodeName () == "reference")
-      {
-        _scene->getRefs ()[elt.attributeNode ("uid").nodeValue ()]
-            = elt.attributeNode ("refer").nodeValue ();
-      }
-    }
-  }
-
-  for (const QString &key : _scene->getEntities ().keys ())
-  {
-    if (_scene->getEntities ().contains (key))
-    {
-      StructuralEntity *e = _scene->getEntities ().value (key);
-
-      if (e->getCategory () == Structural::Edge
-          || e->getType () == Structural::Port || e->isReference ())
-      {
-
-        adjustReferences (e);
-        e->adjust (true);
-      }
-    }
-  }
-}
-
-void
-StructuralView::load (QDomElement ent, QDomElement parent)
-{
-  if (!ent.attributeNode ("uid").nodeValue ().isEmpty ())
-  {
-    QString entUid = ent.attributeNode ("uid").nodeValue ();
-
-    QString parentUid;
-    if (!parent.attributeNode ("uid").nodeValue ().isEmpty ())
-      parentUid = parent.attributeNode ("uid").nodeValue ();
-    else
-      parentUid = "";
-
-    QDomNodeList entChildren = ent.childNodes ();
-
-    QMap<QString, QString> props;
-    QDomNamedNodeMap attrs = ent.attributes ();
-    for (int i = 0; i < attrs.count (); i++)
-    {
-      QDomAttr attr = attrs.item (i).toAttr ();
-      props.insert (attr.name (), attr.value ());
-    }
-
-    QMap<QString, QString> stgs
-        = StructuralUtil::createSettings (false, false);
-    stgs[ST_SETTINGS_ADJUST_REFERENCE] = ST_VALUE_FALSE;
-
-    insert (entUid, parentUid, props, stgs);
-
-    for (int i = 0; i < entChildren.length (); i++)
-    {
-      if (entChildren.item (i).isElement ())
-      {
-        QDomElement child = entChildren.item (i).toElement ();
-
-        if (child.nodeName () == "entity")
-          load (child, ent);
-      }
-    }
-  }
-}
-
-QString
-StructuralView::save ()
-{
-  QDomDocument *doc = new QDomDocument ();
-  QDomElement root = doc->createElement ("structural");
-
-  for (const QString &key : _scene->getRefs ().keys ())
-  {
-    CPR_ASSERT (
-        _scene->getEntities ().contains (key)
-        && _scene->getEntities ().contains (_scene->getRefs ().value (key)));
-    QDomElement reference = doc->createElement ("reference");
-    reference.setAttribute ("uid", key);
-    reference.setAttribute ("refer", _scene->getRefs ().value (key));
-
-    root.appendChild (reference);
-  }
-
-  if (ST_DEFAULT_WITH_BODY)
-  {
-    for (StructuralEntity *e : _scene->getEntities ().values ())
-    {
-      if (e->getType () == Structural::Body)
-        createDocument (e, doc, root);
-    }
-  }
-  else
-  {
-    for (StructuralEntity *e : _scene->getEntities ().values ())
-    {
-      if (e->getParent () == nullptr)
-        createDocument (e, doc, root);
-    }
-  }
-
-  doc->appendChild (root);
-
-  return doc->toString (4);
-}
-
-void
 StructuralView::resizeEvent (QResizeEvent *event)
 {
   _minimap->move (event->size ().width () - _minimap->width (),
@@ -305,26 +148,6 @@ void
 StructuralView::performLink ()
 {
   setMode (Structural::Linking);
-}
-
-void
-StructuralView::createDocument (StructuralEntity *ent, QDomDocument *doc,
-                                QDomElement parent)
-{
-  if (ent->getType () != Structural::Reference)
-  {
-    QDomElement elt = doc->createElement ("entity");
-    elt.setAttribute ("uid", ent->getUid ());
-    elt.setAttribute ("type", ent->getType ());
-
-    for (const QString &key : ent->getProperties ().keys ())
-      elt.setAttribute (key, ent->getProperty (key));
-
-    for (StructuralEntity *e : ent->getChildren ())
-      createDocument (e, doc, elt);
-
-    parent.appendChild (elt);
-  }
 }
 
 StructuralEntity *
@@ -770,7 +593,7 @@ StructuralView::change (QString uid, QMap<QString, QString> props,
 {
   CPR_ASSERT (_scene->getEntities ().contains (uid));
 
-  StructuralEntity *ent = _scene->getEntities ()[uid];
+  StructuralEntity *ent = _scene->getEntity (uid);
   auto *comp = dynamic_cast <StructuralComposition*> (ent);
 
   if (ent->isUncollapsed ()
@@ -1415,7 +1238,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
 void
 StructuralView::select (QString uid, QMap<QString, QString> settings)
 {
-  CPR_ASSERT (_scene->getEntities ().contains (uid) || uid == "");
+  CPR_ASSERT (_scene->hasEntity (uid) || uid == "");
 
   if (_scene->getEntities ().contains (uid))
   {
