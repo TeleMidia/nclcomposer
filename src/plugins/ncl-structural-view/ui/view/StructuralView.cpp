@@ -259,14 +259,14 @@ StructuralView::insert (QString uid, QString parent,
 
   //  CPR_ASSERT_NON_NULL (e);
 
-  if (e != nullptr)
+  if (e)
   {
     e->setUid (uid);
 
     if (!props.contains (ST_ATTR_ENT_ID))
-      e->setId (getNewId (e));
+      e->setId (_scene->createNewId (e->getType ()));
 
-    if (p != nullptr)
+    if (p)
       e->setParent (p);
     else
       _scene->addItem (e);
@@ -506,10 +506,8 @@ StructuralView::remove (QString uid, QMap<QString, QString> stgs)
               // Note:
               // The 'tail' of a 'Structural::Reference' edge
               // is always a 'Structural::Port' entity.
-              QMap<QString, QString> previous
-                  = edge->getTail ()->getProperties ();
-              QMap<QString, QString> props
-                  = edge->getTail ()->getProperties ();
+              auto previous = edge->getTail ()->getProperties ();
+              auto props = edge->getTail ()->getProperties ();
 
               props[ST_ATTR_REFERENCE_COMPONENT_ID] = "";
               props[ST_ATTR_REFERENCE_COMPONENT_UID] = "";
@@ -2232,50 +2230,6 @@ StructuralView::createReference (StructuralEntity *tail,
       }
     }
   }
-}
-
-QString
-StructuralView::getNewId (StructuralEntity *ent)
-{
-  QString name = "";
-
-  if (ent != nullptr)
-  {
-    StructuralType type = ent->getType ();
-
-    if (_counter.contains (type))
-      _counter[type] = 0;
-
-    int n;
-    QString prefix;
-
-    n = _counter.value (type);
-    prefix = StructuralUtil::getPrefix (type);
-
-    if (!prefix.isEmpty ())
-    {
-      bool contains;
-
-      do
-      {
-        contains = false;
-
-        for (StructuralEntity *e : _scene->getEntities ().values ())
-        {
-          if (e->getId () == QString (prefix + QString::number (n)))
-          {
-            contains = true;
-            ++n;
-            break;
-          }
-        }
-      } while (contains);
-
-      name = QString (prefix + QString::number (n));
-    }
-  }
-
-  return name;
 }
 
 void

@@ -206,9 +206,6 @@ private:
   StructuralLinkDialog *_dialog;
   StructuralScene *_scene;
   StructuralLinkTool *_tool;
-
-  QMap<StructuralType, int> _counter;
-  QMap<QString, QString> _references;
 };
 
 #endif // STRUCTURALVIEW_H

@@ -49,6 +49,37 @@ StructuralScene::getRefs ()
   return _refs;
 }
 
+QList<StructuralEntity *>
+StructuralScene::getEntitiesByAttrId (const QString &id)
+{
+  QList <StructuralEntity *> list;
+  for (StructuralEntity *e : _entities.values ())
+  {
+    if (e->getId () == id)
+      list.append (e);
+  }
+
+  return list;
+}
+
+QString
+StructuralScene::createNewId (StructuralType type)
+{
+  QString prefix = StructuralUtil::getPrefix (type);
+  CPR_ASSERT (!prefix.isEmpty ());
+
+  QString id = "";
+
+  for (int n = 0; ; n++)
+  {
+    id = prefix + QString::number (n);
+    if (getEntitiesByAttrId (id).size() == 0)
+      break;
+  }
+
+  return id;
+}
+
 void
 StructuralScene::clear ()
 {

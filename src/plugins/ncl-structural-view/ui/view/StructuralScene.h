@@ -19,8 +19,11 @@ public:
   StructuralEntity *getBody ();
   bool hasEntity (const QString &uid);
   StructuralEntity *getEntity (const QString &uid);
+  QList<StructuralEntity *> getEntitiesByAttrId (const QString &id);
   QMap<QString, StructuralEntity *> &getEntities ();
   QMap<QString, QString> &getRefs ();
+
+  QString createNewId (StructuralType type);
 
   void load (const QString &data);
   void load (QDomElement entity, QDomElement parent);
