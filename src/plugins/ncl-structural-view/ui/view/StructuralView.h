@@ -45,8 +45,6 @@ public:
   StructuralScene *getScene ();
   StructuralLinkDialog *getDialog ();
 
-  QMap<QString, StructuralEntity *> getEntities ();
-
   StructuralMode getMode () const;
   void setMode (StructuralMode mode);
 

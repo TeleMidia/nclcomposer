@@ -198,7 +198,7 @@ StructuralViewPlugin::updateFromModel ()
   refs[ST_ATTR_REFERENCE_COMPONENT_ID] = ST_ATTR_REFERENCE_COMPONENT_UID;
   refs[ST_ATTR_REFERENCE_INTERFACE_ID] = ST_ATTR_REFERENCE_INTERFACE_UID;
 
-  for (StructuralEntity *e : _window->getView ()->getEntities ().values ())
+  for (StructuralEntity *e : _window->getView ()->getScene ()->getEntities ().values ())
   {
     // When ST_DEFAULT_WITH_INTERFACES is disabled, Structural::Reference
     // entities exists but they are hidden. So, there is no need for
@@ -231,7 +231,7 @@ StructuralViewPlugin::updateFromModel ()
 
   QStack<StructuralEntity *> stack2;
 
-  for (StructuralEntity *cur : _window->getView ()->getEntities ().values ())
+  for (StructuralEntity *cur : _window->getView ()->getScene()->getEntities ().values ())
   {
     if (cur->getParent () == nullptr)
       stack2.push (cur);
@@ -518,7 +518,7 @@ StructuralViewPlugin::updateFromModel ()
       stack2.push (c);
   }
 
-  for (const QString &key : _window->getView ()->getEntities ().keys ())
+  for (const QString &key : _window->getView ()->getScene ()->getEntities ().keys ())
   {
     if (_window->getView ()->getScene ()->hasEntity (key))
     {
@@ -559,7 +559,7 @@ StructuralViewPlugin::setReferences (QMap<QString, QString> &props)
     bool hasReferInstead = false;
 
     QMap<QString, StructuralEntity *> entities
-        = _window->getView ()->getEntities ();
+        = _window->getView ()->getScene ()->getEntities ();
 
     if (entities.contains (props.value (ST_ATTR_REFERENCE_COMPONENT_UID)))
     {

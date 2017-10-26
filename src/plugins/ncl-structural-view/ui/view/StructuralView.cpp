@@ -61,12 +61,6 @@ StructuralView::getDialog ()
   return _dialog;
 }
 
-QMap<QString, StructuralEntity *>
-StructuralView::getEntities ()
-{
-  return _scene->getEntities ();
-}
-
 StructuralMode
 StructuralView::getMode () const
 {

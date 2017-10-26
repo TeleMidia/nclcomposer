@@ -537,15 +537,13 @@ StructuralUtil::getNeighbors (StructuralEntity *ent)
   }
   else if (!ST_DEFAULT_WITH_BODY)
   {
-    if (ent->scene () != nullptr)
-    {
-      StructuralView *view = (StructuralView *)ent->scene ()->views ().at (1);
+    StructuralScene *scn = (StructuralScene *)ent->scene ();
+    CPR_ASSERT_NON_NULL (scn);
 
-      for (StructuralEntity *cur : view->getEntities ().values ())
-      {
-        if (cur->getParent () == nullptr && cur != ent)
-          neighbors += cur;
-      }
+    for (StructuralEntity *cur : scn->getEntities ().values ())
+    {
+      if (cur->getParent () == nullptr && cur != ent)
+        neighbors += cur;
     }
   }
 
@@ -566,16 +564,13 @@ StructuralUtil::getUpNeighbors (StructuralEntity *ent)
     }
     else if (!ST_DEFAULT_WITH_BODY)
     {
-      if (ent->scene () != NULL)
-      {
-        StructuralView *view
-            = (StructuralView *)ent->scene ()->views ().at (1);
+      StructuralScene *scn = (StructuralScene *)ent->scene ();
+      CPR_ASSERT_NON_NULL (scn);
 
-        for (StructuralEntity *cur : view->getEntities ().values ())
-        {
-          if (cur->getParent () == nullptr && cur != ent)
-            neighbors += cur;
-        }
+      for (StructuralEntity *cur : scn->getEntities ().values ())
+      {
+        if (cur->getParent () == nullptr && cur != ent)
+          neighbors += cur;
       }
     }
   }
