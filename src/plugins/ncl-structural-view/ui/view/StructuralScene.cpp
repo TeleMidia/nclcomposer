@@ -29,17 +29,17 @@ StructuralScene::hasEntity (const QString &uid)
 StructuralEntity *
 StructuralScene::getEntity (const QString &uid)
 {
-//  CPR_ASSERT (hasEntity (uid));
+  //  CPR_ASSERT (hasEntity (uid));
   return _entities.value (uid, nullptr);
 }
 
-QMap <QString, StructuralEntity *> &
+QMap<QString, StructuralEntity *> &
 StructuralScene::getEntities ()
 {
   return _entities;
 }
 
-QMap <QString, QString> &
+QMap<QString, QString> &
 StructuralScene::getRefs ()
 {
   return _refs;

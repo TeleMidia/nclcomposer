@@ -12,7 +12,7 @@ public:
   StructuralScene (StructuralMenu *menu, QObject *parent = 0);
   virtual ~StructuralScene () {}
 
-  StructuralEntity *getBody();
+  StructuralEntity *getBody ();
   bool hasEntity (const QString &uid);
   StructuralEntity *getEntity (const QString &uid);
   QMap<QString, StructuralEntity *> &getEntities ();

@@ -95,6 +95,7 @@ private:
 
   QMap<QString, QString> _coreToView;
   QMap<QString, QString> _viewToCore;
+  StructuralScene *_struct_scene;
 };
 
 #endif // STRUCTUALVIEWPLUGIN_H
