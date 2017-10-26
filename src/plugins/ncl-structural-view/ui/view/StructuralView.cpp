@@ -544,26 +544,22 @@ StructuralView::insert (QString uid, QString parent,
 
     if (settings[ST_SETTINGS_ADJUST_REFERENCE] != ST_VALUE_FALSE)
     {
-      if (e->getCategory () == Structural::Interface)
+      if (e->getCategory () == Structural::Interface
+          && p != nullptr
+          && p->getType () == Structural::Media)
       {
-        if (p != nullptr)
-        {
-          if (p->getType () == Structural::Media)
+        if (p->isReference ())
+          adjustReferences (p);
+        else
+          for (const QString &key : _references.keys ())
           {
-            if (p->isReference ())
-              adjustReferences (p);
-            else
-              for (const QString &key : _references.keys ())
-              {
-                if (_references.contains (key)
-                    && _references.value (key) == p->getUid ()
-                    && _entities.contains (key))
-                {
-                  adjustReferences (_entities.value (key));
-                }
-              }
+            if (_references.contains (key)
+                && _references.value (key) == p->getUid ()
+                && _entities.contains (key))
+            {
+              adjustReferences (_entities.value (key));
+            }
           }
-        }
       }
     }
 
