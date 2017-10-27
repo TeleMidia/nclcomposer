@@ -298,7 +298,8 @@ StructuralScene::createEntity (StructuralType type)
 }
 
 StructuralEntity *
-StructuralScene::clone (StructuralEntity *ent, StructuralEntity *newparent)
+StructuralScene::clone (const StructuralEntity *ent,
+                        StructuralEntity *newparent)
 {
   StructuralEntity *newent = createEntity (ent->getType ());
   newent->setParent (newparent);

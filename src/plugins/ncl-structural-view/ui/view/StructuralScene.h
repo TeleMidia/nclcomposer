@@ -29,7 +29,8 @@ public:
   QString save ();
 
   StructuralEntity *createEntity (StructuralType type);
-  StructuralEntity *clone (StructuralEntity *ent, StructuralEntity *parent = nullptr);
+  StructuralEntity *clone (const StructuralEntity *ent,
+                           StructuralEntity *parent = nullptr);
 
 
 public slots:
