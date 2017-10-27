@@ -147,19 +147,26 @@ StructuralComposition::draw (QPainter *painter)
       }
     }
 
-    painter->drawEllipse (ST_DEFAULT_ENTITY_PADDING, ST_DEFAULT_ENTITY_PADDING,
-                          getWidth (), getHeight ());
+#if ST_DEFAULT_RECT_COMPOSITIONS
+# define drawComposition(x,y,w,h) drawRoundedRect (x,y,w,h,20,20)
+#else
+# define drawComposition(x,y,w,h) drawEllipse (x,y,w,h)
+#endif
+
+    painter->drawComposition (ST_DEFAULT_ENTITY_PADDING,
+                              ST_DEFAULT_ENTITY_PADDING,
+                              getWidth (), getHeight ());
 
     painter->setBrush (Qt::NoBrush);
 
     if (isMoving ())
-      painter->drawEllipse (
+      painter->drawComposition (
           getMoveLeft () + ST_DEFAULT_ENTITY_PADDING - getLeft (),
           getMoveTop () + ST_DEFAULT_ENTITY_PADDING - getTop (), getWidth (),
           getHeight ());
 
     else if (isResizing ())
-      painter->drawEllipse (
+      painter->drawComposition (
           getResizeLeft () + ST_DEFAULT_ENTITY_PADDING - getLeft (),
           getResizeTop () + ST_DEFAULT_ENTITY_PADDING - getTop (),
           getResizeWidth (), getResizeHeight ());

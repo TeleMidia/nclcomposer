@@ -389,31 +389,28 @@ StructuralView::getNewAngle (StructuralBind *bind)
   {
     for (StructuralEntity *e : _scene->getEntities ().values ())
     {
-      if (e->getType () == Structural::Bind)
+      if (e->getType () == Structural::Bind && e != bind)
       {
-        if (e != bind)
+        StructuralBind *b = (StructuralBind *)e;
+
+        if (b->getTail () != nullptr && b->getHead () != nullptr)
         {
-          StructuralBind *b = (StructuralBind *)e;
-
-          if (b->getTail () != nullptr && b->getHead () != nullptr)
+          if ((bind->getTail () == b->getTail ()
+               || bind->getTail () == b->getHead ())
+              && (bind->getHead () == b->getHead ()
+                  || bind->getHead () == b->getTail ()))
           {
-            if ((bind->getTail () == b->getTail ()
-                 || bind->getTail () == b->getHead ())
-                && (bind->getHead () == b->getHead ()
-                    || bind->getHead () == b->getTail ()))
-            {
 
-              int current = b->getAngle ();
+            int current = b->getAngle ();
 
-              if (b->getHead ()->getType () != Structural::Link)
-                current = -current;
+            if (b->getHead ()->getType () != Structural::Link)
+              current = -current;
 
-              if (max < current)
-                max = current;
+            if (max < current)
+              max = current;
 
-              if (min > current)
-                min = current;
-            }
+            if (min > current)
+              min = current;
           }
         }
       }
@@ -1399,7 +1396,6 @@ StructuralView::performAutostart ()
                 "Autostart is only available when when body and floating"
                 "interfaces are disabled in build");
 
-  qWarning () << "_selected" << _selected;
   CPR_ASSERT (_scene->hasEntity (_selected));
 
   StructuralEntity *e = _scene->getEntity (_selected);

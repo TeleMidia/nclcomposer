@@ -375,8 +375,8 @@ const std::map<Structural::Type, QString> StructuralUtil::_entitiesPrefix
         { Structural::Context, "ctx" }, { Structural::Switch, "swt" },
         { Structural::Port, "p" },      { Structural::SwitchPort, "swtp" },
         { Structural::Area, "a" },      { Structural::Property, "p" },
-        { Structural::Link, "l" },      { Structural::Bind, "" },
-        { Structural::Reference, "" },  { Structural::Mapping, "" },
+        { Structural::Link, "l" },      { Structural::Bind, "bd" },
+        { Structural::Reference, "ref" },  { Structural::Mapping, "map" },
         { Structural::NoType, "e" } };
 
 QString
@@ -572,10 +572,14 @@ StructuralUtil::getUpNeighbors (StructuralEntity *ent)
       StructuralScene *scn = (StructuralScene *) ent->scene ();
       CPR_ASSERT_NON_NULL (scn);
 
-      for (StructuralEntity *cur : scn->getEntities ().values ())
+      qWarning () << scn;
+      if (scn)
       {
-        if (cur->getParent () == nullptr && cur != ent)
-          neighbors += cur;
+        for (StructuralEntity *cur : scn->getEntities ().values ())
+        {
+          if (cur->getParent () == nullptr && cur != ent)
+            neighbors += cur;
+        }
       }
     }
   }

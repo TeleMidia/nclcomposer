@@ -67,7 +67,6 @@ StructuralScene::createNewId (StructuralType type)
   CPR_ASSERT (!prefix.isEmpty ());
 
   QString id = "";
-
   for (int n = 0;; n++)
   {
     id = prefix + QString::number (n);
