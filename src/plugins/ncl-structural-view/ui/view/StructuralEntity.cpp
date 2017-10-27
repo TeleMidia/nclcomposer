@@ -1076,13 +1076,9 @@ StructuralEntity::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
 void
 StructuralEntity::mousePressEvent (QGraphicsSceneMouseEvent *event)
 {
-  if (event->button () == Qt::RightButton)
+  if (event->button () == Qt::LeftButton)
   {
-    event->ignore ();
-  }
-  else if (event->button () == Qt::LeftButton)
-  {
-    if (_selectable && !_selected)
+    if (_selectable /*&& !_selected*/)
     {
       setSelected (true);
       emit selectAsked (getUid (), StructuralUtil::createSettings ());

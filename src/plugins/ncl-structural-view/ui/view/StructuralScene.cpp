@@ -5,9 +5,7 @@
 
 StructuralScene::StructuralScene (StructuralView *view, StructuralMenu *menu,
                                   QObject *parent)
-    : QGraphicsScene (parent),
-      _view (view),
-      _menu (menu)
+    : QGraphicsScene (parent), _view (view), _menu (menu)
 {
   setSceneRect (0, 0, ST_DEFAULT_SCENE_W, ST_DEFAULT_SCENE_H);
 }
@@ -52,7 +50,7 @@ StructuralScene::getRefs ()
 QList<StructuralEntity *>
 StructuralScene::getEntitiesByAttrId (const QString &id)
 {
-  QList <StructuralEntity *> list;
+  QList<StructuralEntity *> list;
   for (StructuralEntity *e : _entities.values ())
   {
     if (e->getId () == id)
@@ -70,10 +68,10 @@ StructuralScene::createNewId (StructuralType type)
 
   QString id = "";
 
-  for (int n = 0; ; n++)
+  for (int n = 0;; n++)
   {
     id = prefix + QString::number (n);
-    if (getEntitiesByAttrId (id).size() == 0)
+    if (getEntitiesByAttrId (id).size () == 0)
       break;
   }
 
@@ -107,22 +105,22 @@ StructuralScene::getBody ()
   return body;
 }
 
-#define for_each_qelem_child(E,P) \
-  for (QDomElement E = P.firstChildElement (); !E.isNull (); \
+#define for_each_qelem_child(E, P)                                            \
+  for (QDomElement E = P.firstChildElement (); !E.isNull ();                  \
        E = E.nextSiblingElement ())
 
-#define for_each_qelem_child_of_type(E,P,T) \
-  for (QDomElement E = P.firstChildElement (T); !E.isNull (); \
+#define for_each_qelem_child_of_type(E, P, T)                                 \
+  for (QDomElement E = P.firstChildElement (T); !E.isNull ();                 \
        E = E.nextSiblingElement (T))
 
 static QMap<QString, QString>
 qdom_attrs_to_qmap (const QDomNamedNodeMap &attrs)
 {
-  QMap <QString, QString> map;
+  QMap<QString, QString> map;
   for (int i = 0; i < attrs.count (); i++)
   {
     QDomAttr a = attrs.item (i).toAttr ();
-    map.insert (a.name(), a.value());
+    map.insert (a.name (), a.value ());
   }
   return map;
 }
@@ -134,7 +132,7 @@ StructuralScene::load (const QString &data)
   doc.setContent (data);
 
   QDomElement root = doc.documentElement ();
-  CPR_ASSERT (root.tagName() == "structural");
+  CPR_ASSERT (root.tagName () == "structural");
 
   // Checks if 'body' exists when it is enabled in view. If not, adds it.
   if (ST_DEFAULT_WITH_BODY)
@@ -143,13 +141,13 @@ StructuralScene::load (const QString &data)
 
     for_each_qelem_child_of_type (elt, root, "entity")
     {
-        StructuralType t = StructuralUtil::strToType (
-              elt.attributeNode ("type").nodeValue());
-        if (t == Structural::Body)
-        {
-          hasBody = true;
-          break;
-        }
+      StructuralType t = StructuralUtil::strToType (
+          elt.attributeNode ("type").nodeValue ());
+      if (t == Structural::Body)
+      {
+        hasBody = true;
+        break;
+      }
     }
 
     if (!hasBody)
@@ -187,23 +185,20 @@ StructuralScene::load (const QString &data)
 }
 
 void
-StructuralScene::load (QDomElement ent, QDomElement parent)
+StructuralScene::load (QDomElement elt, QDomElement parent)
 {
-  CPR_ASSERT (!ent.attribute ("uid").isEmpty ());
+  CPR_ASSERT (!elt.attribute ("uid").isEmpty ());
 
-  QString entUid = ent.attribute ("uid");
+  QString entUid = elt.attribute ("uid");
   QString parentUid = parent.attribute ("uid");
-  QMap<QString, QString> props = qdom_attrs_to_qmap (ent.attributes ());
+  QMap<QString, QString> props = qdom_attrs_to_qmap (elt.attributes ());
 
   auto stgs = StructuralUtil::createSettings (false, false);
   stgs[ST_SETTINGS_ADJUST_REFERENCE] = ST_VALUE_FALSE;
 
   _view->insert (entUid, parentUid, props, stgs);
 
-  for_each_qelem_child_of_type (child, ent, "entity")
-  {
-    load (child, ent);
-  }
+  for_each_qelem_child_of_type (child, elt, "entity") { load (child, elt); }
 }
 
 QString
@@ -229,7 +224,7 @@ StructuralScene::save ()
     for (StructuralEntity *e : _entities.values ())
     {
       if (e->getType () == Structural::Body)
-        createDocument (e, doc, root);
+        createXmlElement (e, doc, root);
     }
   }
   else
@@ -237,7 +232,7 @@ StructuralScene::save ()
     for (StructuralEntity *e : _entities.values ())
     {
       if (e->getParent () == nullptr)
-        createDocument (e, doc, root);
+        createXmlElement (e, doc, root);
     }
   }
 
@@ -247,8 +242,8 @@ StructuralScene::save ()
 }
 
 void
-StructuralScene::createDocument (StructuralEntity *ent, QDomDocument *doc,
-                                 QDomElement parent)
+StructuralScene::createXmlElement (StructuralEntity *ent, QDomDocument *doc,
+                                   QDomElement parent)
 {
   if (ent->getType () != Structural::Reference)
   {
@@ -260,8 +255,61 @@ StructuralScene::createDocument (StructuralEntity *ent, QDomDocument *doc,
       elt.setAttribute (key, ent->getProperty (key));
 
     for (StructuralEntity *e : ent->getChildren ())
-      createDocument (e, doc, elt);
+      createXmlElement (e, doc, elt);
 
     parent.appendChild (elt);
   }
+}
+
+StructuralEntity *
+StructuralScene::clone (StructuralEntity *ent, StructuralEntity *newparent)
+{
+  StructuralEntity *newent = nullptr;
+
+  switch (ent->getType ())
+  {
+    case Structural::Media:
+      newent = new StructuralContent ();
+      break;
+
+    case Structural::Link:
+      newent = new StructuralLink ();
+      break;
+
+    case Structural::Body:
+    case Structural::Context:
+    case Structural::Switch:
+      newent = new StructuralComposition ();
+      break;
+
+    case Structural::Area:
+    case Structural::Property:
+    case Structural::SwitchPort:
+    case Structural::Port:
+      newent = new StructuralInterface ();
+      break;
+
+    case Structural::Mapping:
+      newent = new StructuralEdge ();
+      break;
+
+    case Structural::Bind:
+      newent = new StructuralBind ();
+      CPR_ASSERT_NON_NULL (newparent);
+      break;
+
+    default:
+      CPR_ASSERT_NOT_REACHED ();
+      break;
+  }
+
+  newent->setParent (newparent);
+  newent->setProperties (ent->getProperties ());
+
+  for (StructuralEntity *child : ent->getChildren ())
+  {
+    newent->addChild (this->clone (child, newent));
+  }
+
+  return newent;
 }

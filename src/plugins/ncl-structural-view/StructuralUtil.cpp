@@ -6,6 +6,9 @@
 #include "StructuralView.h"
 
 #include "util/Utilities.h"
+
+Q_LOGGING_CATEGORY(CPR_PLUGIN_STRUCT, "cpr.plugin.struct")
+
 QString
 StructuralUtil::createUid ()
 {
@@ -528,22 +531,24 @@ QVector<StructuralEntity *>
 StructuralUtil::getNeighbors (StructuralEntity *ent)
 {
   QVector<StructuralEntity *> neighbors;
-
   StructuralEntity *parent = ent->getParent ();
 
-  if (parent != nullptr)
+  if (parent)
   {
     neighbors = parent->getChildren ();
   }
   else if (!ST_DEFAULT_WITH_BODY)
   {
-    StructuralScene *scn = (StructuralScene *)ent->scene ();
-    CPR_ASSERT_NON_NULL (scn);
+    StructuralScene *scn = dynamic_cast<StructuralScene *> (ent->scene ());
+//    CPR_ASSERT_NON_NULL (scn);
 
-    for (StructuralEntity *cur : scn->getEntities ().values ())
+    if (scn)
     {
-      if (cur->getParent () == nullptr && cur != ent)
-        neighbors += cur;
+      for (StructuralEntity *cur : scn->getEntities ().values ())
+      {
+        if (cur->getParent () == nullptr && cur != ent)
+          neighbors += cur;
+      }
     }
   }
 
@@ -556,9 +561,9 @@ StructuralUtil::getUpNeighbors (StructuralEntity *ent)
   QVector<StructuralEntity *> neighbors;
 
   StructuralEntity *parent = ent->getParent ();
-  if (parent != nullptr)
+  if (parent)
   {
-    if (parent->getParent () != nullptr)
+    if (parent->getParent ())
     {
       neighbors += parent->getParent ()->getChildren ();
     }

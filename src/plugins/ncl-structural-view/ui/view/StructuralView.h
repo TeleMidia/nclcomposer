@@ -183,9 +183,6 @@ private:
   void paste (StructuralEntity *entity, StructuralEntity *parent,
               const QString &code, bool adjust);
 
-  StructuralEntity *clone (StructuralEntity *entity,
-                           StructuralEntity *parent = NULL);
-
   StructuralMode _mode;
 
   int _zoom; // an integer in %  (varing from ZOOM_MIN to ZOOM_MAX)
@@ -197,7 +194,7 @@ private:
   QString _selected;
 
   StructuralEntity *_clipboard;
-  QMap<QString, QString> _clipboardReferences;
+  QMap<QString, QString> _clipboardRefs;
 
   QUndoStack _commands;
 

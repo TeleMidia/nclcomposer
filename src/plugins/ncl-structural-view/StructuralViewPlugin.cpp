@@ -663,14 +663,13 @@ StructuralViewPlugin::changeSelectedEntity (const QString &pluginID,
 
   if (pluginID != getPluginInstanceID ())
   {
-    QString *entityUID = (QString *)param;
+    QString *entUid = (QString *)param;
 
-    if (entityUID != NULL)
+    if (entUid)
     {
-      Entity *entity = getProject ()->getEntityById (*entityUID);
-
-      if (entity != NULL)
-        selectInView (entity);
+      Entity *ent = getProject ()->getEntityById (*entUid);
+      if (ent)
+        selectInView (ent);
     }
   }
 }
@@ -1065,11 +1064,20 @@ StructuralViewPlugin::changeInView (Entity *ent)
 void
 StructuralViewPlugin::selectInView (Entity *entity)
 {
-  if (_coreToView.contains (entity->getUniqueId ())
-      && _selected != entity->getUniqueId ())
+  QString coreUid = entity->getUniqueId ();
+  QString viewUid = _coreToView.value (coreUid, "");
+
+  qWarning () << "selectinView" << coreUid << viewUid << entity->getType ();
+
+  if (_coreToView.contains (coreUid) && _selected != viewUid)
   {
-    _window->getView ()->select (_coreToView[entity->getUniqueId ()],
-                                 StructuralUtil::createSettings ());
+    if (_struct_scene->hasEntity (viewUid))
+    {
+      _window->getView ()->select (viewUid, StructuralUtil::createSettings ());
+    }
+    else
+      qWarning (CPR_PLUGIN_STRUCT)
+          << "Trying to select an entity that is not in the view.";
   }
   else
   {
@@ -1090,13 +1098,13 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
 
   if (type == Structural::Bind)
   {
-    entityParent = getProject ()->getEntityById (
-        _viewToCore.value (props.value (ST_ATTR_REFERENCE_LINK_UID)));
+    QString coreUid = _viewToCore.value (props.value (ST_ATTR_REFERENCE_LINK_UID));
+    entityParent = getProject ()->getEntityById (coreUid);
   }
   else if (type == Structural::Mapping)
   {
-    entityParent = getProject ()->getEntityById (
-        _viewToCore.value (props.value (ST_ATTR_EDGE_TAIL)));
+    QString coreUid = _viewToCore.value (props.value (ST_ATTR_EDGE_TAIL));
+    entityParent = getProject ()->getEntityById (coreUid);
   }
   else if (type == Structural::Body)
   {
@@ -1229,10 +1237,10 @@ StructuralViewPlugin::selectInCore (QString uid,
 {
   Q_UNUSED (settings);
 
-  if (!_viewToCore.value (uid, "").isEmpty ())
+  QString coreUid = _viewToCore.value (uid, "");
+  if (!coreUid.isEmpty ())
   {
-    emit sendBroadcastMessage ("changeSelectedEntity",
-                               new QString (_coreToView.key (uid)));
+    emit sendBroadcastMessage ("changeSelectedEntity", new QString (coreUid));
   }
 }
 

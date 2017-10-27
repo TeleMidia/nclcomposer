@@ -1,9 +1,9 @@
 #ifndef STRUCTURALSCENE_H
 #define STRUCTURALSCENE_H
 
+#include <QDomDocument>
 #include <QGraphicsScene>
 #include <QGraphicsSceneContextMenuEvent>
-#include <QDomDocument>
 
 #include "StructuralMenu.h"
 
@@ -26,8 +26,9 @@ public:
   QString createNewId (StructuralType type);
 
   void load (const QString &data);
-  void load (QDomElement entity, QDomElement parent);
   QString save ();
+
+  StructuralEntity *clone (StructuralEntity *ent, StructuralEntity *parent = nullptr);
 
 public slots:
   void clear (); // override?
@@ -41,8 +42,9 @@ private:
   QMap<QString, StructuralEntity *> _entities;
   QMap<QString, QString> _refs;
 
-  void createDocument (StructuralEntity *ent, QDomDocument *doc,
-                       QDomElement parent);
+  void load (QDomElement ent, QDomElement parent);
+  void createXmlElement (StructuralEntity *ent, QDomDocument *doc,
+                         QDomElement parent);
 };
 
 #endif // STRUCTURALSCENE_H
