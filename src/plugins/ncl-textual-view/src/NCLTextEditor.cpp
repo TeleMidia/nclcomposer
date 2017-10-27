@@ -32,7 +32,7 @@ using namespace cpr::core;
 NCLTextEditor::NCLTextEditor (QWidget *parent) : QsciScintilla (parent)
 {
   Preference *tabWidth
-      = Preferences::getInstance ()->getValue("cpr.textual.tabWidth");
+      = Preferences::instance ()->getValue("cpr.textual.tabWidth");
   _nclLexer = nullptr;
   _apis = nullptr;
   _textWithoutUserInter = "";
@@ -52,7 +52,7 @@ NCLTextEditor::~NCLTextEditor () {}
 void
 NCLTextEditor::initParameters ()
 {
-  Preferences *prefs = Preferences::getInstance();
+  Preferences *prefs = Preferences::instance();
 
   prefs->restore ();
   Preference *bgCaretLine
@@ -814,7 +814,7 @@ NCLTextEditor::elementsByTagname (const QString &tagname,
     if (node.tagName () == tagname)
       ret.push_back (node);
 
-    if (first || !NCLStructure::getInstance ()->defineScope (node.tagName ()))
+    if (first || !NCLStructure::instance ()->defineScope (node.tagName ()))
     {
       first = false;
       QDomElement child = current.firstChildElement ();

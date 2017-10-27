@@ -513,7 +513,7 @@ WelcomeWidget::doExtractCurrentFile (QString extDirPath,
     }
 
     qCDebug (CPR_GUI) () << fileNameToImport << projectName;
-    ProjectControl::getInstance ()->importFromDocument (fileNameToImport,
+    ProjectControl::instance ()->importFromDocument (fileNameToImport,
                                                         projectName);
     progressDialog->hide ();
 

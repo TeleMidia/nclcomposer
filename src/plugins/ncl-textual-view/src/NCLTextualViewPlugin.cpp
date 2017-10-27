@@ -1124,7 +1124,7 @@ NCLTextualViewPlugin::getEntityAttributesAsString (/*const */ Entity *entity)
   QString line;
   // fill the attributes (ordered)
   deque<QString> *attributes_ordered
-      = NCLStructure::getInstance ()->getAttributesOrdered (
+      = NCLStructure::instance ()->getAttributesOrdered (
           entity->getType ());
 
   if (attributes_ordered != nullptr)
@@ -1140,7 +1140,7 @@ NCLTextualViewPlugin::getEntityAttributesAsString (/*const */ Entity *entity)
   }
 
   map<QString, bool> *attributes
-      = NCLStructure::getInstance ()->getAttributes (entity->getType ());
+      = NCLStructure::instance ()->getAttributes (entity->getType ());
   // Search if there is any other attribute that is not part of NCL Language
   // but the user fills it.
   QMap<QString, QString> attrs = entity->getAttributes ();

@@ -25,7 +25,7 @@ ProjectControl::ProjectControl () {}
 ProjectControl::~ProjectControl ()
 {
   QMap<QString, Project *>::iterator it;
-  PluginControl *pg = PluginControl::getInstance ();
+  PluginControl *pg = PluginControl::instance ();
   for (it = _openProjects.begin (); it != _openProjects.end (); it++)
   {
     Project *project = it.value ();
@@ -48,7 +48,7 @@ ProjectControl::closeProject (const QString &location)
     return false;
 
   Project *project = _openProjects[location];
-  if (PluginControl::getInstance ()->releasePlugins (project))
+  if (PluginControl::instance ()->releasePlugins (project))
   {
     delete project;
     project = nullptr;
@@ -82,7 +82,7 @@ ProjectControl::launchProject (const QString &location)
 
   /* Requests the LanguageProfile associated with this DocumentType */
   ILanguageProfile *profile
-      = LanguageControl::getInstance ()->getProfileFromType (type);
+      = LanguageControl::instance ()->getProfileFromType (type);
 
   if (!profile)
   {
@@ -108,7 +108,7 @@ ProjectControl::launchProject (const QString &location)
     project->setLocation (location);
     project->setProjectType (type);
 
-    PluginControl::getInstance ()->launchProject (project);
+    PluginControl::instance ()->launchProject (project);
 
     _openProjects[location] = project;
     connect (project, SIGNAL (dirtyProject (bool)),
@@ -144,7 +144,7 @@ ProjectControl::importFromDocument (const QString &docLocation,
 
   /* Requests the LanguageProfile associated with this DocumentType */
   ILanguageProfile *profile
-      = LanguageControl::getInstance ()->getProfileFromType (type);
+      = LanguageControl::instance ()->getProfileFromType (type);
 
   if (!profile)
   {
@@ -170,7 +170,7 @@ ProjectControl::importFromDocument (const QString &docLocation,
     project->setLocation (projLocation);
     project->setProjectType (type);
 
-    PluginControl::getInstance ()->launchProject (project);
+    PluginControl::instance ()->launchProject (project);
     project->setLocation (projLocation);
 
     _openProjects[projLocation] = project;
@@ -186,8 +186,8 @@ ProjectControl::importFromDocument (const QString &docLocation,
   {
     IDocumentParser *parser;
     parser = profile->createParser (project);
-    PluginControl::getInstance ()->connectParser (
-        parser, PluginControl::getInstance ()->getMessageControl (project));
+    PluginControl::instance ()->connectParser (
+        parser, PluginControl::instance ()->getMessageControl (project));
 
     QFile input (docLocation);
     if (input.open (QIODevice::ReadOnly))
@@ -200,7 +200,7 @@ ProjectControl::importFromDocument (const QString &docLocation,
 
   project->setDirty (false);
 
-  /* PluginControl::getInstance()->getMessageControl(project)
+  /* PluginControl::instance()->getMessageControl(project)
      ->setCurrentProjectAsDirty(); */
 }
 

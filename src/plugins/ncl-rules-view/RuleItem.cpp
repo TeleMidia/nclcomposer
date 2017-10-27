@@ -30,7 +30,7 @@ RuleItem::init (const QString &id, const QString &var,
 {
   _comparator = comparator;
 
-  NCLStructure *instance = NCLStructure::getInstance ();
+  NCLStructure *instance = NCLStructure::instance ();
 
   if (_varList.isEmpty ())
     _varList = instance->getDatatypeDefaultSuggestions (

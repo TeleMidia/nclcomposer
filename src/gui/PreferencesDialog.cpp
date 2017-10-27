@@ -81,7 +81,7 @@ void
 PreferencesDialog::loadPreferencesPages ()
 {
   QList<IPluginFactory *> plugins
-      = PluginControl::getInstance ()->getLoadedPlugins ();
+      = PluginControl::instance ()->getLoadedPlugins ();
   QList<IPluginFactory *>::iterator it;
 
   for (it = plugins.begin (); it != plugins.end (); it++)

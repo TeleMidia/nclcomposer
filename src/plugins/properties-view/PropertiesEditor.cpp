@@ -179,7 +179,7 @@ PropertiesEditor::getAttributeSuggestions (const QString &property)
 QString
 PropertiesEditor::getAttributeDatatype (const QString &attr)
 {
-  return NCLStructure::getInstance ()->getAttributeDatatype (_currentTagname, attr);
+  return NCLStructure::instance ()->getAttributeDatatype (_currentTagname, attr);
 }
 
 void

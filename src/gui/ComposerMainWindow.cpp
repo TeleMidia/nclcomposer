@@ -119,9 +119,9 @@ ComposerMainWindow::~ComposerMainWindow () { delete _ui; }
 void
 ComposerMainWindow::initModules ()
 {
-  PluginControl *pgControl = PluginControl::getInstance ();
-  LanguageControl *lgControl = LanguageControl::getInstance ();
-  ProjectControl *projectControl = ProjectControl::getInstance ();
+  PluginControl *pgControl = PluginControl::instance ();
+  LanguageControl *lgControl = LanguageControl::instance ();
+  ProjectControl *projectControl = ProjectControl::instance ();
 
   connect (pgControl, SIGNAL (notifyError (QString)),
            SLOT (errorDialog (QString)));
@@ -165,15 +165,15 @@ ComposerMainWindow::initModules ()
 void
 ComposerMainWindow::readExtensions ()
 {
-  LanguageControl::getInstance ()->loadProfiles ();
-  PluginControl::getInstance ()->loadPlugins ();
+  LanguageControl::instance ()->loadProfiles ();
+  PluginControl::instance ()->loadPlugins ();
 
   /* Load the preferences page */
   _preferencesDialog->addPreferencePage (new GeneralPreferences ());
 
   /* Load PreferencesPages from Plugins */
   QList<IPluginFactory *> list
-      = PluginControl::getInstance ()->getLoadedPlugins ();
+      = PluginControl::instance ()->getLoadedPlugins ();
 
   IPluginFactory *currentFactory;
   foreach (currentFactory, list)
@@ -267,11 +267,11 @@ ComposerMainWindow::openProjects (const QStringList &projects)
     if (openCurrentFile)
     {
       checkTemporaryFileLastModified (src);
-      ProjectControl::getInstance ()->launchProject (src);
+      ProjectControl::instance ()->launchProject (src);
       if (createDefaultProjStructure)
       {
         addDefaultStructureToProject (
-            ProjectControl::getInstance ()->getOpenProject (src), true, true,
+            ProjectControl::instance ()->getOpenProject (src), true, true,
             true);
       }
     }
@@ -514,7 +514,7 @@ ComposerMainWindow::tabClosed (int index)
     return; // Do nothing
 
   QString location = _tabProjects->tabToolTip (index);
-  Project *project = ProjectControl::getInstance ()->getOpenProject (location);
+  Project *project = ProjectControl::instance ()->getOpenProject (location);
 
   if (project != nullptr && project->isDirty ())
   {
@@ -530,7 +530,7 @@ ComposerMainWindow::tabClosed (int index)
       return;
   }
 
-  ProjectControl::getInstance ()->closeProject (location);
+  ProjectControl::instance ()->closeProject (location);
 
   // Remove temporary file
   removeTemporaryFile (location);
@@ -576,7 +576,7 @@ ComposerMainWindow::closeAllFiles ()
     //    {
     //      QString location = _tabProjects->tabToolTip(i);
     //      Project *project =
-    //      ProjectControl::getInstance()->getOpenProject(location);
+    //      ProjectControl::instance()->getOpenProject(location);
     //      if (project->isDirty())
     //      {
     //        qCDebug(CPR_GUI) << "ask to save" << location;
@@ -784,7 +784,7 @@ ComposerMainWindow::closeEvent (QCloseEvent *event)
   {
     QString location = _tabProjects->tabToolTip (index);
     Project *project
-        = ProjectControl::getInstance ()->getOpenProject (location);
+        = ProjectControl::instance ()->getOpenProject (location);
 
     qCDebug (CPR_GUI) << location << project;
     if (project != nullptr && project->isDirty ())
@@ -839,9 +839,9 @@ ComposerMainWindow::closeEvent (QCloseEvent *event)
 void
 ComposerMainWindow::cleanUp ()
 {
-  LanguageControl::releaseInstance ();
-  ProjectControl::releaseInstance ();
-  PluginControl::releaseInstance ();
+  LanguageControl::release ();
+  ProjectControl::release ();
+  PluginControl::release ();
 }
 
 /*!
@@ -897,10 +897,10 @@ ComposerMainWindow::saveCurrentProject ()
   {
     QString location = _tabProjects->tabToolTip (index);
     Project *project
-        = ProjectControl::getInstance ()->getOpenProject (location);
+        = ProjectControl::instance ()->getOpenProject (location);
 
-    PluginControl::getInstance ()->savePluginsData (project);
-    ProjectControl::getInstance ()->saveProject (location);
+    PluginControl::instance ()->savePluginsData (project);
+    ProjectControl::instance ()->saveProject (location);
     _ui->action_Save->setEnabled (false);
 
     // Save ncl document as well
@@ -953,13 +953,13 @@ ComposerMainWindow::saveAsCurrentProject ()
 
       /* Move the location of the current project to destFileName */
       if (location != destFileName)
-        ProjectControl::getInstance ()->moveProject (location, destFileName);
+        ProjectControl::instance ()->moveProject (location, destFileName);
 
       Project *project
-          = ProjectControl::getInstance ()->getOpenProject (destFileName);
+          = ProjectControl::instance ()->getOpenProject (destFileName);
 
-      PluginControl::getInstance ()->savePluginsData (project);
-      ProjectControl::getInstance ()->saveProject (destFileName);
+      PluginControl::instance ()->savePluginsData (project);
+      ProjectControl::instance ()->saveProject (destFileName);
 
       /* Update Tab Text and Index */
       updateTabWithProject (index, destFileName);
@@ -1121,13 +1121,13 @@ ComposerMainWindow::launchProjectWizard ()
 
       // We dont need to check this, when creating a new project
       // checkTemporaryFileLastModified(filename);
-      if (ProjectControl::getInstance ()->launchProject (filename))
+      if (ProjectControl::instance ()->launchProject (filename))
       {
         // After launch the project we will insert NCL, HEAD and BODY
         // elements
         // by default
         Project *project
-            = ProjectControl::getInstance ()->getOpenProject (filename);
+            = ProjectControl::instance ()->getOpenProject (filename);
 
         addDefaultStructureToProject (project,
                                       wizard.shouldCopyDefaultConnBase (),
@@ -1159,7 +1159,7 @@ ComposerMainWindow::addDefaultStructureToProject (
 
   Entity *nclEntity;
   MessageControl *msgControl
-      = PluginControl::getInstance ()->getMessageControl (project);
+      = PluginControl::instance ()->getMessageControl (project);
   msgControl->anonymousAddEntity ("ncl", project->getUniqueId (), nclAttrs);
 
   nclEntity = project->getEntitiesbyType ("ncl").first ();
@@ -1293,7 +1293,7 @@ ComposerMainWindow::openProject ()
 
     checkTemporaryFileLastModified (filename);
 
-    ProjectControl::getInstance ()->launchProject (filename);
+    ProjectControl::instance ()->launchProject (filename);
 
     Utilities::updateLastFileDialogPath (filename);
   }
@@ -1364,7 +1364,7 @@ ComposerMainWindow::importFromDocument ()
 #ifdef WIN32
       projFilename = projFilename.replace (QDir::separator (), "/");
 #endif
-      ProjectControl::getInstance ()->importFromDocument (docFilename,
+      ProjectControl::instance ()->importFromDocument (docFilename,
                                                           projFilename);
 
       Utilities::updateLastFileDialogPath (projFilename);
@@ -1456,7 +1456,7 @@ ComposerMainWindow::userPressedRecentProject (QString src)
   {
     checkTemporaryFileLastModified (src);
 
-    ProjectControl::getInstance ()->launchProject (src);
+    ProjectControl::instance ()->launchProject (src);
     if (recreateFile)
     {
       // Create the directory structure if it does not exist anymore
@@ -1474,7 +1474,7 @@ ComposerMainWindow::userPressedRecentProject (QString src)
 
       // \todo Ask for the import or not of the defaultConnBase.
       addDefaultStructureToProject (
-          ProjectControl::getInstance ()->getOpenProject (src), false, false,
+          ProjectControl::instance ()->getOpenProject (src), false, false,
           true);
     }
   }
@@ -1579,7 +1579,7 @@ ComposerMainWindow::setProjectAsDirty (QString location, bool isDirty)
 {
   QToolWindowManager *window = _projectsWidgets[location];
 
-  QString projectId = ProjectControl::getInstance ()
+  QString projectId = ProjectControl::instance ()
                           ->getOpenProject (location)
                           ->getAttribute ("id");
 
@@ -1609,9 +1609,9 @@ ComposerMainWindow::undo ()
   {
     QString location = _tabProjects->tabToolTip (index);
     Project *project
-        = ProjectControl::getInstance ()->getOpenProject (location);
+        = ProjectControl::instance ()->getOpenProject (location);
     MessageControl *msgControl
-        = PluginControl::getInstance ()->getMessageControl (project);
+        = PluginControl::instance ()->getMessageControl (project);
 
     if (msgControl != nullptr)
       msgControl->undo ();
@@ -1627,9 +1627,9 @@ ComposerMainWindow::redo ()
   {
     QString location = _tabProjects->tabToolTip (index);
     Project *project
-        = ProjectControl::getInstance ()->getOpenProject (location);
+        = ProjectControl::instance ()->getOpenProject (location);
     MessageControl *msgControl
-        = PluginControl::getInstance ()->getMessageControl (project);
+        = PluginControl::instance ()->getMessageControl (project);
 
     if (msgControl != 0)
       msgControl->redo ();
@@ -1659,11 +1659,11 @@ ComposerMainWindow::autoSaveCurrentProjects ()
   {
     QString location = _tabProjects->tabToolTip (i);
     Project *project
-        = ProjectControl::getInstance ()->getOpenProject (location);
+        = ProjectControl::instance ()->getOpenProject (location);
     if (project->isDirty ())
     {
-      PluginControl::getInstance ()->savePluginsData (project);
-      ProjectControl::getInstance ()->saveTemporaryProject (location);
+      PluginControl::instance ()->savePluginsData (project);
+      ProjectControl::instance ()->saveTemporaryProject (location);
     }
   }
 }
@@ -1819,7 +1819,7 @@ ComposerMainWindow::updateTabWithProject (int index, QString newLocation)
 
   _tabProjects->setTabToolTip (index, newLocation);
   Project *project
-      = ProjectControl::getInstance ()->getOpenProject (newLocation);
+      = ProjectControl::instance ()->getOpenProject (newLocation);
   if (project != nullptr)
   {
     QString projectId = project->getAttribute ("id");
@@ -1873,7 +1873,7 @@ ComposerMainWindow::wizardFinished (int resp)
     QFileInfo fInfo ("/tmp/a.ncl");
     if (fInfo.exists ())
     {
-      ProjectControl::getInstance ()->importFromDocument ("/tmp/a.ncl",
+      ProjectControl::instance ()->importFromDocument ("/tmp/a.ncl",
                                                           "/tmp/a.cpr");
       QFile::remove ("/tmp/a.ncl");
     }

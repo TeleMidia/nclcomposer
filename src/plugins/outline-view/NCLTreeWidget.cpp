@@ -245,7 +245,7 @@ NCLTreeWidget::addElement (QTreeWidgetItem *father, int pos, QString tagname,
 
 #ifdef KEEP_ELEMENTS_ORDER
     deque<QString> *elements_ordered
-        = NCLStructure::getInstance ()->getElementsOrdered ();
+        = NCLStructure::instance ()->getElementsOrdered ();
     if (father->childCount ())
     {
       // Find where to insert the element.
@@ -321,7 +321,7 @@ NCLTreeWidget::userAddNewElement ()
     tagname = item->text (4);
 
     map<QString, char> *children
-        = NCLStructure::getInstance ()->getChildren (tagname);
+        = NCLStructure::instance ()->getChildren (tagname);
 
     if (children != nullptr)
     {

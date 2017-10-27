@@ -27,7 +27,7 @@ using namespace cpr::core;
 
 QsciNCLAPIs::QsciNCLAPIs (QsciLexer *lexer) : QsciAPIs (lexer)
 {
-  _nclStructure = NCLStructure::getInstance ();
+  _nclStructure = NCLStructure::instance ();
 
   add (QString ("ncl30"));
   prepare ();
@@ -445,9 +445,9 @@ QsciNCLAPIs::getRequiredAttributesAsStr (const QString &element)
 {
   QString ret ("");
   map<QString, bool> *attributes
-      = NCLStructure::getInstance ()->getAttributes (element);
+      = NCLStructure::instance ()->getAttributes (element);
   deque<QString> *attrs_ordered
-      = NCLStructure::getInstance ()->getAttributesOrdered (element);
+      = NCLStructure::instance ()->getAttributesOrdered (element);
 
   if (attributes != nullptr && attrs_ordered != nullptr)
   {

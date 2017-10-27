@@ -109,9 +109,9 @@ AboutPluginsDialog::loadPlugins ()
   _treeWidgetPlugins->clear();
 
   QList<ILanguageProfile *> langList
-      = LanguageControl::getInstance ()->getLoadedProfiles ();
+      = LanguageControl::instance ()->getLoadedProfiles ();
   QList<IPluginFactory *> pList
-      = PluginControl::getInstance ()->getLoadedPlugins ();
+      = PluginControl::instance ()->getLoadedPlugins ();
 
   // search for categories
   QTreeWidgetItem *treeWidgetItem;

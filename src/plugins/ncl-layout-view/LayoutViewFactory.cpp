@@ -28,7 +28,7 @@ NCLLayoutViewFactory::NCLLayoutViewFactory(QObject* parent)
      "320x400"} // other
   );
 
-  Preferences::getInstance ()->registerPreference (
+  Preferences::instance ()->registerPreference (
       "cpr.layout.resolutions",
       new Preference ("resolutions", default_resolutions, "Layout"));
 }

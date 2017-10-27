@@ -56,25 +56,25 @@ NCLLanguageProfile::releaseDocumentParser (IDocumentParser *parser)
 map<QString, map<QString, char> *> *
 NCLLanguageProfile::getNesting ()
 {
-  return NCLStructure::getInstance ()->getNesting ();
+  return NCLStructure::instance ()->getNesting ();
 }
 
 map<QString, bool> *
 NCLLanguageProfile::getAttributes (const QString &element)
 {
-  return NCLStructure::getInstance ()->getAttributes (element);
+  return NCLStructure::instance ()->getAttributes (element);
 }
 
 map<QString, char> *
 NCLLanguageProfile::getChildren (const QString &tagname)
 {
-  return NCLStructure::getInstance ()->getChildren (tagname);
+  return NCLStructure::instance ()->getChildren (tagname);
 }
 
 vector<AttributeReferences *>
 NCLLanguageProfile::getReferences (const QString &element, const QString &attr)
 {
-  return NCLStructure::getInstance ()->getReferences (element, attr);
+  return NCLStructure::instance ()->getReferences (element, attr);
 }
 
 CPR_NCLPROFILE_END_NAMESPACE

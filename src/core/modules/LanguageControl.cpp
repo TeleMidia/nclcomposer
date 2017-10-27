@@ -108,7 +108,7 @@ LanguageControl::loadProfiles ()
   // foreach path where extensions can be installed, try to load language
   // profiles.
   for (const QString &extDir : extPaths)
-    LanguageControl::getInstance ()->loadProfiles (extDir);
+    LanguageControl::instance ()->loadProfiles (extDir);
 }
 
 void

@@ -434,9 +434,9 @@ void LayoutRegionBase::LayoutRegionBase::createActions()
   _sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
 
   //resolutions
-  Preferences::getInstance ()->restore ();
+  Preferences::instance ()->restore ();
   Preference *resolutions
-      = Preferences::getInstance ()->getValue ("cpr.layout.resolutions");
+      = Preferences::instance ()->getValue ("cpr.layout.resolutions");
 
   QStringList reslist = resolutions->value().toStringList();
   while(!reslist.isEmpty())

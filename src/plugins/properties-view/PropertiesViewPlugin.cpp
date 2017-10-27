@@ -169,7 +169,7 @@ PropertiesViewPlugin::updateCurrentEntityAttr (QString attr, QString value)
       {
         try
         {
-          if (NCLStructure::getInstance ()->getAttributeDatatype (
+          if (NCLStructure::instance ()->getAttributeDatatype (
                 _currentEntity->getType (), attr) == "URI")
           {
             attrs[attr] = Utilities::relativePath (project->getLocation (),
@@ -207,7 +207,7 @@ QStringList
 PropertiesViewPlugin::getAttributes (const QString &tagname)
 {
   QStringList attrs_list;
-  NCLStructure *structure = NCLStructure::getInstance ();
+  NCLStructure *structure = NCLStructure::instance ();
   deque<QString> *attrs = structure->getAttributesOrdered (tagname);
 
   if (attrs != nullptr)
@@ -226,7 +226,7 @@ PropertiesViewPlugin::getAttributesDatatype (const QString &tagname)
 {
   QStringList datatypes;
 
-  NCLStructure *structure = NCLStructure::getInstance ();
+  NCLStructure *structure = NCLStructure::instance ();
   foreach (const QString &attr, getAttributes (tagname))
   {
     datatypes << structure->getAttributeDatatype (tagname, attr);
@@ -239,7 +239,7 @@ QList<QStringList>
 PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
 {
   QList<QStringList> suggestions;
-  NCLStructure *structure = NCLStructure::getInstance ();
+  NCLStructure *structure = NCLStructure::instance ();
 
   // \todo References
   foreach (const QString &attr, getAttributes (tagname))

@@ -24,7 +24,7 @@ NCLTextualViewPluginFactory::NCLTextualViewPluginFactory ()
 {
   _prefPageWidget = nullptr;
 
-  Preferences *prefs = Preferences::getInstance ();
+  Preferences *prefs = Preferences::instance ();
   prefs->registerPreference (
         "cpr.textual.bgCaretLine",
         new Preference ("bgCaretLine", QColor ("#B9D3EE"), "Textual"));

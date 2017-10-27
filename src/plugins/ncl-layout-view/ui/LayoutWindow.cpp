@@ -66,9 +66,9 @@ void LayoutWindow::setQnlyView(LayoutView *view)
 
 void LayoutWindow::loadPreferences()
 {
-  Preferences::getInstance ()->restore ();
+  Preferences::instance ()->restore ();
   Preference *resolutions
-      = Preferences::getInstance ()->getValue ("cpr.layout.resolutions");
+      = Preferences::instance ()->getValue ("cpr.layout.resolutions");
 
   QStringList reslist = resolutions->value().toStringList();
   while(!reslist.isEmpty())

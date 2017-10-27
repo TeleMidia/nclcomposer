@@ -29,7 +29,7 @@ void PreferencesEditor::show()
 void PreferencesEditor::loadPreferences()
 {
   int i = 0;
-  QStringList categories = Preferences::getInstance()->categories();
+  QStringList categories = Preferences::instance()->categories();
   QString category,key;
 
   while (ui->tableParameters->rowCount())
@@ -38,7 +38,7 @@ void PreferencesEditor::loadPreferences()
   while(!categories.isEmpty())
   {
     category = categories.takeFirst();
-    QList<Preference *> preferences = Preferences::getInstance()->preferences(category);
+    QList<Preference *> preferences = Preferences::instance()->preferences(category);
 
     while(!preferences.isEmpty())
     {
@@ -51,7 +51,7 @@ void PreferencesEditor::loadPreferences()
       ui->tableParameters->setItem(i, 0, item);
       item = new QTableWidgetItem();
 
-      QVariant value = Preferences::getInstance()->getValue(key)->value();
+      QVariant value = Preferences::instance ()->getValue(key)->value();
 
       if (value.type() == QVariant::StringList)
         item->setText(value.toStringList().join(", "));
@@ -69,14 +69,14 @@ void PreferencesEditor::saveChanges()
   for(int i = 0; i < ui->tableParameters->rowCount(); i++)
   {
     QString key = ui->tableParameters->item(i, 0)->text();
-    QVariant value = Preferences::getInstance()->getValue(key)->value();
+    QVariant value = Preferences::instance ()->getValue(key)->value();
     QString new_value= ui->tableParameters->item(i, 1)->text();
 
     if (value.type () == QVariant::StringList)
-      Preferences::getInstance()->setValue(key, new_value.replace(" ", "").split(","));
+      Preferences::instance ()->setValue(key, new_value.replace(" ", "").split(","));
     else
-      Preferences::getInstance()->setValue(key, new_value);
+      Preferences::instance ()->setValue(key, new_value);
   }
 
-  Preferences::getInstance()->save();
+  Preferences::instance ()->save();
 }

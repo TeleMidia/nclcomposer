@@ -138,7 +138,7 @@ PluginControl::loadPlugins ()
 
   // foreach path where extensions can be installed, try to load plugins.
   for (const QString &extDir : extPaths)
-    PluginControl::getInstance ()->loadPlugins (extDir);
+    PluginControl::instance ()->loadPlugins (extDir);
 }
 
 void
