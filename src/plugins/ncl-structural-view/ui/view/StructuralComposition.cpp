@@ -134,7 +134,7 @@ StructuralComposition::draw (QPainter *painter)
     }
     else
     {
-      if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
+      if (!ST_OPT_WITH_BODY && !ST_OPT_USE_FLOATING_INTERFACES)
       {
         if (getProperty (ST_ATTR_ENT_AUTOSTART) == ST_VALUE_TRUE)
         {
@@ -147,7 +147,7 @@ StructuralComposition::draw (QPainter *painter)
       }
     }
 
-#if ST_DEFAULT_RECT_COMPOSITIONS
+#if ST_OPT_COMPOSITIONS_AS_RECT
 # define drawComposition(x,y,w,h) drawRoundedRect (x,y,w,h,20,20)
 #else
 # define drawComposition(x,y,w,h) drawEllipse (x,y,w,h)
@@ -176,7 +176,7 @@ StructuralComposition::draw (QPainter *painter)
     painter->setRenderHint (QPainter::Antialiasing, false);
     painter->setRenderHint (QPainter::SmoothPixmapTransform, true);
 
-    if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
+    if (!ST_OPT_WITH_BODY && !ST_OPT_USE_FLOATING_INTERFACES)
     {
       if (getProperty (ST_ATTR_ENT_AUTOSTART) == ST_VALUE_TRUE)
       {

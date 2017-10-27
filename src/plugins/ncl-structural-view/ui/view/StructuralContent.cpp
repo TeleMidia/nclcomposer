@@ -115,7 +115,7 @@ StructuralContent::draw (QPainter *painter)
           - 4 * ST_DEFAULT_CONTENT_PADDING,
       QPixmap (StructuralUtil::getMimeTypeIcon (getMimeType ())));
 
-  if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
+  if (!ST_OPT_WITH_BODY && !ST_OPT_USE_FLOATING_INTERFACES)
   {
     if (getProperty (ST_ATTR_ENT_AUTOSTART) == ST_VALUE_TRUE)
     {

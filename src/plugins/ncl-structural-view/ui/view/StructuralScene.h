@@ -28,7 +28,9 @@ public:
   void load (const QString &data);
   QString save ();
 
+  StructuralEntity *createEntity (StructuralType type);
   StructuralEntity *clone (StructuralEntity *ent, StructuralEntity *parent = nullptr);
+
 
 public slots:
   void clear (); // override?

@@ -537,7 +537,7 @@ StructuralUtil::getNeighbors (StructuralEntity *ent)
   {
     neighbors = parent->getChildren ();
   }
-  else if (!ST_DEFAULT_WITH_BODY)
+  else if (!ST_OPT_WITH_BODY)
   {
     StructuralScene *scn = dynamic_cast<StructuralScene *> (ent->scene ());
 //    CPR_ASSERT_NON_NULL (scn);
@@ -567,10 +567,10 @@ StructuralUtil::getUpNeighbors (StructuralEntity *ent)
     {
       neighbors += parent->getParent ()->getChildren ();
     }
-    else if (!ST_DEFAULT_WITH_BODY)
+    else if (!ST_OPT_WITH_BODY)
     {
       StructuralScene *scn = (StructuralScene *) ent->scene ();
-      CPR_ASSERT_NON_NULL (scn);
+//      CPR_ASSERT_NON_NULL (scn);
 
       qWarning () << scn;
       if (scn)

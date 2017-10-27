@@ -205,7 +205,7 @@ StructuralViewPlugin::updateFromModel ()
     // When ST_DEFAULT_WITH_INTERFACES is disabled, Structural::Reference
     // entities exists but they are hidden. So, there is no need for
     // adjustment.
-    if (e->getType () == Structural::Reference && !ST_DEFAULT_WITH_INTERFACES)
+    if (e->getType () == Structural::Reference && !ST_OPT_SHOW_INTERFACES)
       continue;
 
     bool hasChange = false;
@@ -256,7 +256,7 @@ StructuralViewPlugin::updateFromModel ()
     // In fact, Structural::Reference are created/removed/changed dynamically
     // based in Structural::Port properties in
     // StructuralView::adjustReferences().
-    if (e->getType () == Structural::Reference && !ST_DEFAULT_WITH_INTERFACES)
+    if (e->getType () == Structural::Reference && !ST_OPT_SHOW_INTERFACES)
       continue;
 
     // Setting cached data...
@@ -1093,73 +1093,62 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
   Q_UNUSED (settings);
 
   StructuralType type = StructuralUtil::strToType (props[ST_ATTR_ENT_TYPE]);
-
-  Entity *entityParent = NULL;
+  Entity *entParent = nullptr;
 
   if (type == Structural::Bind)
   {
     QString coreUid = _viewToCore.value (props.value (ST_ATTR_REFERENCE_LINK_UID));
-    entityParent = getProject ()->getEntityById (coreUid);
+    entParent = getProject ()->getEntityById (coreUid);
   }
   else if (type == Structural::Mapping)
   {
     QString coreUid = _viewToCore.value (props.value (ST_ATTR_EDGE_TAIL));
-    entityParent = getProject ()->getEntityById (coreUid);
+    entParent = getProject ()->getEntityById (coreUid);
   }
   else if (type == Structural::Body)
   {
-    QList<Entity *> list;
-
     // Check if core already has a 'body' entity. If so, update the references.
-    list = getProject ()->getEntitiesbyType ("body");
-
+    QList<Entity *> list = getProject ()->getEntitiesbyType ("body");
     if (!list.isEmpty ())
     {
       Entity *body = list.first ();
 
-      // Cleaning
       _viewToCore.remove (_coreToView[body->getUniqueId ()]);
-
-      // Updating
       _coreToView[body->getUniqueId ()] = uid;
       _viewToCore[uid] = body->getUniqueId ();
 
-      // Finishing
       return;
     }
 
-    // Check if core already has a 'ncl' entity.
-    // If don't, adds and set entity as parent.
+    // Check if core already has an 'ncl' entity.
+    // If it doesn't, adds and sets entity as parent.
     list = getProject ()->getEntitiesbyType ("ncl");
-
     if (list.isEmpty ())
     {
       Entity *proj = getProject ();
-      if (proj != nullptr)
-      {
-        QMap<QString, QString> attrs;
-        emit addEntity ("ncl", proj->getUniqueId (), attrs);
-      }
+      CPR_ASSERT_NON_NULL (proj);
+      QMap<QString, QString> attrs;
 
-      list = getProject ()->getEntitiesbyType ("ncl");
-
-      if (!list.isEmpty ())
-        entityParent = list.first ();
+      emit addEntity ("ncl", proj->getUniqueId (), attrs);
     }
+
+    list = getProject ()->getEntitiesbyType ("ncl");
+    CPR_ASSERT ( !list.isEmpty());
+    entParent = list.first ();
   }
-  else if (parent.isEmpty () && !ST_DEFAULT_WITH_BODY)
+  else if (parent.isEmpty () && !ST_OPT_WITH_BODY)
   {
     QList<Entity *> list = getProject ()->getEntitiesbyType ("body");
 
     if (!list.isEmpty ())
-      entityParent = list.first ();
+      entParent = list.first ();
   }
   else
   {
-    entityParent = getProject ()->getEntityById (_viewToCore.value (parent));
+    entParent = getProject ()->getEntityById (_viewToCore.value (parent));
   }
 
-  if (entityParent != nullptr)
+  if (entParent != nullptr)
   {
     QMap<QString, QString> attrs;
 
@@ -1176,7 +1165,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
     _notified = uid;
 
     emit addEntity (StructuralUtil::typeToStr (type),
-                    entityParent->getUniqueId (), attrs);
+                    entParent->getUniqueId (), attrs);
 
     if (type == Structural::Link || type == Structural::Bind)
     {

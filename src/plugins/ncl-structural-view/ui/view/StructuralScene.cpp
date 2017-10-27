@@ -91,7 +91,6 @@ StructuralEntity *
 StructuralScene::getBody ()
 {
   StructuralEntity *body = nullptr;
-
   for (StructuralEntity *ent : _entities.values ())
   {
     if (ent->getType () == Structural::Body)
@@ -132,29 +131,6 @@ StructuralScene::load (const QString &data)
 
   QDomElement root = doc.documentElement ();
   CPR_ASSERT (root.tagName () == "structural");
-
-  // Checks if 'body' exists when it is enabled in view. If not, adds it.
-  if (ST_DEFAULT_WITH_BODY)
-  {
-    bool hasBody = false;
-
-    for_each_qelem_child_of_type (elt, root, "entity")
-    {
-      StructuralType t = StructuralUtil::strToType (
-          elt.attributeNode ("type").nodeValue ());
-      if (t == Structural::Body)
-      {
-        hasBody = true;
-        break;
-      }
-    }
-
-    if (!hasBody)
-    {
-      _view->createEntity (Structural::Body);
-      root.setAttribute ("uid", _entities.firstKey ());
-    }
-  }
 
   for_each_qelem_child (elt, root)
   {
@@ -218,7 +194,7 @@ StructuralScene::save ()
     root.appendChild (ref);
   }
 
-  if (ST_DEFAULT_WITH_BODY)
+  if (ST_OPT_WITH_BODY)
   {
     for (StructuralEntity *e : _entities.values ())
     {
@@ -261,40 +237,56 @@ StructuralScene::createXmlElement (StructuralEntity *ent, QDomDocument *doc,
 }
 
 StructuralEntity *
-StructuralScene::clone (StructuralEntity *ent, StructuralEntity *newparent)
+StructuralScene::createEntity (StructuralType type)
 {
-  StructuralEntity *newent = nullptr;
-
-  switch (ent->getType ())
+  StructuralEntity *e = nullptr;
+  switch (type)
   {
     case Structural::Media:
-      newent = new StructuralContent ();
-      break;
-
-    case Structural::Link:
-      newent = new StructuralLink ();
+      e = new StructuralContent ();
       break;
 
     case Structural::Body:
+      CPR_ASSERT (getBody () == nullptr);
+      e = new StructuralComposition ();
+      e->setType (type);
+
+      e->setWidth (ST_DEFAULT_BODY_W);
+      e->setHeight (ST_DEFAULT_BODY_H);
+      break;
+
     case Structural::Context:
     case Structural::Switch:
-      newent = new StructuralComposition ();
+      e = new StructuralComposition ();
+      e->setType (type);
+      break;
+
+    case Structural::Link:
+      e = new StructuralLink ();
+      e->setType (type);
+//    connect ((StructuralLink *)e, &StructuralLink::performedEdit, this,
+//             &StructuralView::performLinkDialog);
       break;
 
     case Structural::Area:
     case Structural::Property:
-    case Structural::SwitchPort:
     case Structural::Port:
-      newent = new StructuralInterface ();
+    case Structural::SwitchPort:
+      e = new StructuralInterface ();
+      e->setType (type);
       break;
 
+    case Structural::Reference:
     case Structural::Mapping:
-      newent = new StructuralEdge ();
+      e = new StructuralEdge ();
+      e->setType (type);
       break;
 
     case Structural::Bind:
-      newent = new StructuralBind ();
-      CPR_ASSERT_NON_NULL (newparent);
+      e = new StructuralBind ();
+      e->setType (type);
+//    connect ((StructuralBind *)e, &StructuralBind::performedEdit, this,
+//             &StructuralView::performBindDialog);
       break;
 
     default:
@@ -302,13 +294,18 @@ StructuralScene::clone (StructuralEntity *ent, StructuralEntity *newparent)
       break;
   }
 
+  return e;
+}
+
+StructuralEntity *
+StructuralScene::clone (StructuralEntity *ent, StructuralEntity *newparent)
+{
+  StructuralEntity *newent = createEntity (ent->getType ());
   newent->setParent (newparent);
   newent->setProperties (ent->getProperties ());
 
   for (StructuralEntity *child : ent->getChildren ())
-  {
     newent->addChild (this->clone (child, newent));
-  }
 
   return newent;
 }

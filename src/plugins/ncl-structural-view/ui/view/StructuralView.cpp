@@ -150,99 +150,6 @@ StructuralView::performLink ()
   setMode (Structural::Linking);
 }
 
-StructuralEntity *
-StructuralView::createEntity (StructuralType type, StructuralEntity *parent)
-{
-  StructuralEntity *e = nullptr;
-
-  if (parent != nullptr || !ST_DEFAULT_WITH_BODY)
-  {
-    switch (type)
-    {
-      case Structural::Media:
-        e = new StructuralContent ();
-        break;
-
-      case Structural::Context:
-      case Structural::Switch:
-        e = new StructuralComposition ();
-        e->setType (type);
-        break;
-
-      case Structural::Link:
-      {
-        e = new StructuralLink ();
-        e->setType (type);
-
-        connect ((StructuralLink *)e, &StructuralLink::performedEdit, this,
-                 &StructuralView::performLinkDialog);
-
-        break;
-      }
-
-      case Structural::Area:
-      case Structural::Property:
-      case Structural::Port:
-      case Structural::SwitchPort:
-      {
-        e = new StructuralInterface ();
-        e->setType (type);
-        break;
-      }
-
-      case Structural::Reference:
-      case Structural::Mapping:
-      {
-        e = new StructuralEdge ();
-        e->setType (type);
-        break;
-      }
-
-      case Structural::Bind:
-      {
-        e = new StructuralBind ();
-        e->setType (type);
-
-        connect ((StructuralBind *)e, &StructuralBind::performedEdit, this,
-                 &StructuralView::performBindDialog);
-        break;
-      }
-
-      default:
-      {
-        break;
-      }
-    }
-  }
-  else
-  {
-    switch (type)
-    {
-      case Structural::Body:
-      {
-        if (_scene->getBody () == nullptr)
-        {
-          e = new StructuralComposition ();
-          e->setType (type);
-
-          e->setWidth (ST_DEFAULT_BODY_W);
-          e->setHeight (ST_DEFAULT_BODY_H);
-
-          canAddBody (false);
-        }
-        break;
-      }
-
-      default:
-      {
-        break;
-      }
-    }
-  }
-
-  return e;
-}
-
 void
 StructuralView::insert (QString uid, QString parent,
                         QMap<QString, QString> props,
@@ -250,131 +157,131 @@ StructuralView::insert (QString uid, QString parent,
 {
   CPR_ASSERT (!_scene->hasEntity (uid));
 
+  StructuralType type = StructuralUtil::strToType (props[ST_ATTR_ENT_TYPE]);
+  StructuralEntity *e = _scene->createEntity (type);
+  CPR_ASSERT_NON_NULL (e);
+
   StructuralEntity *p = nullptr;
   if (_scene->hasEntity (parent))
     p = _scene->getEntity (parent);
 
-  StructuralType type = StructuralUtil::strToType (props[ST_ATTR_ENT_TYPE]);
-  StructuralEntity *e = createEntity (type, p);
+  if (type != StructuralType::Body && p == nullptr)
+    CPR_ASSERT_NOT_REACHED ();
 
-  //  CPR_ASSERT_NON_NULL (e);
+  e->setUid (uid);
 
-  if (e)
+  if (!props.contains (ST_ATTR_ENT_ID))
+    e->setId (_scene->createNewId (e->getType ()));
+
+  if (p)
+    e->setParent (p);
+  else
+    _scene->addItem (e);
+
+  if (!props.contains (ST_ATTR_ENT_TOP))
   {
-    e->setUid (uid);
-
-    if (!props.contains (ST_ATTR_ENT_ID))
-      e->setId (_scene->createNewId (e->getType ()));
-
     if (p)
-      e->setParent (p);
+      e->setTop (p->getHeight () / 2 - e->getHeight () / 2);
     else
-      _scene->addItem (e);
-
-    if (!props.contains (ST_ATTR_ENT_TOP))
     {
-      if (p != nullptr)
-        e->setTop (p->getHeight () / 2 - e->getHeight () / 2);
-      else
-      {
-        auto rect = this->mapToScene (this->viewport ()->rect ().center ());
-        e->setTop (rect.y () - e->getHeight () / 2);
-      }
-    }
-
-    if (!props.contains (ST_ATTR_ENT_LEFT))
-    {
-      if (p != nullptr)
-        e->setLeft (p->getWidth () / 2 - e->getWidth () / 2);
-      else
-      {
-        auto rect = this->mapToScene (this->viewport ()->rect ().center ());
-        e->setLeft (rect.x () - e->getWidth () / 2);
-      }
-    }
-
-    e->setMenu (_menu);
-    e->setProperties (props);
-
-    _scene->getEntities ()[uid] = e;
-
-    // Adjust 'compositions'
-    if (p != nullptr)
-    {
-      if (!p->isUncollapsed ())
-      {
-        if (p->getType () == Structural::Body
-            || p->getType () == Structural::Switch
-            || p->getType () == Structural::Context)
-        {
-          ((StructuralComposition *)p)->collapse ();
-          ((StructuralComposition *)p)->collapse ();
-        }
-      }
-    }
-
-    // Adjust 'references'
-    if (settings[ST_SETTINGS_ADJUST_REFERENCE] != ST_VALUE_FALSE)
-    {
-      adjustReferences (e);
-    }
-
-    // Adjust 'angles'
-    if (e->getType () == Structural::Bind)
-      if (!props.contains (ST_ATTR_EDGE_ANGLE))
-        ((StructuralBind *)e)->setAngle (getNewAngle ((StructuralBind *)e));
-
-    // Adjust 'others'
-    if (!props.contains (ST_ATTR_ENT_TOP)
-        || !props.contains (ST_ATTR_ENT_LEFT))
-      e->adjust (false);
-    else
-      e->adjust (true);
-
-    if (settings[ST_SETTINGS_ADJUST_REFERENCE] != ST_VALUE_FALSE)
-    {
-      if (e->getCategory () == Structural::Interface && p != nullptr
-          && p->getType () == Structural::Media)
-      {
-        if (p->isReference ())
-          adjustReferences (p);
-        else
-          for (const QString &key : _scene->getRefs ().keys ())
-          {
-            if (_scene->getRefs ().contains (key)
-                && _scene->getRefs ().value (key) == p->getUid ()
-                && _scene->hasEntity (key))
-            {
-              adjustReferences (_scene->getEntity (key));
-            }
-          }
-      }
-    }
-
-    connect (e, &StructuralEntity::insertAsked, this, &StructuralView::insert);
-    connect (e, &StructuralEntity::changeAsked, this,
-             &StructuralView::changeEntity);
-    // connect (e, &StructuralEntity::removed, this, &StructuralView::remove);
-    connect (e, &StructuralEntity::selectAsked, this, &StructuralView::select);
-    connect (e, &StructuralEntity::moveAsked, this, &StructuralView::move);
-
-    if (settings[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
-    {
-      emit inserted (uid, parent, e->getProperties (), settings);
-    }
-
-    if (!ST_DEFAULT_WITH_INTERFACES)
-    {
-      // Since interfaces are hidden, no update related with that entities
-      // are notified. However, the structural view create a new id when this
-      // property is empty, then the change must be explicit notified for the
-      // hidden entities (interface in this case).
-      emit changed (uid, e->getProperties (),
-                    e->getProperties (), // this param is not used
-                    // in this case
-                    StructuralUtil::createSettings (false, false));
+      auto rect = this->mapToScene (this->viewport ()->rect ().center ());
+      e->setTop (rect.y () - e->getHeight () / 2);
     }
   }
+
+  if (!props.contains (ST_ATTR_ENT_LEFT))
+  {
+    if (p)
+      e->setLeft (p->getWidth () / 2 - e->getWidth () / 2);
+    else
+    {
+      auto rect = this->mapToScene (this->viewport ()->rect ().center ());
+      e->setLeft (rect.x () - e->getWidth () / 2);
+    }
+  }
+
+  e->setMenu (_menu);
+  e->setProperties (props);
+
+  _scene->getEntities ()[uid] = e;
+
+  // Adjust 'compositions'
+  if (p)
+  {
+    if (!p->isUncollapsed ())
+    {
+      if (p->getType () == Structural::Body
+          || p->getType () == Structural::Switch
+          || p->getType () == Structural::Context)
+      {
+        ((StructuralComposition *)p)->collapse ();
+        ((StructuralComposition *)p)->collapse ();
+      }
+    }
+  }
+
+  // Adjust 'references'
+  if (settings[ST_SETTINGS_ADJUST_REFERENCE] != ST_VALUE_FALSE)
+    adjustReferences (e);
+
+  // Adjust 'angles'
+  if (e->getType () == Structural::Bind)
+    if (!props.contains (ST_ATTR_EDGE_ANGLE))
+      ((StructuralBind *)e)->setAngle (getNewAngle ((StructuralBind *)e));
+
+  // Adjust 'others'
+  if (!props.contains (ST_ATTR_ENT_TOP)
+      || !props.contains (ST_ATTR_ENT_LEFT))
+    e->adjust (false);
+  else
+    e->adjust (true);
+
+  if (settings[ST_SETTINGS_ADJUST_REFERENCE] != ST_VALUE_FALSE)
+  {
+    if (e->getCategory () == Structural::Interface && p != nullptr
+        && p->getType () == Structural::Media)
+    {
+      if (p->isReference ())
+        adjustReferences (p);
+      else
+        for (const QString &key : _scene->getRefs ().keys ())
+        {
+          if (_scene->getRefs ().contains (key)
+              && _scene->getRefs ().value (key) == p->getUid ()
+              && _scene->hasEntity (key))
+          {
+            adjustReferences (_scene->getEntity (key));
+          }
+        }
+    }
+  }
+
+  connect (e, &StructuralEntity::insertAsked, this, &StructuralView::insert);
+  connect (e, &StructuralEntity::changeAsked, this,
+           &StructuralView::changeEntity);
+//  connect (e, &StructuralEntity::removed, this, &StructuralView::remove);
+  connect (e, &StructuralEntity::selectAsked, this, &StructuralView::select);
+  connect (e, &StructuralEntity::moveAsked, this, &StructuralView::move);
+
+  if (settings[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
+  {
+    emit inserted (uid, parent, e->getProperties (), settings);
+  }
+
+  if (!ST_OPT_SHOW_INTERFACES)
+  {
+    // Since interfaces are hidden, no update related with that entities
+    // are notified. However, the structural view create a new id when this
+    // property is empty, then the change must be explicit notified for the
+    // hidden entities (interface in this case).
+    emit changed (uid, e->getProperties (),
+                  e->getProperties (), // this param is not used
+                  // in this case
+                  StructuralUtil::createSettings (false, false));
+  }
+
+  if (type == StructuralType::Body)
+    emit canAddBody(false);
 }
 
 qreal
@@ -495,7 +402,7 @@ StructuralView::remove (QString uid, QMap<QString, QString> stgs)
           }
           else
           {
-            if (ST_DEFAULT_WITH_INTERFACES)
+            if (ST_OPT_SHOW_INTERFACES)
             {
               // In case of 'Structural::Reference' edge, just change
               // 'Structural::Port' properties.
@@ -538,7 +445,7 @@ StructuralView::remove (QString uid, QMap<QString, QString> stgs)
       }
     }
 
-    if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
+    if (!ST_OPT_WITH_BODY && !ST_OPT_USE_FLOATING_INTERFACES)
     {
       if (e->getType () == Structural::Port)
       {
@@ -601,7 +508,7 @@ StructuralView::change (QString uid, QMap<QString, QString> props,
     comp->collapse ();
   }
 
-  if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
+  if (!ST_OPT_WITH_BODY && !ST_OPT_USE_FLOATING_INTERFACES)
   {
     if (ent->getType () == Structural::Port)
     {
@@ -905,7 +812,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
         {
           StructuralInterface *interface = (StructuralInterface *)rel;
 
-          if (!ST_DEFAULT_WITH_INTERFACES)
+          if (!ST_OPT_SHOW_INTERFACES)
           {
             if (interface->getType () == Structural::Port)
             {
@@ -943,7 +850,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
 
       if (tail != nullptr && head != nullptr)
       {
-        if (!ST_DEFAULT_WITH_INTERFACES)
+        if (!ST_OPT_SHOW_INTERFACES)
         {
           if (tail->getCategory () == Structural::Interface)
           {
@@ -1088,7 +995,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
 
       if (type == Structural::Port)
       {
-        if (ST_DEFAULT_WITH_INTERFACES)
+        if (ST_OPT_SHOW_INTERFACES)
         {
           for (StructuralEntity *e : _scene->getEntities ().values ())
             if (e->getType () == Structural::Reference)
@@ -1143,8 +1050,8 @@ StructuralView::adjustReferences (StructuralEntity *ent)
               else
                 parentUid = "";
 
-              if (!ST_DEFAULT_WITH_BODY
-                  && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
+              if (!ST_OPT_WITH_BODY
+                  && !ST_OPT_USE_FLOATING_INTERFACES)
               {
                 if (ent->getParent () == nullptr)
                 {
@@ -1161,7 +1068,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
             }
           }
         }
-        else if (!ST_DEFAULT_WITH_FLOATING_INTERFACES)
+        else if (!ST_OPT_USE_FLOATING_INTERFACES)
         {
           StructuralEntity *component = nullptr;
           StructuralEntity *interface = nullptr;
@@ -1259,7 +1166,7 @@ StructuralView::select (QString uid, QMap<QString, QString> settings)
 
     bool enablePaste = false;
 
-    if (!ST_DEFAULT_WITH_BODY)
+    if (!ST_OPT_WITH_BODY)
     {
       if (_clipboard != nullptr)
       {
@@ -1376,8 +1283,7 @@ StructuralView::removeEntity (QString uid, QMap<QString, QString> stgs)
   if (!e->isReference () || e->getCategory () != Structural::Interface)
   {
     QString parent = "";
-
-    if (p != nullptr)
+    if (p)
       parent = p->getUid ();
 
     Remove *cmd
@@ -1391,7 +1297,7 @@ StructuralView::removeEntity (QString uid, QMap<QString, QString> stgs)
 void
 StructuralView::performAutostart ()
 {
-  CPR_ASSERT_X (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES,
+  CPR_ASSERT_X (!ST_OPT_WITH_BODY && !ST_OPT_USE_FLOATING_INTERFACES,
                 "performAutostart",
                 "Autostart is only available when when body and floating"
                 "interfaces are disabled in build");
@@ -1409,7 +1315,7 @@ StructuralView::performAutostart ()
   {
     QVector<StructuralEntity *> neighbors = StructuralUtil::getNeighbors (e);
 
-    if (ST_DEFAULT_WITH_INTERFACES)
+    if (ST_OPT_SHOW_INTERFACES)
     {
       if (e->getCategory () == Structural::Interface)
         neighbors += StructuralUtil::getUpNeighbors (e);
@@ -1424,7 +1330,7 @@ StructuralView::performAutostart ()
       {
         if (neighbor->getProperty (ST_ATTR_REFERENCE_COMPONENT_UID)
                 == e->getUid ()
-            || (ST_DEFAULT_WITH_INTERFACES
+            || (ST_OPT_SHOW_INTERFACES
                 && neighbor->getProperty (ST_ATTR_REFERENCE_INTERFACE_UID)
                        == e->getUid ()))
         {
@@ -1599,7 +1505,7 @@ StructuralView::performPaste ()
 
     bool isAValidPaste = false;
 
-    if (!ST_DEFAULT_WITH_BODY)
+    if (!ST_OPT_WITH_BODY)
     {
       if (StructuralUtil::validateKinship (_clipboard->getType (),
                                            Structural::Body))
@@ -1693,7 +1599,7 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
   StructuralEntity *parentHead = (StructuralEntity *)head->getParent ();
 
   if ((parentTail != nullptr && parentHead != nullptr)
-      || !ST_DEFAULT_WITH_BODY)
+      || !ST_OPT_WITH_BODY)
   {
     StructuralEntity *parent = nullptr;
 
@@ -1737,7 +1643,7 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
     setMode (Structural::Pointing);
     emit switchedPointer (true);
 
-    if (parent != nullptr || !ST_DEFAULT_WITH_BODY)
+    if (parent != nullptr || !ST_OPT_WITH_BODY)
     {
       emit updateRequested ();
 
@@ -1945,7 +1851,7 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
   StructuralEntity *parentHead = head->getParent ();
 
   if ((parentTail != nullptr && parentHead != nullptr)
-      || !ST_DEFAULT_WITH_BODY)
+      || !ST_OPT_WITH_BODY)
   {
     StructuralEntity *parent = nullptr;
 
@@ -1960,7 +1866,7 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
              && head->getCategory () == Structural::Interface)
       parent = parentTail;
 
-    if (parent != nullptr || !ST_DEFAULT_WITH_BODY)
+    if (parent != nullptr || !ST_OPT_WITH_BODY)
     {
       QString uid = StructuralUtil::createUid ();
 
@@ -2578,7 +2484,7 @@ StructuralView::dragEnterEvent (QDragEnterEvent *evt)
 {
   QGraphicsView::dragEnterEvent (evt);
 
-  if (!ST_DEFAULT_WITH_BODY)
+  if (!ST_OPT_WITH_BODY)
   {
     if (!evt->isAccepted ())
     {
@@ -2600,7 +2506,7 @@ StructuralView::dragMoveEvent (QDragMoveEvent *evt)
 {
   QGraphicsView::dragMoveEvent (evt);
 
-  if (!ST_DEFAULT_WITH_BODY)
+  if (!ST_OPT_WITH_BODY)
   {
     if (!evt->isAccepted ())
     {
@@ -2622,7 +2528,7 @@ StructuralView::dropEvent (QDropEvent *evt)
 {
   QGraphicsView::dropEvent (evt);
 
-  if (!ST_DEFAULT_WITH_BODY)
+  if (!ST_OPT_WITH_BODY)
   {
     if (evt->isAccepted ())
     {
@@ -2807,7 +2713,7 @@ StructuralView::performBindDialog (StructuralBind *ent)
             StructuralUtil::getIcon (e->getType ()));
       }
 
-      if (!ST_DEFAULT_WITH_INTERFACES)
+      if (!ST_OPT_SHOW_INTERFACES)
       {
         if (!ent->getProperty (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ()
             && _scene->hasEntity (
@@ -2849,7 +2755,7 @@ StructuralView::performBindDialog (StructuralBind *ent)
                                      StructuralUtil::getIcon (e->getType ()));
       }
 
-      if (!ST_DEFAULT_WITH_INTERFACES)
+      if (!ST_OPT_SHOW_INTERFACES)
       {
         if (!ent->getProperty (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ()
             && _scene->hasEntity (

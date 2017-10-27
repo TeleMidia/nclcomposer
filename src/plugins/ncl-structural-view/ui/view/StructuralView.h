@@ -159,9 +159,6 @@ protected:
   virtual void resizeEvent (QResizeEvent *event);
 
 private:
-  StructuralEntity *createEntity (StructuralType type,
-                                  StructuralEntity *parent);
-
   void createLink (StructuralEntity *tail, StructuralEntity *head);
   void createBind (StructuralEntity *tail, StructuralEntity *head,
                    const QString &role = "", const QString &code = "");
