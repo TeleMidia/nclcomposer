@@ -13,10 +13,6 @@ namespace StructuralUtil
 {
 QString createUid ();
 
-QMap<QString, QString> createProperties (qreal top, qreal left);
-QMap<QString, QString> createProperties (qreal top, qreal left, qreal width,
-                                         qreal height);
-
 QMap<QString, QString> createSettings ();
 QMap<QString, QString> createSettings (bool undo, bool notify);
 QMap<QString, QString> createSettings (const QString &undo,

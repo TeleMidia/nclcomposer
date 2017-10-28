@@ -18,22 +18,6 @@ createUid ()
 }
 
 QMap<QString, QString>
-createProperties (qreal top, qreal left)
-{
-  return { { ST_ATTR_ENT_TOP, QString::number (top) },
-           { ST_ATTR_ENT_LEFT, QString::number (left) } };
-}
-
-QMap<QString, QString>
-createProperties (qreal top, qreal left, qreal width, qreal height)
-{
-  return { { ST_ATTR_ENT_TOP, QString::number (top) },
-           { ST_ATTR_ENT_LEFT, QString::number (left) },
-           { ST_ATTR_ENT_WIDTH, QString::number (width) },
-           { ST_ATTR_ENT_HEIGHT, QString::number (height) } };
-}
-
-QMap<QString, QString>
 createSettings ()
 {
   return createSettings (true, true);
