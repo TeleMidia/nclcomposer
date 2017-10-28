@@ -7,7 +7,7 @@
 
 #include "util/Utilities.h"
 
-Q_LOGGING_CATEGORY(CPR_PLUGIN_STRUCT, "cpr.plugin.struct")
+Q_LOGGING_CATEGORY (CPR_PLUGIN_STRUCT, "cpr.plugin.struct")
 
 QString
 StructuralUtil::createUid ()
@@ -371,12 +371,12 @@ StructuralUtil::getColor (StructuralType type)
 }
 
 const std::map<Structural::Type, QString> StructuralUtil::_entitiesPrefix
-    = { { Structural::Media, "m" },     { Structural::Body, "b" },
-        { Structural::Context, "ctx" }, { Structural::Switch, "swt" },
-        { Structural::Port, "p" },      { Structural::SwitchPort, "swtp" },
-        { Structural::Area, "a" },      { Structural::Property, "p" },
-        { Structural::Link, "l" },      { Structural::Bind, "bd" },
-        { Structural::Reference, "ref" },  { Structural::Mapping, "map" },
+    = { { Structural::Media, "m" },       { Structural::Body, "b" },
+        { Structural::Context, "ctx" },   { Structural::Switch, "swt" },
+        { Structural::Port, "p" },        { Structural::SwitchPort, "swtp" },
+        { Structural::Area, "a" },        { Structural::Property, "p" },
+        { Structural::Link, "l" },        { Structural::Bind, "bd" },
+        { Structural::Reference, "ref" }, { Structural::Mapping, "map" },
         { Structural::NoType, "e" } };
 
 QString
@@ -540,7 +540,7 @@ StructuralUtil::getNeighbors (StructuralEntity *ent)
   else if (!ST_OPT_WITH_BODY)
   {
     StructuralScene *scn = dynamic_cast<StructuralScene *> (ent->scene ());
-//    CPR_ASSERT_NON_NULL (scn);
+    //    CPR_ASSERT_NON_NULL (scn);
 
     if (scn)
     {
@@ -569,8 +569,8 @@ StructuralUtil::getUpNeighbors (StructuralEntity *ent)
     }
     else if (!ST_OPT_WITH_BODY)
     {
-      StructuralScene *scn = (StructuralScene *) ent->scene ();
-//      CPR_ASSERT_NON_NULL (scn);
+      StructuralScene *scn = (StructuralScene *)ent->scene ();
+      //      CPR_ASSERT_NON_NULL (scn);
 
       qWarning () << scn;
       if (scn)

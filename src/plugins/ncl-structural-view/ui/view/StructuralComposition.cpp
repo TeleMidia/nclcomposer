@@ -148,14 +148,14 @@ StructuralComposition::draw (QPainter *painter)
     }
 
 #if ST_OPT_COMPOSITIONS_AS_RECT
-# define drawComposition(x,y,w,h) drawRoundedRect (x,y,w,h,20,20)
+#define drawComposition(x, y, w, h) drawRoundedRect (x, y, w, h, 20, 20)
 #else
-# define drawComposition(x,y,w,h) drawEllipse (x,y,w,h)
+#define drawComposition(x, y, w, h) drawEllipse (x, y, w, h)
 #endif
 
     painter->drawComposition (ST_DEFAULT_ENTITY_PADDING,
-                              ST_DEFAULT_ENTITY_PADDING,
-                              getWidth (), getHeight ());
+                              ST_DEFAULT_ENTITY_PADDING, getWidth (),
+                              getHeight ());
 
     painter->setBrush (Qt::NoBrush);
 

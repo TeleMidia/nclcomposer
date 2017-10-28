@@ -16,9 +16,11 @@ public:
 
   StructuralEntity *getTail () const;
   void setTail (StructuralEntity *tail);
+  bool hasTail () const;
 
   StructuralEntity *getHead () const;
   void setHead (StructuralEntity *head);
+  bool hasHead () const;
 
   virtual void adjust (bool collision = false, bool recursion = true);
 

@@ -106,6 +106,12 @@ StructuralEdge::setTail (StructuralEntity *tail)
   _tail = tail;
 }
 
+bool
+StructuralEdge::hasTail () const
+{
+  return (_tail != nullptr);
+}
+
 StructuralEntity *
 StructuralEdge::getHead () const
 {
@@ -116,6 +122,12 @@ void
 StructuralEdge::setHead (StructuralEntity *head)
 {
   _head = head;
+}
+
+bool
+StructuralEdge::hasHead () const
+{
+  return (_head != nullptr);
 }
 
 void

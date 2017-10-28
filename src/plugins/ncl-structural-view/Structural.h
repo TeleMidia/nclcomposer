@@ -297,4 +297,7 @@ typedef Structural::MimeType StructuralMimeType;
 typedef Structural::Role StructuralRole;
 typedef Structural::Mode StructuralMode;
 
+#include <QMap>
+typedef QMap<QString, QString> QStrMap;
+
 #endif // STRUCTURAL_H

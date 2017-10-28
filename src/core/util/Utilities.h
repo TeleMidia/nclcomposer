@@ -121,6 +121,13 @@ COMPOSERCORESHARED_EXPORT
 #define CPR_ASSERT_NOT_REACHED() \
   CPR_ASSERT_X(false,"","Should not reach here.")
 
+// Cast utilities.
+#undef cast
+#define cast(a, b)       (dynamic_cast<a>((b)))
+#define instanceof(a, b) (cast (a,(b)) != nullptr)
+
+#define not_null(a) (a != nullptr)
+
 CPR_CORE_END_NAMESPACE
 
 #endif // DEFINITIONS_H

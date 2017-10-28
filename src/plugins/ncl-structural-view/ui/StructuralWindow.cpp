@@ -348,10 +348,8 @@ StructuralWindow::createConnections ()
   connect (_minimapAction, &QAction::triggered, _view,
            &StructuralView::toggleMinimapVisibility);
 
-  connect (_undoAction, &QAction::triggered, _view,
-           &StructuralView::undo);
-  connect (_redoAction, &QAction::triggered, _view,
-           &StructuralView::redo);
+  connect (_undoAction, &QAction::triggered, _view, &StructuralView::undo);
+  connect (_redoAction, &QAction::triggered, _view, &StructuralView::redo);
   connect (_cutAction, &QAction::triggered, _view,
            &StructuralView::performCut);
   connect (_copyAction, &QAction::triggered, _view,
@@ -475,7 +473,7 @@ StructuralWindow::select (QString uid, QMap<QString, QString> settings)
   Q_UNUSED (settings);
 
   StructuralEntity *ent = nullptr;
-  if (_view->getScene()->hasEntity (uid))
+  if (_view->getScene ()->hasEntity (uid))
     ent = _view->getScene ()->getEntity (uid);
 
   if (ent != nullptr)

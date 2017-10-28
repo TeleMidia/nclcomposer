@@ -27,6 +27,7 @@
 #include "StructuralMinimap.h"
 #include "StructuralScene.h"
 
+typedef StructuralUtil util;
 class StructuralMinimap;
 
 class StructuralView : public QGraphicsView
@@ -60,26 +61,23 @@ public:
 
 public slots:
   // External methods
-  void createEntity (StructuralType type,
-                     QMap<QString, QString> prop = QMap<QString, QString> (),
-                     QMap<QString, QString> stgs = QMap<QString, QString> ());
+  void createEntity (StructuralType type, QStrMap prop = QStrMap (),
+                     QStrMap stgs = QStrMap ());
 
-  void changeEntity (QString uid, QMap<QString, QString> props,
-                     QMap<QString, QString> prev, QMap<QString, QString> stgs);
+  void changeEntity (QString uid, QStrMap props, QStrMap prev, QStrMap stgs);
 
-  void removeEntity (QString uid, QMap<QString, QString> settings);
+  void removeEntity (QString uid, QStrMap settings);
 
   // "Internal" methods
-  void insert (QString uid, QString parent, QMap<QString, QString> properties,
-               QMap<QString, QString> settings);
-  void remove (QString uid, QMap<QString, QString> settings);
-  void change (QString uid, QMap<QString, QString> properties,
-               QMap<QString, QString> previous,
-               QMap<QString, QString> settings);
-  void select (QString uid, QMap<QString, QString> settings);
+  void insert (QString uid, QString parent, QStrMap properties,
+               QStrMap settings);
+  void remove (QString uid, QStrMap settings);
+  void change (QString uid, QStrMap properties, QStrMap previous,
+               QStrMap settings);
+  void select (QString uid, QStrMap settings);
 
-  void move (QString uid, QString parent, QMap<QString, QString> properties,
-             QMap<QString, QString> settings);
+  void move (QString uid, QString parent, QStrMap properties,
+             QStrMap settings);
 
   void zoomIn ();
   void zoomOut ();
@@ -104,9 +102,7 @@ public slots:
   void performAutoAdjust ();
 #endif
 
-  void performProperties ();
-
-  void performInsert (StructuralType type, QMap<QString, QString> properties);
+  void performInsert (StructuralType type, QStrMap properties);
 
   void performLinkDialog (StructuralLink *entity);
   void performBindDialog (StructuralBind *entity);
@@ -116,14 +112,12 @@ public slots:
   void adjustReferences (StructuralEntity *entity);
 
 signals:
-  void inserted (QString uid, QString _parent,
-                 QMap<QString, QString> properties,
-                 QMap<QString, QString> settings);
-  void removed (QString uid, QMap<QString, QString> settings);
-  void changed (QString uid, QMap<QString, QString> properties,
-                QMap<QString, QString> previous,
-                QMap<QString, QString> settings);
-  void selected (QString uid, QMap<QString, QString> settings);
+  void inserted (QString uid, QString _parent, QStrMap properties,
+                 QStrMap settings);
+  void removed (QString uid, QStrMap settings);
+  void changed (QString uid, QStrMap properties, QStrMap previous,
+                QStrMap settings);
+  void selected (QString uid, QStrMap settings);
 
   void canUndoChanged (bool state);
   void canRedoChanged (bool state);
@@ -191,7 +185,7 @@ private:
   QString _selected;
 
   StructuralEntity *_clipboard;
-  QMap<QString, QString> _clipboardRefs;
+  QStrMap _clipboardRefs;
 
   QUndoStack _commands;
 

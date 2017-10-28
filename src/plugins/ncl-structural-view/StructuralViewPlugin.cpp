@@ -96,7 +96,7 @@ StructuralViewPlugin::init ()
 
   c = data.mid (ci, ei - ci);
 
-  if (!c.isEmpty())
+  if (!c.isEmpty ())
     _struct_scene->load (c);
 }
 
@@ -233,8 +233,7 @@ StructuralViewPlugin::updateFromModel ()
 
   QStack<StructuralEntity *> stack2;
 
-  for (StructuralEntity *cur :
-       _struct_scene->getEntities ().values ())
+  for (StructuralEntity *cur : _struct_scene->getEntities ().values ())
   {
     if (cur->getParent () == nullptr)
       stack2.push (cur);
@@ -1097,7 +1096,8 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
 
   if (type == Structural::Bind)
   {
-    QString coreUid = _viewToCore.value (props.value (ST_ATTR_REFERENCE_LINK_UID));
+    QString coreUid
+        = _viewToCore.value (props.value (ST_ATTR_REFERENCE_LINK_UID));
     entParent = getProject ()->getEntityById (coreUid);
   }
   else if (type == Structural::Mapping)
@@ -1133,7 +1133,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
     }
 
     list = getProject ()->getEntitiesbyType ("ncl");
-    CPR_ASSERT ( !list.isEmpty());
+    CPR_ASSERT (!list.isEmpty ());
     entParent = list.first ();
   }
   else if (parent.isEmpty () && !ST_OPT_WITH_BODY)

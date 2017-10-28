@@ -4,8 +4,8 @@
 #include <QMap>
 #include <QObject>
 
-#include <QLoggingCategory>
 #include "StructuralEntity.h"
+#include <QLoggingCategory>
 
 class StructuralEntity;
 
@@ -112,6 +112,6 @@ invert (const std::map<V, K> &map)
   return inverted;
 }
 
-Q_DECLARE_LOGGING_CATEGORY(CPR_PLUGIN_STRUCT)
+Q_DECLARE_LOGGING_CATEGORY (CPR_PLUGIN_STRUCT)
 
 #endif // STRUCTURALUTIL_H

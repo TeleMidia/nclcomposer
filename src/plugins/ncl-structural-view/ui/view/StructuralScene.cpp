@@ -264,8 +264,8 @@ StructuralScene::createEntity (StructuralType type)
     case Structural::Link:
       e = new StructuralLink ();
       e->setType (type);
-//    connect ((StructuralLink *)e, &StructuralLink::performedEdit, this,
-//             &StructuralView::performLinkDialog);
+      //    connect ((StructuralLink *)e, &StructuralLink::performedEdit, this,
+      //             &StructuralView::performLinkDialog);
       break;
 
     case Structural::Area:
@@ -285,8 +285,8 @@ StructuralScene::createEntity (StructuralType type)
     case Structural::Bind:
       e = new StructuralBind ();
       e->setType (type);
-//    connect ((StructuralBind *)e, &StructuralBind::performedEdit, this,
-//             &StructuralView::performBindDialog);
+      //    connect ((StructuralBind *)e, &StructuralBind::performedEdit, this,
+      //             &StructuralView::performBindDialog);
       break;
 
     default:
