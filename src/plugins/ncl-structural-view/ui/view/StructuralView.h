@@ -27,7 +27,7 @@
 #include "StructuralMinimap.h"
 #include "StructuralScene.h"
 
-typedef StructuralUtil util;
+namespace util = StructuralUtil;
 class StructuralMinimap;
 
 class StructuralView : public QGraphicsView

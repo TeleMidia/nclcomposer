@@ -9,22 +9,23 @@
 
 Q_LOGGING_CATEGORY (CPR_PLUGIN_STRUCT, "cpr.plugin.struct")
 
+namespace StructuralUtil
+{
 QString
-StructuralUtil::createUid ()
+createUid ()
 {
   return QUuid::createUuid ().toString ();
 }
 
 QMap<QString, QString>
-StructuralUtil::createProperties (qreal top, qreal left)
+createProperties (qreal top, qreal left)
 {
   return { { ST_ATTR_ENT_TOP, QString::number (top) },
            { ST_ATTR_ENT_LEFT, QString::number (left) } };
 }
 
 QMap<QString, QString>
-StructuralUtil::createProperties (qreal top, qreal left, qreal width,
-                                  qreal height)
+createProperties (qreal top, qreal left, qreal width, qreal height)
 {
   return { { ST_ATTR_ENT_TOP, QString::number (top) },
            { ST_ATTR_ENT_LEFT, QString::number (left) },
@@ -33,13 +34,13 @@ StructuralUtil::createProperties (qreal top, qreal left, qreal width,
 }
 
 QMap<QString, QString>
-StructuralUtil::createSettings ()
+createSettings ()
 {
   return createSettings (true, true);
 }
 
 QMap<QString, QString>
-StructuralUtil::createSettings (bool undo, bool notify)
+createSettings (bool undo, bool notify)
 {
   return createSettings ((undo ? ST_VALUE_TRUE : ST_VALUE_FALSE),
                          (notify ? ST_VALUE_TRUE : ST_VALUE_FALSE),
@@ -47,8 +48,8 @@ StructuralUtil::createSettings (bool undo, bool notify)
 }
 
 QMap<QString, QString>
-StructuralUtil::createSettings (const QString &undo, const QString &notify,
-                                const QString &code)
+createSettings (const QString &undo, const QString &notify,
+                const QString &code)
 {
   QMap<QString, QString> sts;
 
@@ -71,7 +72,7 @@ StructuralUtil::createSettings (const QString &undo, const QString &notify,
 }
 
 QMap<QString, QString>
-StructuralUtil::createCoreTranslations (StructuralType type)
+createCoreTranslations (StructuralType type)
 {
   QMap<QString, QString> transls;
 
@@ -182,7 +183,7 @@ StructuralUtil::createCoreTranslations (StructuralType type)
 }
 
 QMap<QString, QString>
-StructuralUtil::createPluginTranslations (StructuralType type)
+createPluginTranslations (StructuralType type)
 {
   QMap<QString, QString> transl;
   QMap<QString, QString> inverted = createCoreTranslations (type);
@@ -193,17 +194,17 @@ StructuralUtil::createPluginTranslations (StructuralType type)
   return transl;
 }
 
-const std::map<Structural::Category, QString> StructuralUtil::_categoryToStr
+static const std::map<Structural::Category, QString> _categoryToStr
     = { { Structural::Node, "node" },
         { Structural::Edge, "edge" },
         { Structural::Interface, "interface" },
         { Structural::NoCategory, "" } };
 
-const std::map<QString, Structural::Category> StructuralUtil::_strToCategory
-    = invert<QString, Structural::Category> (StructuralUtil::_categoryToStr);
+const std::map<QString, Structural::Category> _strToCategory
+    = invert<QString, Structural::Category> (_categoryToStr);
 
 QString
-StructuralUtil::categoryToStr (StructuralCategory category)
+categoryToStr (StructuralCategory category)
 {
   if (_categoryToStr.count (category))
     return _categoryToStr.at (category);
@@ -212,7 +213,7 @@ StructuralUtil::categoryToStr (StructuralCategory category)
 }
 
 StructuralCategory
-StructuralUtil::strToCategory (const QString &category)
+strToCategory (const QString &category)
 {
   if (_strToCategory.count (category))
     return _strToCategory.at (category);
@@ -220,7 +221,7 @@ StructuralUtil::strToCategory (const QString &category)
     return Structural::NoCategory;
 }
 
-const std::map<Structural::Type, QString> StructuralUtil::_typeToStr
+static const std::map<Structural::Type, QString> _typeToStr
     = { { Structural::Media, "media" },
         { Structural::Body, "body" },
         { Structural::Context, "context" },
@@ -235,11 +236,11 @@ const std::map<Structural::Type, QString> StructuralUtil::_typeToStr
         { Structural::Mapping, "mapping" },
         { Structural::NoType, "" } };
 
-const std::map<QString, Structural::Type> StructuralUtil::_strToType
-    = invert<QString, Structural::Type> (StructuralUtil::_typeToStr);
+static const std::map<QString, Structural::Type> _strToType
+    = invert<QString, Structural::Type> (_typeToStr);
 
 QString
-StructuralUtil::typeToStr (StructuralType type)
+typeToStr (StructuralType type)
 {
   if (_typeToStr.count (type))
     return _typeToStr.at (type);
@@ -248,7 +249,7 @@ StructuralUtil::typeToStr (StructuralType type)
 }
 
 StructuralType
-StructuralUtil::strToType (const QString &type)
+strToType (const QString &type)
 {
   if (_strToType.count (type))
     return _strToType.at (type);
@@ -256,7 +257,7 @@ StructuralUtil::strToType (const QString &type)
     return Structural::NoType;
 }
 
-const std::map<Structural::Role, QString> StructuralUtil::_roleToStr
+static const std::map<Structural::Role, QString> _roleToStr
     = { { Structural::onBegin, "onBegin" },
         { Structural::onEnd, "onEnd" },
         { Structural::onSelection, "onSelection" },
@@ -273,11 +274,11 @@ const std::map<Structural::Role, QString> StructuralUtil::_roleToStr
         { Structural::Set, "set" },
         { Structural::NoRole, "" } };
 
-const std::map<QString, Structural::Role> StructuralUtil::_strToRole
-    = invert<QString, Structural::Role> (StructuralUtil::_roleToStr);
+static const std::map<QString, Structural::Role> _strToRole
+    = invert<QString, Structural::Role> (_roleToStr);
 
 QString
-StructuralUtil::roleToString (StructuralRole role)
+roleToString (StructuralRole role)
 {
   if (_roleToStr.count (role))
     return _roleToStr.at (role);
@@ -286,7 +287,7 @@ StructuralUtil::roleToString (StructuralRole role)
 }
 
 StructuralRole
-StructuralUtil::strToRole (const QString &role)
+strToRole (const QString &role)
 {
   if (_strToRole.count (role))
     return _strToRole.at (role);
@@ -294,18 +295,18 @@ StructuralUtil::strToRole (const QString &role)
     return Structural::NoRole;
 }
 
-const std::map<Structural::MimeType, QString> StructuralUtil::_mimeToStr
+static const std::map<Structural::MimeType, QString> _mimeToStr
     = { { Structural::Text, "text" },   { Structural::Image, "image" },
         { Structural::Audio, "audio" }, { Structural::Video, "video" },
         { Structural::HTML, "html" },   { Structural::NCL, "ncl" },
         { Structural::NCLua, "nclua" }, { Structural::Settings, "settings" },
         { Structural::Time, "time" },   { Structural::NoMimeType, "" } };
 
-const std::map<QString, Structural::MimeType> StructuralUtil::_strToMime
-    = invert<QString, Structural::MimeType> (StructuralUtil::_mimeToStr);
+static const std::map<QString, Structural::MimeType> _strToMime
+    = invert<QString, Structural::MimeType> (_mimeToStr);
 
 QString
-StructuralUtil::mimeToStr (StructuralMimeType mime)
+mimeToStr (StructuralMimeType mime)
 {
   if (_mimeToStr.count (mime))
     return _mimeToStr.at (mime);
@@ -314,7 +315,7 @@ StructuralUtil::mimeToStr (StructuralMimeType mime)
 }
 
 StructuralMimeType
-StructuralUtil::strToMime (const QString &mime)
+strToMime (const QString &mime)
 {
   if (_strToMime.count (mime))
     return _strToMime.at (mime);
@@ -322,7 +323,7 @@ StructuralUtil::strToMime (const QString &mime)
     return Structural::NoMimeType;
 }
 
-const std::map<Structural::Type, QString> StructuralUtil::_entitiesIcon
+static const std::map<Structural::Type, QString> _entitiesIcon
     = { { Structural::Media, ":/icon/media" },
         { Structural::Body, ":/icon/body" },
         { Structural::Context, ":/icon/context" },
@@ -338,7 +339,7 @@ const std::map<Structural::Type, QString> StructuralUtil::_entitiesIcon
         { Structural::NoType, "" } };
 
 QString
-StructuralUtil::getIcon (StructuralType type)
+getIcon (StructuralType type)
 {
   if (_entitiesIcon.count (type))
     return _entitiesIcon.at (type);
@@ -346,7 +347,7 @@ StructuralUtil::getIcon (StructuralType type)
     return "";
 }
 
-const std::map<Structural::Type, QString> StructuralUtil::_entitiesColor
+const std::map<Structural::Type, QString> _entitiesColor
     = { { Structural::Media, "" },
         { Structural::Body, "#EEEEEE" },
         { Structural::Context, "#F4E4CC" },
@@ -362,7 +363,7 @@ const std::map<Structural::Type, QString> StructuralUtil::_entitiesColor
         { Structural::NoType, "" } };
 
 QString
-StructuralUtil::getColor (StructuralType type)
+getColor (StructuralType type)
 {
   if (_entitiesColor.count (type))
     return _entitiesColor.at (type);
@@ -370,7 +371,7 @@ StructuralUtil::getColor (StructuralType type)
     return "";
 }
 
-const std::map<Structural::Type, QString> StructuralUtil::_entitiesPrefix
+static const std::map<Structural::Type, QString> _entitiesPrefix
     = { { Structural::Media, "m" },       { Structural::Body, "b" },
         { Structural::Context, "ctx" },   { Structural::Switch, "swt" },
         { Structural::Port, "p" },        { Structural::SwitchPort, "swtp" },
@@ -380,7 +381,7 @@ const std::map<Structural::Type, QString> StructuralUtil::_entitiesPrefix
         { Structural::NoType, "e" } };
 
 QString
-StructuralUtil::getPrefix (StructuralType type)
+getPrefix (StructuralType type)
 {
   if (_entitiesPrefix.count (type))
     return _entitiesPrefix.at (type);
@@ -389,9 +390,8 @@ StructuralUtil::getPrefix (StructuralType type)
 }
 
 QString
-StructuralUtil::getTooltip (StructuralType type, const QString &title,
-                            const QString &info, const QString &warning,
-                            const QString &error, const QString &extra)
+getTooltip (StructuralType type, const QString &title, const QString &info,
+            const QString &warning, const QString &error, const QString &extra)
 {
   QString tooltip;
 
@@ -432,7 +432,7 @@ StructuralUtil::getTooltip (StructuralType type, const QString &title,
   return tooltip;
 }
 
-const std::map<Structural::MimeType, QString> StructuralUtil::_mimeIcon
+static const std::map<Structural::MimeType, QString> _mimeIcon
     = { { Structural::Text, ":/icon/media-text" },
         { Structural::Image, ":/icon/media-image" },
         { Structural::Audio, ":/icon/media-audio" },
@@ -445,7 +445,7 @@ const std::map<Structural::MimeType, QString> StructuralUtil::_mimeIcon
         { Structural::NoMimeType, ":/icon/media" } };
 
 QString
-StructuralUtil::getMimeTypeIcon (StructuralMimeType type)
+getMimeTypeIcon (StructuralMimeType type)
 {
   if (_mimeIcon.count (type))
     return _mimeIcon.at (type);
@@ -454,9 +454,9 @@ StructuralUtil::getMimeTypeIcon (StructuralMimeType type)
 }
 
 QString
-StructuralUtil::getMimeTooltip (StructuralMimeType mime, const QString &title,
-                                const QString &info, const QString &warning,
-                                const QString &error, const QString &extra)
+getMimeTooltip (StructuralMimeType mime, const QString &title,
+                const QString &info, const QString &warning,
+                const QString &error, const QString &extra)
 {
   Q_UNUSED (extra);
 
@@ -481,7 +481,7 @@ StructuralUtil::getMimeTooltip (StructuralMimeType mime, const QString &title,
   return tooltip;
 }
 
-const std::map<QString, Structural::MimeType> StructuralUtil::_mimeExtension
+static const std::map<QString, Structural::MimeType> _mimeExtension
     = { { "txt", Structural::Text },    { "png", Structural::Image },
         { "jpg", Structural::Image },   { "jpeg", Structural::Image },
         { "gif", Structural::Image },   { "mp3", Structural::Audio },
@@ -493,7 +493,7 @@ const std::map<QString, Structural::MimeType> StructuralUtil::_mimeExtension
         { "ncl", Structural::NCL },     { "lua", Structural::NCLua } };
 
 Structural::MimeType
-StructuralUtil::getMimeByExtension (const QString &ext)
+getMimeByExtension (const QString &ext)
 {
   if (_mimeExtension.count (ext))
     return _mimeExtension.at (ext);
@@ -501,7 +501,7 @@ StructuralUtil::getMimeByExtension (const QString &ext)
     return Structural::NoMimeType;
 }
 
-const std::map<Structural::Role, QString> StructuralUtil::_rolesIcon
+static const std::map<Structural::Role, QString> _rolesIcon
     = { { Structural::onBegin, ":/icon/bind-onbegin" },
         { Structural::onEnd, ":/icon/bind-onend" },
         { Structural::onSelection, ":/icon/bind-onselection" },
@@ -519,7 +519,7 @@ const std::map<Structural::Role, QString> StructuralUtil::_rolesIcon
         { Structural::NoRole, "" } };
 
 QString
-StructuralUtil::getIcon (StructuralRole role)
+getIcon (StructuralRole role)
 {
   if (_rolesIcon.count (role))
     return _rolesIcon.at (role);
@@ -528,7 +528,7 @@ StructuralUtil::getIcon (StructuralRole role)
 }
 
 QVector<StructuralEntity *>
-StructuralUtil::getNeighbors (StructuralEntity *ent)
+getNeighbors (StructuralEntity *ent)
 {
   QVector<StructuralEntity *> neighbors;
   StructuralEntity *parent = ent->getParent ();
@@ -556,7 +556,7 @@ StructuralUtil::getNeighbors (StructuralEntity *ent)
 }
 
 QVector<StructuralEntity *>
-StructuralUtil::getUpNeighbors (StructuralEntity *ent)
+getUpNeighbors (StructuralEntity *ent)
 {
   QVector<StructuralEntity *> neighbors;
 
@@ -588,7 +588,7 @@ StructuralUtil::getUpNeighbors (StructuralEntity *ent)
 }
 
 bool
-StructuralUtil::isCondition (StructuralRole role)
+isCondition (StructuralRole role)
 {
   return (role == Structural::onBegin || role == Structural::onBeginAttribution
           || role == Structural::onEnd || role == Structural::onEndAttribution
@@ -600,26 +600,26 @@ StructuralUtil::isCondition (StructuralRole role)
 }
 
 bool
-StructuralUtil::isCondition (const QString &role)
+isCondition (const QString &role)
 {
   return (_strToRole.count (role) ? isCondition (_strToRole.at (role))
                                   : false);
 }
 
 bool
-StructuralUtil::isAction (StructuralRole role)
+isAction (StructuralRole role)
 {
   return (role != Structural::NoRole && !isCondition (role));
 }
 
 bool
-StructuralUtil::isAction (const QString &role)
+isAction (const QString &role)
 {
   return (_strToRole.count (role) && isAction (_strToRole.at (role)));
 }
 
 void
-StructuralUtil::adjustEdges (StructuralEntity *ent)
+adjustEdges (StructuralEntity *ent)
 {
   QVector<StructuralEntity *> relatives = getNeighbors (ent);
   relatives += getUpNeighbors (ent);
@@ -637,7 +637,7 @@ StructuralUtil::adjustEdges (StructuralEntity *ent)
 }
 
 QString
-StructuralUtil::formatId (const QString &id)
+formatId (const QString &id)
 {
   QString normalized = id.normalized (QString::NormalizationForm_KD);
   normalized.remove (QRegExp ("[^a-zA-Z_-\\.\\s]"));
@@ -649,7 +649,7 @@ StructuralUtil::formatId (const QString &id)
 }
 
 bool
-StructuralUtil::validateKinship (StructuralType entT, StructuralType parentT)
+validateKinship (StructuralType entT, StructuralType parentT)
 {
 #define _COMPOSITE_CHILDREN                                                   \
   Structural::Switch, Structural::Context, Structural::Media,                 \
@@ -670,3 +670,4 @@ StructuralUtil::validateKinship (StructuralType entT, StructuralType parentT)
 
   return false;
 }
+} // namespace
