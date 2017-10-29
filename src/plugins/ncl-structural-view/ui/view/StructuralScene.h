@@ -31,6 +31,7 @@ public:
   StructuralEntity *createEntity (StructuralType type);
   StructuralEntity *clone (const StructuralEntity *ent,
                            StructuralEntity *parent = nullptr);
+  void updateWithDefaultProperties (StructuralEntity *e);
 
 public slots:
   void clear (); // override?

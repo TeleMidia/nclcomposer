@@ -78,7 +78,7 @@
 #define ST_SETTINGS_UNDO_TRACE ":settings:undo:trace"
 #define ST_SETTINGS_NOTIFY ":settings:notify"
 #define ST_SETTINGS_CODE ":settings:code"
-#define ST_SETTINGS_ADJUST_REFERENCE ":settings:adjust:reference"
+#define ST_SETTINGS_ADJUST_REFERS ":settings:adjust:refers"
 
 //
 // Values

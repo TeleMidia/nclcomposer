@@ -152,14 +152,17 @@ StructuralView::performLink ()
 
 void
 StructuralView::insert (QString uid, QString parent, QStrMap props,
-                        QStrMap settings)
+                        QStrMap stgs)
 {
   CPR_ASSERT (!_scene->hasEntity (uid));
 
+  // 1. Create the new entity.
   StructuralType type = util::strToType (props[ST_ATTR_ENT_TYPE]);
   StructuralEntity *e = _scene->createEntity (type);
+  e->setUid (uid);
   CPR_ASSERT_NON_NULL (e);
 
+  // 2. Add as child of p
   StructuralEntity *p = nullptr;
   if (_scene->hasEntity (parent))
     p = _scene->getEntity (parent);
@@ -167,62 +170,33 @@ StructuralView::insert (QString uid, QString parent, QStrMap props,
   if (type != StructuralType::Body && p == nullptr)
     CPR_ASSERT_NOT_REACHED ();
 
-  e->setUid (uid);
-
-  if (!props.contains (ST_ATTR_ENT_ID))
-    e->setId (_scene->createNewId (e->getType ()));
-
-  if (p)
-    e->setParent (p);
-  else
+  e->setParent (p);
+  if (p == nullptr)
     _scene->addItem (e);
 
-  if (!props.contains (ST_ATTR_ENT_TOP))
-  {
-    if (p)
-      e->setTop (p->getHeight () / 2 - e->getHeight () / 2);
-    else
-    {
-      auto rect = this->mapToScene (this->viewport ()->rect ().center ());
-      e->setTop (rect.y () - e->getHeight () / 2);
-    }
-  }
-
-  if (!props.contains (ST_ATTR_ENT_LEFT))
-  {
-    if (p)
-      e->setLeft (p->getWidth () / 2 - e->getWidth () / 2);
-    else
-    {
-      auto rect = this->mapToScene (this->viewport ()->rect ().center ());
-      e->setLeft (rect.x () - e->getWidth () / 2);
-    }
-  }
-
-  e->setMenu (_menu);
+  // 3. Update the properties of the new entity
+  _scene->updateWithDefaultProperties (e);
   e->setProperties (props);
 
+  e->setMenu (_menu);
   _scene->getEntities ()[uid] = e;
 
   // Adjust 'compositions'
-  if (p)
+  if (p && !p->isUncollapsed() ())
   {
-    if (!p->isUncollapsed ())
+    if (p->getType () == Structural::Body
+        || p->getType () == Structural::Switch
+        || p->getType () == Structural::Context)
     {
-      if (p->getType () == Structural::Body
-          || p->getType () == Structural::Switch
-          || p->getType () == Structural::Context)
-      {
-        auto comp = cast (StructuralComposition *, p);
-        CPR_ASSERT_NON_NULL (comp);
+      auto comp = cast (StructuralComposition *, p);
+      CPR_ASSERT_NON_NULL (comp);
 
-        comp->collapse ();
-      }
+      comp->collapse ();
     }
   }
 
   // Adjust 'references'
-  if (settings[ST_SETTINGS_ADJUST_REFERENCE] != ST_VALUE_FALSE)
+  if (stgs[ST_SETTINGS_ADJUST_REFERS] != ST_VALUE_FALSE)
     adjustReferences (e);
 
   // Adjust 'angles'
@@ -236,7 +210,7 @@ StructuralView::insert (QString uid, QString parent, QStrMap props,
   else
     e->adjust (true);
 
-  if (settings[ST_SETTINGS_ADJUST_REFERENCE] != ST_VALUE_FALSE)
+  if (stgs[ST_SETTINGS_ADJUST_REFERS] != ST_VALUE_FALSE)
   {
     if (e->getCategory () == Structural::Interface && p != nullptr
         && p->getType () == Structural::Media)
@@ -263,9 +237,9 @@ StructuralView::insert (QString uid, QString parent, QStrMap props,
   connect (e, &StructuralEntity::selectAsked, this, &StructuralView::select);
   connect (e, &StructuralEntity::moveAsked, this, &StructuralView::move);
 
-  if (settings[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
+  if (stgs[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
   {
-    emit inserted (uid, parent, e->getProperties (), settings);
+    emit inserted (uid, parent, e->getProperties (), stgs);
   }
 
   if (!ST_OPT_SHOW_INTERFACES)
@@ -351,8 +325,10 @@ StructuralView::remove (QString uid, QStrMap stgs)
   if (e->getCategory () == Structural::Interface)
   {
     for (const QString &key : _scene->getRefs ().keys (e->getUid ()))
+    {
       remove (key, util::createSettings (ST_VALUE_FALSE, ST_VALUE_FALSE,
                                          stgs.value (ST_SETTINGS_CODE)));
+    }
 
     // Only remove interface -> interface references. Keeping
     // Media -> Media references to enable undo.  All "trash" references
@@ -626,7 +602,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                       _scene->getRefs ()[uid] = child->getUid ();
 
                       QStrMap settings = util::createSettings (false, false);
-                      settings[ST_SETTINGS_ADJUST_REFERENCE] = ST_VALUE_FALSE;
+                      settings[ST_SETTINGS_ADJUST_REFERS] = ST_VALUE_FALSE;
 
                       insert (uid, ent->getUid (), props, settings);
                     }
@@ -690,7 +666,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                         _scene->getRefs ()[uid] = child->getUid ();
 
                         QStrMap settings = util::createSettings (false, false);
-                        settings[ST_SETTINGS_ADJUST_REFERENCE]
+                        settings[ST_SETTINGS_ADJUST_REFERS]
                             = ST_VALUE_FALSE;
 
                         insert (uid, refer->getUid (), props, settings);

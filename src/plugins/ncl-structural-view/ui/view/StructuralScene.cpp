@@ -169,7 +169,7 @@ StructuralScene::load (QDomElement elt, QDomElement parent)
   QMap<QString, QString> props = qdom_attrs_to_qmap (elt.attributes ());
 
   auto stgs = StructuralUtil::createSettings (false, false);
-  stgs[ST_SETTINGS_ADJUST_REFERENCE] = ST_VALUE_FALSE;
+  stgs[ST_SETTINGS_ADJUST_REFERS] = ST_VALUE_FALSE;
 
   _view->insert (entUid, parentUid, props, stgs);
 
@@ -309,4 +309,29 @@ StructuralScene::clone (const StructuralEntity *ent,
     newent->addChild (this->clone (child, newent));
 
   return newent;
+}
+
+void
+StructuralScene::updateWithDefaultProperties (StructuralEntity *e)
+{
+  StructuralEntity *p = e->getParent ();
+
+  if (e->getId ().isEmpty ())
+    e->setId (createNewId (e->getType ()));
+
+  if (p)
+    e->setTop (p->getHeight () / 2 - e->getHeight () / 2);
+  else
+  {
+    auto rect = views ().at (1)->mapToScene (views().at(1)->rect ().center ());
+    e->setTop (rect.y () - e->getHeight () / 2);
+  }
+
+  if (p)
+    e->setLeft (p->getWidth () / 2 - e->getWidth () / 2);
+  else
+  {
+    auto rect = views ().at (1)->mapToScene (views().at (1)->rect ().center ());
+    e->setLeft (rect.x () - e->getWidth () / 2);
+  }
 }
