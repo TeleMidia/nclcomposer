@@ -10,23 +10,16 @@ using namespace cpr::core;
 /*!
  * \brief Handles the creation and deletion of RulesViewPlugin objects.
  */
-class RulesViewFactory : public QObject, public IPluginFactory
+class RulesViewFactory : public QObject,
+    public IPluginFactoryTpl <RulesViewPlugin>
 {
   Q_OBJECT
   Q_INTERFACES (IPluginFactory)
   Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "ncl-rules-view.json")
 
 public:
-  explicit RulesViewFactory ();
-  ~RulesViewFactory ();
-
-  IPlugin *
-  createPluginInstance () override
-  {
-    return new RulesViewPlugin ();
-  }
-
-  void releasePluginInstance (IPlugin *) override;
+  explicit RulesViewFactory () {}
+  ~RulesViewFactory () {}
 
   QString
   id () const override
