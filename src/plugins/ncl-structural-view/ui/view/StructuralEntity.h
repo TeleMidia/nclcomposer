@@ -52,6 +52,7 @@ public:
   QVector<StructuralEntity *> getChildren () const;
   void addChild (StructuralEntity *entity);
   void removeChild (StructuralEntity *entity);
+  bool isChild (StructuralEntity *child) const;
 
   QVector<QString> getRestrictions () const;
   void addRestriction (const QString &restriction);

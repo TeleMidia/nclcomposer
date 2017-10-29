@@ -794,6 +794,20 @@ StructuralEntity::removeChild (StructuralEntity *entity)
   entity->setParent (nullptr);
 }
 
+bool
+StructuralEntity::isChild (StructuralEntity *child) const
+{
+  CPR_ASSERT (this != child);
+
+  for (StructuralEntity *c : getChildren ())
+  {
+    if (c->getUid () == child->getUid () || c->isChild (child))
+      return true;
+  }
+
+  return false;
+}
+
 QVector<QString>
 StructuralEntity::getRestrictions () const
 {

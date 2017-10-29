@@ -1132,8 +1132,10 @@ StructuralView::select (QString uid, QStrMap settings)
         if (ent->getUid () != _clipboard->getUid ())
         {
           if (util::validateKinship (_clipboard->getType (), ent->getType ()))
-            if (!isChild (ent, _clipboard))
+          {
+            if (!_clipboard->isChild (ent))
               canPaste = true;
+          }
         }
       }
 
@@ -1488,24 +1490,24 @@ StructuralView::performPaste ()
     if (_scene->hasEntity (_selected))
       parent = _scene->getEntity (_selected);
 
-    bool isAValidPaste = false;
+    bool isValidPaste = false;
 
     if (!ST_OPT_WITH_BODY)
     {
       if (util::validateKinship (_clipboard->getType (), Structural::Body))
-        isAValidPaste = true;
+        isValidPaste = true;
     }
     else
     {
-      if (parent != nullptr)
-        if (_clipboard->getUid () != parent->getUid ())
-          if (util::validateKinship (_clipboard->getType (),
-                                     parent->getType ())
-              && !isChild (parent, _clipboard))
-            isAValidPaste = true;
+      if (parent)
+      {
+        isValidPaste = (_clipboard->getUid () != parent->getUid ())
+            && (util::validateKinship (_clipboard->getType (), parent->getType ()))
+            && (!_clipboard->isChild (parent));
+      }
     }
 
-    if (isAValidPaste)
+    if (isValidPaste)
     {
       // 0: Cancel - Nothing todo.
       // 1: No - Paste entity.
@@ -2786,18 +2788,6 @@ StructuralView::performBindDialog (StructuralBind *ent)
 
     changeEntity (ent->getUid (), props, prev, settings);
   }
-}
-
-bool
-StructuralView::isChild (StructuralEntity *ent, StructuralEntity *parent)
-{
-  CPR_ASSERT (ent != parent);
-
-  for (StructuralEntity *e : parent->getChildren ())
-    if (e->getUid () == ent->getUid () || isChild (ent, e))
-      return true;
-
-  return false;
 }
 
 void
