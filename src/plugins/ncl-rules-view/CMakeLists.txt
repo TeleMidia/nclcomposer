@@ -14,7 +14,6 @@ set(NCL_RULES_VIEW_SOURCES
   RuleItem.cpp
   RulesTreeWidget.cpp
   RulesView.cpp
-  RulesViewFactory.cpp
   RulesViewPlugin.cpp
   
   Util.h
