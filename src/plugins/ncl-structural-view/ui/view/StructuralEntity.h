@@ -91,8 +91,8 @@ public:
   bool isSelected () const;
   void setSelected (bool selectAsked);
 
-  bool isUncollapsed () const;
-  void setUncollapsed (bool uncollapsed);
+  bool isCollapsed () const;
+  void setCollapsed (bool collapsed);
 
   bool isReference () const;
   void setReference (bool reference);
@@ -139,17 +139,19 @@ public:
   qreal getResizeHeight () const;
   void setResizeHeight (qreal resizeHeight);
 
-  qreal getUncollapedTop () const;
-  void setUncollapedTop (qreal uncollapedTop);
+  qreal getUncollapsedTop () const;
+  void setUncollapsedTop (qreal uncollapedTop);
 
-  qreal getUncollapedLeft () const;
-  void setUncollapedLeft (qreal uncollapedLeft);
+  qreal getUncollapsedLeft () const;
+  void setUncollapsedLeft (qreal uncollapedLeft);
 
-  qreal getUncollapedWidth () const;
-  void setUncollapedWidth (qreal uncollapedWidth);
+  qreal getUncollapsedWidth () const;
+  void setUncollapsedWidth (qreal uncollapedWidth);
 
-  qreal getUncollapedHeight () const;
-  void setUncollapedHeight (qreal uncollapedHeight);
+  qreal getUncollapsedHeight () const;
+  void setUncollapsedHeight (qreal uncollapedHeight);
+
+  QRect getUncollapsedRect ();
 
   qreal getzIndex () const;
   void setzIndex (qreal zIndex);
@@ -224,7 +226,7 @@ private:
 
   bool _selected;
   bool _focused;
-  bool _uncollapsed;
+  bool _collapsed;
 
   bool _reference;
 

@@ -46,10 +46,10 @@ StructuralEntity::StructuralEntity (StructuralEntity *parent)
   setResizeWidth (0);
   setResizeHeight (0);
 
-  setUncollapedTop (0);
-  setUncollapedLeft (0);
-  setUncollapedWidth (0);
-  setUncollapedHeight (0);
+  setUncollapsedTop (0);
+  setUncollapsedLeft (0);
+  setUncollapsedWidth (0);
+  setUncollapsedHeight (0);
 
   setzIndex (0);
 
@@ -60,7 +60,7 @@ StructuralEntity::StructuralEntity (StructuralEntity *parent)
   setAcceptDrops (true);
 
   setSelected (false);
-  setUncollapsed (true);
+  setCollapsed (false);
 }
 
 StructuralEntity::~StructuralEntity () {}
@@ -263,10 +263,10 @@ StructuralEntity::adjust (bool collision, bool recursion)
   setWidth (_properties[ST_ATTR_ENT_WIDTH].toDouble ());
   setHeight (_properties[ST_ATTR_ENT_HEIGHT].toDouble ());
 
-  setUncollapedTop (_properties[ST_ATTR_ENT_UNCOLLAPSED_TOP].toDouble ());
-  setUncollapedLeft (_properties[ST_ATTR_ENT_UNCOLLAPSED_LEFT].toDouble ());
-  setUncollapedWidth (_properties[ST_ATTR_ENT_UNCOLLAPSED_WIDTH].toDouble ());
-  setUncollapedHeight (
+  setUncollapsedTop (_properties[ST_ATTR_ENT_UNCOLLAPSED_TOP].toDouble ());
+  setUncollapsedLeft (_properties[ST_ATTR_ENT_UNCOLLAPSED_LEFT].toDouble ());
+  setUncollapsedWidth (_properties[ST_ATTR_ENT_UNCOLLAPSED_WIDTH].toDouble ());
+  setUncollapsedHeight (
       _properties[ST_ATTR_ENT_UNCOLLAPSED_HEIGHT].toDouble ());
 
   setzIndex (_properties[ST_ATTR_ENT_ZINDEX].toInt ());
@@ -275,8 +275,8 @@ StructuralEntity::adjust (bool collision, bool recursion)
       (_properties[ST_ATTR_ENT_HIDDEN] == ST_VALUE_TRUE ? true : false));
   setReference (
       (_properties[ST_ATTR_ENT_REFERENCE] == ST_VALUE_TRUE ? true : false));
-  setUncollapsed (
-      (_properties[ST_ATTR_ENT_UNCOLLAPSED] == ST_VALUE_TRUE ? true : false));
+  setCollapsed (
+      (_properties[ST_ATTR_ENT_COLLAPSED] == ST_VALUE_TRUE ? true : false));
 
   setToolTip (StructuralUtil::getTooltip (
       _type, _id, _info, _warnning, _error,
@@ -422,17 +422,17 @@ StructuralEntity::setSelected (bool selected)
 }
 
 bool
-StructuralEntity::isUncollapsed () const
+StructuralEntity::isCollapsed () const
 {
-  return _uncollapsed;
+  return _collapsed;
 }
 
 void
-StructuralEntity::setUncollapsed (bool uncollapsed)
+StructuralEntity::setCollapsed (bool collapsed)
 {
-  _uncollapsed = uncollapsed;
-  _properties[ST_ATTR_ENT_UNCOLLAPSED]
-      = (uncollapsed ? ST_VALUE_TRUE : ST_VALUE_FALSE);
+  _collapsed = collapsed;
+  _properties[ST_ATTR_ENT_COLLAPSED]
+      = (_collapsed ? ST_VALUE_TRUE : ST_VALUE_FALSE);
 }
 
 bool
@@ -626,39 +626,39 @@ StructuralEntity::setResizeHeight (qreal resizeHeight)
 }
 
 qreal
-StructuralEntity::getUncollapedTop () const
+StructuralEntity::getUncollapsedTop () const
 {
   return _uncollapsedTop;
 }
 
 void
-StructuralEntity::setUncollapedTop (qreal uncollapedTop)
+StructuralEntity::setUncollapsedTop (qreal uncollapedTop)
 {
   _uncollapsedTop = uncollapedTop;
   _properties[ST_ATTR_ENT_UNCOLLAPSED_TOP] = QString::number (uncollapedTop);
 }
 
 qreal
-StructuralEntity::getUncollapedLeft () const
+StructuralEntity::getUncollapsedLeft () const
 {
   return _uncollapsedLeft;
 }
 
 void
-StructuralEntity::setUncollapedLeft (qreal uncollapedLeft)
+StructuralEntity::setUncollapsedLeft (qreal uncollapedLeft)
 {
   _uncollapsedLeft = uncollapedLeft;
   _properties[ST_ATTR_ENT_UNCOLLAPSED_LEFT] = QString::number (uncollapedLeft);
 }
 
 qreal
-StructuralEntity::getUncollapedWidth () const
+StructuralEntity::getUncollapsedWidth () const
 {
   return _uncollapsedWidth;
 }
 
 void
-StructuralEntity::setUncollapedWidth (qreal uncollapedWidth)
+StructuralEntity::setUncollapsedWidth (qreal uncollapedWidth)
 {
   _uncollapsedWidth = uncollapedWidth;
   _properties[ST_ATTR_ENT_UNCOLLAPSED_WIDTH]
@@ -666,17 +666,23 @@ StructuralEntity::setUncollapedWidth (qreal uncollapedWidth)
 }
 
 qreal
-StructuralEntity::getUncollapedHeight () const
+StructuralEntity::getUncollapsedHeight () const
 {
   return _uncollapsedHeight;
 }
 
 void
-StructuralEntity::setUncollapedHeight (qreal uncollapedHeight)
+StructuralEntity::setUncollapsedHeight (qreal uncollapedHeight)
 {
   _uncollapsedHeight = uncollapedHeight;
   _properties[ST_ATTR_ENT_UNCOLLAPSED_HEIGHT]
       = QString::number (uncollapedHeight);
+}
+
+QRect
+StructuralEntity::getUncollapsedRect ()
+{
+  return QRect (_uncollapsedLeft, _uncollapsedTop, _uncollapsedWidth, _uncollapsedHeight);
 }
 
 qreal

@@ -182,18 +182,17 @@ StructuralView::insert (QString uid, QString parent, QStrMap props,
   _scene->getEntities ()[uid] = e;
 
   // Adjust 'compositions'
-  if (p && !p->isUncollapsed() ())
-  {
-    if (p->getType () == Structural::Body
+  if (p
+      && (p->getType () == Structural::Body
         || p->getType () == Structural::Switch
-        || p->getType () == Structural::Context)
+        || p->getType () == Structural::Context))
     {
       auto comp = cast (StructuralComposition *, p);
       CPR_ASSERT_NON_NULL (comp);
 
-      comp->collapse ();
+      if (comp->isCollapsed ())
+        comp->uncollapse ();
     }
-  }
 
   // Adjust 'references'
   if (stgs[ST_SETTINGS_ADJUST_REFERS] != ST_VALUE_FALSE)
@@ -470,14 +469,14 @@ StructuralView::change (QString uid, QStrMap props, QStrMap prev,
   StructuralEntity *ent = _scene->getEntity (uid);
   auto *comp = dynamic_cast<StructuralComposition *> (ent);
 
-  if (ent->isUncollapsed ()
-      && props.value (ST_ATTR_ENT_UNCOLLAPSED) == ST_VALUE_FALSE)
+  if (ent->isCollapsed ()
+      && props.value (ST_ATTR_ENT_COLLAPSED) == ST_VALUE_FALSE)
   {
-    comp->collapse ();
+    comp->uncollapse ();
   }
 
-  if (!ent->isUncollapsed ()
-      && props.value (ST_ATTR_ENT_UNCOLLAPSED) == ST_VALUE_TRUE)
+  if (!ent->isCollapsed ()
+      && props.value (ST_ATTR_ENT_COLLAPSED) == ST_VALUE_TRUE)
   {
     comp->collapse ();
   }
@@ -830,8 +829,10 @@ StructuralView::adjustReferences (StructuralEntity *ent)
         }
 
         if (ent->getParent () != nullptr)
-          if (!ent->getParent ()->isUncollapsed ())
+        {
+          if (ent->getParent ()->isCollapsed ())
             isVisible = false;
+        }
 
         StructuralEntity *component = nullptr;
         StructuralEntity *interface = nullptr;

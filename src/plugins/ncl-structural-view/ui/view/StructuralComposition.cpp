@@ -6,6 +6,7 @@
 
 #include "StructuralContent.h"
 #include "StructuralUtil.h"
+#include "util/Utilities.h"
 
 StructuralComposition::StructuralComposition (StructuralEntity *parent)
     : StructuralNode (parent)
@@ -14,90 +15,101 @@ StructuralComposition::StructuralComposition (StructuralEntity *parent)
   setHeight (ST_DEFAULT_COMPOSITION_H);
 
   setHoverable (false);
-  setUncollapsed (true);
+  setCollapsed (false);
 }
 
 void
 StructuralComposition::collapse (bool notify)
 {
+  CPR_ASSERT (!isCollapsed());
+
   QMap<QString, QString> previous = getProperties ();
 
-  if (!isUncollapsed ())
+  setHoverable (true);
+  setResizable (false);
+
+  setUncollapsedWidth (getWidth ());
+  setUncollapsedHeight (getHeight ());
+
+  setTop (getTop () + getUncollapsedHeight () / 2 - ST_DEFAULT_CONTENT_H / 2);
+  setLeft (getLeft () + getUncollapsedWidth () / 2
+           - ST_DEFAULT_CONTENT_W / 2);
+  setWidth (ST_DEFAULT_CONTENT_W);
+  setHeight (ST_DEFAULT_CONTENT_H);
+
+  for (StructuralEntity *ent : getChildren ())
   {
-    setHoverable (false);
-    setResizable (true);
+    ent->setUncollapsedTop (ent->getTop ());
+    ent->setUncollapsedLeft (ent->getLeft ());
 
-    setTop (getTop ()
-            - (getUncollapedHeight () / 2 - ST_DEFAULT_CONTENT_H / 2));
-    setLeft (getLeft ()
-             - (getUncollapedWidth () / 2 - ST_DEFAULT_CONTENT_W / 2));
-    setWidth (getUncollapedWidth ());
-    setHeight (getUncollapedHeight ());
-
-    for (StructuralEntity *ent : getChildren ())
+    if (ent->getCategory () == Structural::Interface)
     {
-      if (ent->getCategory () == Structural::Interface)
-      {
-        ent->setTop (ent->getTop () * getUncollapedHeight ()
-                     / ST_DEFAULT_CONTENT_H);
-        ent->setLeft (ent->getLeft () * getUncollapedWidth ()
-                      / ST_DEFAULT_CONTENT_W);
-      }
-      else
-      {
-        ent->setTop (ent->getUncollapedTop ());
-        ent->setLeft (ent->getUncollapedLeft ());
-
-        ent->setHidden (false);
-
-        if (ent->isUncollapsed ())
-        {
-          ent->setWidth (ent->getUncollapedWidth ());
-          ent->setHeight (ent->getUncollapedHeight ());
-        }
-      }
+      ent->setTop (((ent->getTop () * ST_DEFAULT_CONTENT_H)
+                    / getUncollapsedHeight ()));
+      ent->setLeft (((ent->getLeft () * ST_DEFAULT_CONTENT_W)
+                     / getUncollapsedWidth ()));
     }
-  }
-  else
-  {
-    setHoverable (true);
-    setResizable (false);
-
-    setUncollapedWidth (getWidth ());
-    setUncollapedHeight (getHeight ());
-
-    setTop (getTop () + getUncollapedHeight () / 2 - ST_DEFAULT_CONTENT_H / 2);
-    setLeft (getLeft () + getUncollapedWidth () / 2
-             - ST_DEFAULT_CONTENT_W / 2);
-    setWidth (ST_DEFAULT_CONTENT_W);
-    setHeight (ST_DEFAULT_CONTENT_H);
-
-    for (StructuralEntity *ent : getChildren ())
+    else
     {
-      ent->setUncollapedTop (ent->getTop ());
-      ent->setUncollapedLeft (ent->getLeft ());
+      ent->setHidden (true);
 
-      if (ent->getCategory () == Structural::Interface)
+      if (!ent->isCollapsed ())
       {
-        ent->setTop (((ent->getTop () * ST_DEFAULT_CONTENT_H)
-                      / getUncollapedHeight ()));
-        ent->setLeft (((ent->getLeft () * ST_DEFAULT_CONTENT_W)
-                       / getUncollapedWidth ()));
-      }
-      else
-      {
-        ent->setHidden (true);
-
-        if (ent->isUncollapsed ())
-        {
-          ent->setUncollapedWidth (ent->getWidth ());
-          ent->setUncollapedHeight (ent->getHeight ());
-        }
+        ent->setUncollapsedWidth (ent->getWidth ());
+        ent->setUncollapsedHeight (ent->getHeight ());
       }
     }
   }
 
-  setUncollapsed (!isUncollapsed ());
+  setCollapsed (true);
+
+  if (notify)
+  {
+    emit changeAsked (getUid (), getProperties (), previous,
+                      StructuralUtil::createSettings (true, false));
+  }
+}
+
+void
+StructuralComposition::uncollapse (bool notify)
+{
+  CPR_ASSERT (isCollapsed ());
+
+  QMap<QString, QString> previous = getProperties ();
+  QRect uncollapsed = getUncollapsedRect ();
+
+  setHoverable (false);
+  setResizable (true);
+
+  setTop (getTop () - (uncollapsed.height () / 2 - ST_DEFAULT_CONTENT_H / 2));
+  setLeft (getLeft () - (uncollapsed.width () / 2 - ST_DEFAULT_CONTENT_W / 2));
+  setWidth (uncollapsed.width ());
+  setHeight (uncollapsed.height ());
+
+  for (StructuralEntity *ent : getChildren ())
+  {
+    if (ent->getCategory () == Structural::Interface)
+    {
+      ent->setTop (ent->getTop () * uncollapsed.height () / ST_DEFAULT_CONTENT_H);
+      ent->setLeft (ent->getLeft () * uncollapsed.width ()
+                    / ST_DEFAULT_CONTENT_W);
+    }
+    else
+    {
+      ent->setTop (ent->getUncollapsedTop ());
+      ent->setLeft (ent->getUncollapsedLeft ());
+
+      ent->setHidden (false);
+
+      if (!ent->isCollapsed ())
+      {
+        ent->setWidth (ent->getUncollapsedWidth ());
+        ent->setHeight (ent->getUncollapsedHeight ());
+      }
+    }
+  }
+
+  setCollapsed (false);
 
   if (notify)
   {
@@ -109,7 +121,7 @@ StructuralComposition::collapse (bool notify)
 void
 StructuralComposition::draw (QPainter *painter)
 {
-  if (isUncollapsed ())
+  if (!isCollapsed ())
   {
     painter->setRenderHint (QPainter::Antialiasing, true);
     painter->setRenderHint (QPainter::SmoothPixmapTransform, false);
@@ -122,13 +134,9 @@ StructuralComposition::draw (QPainter *painter)
       QString color;
 
       if (!getError ().isEmpty ())
-      {
         color = QString (ST_DEFAULT_ALERT_ERROR_COLOR);
-      }
       else
-      {
         color = QString (ST_DEFAULT_ALERT_WARNING_COLOR);
-      }
 
       painter->setPen (QPen (QBrush (QColor (color)), 2));
     }
@@ -137,9 +145,7 @@ StructuralComposition::draw (QPainter *painter)
       if (!ST_OPT_WITH_BODY && !ST_OPT_USE_FLOATING_INTERFACES)
       {
         if (getProperty (ST_ATTR_ENT_AUTOSTART) == ST_VALUE_TRUE)
-        {
           painter->setPen (QPen (QBrush (QColor (76, 76, 76)), 2));
-        }
       }
       else
       {
@@ -289,10 +295,10 @@ StructuralComposition::delineate (QPainterPath *painter) const
   int w = getWidth ();
   int h = getHeight ();
 
-  if (isUncollapsed ())
-    painter->addEllipse (x, y, w, h);
-  else
+  if (isCollapsed ())
     painter->addRect (x, y, w, h);
+  else
+    painter->addEllipse (x, y, w, h);
 }
 
 void
@@ -355,5 +361,8 @@ void
 StructuralComposition::mouseDoubleClickEvent (QGraphicsSceneMouseEvent *event)
 {
   Q_UNUSED (event);
-  collapse (true);
+  if (!isCollapsed ())
+    collapse (true);
+  else
+    uncollapse (true);
 }

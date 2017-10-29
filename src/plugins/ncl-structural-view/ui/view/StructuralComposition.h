@@ -10,6 +10,7 @@ public:
   virtual ~StructuralComposition () {}
 
   void collapse (bool notify = false);
+  void uncollapse (bool notify = false);
 
 protected:
   virtual void draw (QPainter *painter);

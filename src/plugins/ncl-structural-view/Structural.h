@@ -30,7 +30,7 @@
 #define ST_ATTR_ENT_AUTOSTART ":ent:autostart"
 #define ST_ATTR_ENT_HIDDEN ":ent:hidden"
 #define ST_ATTR_ENT_REFERENCE ":ent:reference"
-#define ST_ATTR_ENT_UNCOLLAPSED ":ent:uncollapsed"
+#define ST_ATTR_ENT_COLLAPSED ":ent:collapsed"
 
 // Node defines
 #define ST_ATTR_NODE_SRC ":node:src"
