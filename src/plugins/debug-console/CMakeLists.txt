@@ -9,7 +9,6 @@ configure_file(debug-console.json.in debug-console.json)
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
 set(DEBUG_CONSOLE_SOURCES
-  DebugConsoleFactory.cpp
   DebugConsoleFactory.h
   DebugConsolePlugin.cpp
   DebugConsolePlugin.h
