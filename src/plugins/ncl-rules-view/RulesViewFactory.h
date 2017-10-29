@@ -25,8 +25,9 @@ public:
   {
     return new RulesViewPlugin ();
   }
+
   void releasePluginInstance (IPlugin *) override;
-  QList<LanguageType> getSupportedLanguages () override;
+
   QString
   id () const override
   {
