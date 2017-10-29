@@ -23,19 +23,18 @@ using namespace cpr::core;
 
 #include "StructuralViewPlugin.h"
 
-class StructuralViewFactory : public QObject, public IPluginFactory
+class StructuralViewFactory : public QObject,
+    public IPluginFactoryTpl <StructuralViewPlugin>
 {
   Q_OBJECT
   Q_INTERFACES (IPluginFactory)
   Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "ncl-structural-view.json")
 
 public:
-  StructuralViewFactory (QObject *parent = 0);
-  virtual ~StructuralViewFactory ();
+  StructuralViewFactory (QObject *parent = 0) : QObject (parent) {}
+  virtual ~StructuralViewFactory () {}
 
-  IPlugin *createPluginInstance ();
-  void releasePluginInstance (IPlugin *);
-  QString id () const;
+  QString id () const { return "br.puc-rio.telemidia.composer.structural"; }
 };
 
 #endif // QNSTCOMPOSERPLUGINFACTORY_H
