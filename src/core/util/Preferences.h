@@ -85,7 +85,8 @@ public:
   void save () const;
   void restore () const;
 
-  void registerPreference (const QString &key, Preference *preference);
+  void registerPreference (const QString &key, Preference *pref);
+  void registerPreferences (const QMap <QString, Preference *> &prefs);
 
   Preference *getValue (const QString &key) const;
   void setValue (const QString &key, const QVariant &value);

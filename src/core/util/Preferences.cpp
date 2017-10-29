@@ -64,6 +64,13 @@ Preferences::registerPreference (const QString &key, Preference *preference)
 }
 
 void
+Preferences::registerPreferences (const QMap<QString, Preference *> &prefs)
+{
+  for (auto k : prefs.keys ())
+    registerPreference (k, prefs.value(k));
+}
+
+void
 Preferences::restore () const
 {
   GlobalSettings settings;
