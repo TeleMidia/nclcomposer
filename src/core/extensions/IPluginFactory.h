@@ -111,6 +111,18 @@ private:
   QJsonObject metadata_obj;
 };
 
+template <typename T> class IPluginFactoryTpl : public IPluginFactory
+{
+public:
+  IPlugin *createPluginInstance() { return new T ();}
+
+  void releasePluginInstance (IPlugin *plugin)
+  {
+    CPR_ASSERT (instanceof (T*, plugin));
+    delete cast (T*, plugin);
+  }
+};
+
 CPR_CORE_END_NAMESPACE
 
 Q_DECLARE_METATYPE (cpr::core::IPluginFactory *)
