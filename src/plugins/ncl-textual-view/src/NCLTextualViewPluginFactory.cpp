@@ -25,36 +25,25 @@ NCLTextualViewPluginFactory::NCLTextualViewPluginFactory ()
   _prefPageWidget = nullptr;
 
   Preferences *prefs = Preferences::instance ();
-  prefs->registerPreference (
-        "cpr.textual.bgCaretLine",
-        new Preference ("bgCaretLine", QColor ("#B9D3EE"), "Textual"));
-  prefs->registerPreference (
-      "cpr.textual.caretLineVisible",
-        new Preference ("caretLineVisible", true, "Textual"));
-  prefs->registerPreference (
-      "cpr.textual.bgMarginColor",
-      new Preference ("bgMarginColor", QColor ("#ffffff"), "Textual"));
-  prefs->registerPreference (
-      "cpr.textual.marginForeColor",
-      new Preference ("marginForeColor", QColor ("#B9D3EE"), "Textual"));
-  prefs->registerPreference (
-      "cpr.textual.marginBackColor",
-      new Preference ("marginBackColor", QColor ("#FFFFFF"), "Textual"));
-  prefs->registerPreference (
-      "cpr.textual.fontSize",
-      new Preference ("fontSize", 10, "Textual"));
-  prefs->registerPreference (
-        "cpr.textual.tabWidth",
-        new Preference ("tabWidth", 2,"Textual"));
-  prefs->registerPreference (
-        "cpr.textual.whitespaceVisibility",
-        new Preference ("whitespaceVisibility", false, "Textual"));
-  prefs->registerPreference (
-        "cpr.textual.edgeMode",
-         new Preference ("edgeMode", false, "Textual"));
-  prefs->registerPreference (
-        "cpr.textual.edgeColumn",
-        new Preference ("edgeColumn", "80", "Textual"));
+  prefs->registerPreferences (
+      { { "cpr.textual.bgCaretLine",
+          new Preference ("bgCaretLine", QColor ("#B9D3EE"), "Textual") },
+        { "cpr.textual.caretLineVisible",
+          new Preference ("caretLineVisible", true, "Textual") },
+        { "cpr.textual.bgMarginColor",
+          new Preference ("bgMarginColor", QColor ("#ffffff"), "Textual") },
+        { "cpr.textual.marginForeColor",
+          new Preference ("marginForeColor", QColor ("#B9D3EE"), "Textual") },
+        { "cpr.textual.marginBackColor",
+          new Preference ("marginBackColor", QColor ("#FFFFFF"), "Textual") },
+        { "cpr.textual.fontSize", new Preference ("fontSize", 10, "Textual") },
+        { "cpr.textual.tabWidth", new Preference ("tabWidth", 2, "Textual") },
+        { "cpr.textual.whitespaceVisibility",
+          new Preference ("whitespaceVisibility", false, "Textual") },
+        { "cpr.textual.edgeMode",
+          new Preference ("edgeMode", false, "Textual") },
+        { "cpr.textual.edgeColumn",
+          new Preference ("edgeColumn", "80", "Textual") } });
 }
 
 IPlugin *
