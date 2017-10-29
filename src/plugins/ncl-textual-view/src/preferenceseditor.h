@@ -3,8 +3,9 @@
 
 #include <QDialog>
 
-namespace Ui {
-  class PreferencesEditor;
+namespace Ui
+{
+class PreferencesEditor;
 }
 
 class PreferencesEditor : public QDialog
@@ -12,8 +13,8 @@ class PreferencesEditor : public QDialog
   Q_OBJECT
 
 public:
-  explicit PreferencesEditor(QWidget *parent = 0);
-  ~PreferencesEditor();
+  explicit PreferencesEditor (QWidget *parent = 0);
+  ~PreferencesEditor ();
 
 private:
   Ui::PreferencesEditor *ui;

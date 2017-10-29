@@ -48,8 +48,8 @@ NCLTextualViewPlugin::NCLTextualViewPlugin ()
 
   _isSyncing = false;
 
-  connect (_nclTextEditor, SIGNAL (focusLosted (QFocusEvent *)),
-           this, SLOT (manageFocusLost (QFocusEvent *)));
+  connect (_nclTextEditor, SIGNAL (focusLosted (QFocusEvent *)), this,
+           SLOT (manageFocusLost (QFocusEvent *)));
 
   connect (_nclTextEditor, SIGNAL (textChanged ()), this,
            SIGNAL (setCurrentProjectAsDirty ()));
@@ -150,8 +150,8 @@ NCLTextualViewPlugin::incrementalUpdateFromModel ()
       Node *node = nodes.front ();
       nodes.pop_front ();
 
-      Entity *ent = dynamic_cast <Entity *> (node);
-      Comment *comment = dynamic_cast <Comment *> (node);
+      Entity *ent = dynamic_cast<Entity *> (node);
+      Comment *comment = dynamic_cast<Comment *> (node);
 
       if (!first) // ignore the project root
       {
@@ -159,10 +159,11 @@ NCLTextualViewPlugin::incrementalUpdateFromModel ()
           onEntityAdded ("xxx", ent);
         else if (comment)
         {
-          onCommentAdded("xxx", comment);
+          onCommentAdded ("xxx", comment);
         }
         else
-          qCWarning (CPR_PLUGIN_TEXTUAL()) << "Trying to add an unknown node.";
+          qCWarning (CPR_PLUGIN_TEXTUAL ())
+              << "Trying to add an unknown node.";
       }
       else
         first = false;
@@ -299,7 +300,8 @@ NCLTextualViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
 }
 
 void
-NCLTextualViewPlugin::onCommentAdded (const QString &pluginID, Comment *comment)
+NCLTextualViewPlugin::onCommentAdded (const QString &pluginID,
+                                      Comment *comment)
 {
   Q_UNUSED (pluginID);
 
@@ -349,7 +351,7 @@ NCLTextualViewPlugin::onCommentAdded (const QString &pluginID, Comment *comment)
     else // keep the previous tabulation
       fixIdentation (insertAtOffset, false);
 
-//    _currentEntity = entity;
+    //    _currentEntity = entity;
   }
   else
     qCWarning (CPR_PLUGIN_TEXTUAL)
@@ -681,9 +683,10 @@ NCLTextualViewPlugin::nonIncrementalUpdateCoreModel ()
 
     if (current.isComment ())
     {
-      qCWarning (CPR_PLUGIN_TEXTUAL()) << "Adding a comment " << current.toComment().data();
+      qCWarning (CPR_PLUGIN_TEXTUAL ()) << "Adding a comment "
+                                        << current.toComment ().data ();
 
-      emit addComment (current.toComment().data(), parentUId);
+      emit addComment (current.toComment ().data (), parentUId);
     }
     else if (current.isElement ())
     {
@@ -891,7 +894,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
       child = child.nextSiblingElement ();
     }
 
-    foreach (Entity *child, curEntity->getEntityChildren())
+    foreach (Entity *child, curEntity->getEntityChildren ())
       entities.push_back (child);
   }
 
@@ -1040,8 +1043,7 @@ NCLTextualViewPlugin::manageFocusLost (QFocusEvent *event)
   // qCDebug (CPR_PLUGIN_TEXTUAL) << nclTextEditor <<
   // QApplication::focusWidget();
   if (_nclTextEditor->textWithoutUserInteraction () != _nclTextEditor->text ()
-      && !_isSyncing
-      && (QApplication::focusWidget () != nullptr))
+      && !_isSyncing && (QApplication::focusWidget () != nullptr))
   {
     /*int ret = QMessageBox::question(_window,
                                     tr("Textual View synchronization"),
@@ -1124,8 +1126,7 @@ NCLTextualViewPlugin::getEntityAttributesAsString (/*const */ Entity *entity)
   QString line;
   // fill the attributes (ordered)
   deque<QString> *attributes_ordered
-      = NCLStructure::instance ()->getAttributesOrdered (
-          entity->getType ());
+      = NCLStructure::instance ()->getAttributesOrdered (entity->getType ());
 
   if (attributes_ordered != nullptr)
   {

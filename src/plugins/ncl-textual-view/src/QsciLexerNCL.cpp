@@ -151,7 +151,7 @@ QsciLexerNCL::defaultFont (int style) const
       f = QFont ("Monospace");
   }
 
-  f.setPointSize(_defaultFont.pointSize());
+  f.setPointSize (_defaultFont.pointSize ());
 
   return f;
 }
@@ -236,7 +236,7 @@ QsciLexerNCL::scriptsStyled () const
 
 // Return true if scripts are styled.
 void
-QsciLexerNCL::setDefaultFont(const QFont &f)
+QsciLexerNCL::setDefaultFont (const QFont &f)
 {
   this->_defaultFont = f;
 }

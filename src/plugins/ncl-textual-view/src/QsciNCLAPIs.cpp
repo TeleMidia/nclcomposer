@@ -125,13 +125,12 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
     if (datatype == "URI")
     {
 
-      nclEditor->setEmitFocusOut(false);
+      nclEditor->setEmitFocusOut (false);
       QString filename
-          = QFileDialog::getOpenFileName (nclEditor,
-                                          tr ("Select file"),
+          = QFileDialog::getOpenFileName (nclEditor, tr ("Select file"),
                                           // nclEditor->getDocumentUrl()
                                           Utilities::getLastFileDialogPath ());
-      nclEditor->setEmitFocusOut(true);
+      nclEditor->setEmitFocusOut (true);
 
       if (!filename.isEmpty () && !filename.isNull ())
       {

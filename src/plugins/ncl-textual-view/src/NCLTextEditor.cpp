@@ -32,7 +32,7 @@ using namespace cpr::core;
 NCLTextEditor::NCLTextEditor (QWidget *parent) : QsciScintilla (parent)
 {
   Preference *tabWidth
-      = Preferences::instance ()->getValue("cpr.textual.tabWidth");
+      = Preferences::instance ()->getValue ("cpr.textual.tabWidth");
   _nclLexer = nullptr;
   _apis = nullptr;
   _textWithoutUserInter = "";
@@ -42,9 +42,9 @@ NCLTextEditor::NCLTextEditor (QWidget *parent) : QsciScintilla (parent)
   initParameters ();
   setAcceptDrops (true);
 
-  setTabWidth (tabWidth->value().toInt());
-  connect (this, SIGNAL (cursorPositionChanged (int, int)),
-           this, SLOT (handleCursorPositionChanged (int, int)));
+  setTabWidth (tabWidth->value ().toInt ());
+  connect (this, SIGNAL (cursorPositionChanged (int, int)), this,
+           SLOT (handleCursorPositionChanged (int, int)));
 }
 
 NCLTextEditor::~NCLTextEditor () {}
@@ -52,53 +52,49 @@ NCLTextEditor::~NCLTextEditor () {}
 void
 NCLTextEditor::initParameters ()
 {
-  Preferences *prefs = Preferences::instance();
+  Preferences *prefs = Preferences::instance ();
 
   prefs->restore ();
-  Preference *bgCaretLine
-      = prefs->getValue ("cpr.textual.bgCaretLine");
+  Preference *bgCaretLine = prefs->getValue ("cpr.textual.bgCaretLine");
   Preference *caretLineVisible
-      = prefs->getValue("cpr.textual.caretLineVisible");
-  Preference *bgMarginColor
-      = prefs->getValue ("cpr.textual.bgMarginColor");
+      = prefs->getValue ("cpr.textual.caretLineVisible");
+  Preference *bgMarginColor = prefs->getValue ("cpr.textual.bgMarginColor");
   Preference *marginForeColor
       = prefs->getValue ("cpr.textual.marginForeColor");
   Preference *marginBackColor
       = prefs->getValue ("cpr.textual.marginBackColor");
   Preference *prefFontSize = prefs->getValue ("cpr.textual.fontSize");
   Preference *whitespaceVisibility
-      = prefs->getValue("cpr.textual.whitespaceVisibility");
-  Preference *edgeMode
-      = prefs->getValue("cpr.textual.edgeMode");
-  Preference *edgeColumn
-      = prefs->getValue("cpr.textual.edgeColumn");
+      = prefs->getValue ("cpr.textual.whitespaceVisibility");
+  Preference *edgeMode = prefs->getValue ("cpr.textual.edgeMode");
+  Preference *edgeColumn = prefs->getValue ("cpr.textual.edgeColumn");
 
   _tabBehavior = TAB_BEHAVIOR_DEFAULT;
 
   setAutoIndent (true);
   setFolding (QsciScintilla::CircledTreeFoldStyle);
-  setFoldMarginColors (marginForeColor->value().toString(),
-                       marginBackColor->value().toString());
+  setFoldMarginColors (marginForeColor->value ().toString (),
+                       marginBackColor->value ().toString ());
 
   setMarginLineNumbers (1, true);
 
   setMarginWidth (1, 25);
-  setMarginsBackgroundColor (QColor(bgMarginColor->value().toString()));
+  setMarginsBackgroundColor (QColor (bgMarginColor->value ().toString ()));
 
   setCaretWidth (20);
   setCaretLineBackgroundColor (QColor ("#e6fff0"));
-  if(caretLineVisible->value().toInt()==1)
+  if (caretLineVisible->value ().toInt () == 1)
     setCaretLineVisible (true);
 
   // whitespacevisibility switch
-  if(whitespaceVisibility->value().toInt() == 0)
-    setWhitespaceVisibility(WhitespaceVisibility::WsInvisible);
-  else if(whitespaceVisibility->value().toInt() == 1)
-    setWhitespaceVisibility(WhitespaceVisibility::WsVisible);
-  else if(whitespaceVisibility->value().toInt() == 2)
-    setWhitespaceVisibility(WhitespaceVisibility::WsVisibleAfterIndent);
-  else if(whitespaceVisibility->value().toInt() == 3)
-    setWhitespaceVisibility(WhitespaceVisibility::WsVisibleOnlyInIndent);
+  if (whitespaceVisibility->value ().toInt () == 0)
+    setWhitespaceVisibility (WhitespaceVisibility::WsInvisible);
+  else if (whitespaceVisibility->value ().toInt () == 1)
+    setWhitespaceVisibility (WhitespaceVisibility::WsVisible);
+  else if (whitespaceVisibility->value ().toInt () == 2)
+    setWhitespaceVisibility (WhitespaceVisibility::WsVisibleAfterIndent);
+  else if (whitespaceVisibility->value ().toInt () == 3)
+    setWhitespaceVisibility (WhitespaceVisibility::WsVisibleOnlyInIndent);
 
   ensureLineVisible (1);
   setUtf8 (true);
@@ -135,7 +131,7 @@ NCLTextEditor::initParameters ()
   _nclLexer = new QsciLexerNCL (0);
   QFont font;
   font.setFamily (QString::fromUtf8 (PREF_FONT_FAMILY));
-  font.setPointSize (prefFontSize->value().toInt());
+  font.setPointSize (prefFontSize->value ().toInt ());
   _nclLexer->setDefaultFont (font);
 
   setLexer (_nclLexer);
@@ -154,9 +150,9 @@ NCLTextEditor::initParameters ()
   _fillingAttributeIndicator = indicatorDefine (RoundBoxIndicator, 2);
 
   // setWhitespaceVisibility(QsciScintilla::WsVisible);
-  if(edgeMode->value().toInt()==1)
-    setEdgeMode(QsciScintilla::EdgeLine);
-  setEdgeColumn(edgeColumn->value().toInt());
+  if (edgeMode->value ().toInt () == 1)
+    setEdgeMode (QsciScintilla::EdgeLine);
+  setEdgeColumn (edgeColumn->value ().toInt ());
 
   prefs->save ();
 }
