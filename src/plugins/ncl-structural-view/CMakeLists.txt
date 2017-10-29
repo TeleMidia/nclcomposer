@@ -34,7 +34,6 @@ set(NCL_STRUCTURAL_VIEW_SOURCES
 
   StructuralUtil.cpp
   StructuralViewPlugin.cpp
-  StructuralViewFactory.cpp
   ui/Commands.cpp
   ui/StructuralWindow.cpp
   ui/view/StructuralView.cpp
