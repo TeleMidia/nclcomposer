@@ -18,12 +18,6 @@ createUid ()
 }
 
 QMap<QString, QString>
-createSettings ()
-{
-  return createSettings (true, true);
-}
-
-QMap<QString, QString>
 createSettings (bool undo, bool notify)
 {
   return createSettings ((undo ? ST_VALUE_TRUE : ST_VALUE_FALSE),

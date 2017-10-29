@@ -13,8 +13,7 @@ namespace StructuralUtil
 {
 QString createUid ();
 
-QMap<QString, QString> createSettings ();
-QMap<QString, QString> createSettings (bool undo, bool notify);
+QMap<QString, QString> createSettings (bool undo = true, bool notify = true);
 QMap<QString, QString> createSettings (const QString &undo,
                                        const QString &notify,
                                        const QString &code);

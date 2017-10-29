@@ -17,6 +17,8 @@
  */
 #include "StructuralViewPlugin.h"
 
+namespace util = StructuralUtil;
+
 StructuralViewPlugin::StructuralViewPlugin (QObject *parent)
     : _window (new StructuralWindow ())
 {
@@ -247,8 +249,7 @@ StructuralViewPlugin::updateFromModel ()
 
     QString cacheId = createCacheId (e);
 
-    QMap<QString, QString> settings
-        = StructuralUtil::createSettings (false, false);
+    QMap<QString, QString> settings = util::createSettings (false, false);
 
     // When ST_DEFAULT_WITH_INTERFACES is disabled, Structural::Reference
     // entities exists but they are hidden.  So, they could be ignore here.
@@ -265,7 +266,7 @@ StructuralViewPlugin::updateFromModel ()
       props.insert (ST_ATTR_ENT_UID, e->getUid ());
 
       QMap<QString, QString> transls
-          = StructuralUtil::createCoreTranslations (e->getType ());
+          = util::createCoreTranslations (e->getType ());
 
       for (const QString &transl : transls.values ())
       {
@@ -341,8 +342,7 @@ StructuralViewPlugin::updateFromModel ()
       {
         if (!props.value (ST_ATTR_ENT_ID).isEmpty ())
         {
-          StructuralRole role
-              = StructuralUtil::strToRole (props.value (ST_ATTR_ENT_ID));
+          StructuralRole role = util::strToRole (props.value (ST_ATTR_ENT_ID));
 
           QString coreBindUID = _viewToCore.value (e->getUid ());
           QString viewLinkUID
@@ -352,7 +352,7 @@ StructuralViewPlugin::updateFromModel ()
 
           props.insert (ST_ATTR_REFERENCE_LINK_UID, viewLinkUID);
 
-          if (StructuralUtil::isCondition (role))
+          if (util::isCondition (role))
           {
             if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
             {
@@ -369,7 +369,7 @@ StructuralViewPlugin::updateFromModel ()
                             props.value (ST_ATTR_REFERENCE_LINK_UID));
             }
           }
-          else if (StructuralUtil::isAction (role))
+          else if (util::isAction (role))
           {
             if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
             {
@@ -461,7 +461,7 @@ StructuralViewPlugin::updateFromModel ()
 
         if (e->getType () == Structural::Bind)
         {
-          if (StructuralUtil::isCondition (e->getProperty (ST_ATTR_ENT_ID)))
+          if (util::isCondition (e->getProperty (ST_ATTR_ENT_ID)))
           {
             if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
             {
@@ -478,7 +478,7 @@ StructuralViewPlugin::updateFromModel ()
                             e->getProperty (ST_ATTR_REFERENCE_LINK_UID));
             }
           }
-          else if (StructuralUtil::isAction (e->getProperty (ST_ATTR_ENT_ID)))
+          else if (util::isAction (e->getProperty (ST_ATTR_ENT_ID)))
           {
             if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
             {
@@ -677,7 +677,7 @@ void
 StructuralViewPlugin::insertInView (Entity *ent, bool undo)
 {
   QMap<QString, QString> props;
-  Structural::Type type = StructuralUtil::strToType (ent->getType ());
+  Structural::Type type = util::strToType (ent->getType ());
 
   if (type != Structural::NoType)
   {
@@ -686,8 +686,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
     _coreToView[ent->getUniqueId ()] = ent->getUniqueId ();
     _viewToCore[ent->getUniqueId ()] = ent->getUniqueId ();
 
-    QMap<QString, QString> transls
-        = StructuralUtil::createCoreTranslations (type);
+    QMap<QString, QString> transls = util::createCoreTranslations (type);
 
     if (!transls.isEmpty ())
     {
@@ -697,8 +696,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
           props.insert (transls.value (key), ent->getAttribute (key));
       }
 
-      QMap<QString, QString> settings
-          = StructuralUtil::createSettings (undo, false);
+      QMap<QString, QString> settings = util::createSettings (undo, false);
 
       QString parentUid = ent->getParentUniqueId ();
       parentUid = _coreToView.value (ent->getParentUniqueId (), "");
@@ -737,15 +735,13 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
 
         if (!props.value (ST_ATTR_ENT_ID).isEmpty ())
         {
-          StructuralRole role
-              = StructuralUtil::strToRole (props.value (ST_ATTR_ENT_ID));
+          StructuralRole role = util::strToRole (props.value (ST_ATTR_ENT_ID));
 
-          props.insert (ST_ATTR_BIND_ROLE,
-                        StructuralUtil::roleToString (role));
+          props.insert (ST_ATTR_BIND_ROLE, util::roleToString (role));
           props.insert (ST_ATTR_REFERENCE_LINK_UID,
                         _coreToView.value (ent->getParentUniqueId ()));
 
-          if (StructuralUtil::isCondition (role))
+          if (util::isCondition (role))
           {
             if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
             {
@@ -761,7 +757,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
             props.insert (ST_ATTR_EDGE_HEAD,
                           _coreToView.value (ent->getParentUniqueId ()));
           }
-          else if (StructuralUtil::isAction (role))
+          else if (util::isAction (role))
           {
             if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
             {
@@ -836,9 +832,8 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
       _coreToView[uid] = uid;
       _viewToCore[uid] = uid;
 
-      _window->getView ()->change (
-          e->getUid (), next, previous,
-          StructuralUtil::createSettings (true, false));
+      _window->getView ()->change (e->getUid (), next, previous,
+                                   util::createSettings (true, false));
     }
   }
 }
@@ -848,8 +843,7 @@ StructuralViewPlugin::removeInView (Entity *entity, bool undo)
 {
   if (_coreToView.contains (entity->getUniqueId ()))
   {
-    QMap<QString, QString> settings
-        = StructuralUtil::createSettings (undo, false);
+    QMap<QString, QString> settings = util::createSettings (undo, false);
 
     if (entity->getType () == "linkParam" || entity->getType () == "bindParam")
     {
@@ -882,9 +876,8 @@ StructuralViewPlugin::removeInView (Entity *entity, bool undo)
           next.remove (name + ":" + uid);
           next.remove (value + ":" + uid);
 
-          _window->getView ()->change (
-              e->getUid (), next, previous,
-              StructuralUtil::createSettings (undo, false));
+          _window->getView ()->change (e->getUid (), next, previous,
+                                       util::createSettings (undo, false));
         }
       }
     }
@@ -905,14 +898,13 @@ StructuralViewPlugin::changeInView (Entity *ent)
 {
   QMap<QString, QString> props;
 
-  Structural::Type type = StructuralUtil::strToType (ent->getType ());
+  Structural::Type type = util::strToType (ent->getType ());
 
   if (type != Structural::NoType)
   {
     props[ST_ATTR_ENT_TYPE] = ent->getType ();
 
-    QMap<QString, QString> transls
-        = StructuralUtil::createCoreTranslations (type);
+    QMap<QString, QString> transls = util::createCoreTranslations (type);
 
     for (const QString &key : transls.keys ())
     {
@@ -928,15 +920,13 @@ StructuralViewPlugin::changeInView (Entity *ent)
       {
         if (!props.value (ST_ATTR_ENT_ID).isEmpty ())
         {
-          StructuralRole role
-              = StructuralUtil::strToRole (props.value (ST_ATTR_ENT_ID));
+          StructuralRole role = util::strToRole (props.value (ST_ATTR_ENT_ID));
 
-          props.insert (ST_ATTR_BIND_ROLE,
-                        StructuralUtil::roleToString (role));
+          props.insert (ST_ATTR_BIND_ROLE, util::roleToString (role));
           props.insert (ST_ATTR_REFERENCE_LINK_UID,
                         _coreToView.value (ent->getParentUniqueId ()));
 
-          if (StructuralUtil::isCondition (role))
+          if (util::isCondition (role))
           {
             if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
             {
@@ -953,7 +943,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
                             _coreToView.value (ent->getParentUniqueId ()));
             }
           }
-          else if (StructuralUtil::isAction (role))
+          else if (util::isAction (role))
           {
             if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
             {
@@ -990,8 +980,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
         }
       }
 
-      QMap<QString, QString> settings
-          = StructuralUtil::createSettings (true, false);
+      QMap<QString, QString> settings = util::createSettings (true, false);
 
       QString uid = _coreToView[ent->getUniqueId ()];
 
@@ -1042,9 +1031,8 @@ StructuralViewPlugin::changeInView (Entity *ent)
       _coreToView[uid] = uid;
       _viewToCore[uid] = uid;
 
-      _window->getView ()->change (
-          e->getUid (), next, previous,
-          StructuralUtil::createSettings (true, false));
+      _window->getView ()->change (e->getUid (), next, previous,
+                                   util::createSettings (true, false));
     }
     else if (_coreToView.contains (ent->getUniqueId ()))
     {
@@ -1053,9 +1041,8 @@ StructuralViewPlugin::changeInView (Entity *ent)
       next[name + ":" + uid] = ent->getAttribute ("name");
       next[value + ":" + uid] = ent->getAttribute ("value");
 
-      _window->getView ()->change (
-          e->getUid (), next, previous,
-          StructuralUtil::createSettings (true, false));
+      _window->getView ()->change (e->getUid (), next, previous,
+                                   util::createSettings (true, false));
     }
   }
 }
@@ -1072,7 +1059,7 @@ StructuralViewPlugin::selectInView (Entity *entity)
   {
     if (_struct_scene->hasEntity (viewUid))
     {
-      _window->getView ()->select (viewUid, StructuralUtil::createSettings ());
+      _window->getView ()->select (viewUid, util::createSettings ());
     }
     else
       qWarning (CPR_PLUGIN_STRUCT)
@@ -1080,7 +1067,7 @@ StructuralViewPlugin::selectInView (Entity *entity)
   }
   else
   {
-    _window->getView ()->select ("", StructuralUtil::createSettings ());
+    _window->getView ()->select ("", util::createSettings ());
   }
 }
 
@@ -1091,7 +1078,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
 {
   Q_UNUSED (settings);
 
-  StructuralType type = StructuralUtil::strToType (props[ST_ATTR_ENT_TYPE]);
+  StructuralType type = util::strToType (props[ST_ATTR_ENT_TYPE]);
   Entity *entParent = nullptr;
 
   if (type == Structural::Bind)
@@ -1152,8 +1139,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
   {
     QMap<QString, QString> attrs;
 
-    QMap<QString, QString> transls
-        = StructuralUtil::createPluginTranslations (type);
+    QMap<QString, QString> transls = util::createPluginTranslations (type);
 
     for (const QString &key : transls.keys ())
     {
@@ -1164,8 +1150,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
     _waiting = true;
     _notified = uid;
 
-    emit addEntity (StructuralUtil::typeToStr (type),
-                    entParent->getUniqueId (), attrs);
+    emit addEntity (util::typeToStr (type), entParent->getUniqueId (), attrs);
 
     if (type == Structural::Link || type == Structural::Bind)
     {
@@ -1247,11 +1232,10 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
   {
     QMap<QString, QString> attributes;
 
-    Structural::Type type
-        = StructuralUtil::strToType (props[ST_ATTR_ENT_TYPE]);
+    Structural::Type type = util::strToType (props[ST_ATTR_ENT_TYPE]);
 
     QMap<QString, QString> translations
-        = StructuralUtil::createPluginTranslations (type);
+        = util::createPluginTranslations (type);
 
     for (const QString &key : translations.keys ())
     {
@@ -1271,7 +1255,7 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
         bool isInterface = false;
 
         if (properties[ST_ATTR_ENT_CATEGORY]
-            == StructuralUtil::translateCategoryToString (
+            == util::translateCategoryToString (
                    Structural::Interface))
         {
           isInterface = true;
@@ -1312,7 +1296,7 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
 
           QMap<QString, QString> pp;
           pp[ST_ATTR_ENT_TYPE]
-              = StructuralUtil::translateTypeToString (Structural::Port);
+              = util::translateTypeToString (Structural::Port);
           pp.insert (ST_ATTR_ENT_ID,
                      "p" + properties.value (ST_ATTR_ENT_ID));
 
@@ -1334,7 +1318,7 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
 
           setReferences (pp);
 
-          _window->getView ()->insert (StructuralUtil::createUid (), parent,
+          _window->getView ()->insert (util::createUid (), parent,
                                        pp, settings);
         }
       }
