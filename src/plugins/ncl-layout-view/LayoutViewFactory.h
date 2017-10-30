@@ -23,22 +23,18 @@ using namespace cpr::core;
 
 #include "LayoutViewPlugin.h"
 
-class NCLLayoutViewFactory : public QObject, public IPluginFactory
+class NCLLayoutViewFactory : public QObject,
+    public IPluginFactoryTpl<NCLLayoutViewPlugin>
 {
   Q_OBJECT
-  Q_INTERFACES(IPluginFactory)
-
-  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "ncl-layout-view.json")
+  Q_INTERFACES (IPluginFactory)
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "ncl-layout-view.json")
 
 public:
-  explicit NCLLayoutViewFactory(QObject* parent = 0);
-  virtual ~NCLLayoutViewFactory();
+  explicit NCLLayoutViewFactory (QObject* parent = 0);
+  virtual ~NCLLayoutViewFactory () {}
 
-  IPlugin* createPluginInstance();
-
-  void releasePluginInstance(IPlugin *);
-
-  QString id() const;
+  QString id() const { return "br.puc-rio.telemidia.qncllayout"; }
 };
 
 #endif // QNLYCOMPOSERPLUGINFACTORY_H

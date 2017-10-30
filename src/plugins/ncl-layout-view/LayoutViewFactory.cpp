@@ -32,24 +32,3 @@ NCLLayoutViewFactory::NCLLayoutViewFactory(QObject* parent)
       "cpr.layout.resolutions",
       new Preference ("resolutions", default_resolutions, "Layout"));
 }
-
-NCLLayoutViewFactory::~NCLLayoutViewFactory()
-{
-
-}
-
-IPlugin* NCLLayoutViewFactory::createPluginInstance()
-{
-  return new NCLLayoutViewPlugin();
-}
-
-void NCLLayoutViewFactory::releasePluginInstance(IPlugin* plugin)
-{
-  delete plugin;
-}
-
-QString NCLLayoutViewFactory::id() const
-{
-  return "br.puc-rio.telemidia.qncllayout";
-}
-
