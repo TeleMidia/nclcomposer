@@ -12,12 +12,10 @@ set(OUTLINE_VIEW_SOURCES
   NCLParser.h
   OutlineViewPlugin_global.h
   OutlineViewPlugin.h
-  OutlineViewFactory.h
 
   NCLTreeWidget.cpp
   NCLParser.cpp
   OutlineViewPlugin.cpp
-  OutlineViewFactory.cpp
 )
 
 add_library (outline_view SHARED

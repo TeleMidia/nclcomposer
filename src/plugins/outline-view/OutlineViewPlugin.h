@@ -20,10 +20,12 @@
 
 #include <QObject>
 
+#include <extensions/IPlugin.h>
+#include <extensions/IPluginFactory.h>
+using namespace cpr::core;
+
 #include "NCLTreeWidget.h"
 #include "OutlineViewPlugin_global.h"
-#include <extensions/IPlugin.h>
-using namespace cpr::core;
 
 /*!
  \brief OutlineViewPlugin is a Composer plugin that shows the internal model
@@ -185,5 +187,21 @@ private slots:
 
   void openWithDefaultSystemEditor (QString entityId);
 };
+
+/*!
+ \brief Handles the creation and deletion of OutlineView objects.
+*/
+class OutlineViewFactory : public QObject,
+    public IPluginFactoryTpl <OutlineViewPlugin>
+{
+  Q_OBJECT
+  Q_INTERFACES (IPluginFactory)
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "outline-view.json")
+
+public:
+  QString id () const { return "br.puc-rio.telemidia.OutlineView"; }
+  QIcon icon () const { return QIcon (":/images/ncl.png"); }
+};
+
 
 #endif // OUTLINEVIEWPLUGIN_H
