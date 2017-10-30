@@ -12,7 +12,6 @@ find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 set(VALIDATOR_SOURCES
   NCLComposerAdapter.cpp
   ValidatorPlugin.cpp
-  ValidatorFactory.cpp
   ValidatorTreewidgetItem.cpp
   langstruct/langstruct.cpp
   langstruct/components/ReferenceStructure.cpp
@@ -28,7 +27,6 @@ set(VALIDATOR_SOURCES
 
   NCLComposerAdapter.h
   ValidatorPlugin.h
-  ValidatorFactory.h
   ValidatorTreewidgetItem.h
   definitions/definitions.h
   langstruct/langstruct.h
