@@ -72,9 +72,6 @@ class DebugConsoleFactory :
   Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "debug-console.json")
 
 public:
-  DebugConsoleFactory () {}
-  ~DebugConsoleFactory () {}
-
   QString id () const { return "br.puc-rio.telemidia.DebugConsole"; }
   QIcon icon () const { return QIcon (":/images/icon.png"); }
 };
