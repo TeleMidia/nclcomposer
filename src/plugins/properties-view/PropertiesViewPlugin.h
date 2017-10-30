@@ -25,6 +25,7 @@
 #include <QPushButton>
 
 #include <extensions/IPlugin.h>
+#include <extensions/IPluginFactory.h>
 using namespace cpr::core;
 
 #include "PropertiesEditor.h"
@@ -153,6 +154,22 @@ private:
   QStringList getAttributes (const QString &tagname);
   QStringList getAttributesDatatype (const QString &tagname);
   QList<QStringList> getAttributeSuggestions (const QString &tagname);
+};
+
+/*!
+ \brief Handles the creation and deletion of PropertyView objects.
+
+*/
+class PropertiesViewFactory : public QObject,
+    public IPluginFactoryTpl <PropertiesViewPlugin>
+{
+  Q_OBJECT
+  Q_INTERFACES (IPluginFactory)
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "properties-view.json")
+
+public:
+  QString id () const { return "br.puc-rio.telemidia.PropertiesView"; }
+  QIcon icon () const { return QIcon (":/images/icon.png"); }
 };
 
 #endif // PROPERTIESVIEWPLUGIN_H
