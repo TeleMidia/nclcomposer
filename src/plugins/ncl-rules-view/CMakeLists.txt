@@ -18,7 +18,6 @@ set(NCL_RULES_VIEW_SOURCES
   
   Util.h
   RulesViewPlugin.h
-  RulesViewFactory.h
   RulesView.h
   RulesTreeWidget.h
   RuleItem.h

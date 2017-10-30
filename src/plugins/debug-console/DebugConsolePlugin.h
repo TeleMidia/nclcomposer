@@ -25,6 +25,7 @@
 #include <QPushButton>
 
 #include <extensions/IPlugin.h>
+#include <extensions/IPluginFactory.h>
 using namespace cpr::core;
 
 /*!
@@ -57,6 +58,25 @@ public slots:
   void errorMessage (const QString &) override;
 
   void sendToAll ();
+};
+
+/*!
+ * \brief Handles the creation and deletion of DebugConsolePlugin objects.
+ */
+class DebugConsoleFactory :
+    public QObject,
+    public IPluginFactoryTpl<DebugConsolePlugin>
+{
+  Q_OBJECT
+  Q_INTERFACES (IPluginFactory)
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "debug-console.json")
+
+public:
+  DebugConsoleFactory () {}
+  ~DebugConsoleFactory () {}
+
+  QString id () const { return "br.puc-rio.telemidia.DebugConsole"; }
+  QIcon icon () const { return QIcon (":/images/icon.png"); }
 };
 
 #endif // DEBUGCONSOLEPLUGIN_H

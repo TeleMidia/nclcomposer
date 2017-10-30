@@ -16,7 +16,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "DebugConsolePlugin.h"
-#include "DebugConsoleFactory.h"
 
 DebugConsolePlugin::DebugConsolePlugin ()
 {

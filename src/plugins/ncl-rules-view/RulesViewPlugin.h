@@ -3,11 +3,11 @@
 
 #include <QMap>
 #include <extensions/IPlugin.h>
+#include <extensions/IPluginFactory.h>
+using namespace cpr::core;
 
 #include "RulesTreeWidget.h"
 #include "RulesView.h"
-
-using namespace cpr::core;
 
 /*!
  * \brief Rules View is a simple plugin allows users to graphically define
@@ -56,6 +56,24 @@ private:
   RulesTreeWidget *_rulesTable;
   Entity *_ruleBaseEntity;
   QMap<QTreeWidgetItem *, QString> _items;
+};
+
+/*!
+ * \brief Handles the creation and deletion of RulesViewPlugin objects.
+ */
+class RulesViewFactory : public QObject,
+    public IPluginFactoryTpl <RulesViewPlugin>
+{
+  Q_OBJECT
+  Q_INTERFACES (IPluginFactory)
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "ncl-rules-view.json")
+
+public:
+  explicit RulesViewFactory () {}
+  ~RulesViewFactory () {}
+
+  QString id () const override { return "br.puc-rio.telemidia.RulesView"; }
+  QIcon icon () const override { return QIcon (); }
 };
 
 #endif // RULESVIEWPLUGIN_H
