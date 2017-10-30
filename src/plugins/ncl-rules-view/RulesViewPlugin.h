@@ -69,9 +69,6 @@ class RulesViewFactory : public QObject,
   Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "ncl-rules-view.json")
 
 public:
-  explicit RulesViewFactory () {}
-  ~RulesViewFactory () {}
-
   QString id () const override { return "br.puc-rio.telemidia.RulesView"; }
   QIcon icon () const override { return QIcon (); }
 };
