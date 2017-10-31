@@ -59,6 +59,9 @@ public:
     return _menu;
   }
 
+  void adjustEntity (StructuralEntity *e, const QStrMap &props,
+                     const QStrMap &stgs);
+
 public slots:
   // External methods
   void createEntity (StructuralType type, QStrMap prop = QStrMap (),
