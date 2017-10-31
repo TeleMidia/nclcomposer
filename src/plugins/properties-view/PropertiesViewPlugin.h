@@ -164,8 +164,7 @@ class PropertiesViewFactory : public QObject,
     public IPluginFactoryTpl <PropertiesViewPlugin>
 {
   Q_OBJECT
-  Q_INTERFACES (IPluginFactory)
-  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "properties-view.json")
+  CPR_PLUGIN_METADATA ("properties-view.json")
 
 public:
   QString id () const { return "br.puc-rio.telemidia.PropertiesView"; }

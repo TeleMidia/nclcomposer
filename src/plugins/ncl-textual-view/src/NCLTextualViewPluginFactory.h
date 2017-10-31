@@ -37,8 +37,7 @@ class TextPluginPreferencesWidget;
 class NCLTextualViewPluginFactory : public QObject, public IPluginFactory
 {
   Q_OBJECT
-  Q_INTERFACES (IPluginFactory)
-  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "ncl-textual-view.json")
+  CPR_PLUGIN_METADATA ("ncl-textual-view.json")
 
 public:
   NCLTextualViewPluginFactory ();

@@ -27,8 +27,7 @@ class NCLLayoutViewFactory : public QObject,
     public IPluginFactoryTpl<NCLLayoutViewPlugin>
 {
   Q_OBJECT
-  Q_INTERFACES (IPluginFactory)
-  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "ncl-layout-view.json")
+  CPR_PLUGIN_METADATA ("ncl-layout-view.json")
 
 public:
   explicit NCLLayoutViewFactory (QObject* parent = 0);

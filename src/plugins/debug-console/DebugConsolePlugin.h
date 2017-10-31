@@ -68,8 +68,7 @@ class DebugConsoleFactory :
     public IPluginFactoryTpl<DebugConsolePlugin>
 {
   Q_OBJECT
-  Q_INTERFACES (IPluginFactory)
-  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "debug-console.json")
+  CPR_PLUGIN_METADATA ("debug-console.json")
 
 public:
   QString id () const { return "br.puc-rio.telemidia.DebugConsole"; }

@@ -31,6 +31,14 @@ using namespace cpr::core;
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
+ * \brief Helper macro to avoid code duplication in an instance of
+ * IPluginFactory.
+ */
+#define CPR_PLUGIN_METADATA(FILENAME) \
+  Q_INTERFACES (IPluginFactory) \
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE FILENAME)
+
+/*!
  * \ingroup core
  * \brief A Factory interface for building plugin instances.
  *

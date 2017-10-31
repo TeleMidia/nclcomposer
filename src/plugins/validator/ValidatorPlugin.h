@@ -97,12 +97,10 @@ class ValidatorFactory : public QObject,
     public IPluginFactoryTpl<ValidatorPlugin>
 {
   Q_OBJECT
-  Q_INTERFACES (IPluginFactory)
-  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "validator-plugin.json")
+  CPR_PLUGIN_METADATA ("validator-plugin.json")
 
 public:
   QString id () const { return "br.ufma.deinf.laws.validator"; }
-
   QIcon icon () const { return QIcon (); }
 };
 

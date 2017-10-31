@@ -24,11 +24,10 @@ using namespace cpr::core;
 #include "StructuralViewPlugin.h"
 
 class StructuralViewFactory : public QObject,
-    public IPluginFactoryTpl <StructuralViewPlugin>
+    public IPluginFactoryTpl<StructuralViewPlugin>
 {
   Q_OBJECT
-  Q_INTERFACES (IPluginFactory)
-  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "ncl-structural-view.json")
+  CPR_PLUGIN_METADATA ("ncl-structural-view.json")
 
 public:
   StructuralViewFactory (QObject *parent = 0) : QObject (parent) {}

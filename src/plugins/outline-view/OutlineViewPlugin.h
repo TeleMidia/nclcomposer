@@ -195,8 +195,7 @@ class OutlineViewFactory : public QObject,
     public IPluginFactoryTpl <OutlineViewPlugin>
 {
   Q_OBJECT
-  Q_INTERFACES (IPluginFactory)
-  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "outline-view.json")
+  CPR_PLUGIN_METADATA ("outline-view.json")
 
 public:
   QString id () const { return "br.puc-rio.telemidia.OutlineView"; }
