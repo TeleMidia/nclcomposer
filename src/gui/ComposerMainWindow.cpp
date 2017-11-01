@@ -170,16 +170,6 @@ ComposerMainWindow::readExtensions ()
 
   /* Load the preferences page */
   _preferencesDialog->addPreferencePage (new GeneralPreferences ());
-
-  /* Load PreferencesPages from Plugins */
-  QList<IPluginFactory *> list
-      = PluginControl::instance ()->getLoadedPlugins ();
-
-  IPluginFactory *currentFactory;
-  foreach (currentFactory, list)
-  {
-    _preferencesDialog->addPreferencePage (currentFactory);
-  }
 }
 
 QString

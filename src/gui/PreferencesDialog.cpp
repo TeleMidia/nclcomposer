@@ -30,8 +30,6 @@ PreferencesDialog::PreferencesDialog (QWidget *parent)
   ui->setupUi (this);
   this->setModal (true);
 
-  loadPreferencesPages ();
-
   connect (ui->listWidget, SIGNAL (itemSelectionChanged ()), this,
            SLOT (changeActivePage ()));
 
@@ -45,16 +43,6 @@ PreferencesDialog::PreferencesDialog (QWidget *parent)
 }
 
 PreferencesDialog::~PreferencesDialog () { delete ui; }
-
-void
-PreferencesDialog::addPreferencePage (IPluginFactory *pF)
-{
-  if (pF->getPreferencePageWidget () == nullptr)
-    return;
-
-  addPreferencePage (pF->icon (), pF->metadata ().value ("name").toString (),
-                     (IPreferencesPage *)pF->getPreferencePageWidget ());
-}
 
 void
 PreferencesDialog::addPreferencePage (QIcon icon, QString name,
@@ -75,31 +63,6 @@ PreferencesDialog::addPreferencePage (IPreferencesPage *page)
   pages[page->getName ()] = page;
   page->hide ();
   ui->scrollAreaVerticalLayout->addWidget (page);
-}
-
-void
-PreferencesDialog::loadPreferencesPages ()
-{
-  QList<IPluginFactory *> plugins
-      = PluginControl::instance ()->getLoadedPlugins ();
-  QList<IPluginFactory *>::iterator it;
-
-  for (it = plugins.begin (); it != plugins.end (); it++)
-  {
-    IPluginFactory *pF = *it;
-    if (pF->getPreferencePageWidget () == nullptr)
-      continue;
-
-    new QListWidgetItem (pF->icon (),
-                         pF->metadata ().value ("name").toString (),
-                         ui->listWidget, 0);
-
-    IPreferencesPage *page
-        = (IPreferencesPage *)pF->getPreferencePageWidget ();
-    pages[pF->metadata ().value ("name").toString ()] = page;
-    page->hide ();
-    ui->scrollAreaVerticalLayout->addWidget (page);
-  }
 }
 
 void

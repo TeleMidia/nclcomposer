@@ -82,19 +82,6 @@ public:
   {
     return QIcon ();
   }
-  virtual QWidget *
-  getPreferencePageWidget ()
-  {
-    return nullptr;
-  }
-  virtual void
-  setDefaultValues ()
-  {
-  }
-  virtual void
-  applyValues ()
-  {
-  }
 
   virtual QList<LanguageType>
   getSupportedLanguages ()

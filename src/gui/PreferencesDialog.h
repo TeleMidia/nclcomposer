@@ -44,7 +44,6 @@ public:
   explicit PreferencesDialog (QWidget *parent = 0);
   ~PreferencesDialog ();
 
-  void addPreferencePage (IPluginFactory *);
   void addPreferencePage (IPreferencesPage *page);
   /*!
    * \deprecated
@@ -60,7 +59,6 @@ private:
   QListWidgetItem *currentItem;
   IPreferencesPage *currentPage;
 
-  void loadPreferencesPages ();
   QMap<QString, IPreferencesPage *> pages;
 
 private slots:

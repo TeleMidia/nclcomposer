@@ -76,30 +76,3 @@ NCLTextualViewPluginFactory::icon () const
 {
   return QIcon (":/images/ncl.png");
 }
-
-QWidget *
-NCLTextualViewPluginFactory::getPreferencePageWidget ()
-{
-  /*
-  if (prefPageWidget == nullptr)
-  {
-    prefPageWidget = new QFrame();
-    prefPageUi = new Ui::TextPluginPreferencesWidget();
-    prefPageUi->setupUi(prefPageWidget);
-   }
-   return prefPageWidget;
-  */
-  return nullptr;
-}
-
-void
-NCLTextualViewPluginFactory::setDefaultValues ()
-{
-  // TODO
-}
-
-void
-NCLTextualViewPluginFactory::applyValues ()
-{
-  // TODO
-}

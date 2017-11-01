@@ -50,12 +50,6 @@ public:
 
   QIcon icon () const;
 
-  QWidget *getPreferencePageWidget ();
-
-  void setDefaultValues ();
-
-  void applyValues ();
-
 private:
   QFrame *_prefPageWidget;
   Ui::TextPluginPreferencesWidget *_prefPageUi;
