@@ -237,6 +237,12 @@ StructuralEntity::getProperty (const QString &name) const
     return "";
 }
 
+bool
+StructuralEntity::hasProperty (const QString &name) const
+{
+  return _properties.contains (name);
+}
+
 void
 StructuralEntity::setProperty (const QString &name, const QString &value)
 {

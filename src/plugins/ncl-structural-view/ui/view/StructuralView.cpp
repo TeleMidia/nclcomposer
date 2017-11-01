@@ -538,7 +538,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
       // Adjusting others media entities that refer the current one
       bool hasChange = false;
 
-      if (!ent->getProperty (ST_ATTR_REFERENCE_REFER_ID).isEmpty ())
+      if (!ent->hasProperty (ST_ATTR_REFERENCE_REFER_ID))
       {
         QString referUid = ent->getProperty (ST_ATTR_REFERENCE_REFER_UID);
         if (_scene->hasEntity (referUid))
@@ -551,7 +551,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
             {
               QString instance = "new";
 
-              if (!ent->getProperty (ST_ATTR_NODE_INSTANCE).isEmpty ())
+              if (!ent->hasProperty (ST_ATTR_NODE_INSTANCE))
                 instance = ent->getProperty (ST_ATTR_NODE_INSTANCE);
 
               for (StructuralEntity *child : ent->getChildren ())
@@ -745,14 +745,14 @@ StructuralView::adjustReferences (StructuralEntity *ent)
           // was defined
           else if (edge->getType () == Structural::Bind)
           {
-            StructuralEdge *bind = (StructuralEdge *)edge;
+            StructuralEdge *bind = cast (StructuralEdge *, edge);
+            CPR_ASSERT_NON_NULL (bind);
 
-            if (!bind->getProperty (ST_ATTR_REFERENCE_COMPONENT_ID).isEmpty ()
-                && bind->getProperty (ST_ATTR_REFERENCE_INTERFACE_ID)
-                       .isEmpty ())
+            if (!bind->hasProperty (ST_ATTR_REFERENCE_COMPONENT_ID)
+                && bind->hasProperty (ST_ATTR_REFERENCE_INTERFACE_ID) )
             {
-              if (ent->getId ()
-                  == bind->getProperty (ST_ATTR_REFERENCE_COMPONENT_ID))
+              QString compId = bind->getProperty (ST_ATTR_REFERENCE_COMPONENT_ID);
+              if (ent->getId () == compId)
               {
                 if (bind->hasHead ()
                     && bind->getHead ()->getType () == Structural::Link)
@@ -846,7 +846,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
         StructuralEntity *component = nullptr;
         StructuralEntity *interface = nullptr;
 
-        if (!ent->getProperty (ST_ATTR_REFERENCE_INTERFACE_ID).isEmpty ())
+        if (!ent->hasProperty (ST_ATTR_REFERENCE_INTERFACE_ID))
         {
           if (head->getId ()
                   != ent->getProperty (ST_ATTR_REFERENCE_INTERFACE_ID)
@@ -862,9 +862,9 @@ StructuralView::adjustReferences (StructuralEntity *ent)
             isVisible = false;
         }
 
-        if (!ent->getProperty (ST_ATTR_REFERENCE_COMPONENT_ID).isEmpty ())
+        if (!ent->hasProperty (ST_ATTR_REFERENCE_COMPONENT_ID))
         {
-          if (ent->getProperty (ST_ATTR_REFERENCE_INTERFACE_ID).isEmpty ())
+          if (ent->hasProperty (ST_ATTR_REFERENCE_INTERFACE_ID))
             if (head->getId ()
                     != ent->getProperty (ST_ATTR_REFERENCE_COMPONENT_ID)
                 && tail->getId ()
@@ -2648,7 +2648,7 @@ StructuralView::performBindDialog (StructuralBind *ent)
 
       if (!ST_OPT_SHOW_INTERFACES)
       {
-        if (!ent->getProperty (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ()
+        if (!ent->hasProperty (ST_ATTR_REFERENCE_INTERFACE_UID)
             && _scene->hasEntity (
                    ent->getProperty (ST_ATTR_REFERENCE_INTERFACE_UID)))
         {
@@ -2690,7 +2690,7 @@ StructuralView::performBindDialog (StructuralBind *ent)
 
       if (!ST_OPT_SHOW_INTERFACES)
       {
-        if (!ent->getProperty (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ()
+        if (!ent->hasProperty (ST_ATTR_REFERENCE_INTERFACE_UID)
             && _scene->hasEntity (
                    ent->getProperty (ST_ATTR_REFERENCE_INTERFACE_UID)))
         {

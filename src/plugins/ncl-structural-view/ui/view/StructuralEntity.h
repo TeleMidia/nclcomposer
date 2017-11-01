@@ -46,6 +46,8 @@ public:
   QString getProperty (const QString &name) const;
   void setProperty (const QString &name, const QString &value);
 
+  bool hasProperty (const QString &name) const;
+
   StructuralEntity *getParent () const;
   void setParent (StructuralEntity *parent);
 
