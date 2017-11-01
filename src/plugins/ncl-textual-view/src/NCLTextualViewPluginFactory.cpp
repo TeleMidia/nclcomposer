@@ -45,34 +45,3 @@ NCLTextualViewPluginFactory::NCLTextualViewPluginFactory ()
         { "cpr.textual.edgeColumn",
           new Preference ("edgeColumn", "80", "Textual") } });
 }
-
-IPlugin *
-NCLTextualViewPluginFactory::createPluginInstance ()
-{
-  return new NCLTextualViewPlugin ();
-}
-
-void
-NCLTextualViewPluginFactory::releasePluginInstance (IPlugin *plugin)
-{
-  NCLTextualViewPlugin *textualView
-      = qobject_cast<NCLTextualViewPlugin *> (plugin);
-
-  if (textualView)
-  {
-    delete textualView;
-    textualView = nullptr;
-  }
-}
-
-QString
-NCLTextualViewPluginFactory::id () const
-{
-  return "br.puc-rio.telemidia.NCLTextualView";
-}
-
-QIcon
-NCLTextualViewPluginFactory::icon () const
-{
-  return QIcon (":/images/ncl.png");
-}

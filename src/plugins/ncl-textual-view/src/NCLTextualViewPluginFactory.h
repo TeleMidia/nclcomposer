@@ -34,7 +34,8 @@ class TextPluginPreferencesWidget;
 /*!
   \brief Handles the creation and deletion of NCLTextualView objects.
  */
-class NCLTextualViewPluginFactory : public QObject, public IPluginFactory
+class NCLTextualViewPluginFactory : public QObject,
+    public IPluginFactoryTpl<NCLTextualViewPlugin>
 {
   Q_OBJECT
   CPR_PLUGIN_METADATA ("ncl-textual-view.json")
@@ -42,13 +43,8 @@ class NCLTextualViewPluginFactory : public QObject, public IPluginFactory
 public:
   NCLTextualViewPluginFactory ();
 
-  IPlugin *createPluginInstance ();
-
-  void releasePluginInstance (IPlugin *);
-
-  QString id () const;
-
-  QIcon icon () const;
+  QString id () const { return "br.puc-rio.telemidia.NCLTextualView"; }
+  QIcon icon () const { return QIcon (":/images/ncl.png"); }
 
 private:
   QFrame *_prefPageWidget;
