@@ -80,7 +80,9 @@ private:
   QString getUidById (const QString &id, Entity *entity);
   QString getUidByName (const QString &name, Entity *entity);
 
-  void setReferences (QMap<QString, QString> &properties);
+  void setReferences (QStrMap &properties);
+
+  QStrMap getViewPropsFromCoreEntity (const Entity *ent);
 
   void clean ();
 
