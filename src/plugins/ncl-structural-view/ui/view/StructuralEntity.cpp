@@ -211,9 +211,7 @@ StructuralEntity::setProperties (const QMap<QString, QString> &props)
 {
   if (!_restrictions.isEmpty ())
   {
-    QMap<QString, QString> prev = _properties;
-
-    for (const QString &key : prev.keys ())
+    for (const QString &key : _properties.keys ())
     {
       for (const QString &restriction : _restrictions)
       {

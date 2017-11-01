@@ -71,7 +71,6 @@ StructuralNode::adjust (bool collision, bool recursion)
 
   if (parent != NULL || !ST_OPT_WITH_BODY)
   {
-
     if (!collision)
     {
       // Tries (10x) to find a position where there is no collision

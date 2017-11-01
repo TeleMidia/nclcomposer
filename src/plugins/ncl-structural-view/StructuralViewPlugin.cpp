@@ -160,7 +160,7 @@ StructuralViewPlugin::updateFromModel ()
   _window->getView ()->clean ();
   clean ();
 
-  // Inserting the enities again.
+  // Insert the entities from the core again.
   QStack<Entity *> stack;
   stack.push (project);
 
@@ -713,8 +713,6 @@ StructuralViewPlugin::selectInView (Entity *entity)
   QString coreUid = entity->getUniqueId ();
   QString viewUid = _coreToView.value (coreUid, "");
 
-  qWarning () << "selectinView" << coreUid << viewUid << entity->getType ();
-
   if (_coreToView.contains (coreUid) && _selected != viewUid)
   {
     if (_struct_scene->hasEntity (viewUid))
@@ -798,7 +796,6 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
   if (entParent != nullptr)
   {
     QMap<QString, QString> attrs;
-
     QMap<QString, QString> transls = util::createPluginTranslations (type);
 
     for (const QString &key : transls.keys ())
@@ -888,7 +885,7 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
 
   Entity *ent = getProject ()->getEntityById (_viewToCore.value (uid));
 
-  if (ent != nullptr)
+  if (ent)
   {
     QMap<QString, QString> attributes;
 
