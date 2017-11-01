@@ -23,7 +23,7 @@ class StructuralEntity : public QObject, public QGraphicsItem
 
 public:
   StructuralEntity (StructuralEntity *parent = 0);
-  virtual ~StructuralEntity ();
+  virtual ~StructuralEntity () {}
 
   QString getId () const;
   void setId (const QString &id);
@@ -260,7 +260,7 @@ private:
   QString _id;
   QString _uid;
 
-  QMap<QString, QString> _properties;
+  QMap<QString, QString> _props;
 
   StructuralType _type;
   StructuralCategory _category;

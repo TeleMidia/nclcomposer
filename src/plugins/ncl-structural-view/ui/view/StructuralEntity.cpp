@@ -63,8 +63,6 @@ StructuralEntity::StructuralEntity (StructuralEntity *parent)
   setCollapsed (false);
 }
 
-StructuralEntity::~StructuralEntity () {}
-
 QString
 StructuralEntity::getUid () const
 {
@@ -75,7 +73,7 @@ void
 StructuralEntity::setUid (const QString &uid)
 {
   _uid = uid;
-  _properties[ST_ATTR_ENT_UID] = _uid;
+  _props[ST_ATTR_ENT_UID] = _uid;
 }
 
 QString
@@ -88,7 +86,7 @@ void
 StructuralEntity::setId (const QString &id)
 {
   _id = id;
-  _properties.insert (ST_ATTR_ENT_ID, _id);
+  _props.insert (ST_ATTR_ENT_ID, _id);
 }
 
 StructuralCategory
@@ -101,8 +99,7 @@ void
 StructuralEntity::setCategory (StructuralCategory category)
 {
   _category = category;
-  _properties[ST_ATTR_ENT_CATEGORY]
-      = StructuralUtil::categoryToStr (_category);
+  _props[ST_ATTR_ENT_CATEGORY] = StructuralUtil::categoryToStr (_category);
 }
 
 StructuralType
@@ -115,7 +112,7 @@ void
 StructuralEntity::setType (StructuralType type)
 {
   _type = type;
-  _properties[ST_ATTR_ENT_TYPE] = StructuralUtil::typeToStr (_type);
+  _props[ST_ATTR_ENT_TYPE] = StructuralUtil::typeToStr (_type);
 
   _restrictions.clear ();
 
@@ -203,7 +200,7 @@ StructuralEntity::setStructuralResize (StructuralResize resize)
 QMap<QString, QString>
 StructuralEntity::getProperties () const
 {
-  return _properties;
+  return _props;
 }
 
 void
@@ -211,19 +208,18 @@ StructuralEntity::setProperties (const QMap<QString, QString> &props)
 {
   if (!_restrictions.isEmpty ())
   {
-    for (const QString &key : _properties.keys ())
+    for (const QString &key : _props.keys ())
     {
       for (const QString &restriction : _restrictions)
       {
-        if (key.contains (restriction))
-          if (!props.contains (key))
-            _properties.remove (key);
+        if (key.contains (restriction) && !props.contains (key))
+          _props.remove (key);
       }
     }
   }
 
   for (const QString &name : props.keys ())
-    _properties[name] = props.value (name);
+    _props[name] = props.value (name);
 
   adjust (true);
 }
@@ -231,22 +227,19 @@ StructuralEntity::setProperties (const QMap<QString, QString> &props)
 QString
 StructuralEntity::getProperty (const QString &name) const
 {
-  if (_properties.contains (name))
-    return _properties.value (name, "");
-  else
-    return "";
+  return _props.value (name, "");
 }
 
 bool
 StructuralEntity::hasProperty (const QString &name) const
 {
-  return _properties.contains (name);
+  return _props.contains (name);
 }
 
 void
 StructuralEntity::setProperty (const QString &name, const QString &value)
 {
-  _properties[name] = value;
+  _props[name] = value;
 }
 
 void
@@ -255,36 +248,33 @@ StructuralEntity::adjust (bool collision, bool recursion)
   Q_UNUSED (collision);
   Q_UNUSED (recursion);
 
-  setId (_properties[ST_ATTR_ENT_ID]);
-  setUid (_properties[ST_ATTR_ENT_UID]);
+  setId (_props[ST_ATTR_ENT_ID]);
+  setUid (_props[ST_ATTR_ENT_UID]);
 
-  setCategory (
-      StructuralUtil::strToCategory (_properties[ST_ATTR_ENT_CATEGORY]));
-  setType (StructuralUtil::strToType (_properties[ST_ATTR_ENT_TYPE]));
+  setCategory (StructuralUtil::strToCategory (_props[ST_ATTR_ENT_CATEGORY]));
+  setType (StructuralUtil::strToType (_props[ST_ATTR_ENT_TYPE]));
 
-  setTop (_properties[ST_ATTR_ENT_TOP].toDouble ());
-  setLeft (_properties[ST_ATTR_ENT_LEFT].toDouble ());
-  setWidth (_properties[ST_ATTR_ENT_WIDTH].toDouble ());
-  setHeight (_properties[ST_ATTR_ENT_HEIGHT].toDouble ());
+  setTop (_props[ST_ATTR_ENT_TOP].toDouble ());
+  setLeft (_props[ST_ATTR_ENT_LEFT].toDouble ());
+  setWidth (_props[ST_ATTR_ENT_WIDTH].toDouble ());
+  setHeight (_props[ST_ATTR_ENT_HEIGHT].toDouble ());
 
-  setUncollapsedTop (_properties[ST_ATTR_ENT_UNCOLLAPSED_TOP].toDouble ());
-  setUncollapsedLeft (_properties[ST_ATTR_ENT_UNCOLLAPSED_LEFT].toDouble ());
-  setUncollapsedWidth (_properties[ST_ATTR_ENT_UNCOLLAPSED_WIDTH].toDouble ());
-  setUncollapsedHeight (
-      _properties[ST_ATTR_ENT_UNCOLLAPSED_HEIGHT].toDouble ());
+  setUncollapsedTop (_props[ST_ATTR_ENT_UNCOLLAPSED_TOP].toDouble ());
+  setUncollapsedLeft (_props[ST_ATTR_ENT_UNCOLLAPSED_LEFT].toDouble ());
+  setUncollapsedWidth (_props[ST_ATTR_ENT_UNCOLLAPSED_WIDTH].toDouble ());
+  setUncollapsedHeight (_props[ST_ATTR_ENT_UNCOLLAPSED_HEIGHT].toDouble ());
 
-  setzIndex (_properties[ST_ATTR_ENT_ZINDEX].toInt ());
+  setzIndex (_props[ST_ATTR_ENT_ZINDEX].toInt ());
 
-  setHidden (
-      (_properties[ST_ATTR_ENT_HIDDEN] == ST_VALUE_TRUE ? true : false));
+  setHidden ((_props[ST_ATTR_ENT_HIDDEN] == ST_VALUE_TRUE ? true : false));
   setReference (
-      (_properties[ST_ATTR_ENT_REFERENCE] == ST_VALUE_TRUE ? true : false));
+      (_props[ST_ATTR_ENT_REFERENCE] == ST_VALUE_TRUE ? true : false));
   setCollapsed (
-      (_properties[ST_ATTR_ENT_COLLAPSED] == ST_VALUE_TRUE ? true : false));
+      (_props[ST_ATTR_ENT_COLLAPSED] == ST_VALUE_TRUE ? true : false));
 
-  setToolTip (StructuralUtil::getTooltip (
-      _type, _id, _info, _warnning, _error,
-      _properties[ST_ATTR_REFERENCE_XCONNECTOR_ID]));
+  setToolTip (
+      StructuralUtil::getTooltip (_type, _id, _info, _warnning, _error,
+                                  _props[ST_ATTR_REFERENCE_XCONNECTOR_ID]));
 
   if (scene () != NULL)
     scene ()->update ();
@@ -372,7 +362,7 @@ void
 StructuralEntity::setHidden (bool hidden)
 {
   _hidden = hidden;
-  _properties[ST_ATTR_ENT_HIDDEN] = (hidden ? ST_VALUE_TRUE : ST_VALUE_FALSE);
+  _props[ST_ATTR_ENT_HIDDEN] = (hidden ? ST_VALUE_TRUE : ST_VALUE_FALSE);
 
   setVisible (!hidden);
 }
@@ -435,7 +425,7 @@ void
 StructuralEntity::setCollapsed (bool collapsed)
 {
   _collapsed = collapsed;
-  _properties[ST_ATTR_ENT_COLLAPSED]
+  _props[ST_ATTR_ENT_COLLAPSED]
       = (_collapsed ? ST_VALUE_TRUE : ST_VALUE_FALSE);
 }
 
@@ -449,8 +439,7 @@ void
 StructuralEntity::setReference (bool reference)
 {
   _reference = reference;
-  _properties[ST_ATTR_ENT_REFERENCE]
-      = (reference ? ST_VALUE_TRUE : ST_VALUE_FALSE);
+  _props[ST_ATTR_ENT_REFERENCE] = (reference ? ST_VALUE_TRUE : ST_VALUE_FALSE);
 }
 
 qreal
@@ -463,7 +452,7 @@ void
 StructuralEntity::setTop (qreal top)
 {
   _top = top;
-  _properties[ST_ATTR_ENT_TOP] = QString::number (top);
+  _props[ST_ATTR_ENT_TOP] = QString::number (top);
 
   setY (top - 4);
 }
@@ -514,7 +503,7 @@ void
 StructuralEntity::setLeft (qreal left)
 {
   _left = left;
-  _properties[ST_ATTR_ENT_LEFT] = QString::number (left);
+  _props[ST_ATTR_ENT_LEFT] = QString::number (left);
 
   setX (left - 4);
 }
@@ -565,7 +554,7 @@ void
 StructuralEntity::setWidth (qreal width)
 {
   _width = width;
-  _properties[ST_ATTR_ENT_WIDTH] = QString::number (width);
+  _props[ST_ATTR_ENT_WIDTH] = QString::number (width);
 }
 
 qreal
@@ -602,7 +591,7 @@ void
 StructuralEntity::setHeight (qreal height)
 {
   _height = height;
-  _properties[ST_ATTR_ENT_HEIGHT] = QString::number (height);
+  _props[ST_ATTR_ENT_HEIGHT] = QString::number (height);
 }
 
 qreal
@@ -639,7 +628,7 @@ void
 StructuralEntity::setUncollapsedTop (qreal uncollapedTop)
 {
   _uncollapsedTop = uncollapedTop;
-  _properties[ST_ATTR_ENT_UNCOLLAPSED_TOP] = QString::number (uncollapedTop);
+  _props[ST_ATTR_ENT_UNCOLLAPSED_TOP] = QString::number (uncollapedTop);
 }
 
 qreal
@@ -652,7 +641,7 @@ void
 StructuralEntity::setUncollapsedLeft (qreal uncollapedLeft)
 {
   _uncollapsedLeft = uncollapedLeft;
-  _properties[ST_ATTR_ENT_UNCOLLAPSED_LEFT] = QString::number (uncollapedLeft);
+  _props[ST_ATTR_ENT_UNCOLLAPSED_LEFT] = QString::number (uncollapedLeft);
 }
 
 qreal
@@ -665,8 +654,7 @@ void
 StructuralEntity::setUncollapsedWidth (qreal uncollapedWidth)
 {
   _uncollapsedWidth = uncollapedWidth;
-  _properties[ST_ATTR_ENT_UNCOLLAPSED_WIDTH]
-      = QString::number (uncollapedWidth);
+  _props[ST_ATTR_ENT_UNCOLLAPSED_WIDTH] = QString::number (uncollapedWidth);
 }
 
 qreal
@@ -679,14 +667,14 @@ void
 StructuralEntity::setUncollapsedHeight (qreal uncollapedHeight)
 {
   _uncollapsedHeight = uncollapedHeight;
-  _properties[ST_ATTR_ENT_UNCOLLAPSED_HEIGHT]
-      = QString::number (uncollapedHeight);
+  _props[ST_ATTR_ENT_UNCOLLAPSED_HEIGHT] = QString::number (uncollapedHeight);
 }
 
 QRect
 StructuralEntity::getUncollapsedRect ()
 {
-  return QRect (_uncollapsedLeft, _uncollapsedTop, _uncollapsedWidth, _uncollapsedHeight);
+  return QRect (_uncollapsedLeft, _uncollapsedTop, _uncollapsedWidth,
+                _uncollapsedHeight);
 }
 
 qreal
@@ -699,7 +687,7 @@ void
 StructuralEntity::setzIndex (qreal zIndex)
 {
   _zindex = zIndex;
-  _properties[ST_ATTR_ENT_ZINDEX] = QString::number (zIndex);
+  _props[ST_ATTR_ENT_ZINDEX] = QString::number (zIndex);
 
   setZValue (zIndex);
 }

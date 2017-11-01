@@ -21,7 +21,7 @@ StructuralComposition::StructuralComposition (StructuralEntity *parent)
 void
 StructuralComposition::collapse (bool notify)
 {
-  CPR_ASSERT (!isCollapsed());
+  CPR_ASSERT (!isCollapsed ());
 
   QMap<QString, QString> previous = getProperties ();
 
@@ -32,8 +32,7 @@ StructuralComposition::collapse (bool notify)
   setUncollapsedHeight (getHeight ());
 
   setTop (getTop () + getUncollapsedHeight () / 2 - ST_DEFAULT_CONTENT_H / 2);
-  setLeft (getLeft () + getUncollapsedWidth () / 2
-           - ST_DEFAULT_CONTENT_W / 2);
+  setLeft (getLeft () + getUncollapsedWidth () / 2 - ST_DEFAULT_CONTENT_W / 2);
   setWidth (ST_DEFAULT_CONTENT_W);
   setHeight (ST_DEFAULT_CONTENT_H);
 
@@ -44,10 +43,10 @@ StructuralComposition::collapse (bool notify)
 
     if (ent->getCategory () == Structural::Interface)
     {
-      ent->setTop (((ent->getTop () * ST_DEFAULT_CONTENT_H)
-                    / getUncollapsedHeight ()));
-      ent->setLeft (((ent->getLeft () * ST_DEFAULT_CONTENT_W)
-                     / getUncollapsedWidth ()));
+      ent->setTop (
+          ((ent->getTop () * ST_DEFAULT_CONTENT_H) / getUncollapsedHeight ()));
+      ent->setLeft (
+          ((ent->getLeft () * ST_DEFAULT_CONTENT_W) / getUncollapsedWidth ()));
     }
     else
     {
@@ -90,7 +89,8 @@ StructuralComposition::uncollapse (bool notify)
   {
     if (ent->getCategory () == Structural::Interface)
     {
-      ent->setTop (ent->getTop () * uncollapsed.height () / ST_DEFAULT_CONTENT_H);
+      ent->setTop (ent->getTop () * uncollapsed.height ()
+                   / ST_DEFAULT_CONTENT_H);
       ent->setLeft (ent->getLeft () * uncollapsed.width ()
                     / ST_DEFAULT_CONTENT_W);
     }

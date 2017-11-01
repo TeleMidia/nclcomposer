@@ -323,7 +323,8 @@ StructuralScene::updateWithDefaultProperties (StructuralEntity *e)
     e->setTop (p->getHeight () / 2 - e->getHeight () / 2);
   else
   {
-    auto rect = views ().at (1)->mapToScene (views().at(1)->rect ().center ());
+    auto rect
+        = views ().at (1)->mapToScene (views ().at (1)->rect ().center ());
     e->setTop (rect.y () - e->getHeight () / 2);
   }
 
@@ -331,7 +332,8 @@ StructuralScene::updateWithDefaultProperties (StructuralEntity *e)
     e->setLeft (p->getWidth () / 2 - e->getWidth () / 2);
   else
   {
-    auto rect = views ().at (1)->mapToScene (views().at (1)->rect ().center ());
+    auto rect
+        = views ().at (1)->mapToScene (views ().at (1)->rect ().center ());
     e->setLeft (rect.x () - e->getWidth () / 2);
   }
 }
