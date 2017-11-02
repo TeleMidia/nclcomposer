@@ -96,8 +96,7 @@ private:
 
   StructuralWindow *_window;
 
-  QMap<QString, QString> _coreToView;
-  QMap<QString, QString> _viewToCore;
+  QStrMap _core2view, _view2core;
   StructuralScene *_struct_scene;
 };
 

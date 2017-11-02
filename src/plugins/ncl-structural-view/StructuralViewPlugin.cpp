@@ -81,8 +81,8 @@ StructuralViewPlugin::init ()
   {
     QStringList list = (c.mid (li, ni - li)).split ("=");
 
-    _coreToView[list.at (0)] = list.at (1);
-    _viewToCore[list.at (1)] = list.at (0);
+    _core2view[list.at (0)] = list.at (1);
+    _view2core[list.at (1)] = list.at (0);
 
     li = ni + 1;
     ni = c.indexOf (":", ni + 1);
@@ -119,9 +119,9 @@ StructuralViewPlugin::saveSubsession ()
   data.append (_struct_scene->save ());
 
   data.append ("-- EXTRA DATA");
-  for (const QString &key : _coreToView.keys ())
+  for (const QString &key : _core2view.keys ())
   {
-    data.append (key + "=" + _coreToView[key] + ":");
+    data.append (key + "=" + _core2view[key] + ":");
   }
 
   data.append ("-- END OF PLUGIN DATA");
@@ -149,7 +149,12 @@ StructuralViewPlugin::updateFromModel ()
           = { { ST_ATTR_ENT_TOP, old_props[ST_ATTR_ENT_TOP] },
               { ST_ATTR_ENT_LEFT, old_props[ST_ATTR_ENT_LEFT] },
               { ST_ATTR_ENT_WIDTH, old_props[ST_ATTR_ENT_WIDTH] },
-              { ST_ATTR_ENT_HEIGHT, old_props[ST_ATTR_ENT_HEIGHT] } };
+              { ST_ATTR_ENT_HEIGHT, old_props[ST_ATTR_ENT_HEIGHT] },
+              { ST_ATTR_ENT_COLLAPSED, old_props[ST_ATTR_ENT_COLLAPSED]},
+              { ST_ATTR_ENT_UNCOLLAPSED_TOP, old_props[ST_ATTR_ENT_UNCOLLAPSED_TOP]},
+              { ST_ATTR_ENT_UNCOLLAPSED_LEFT, old_props[ST_ATTR_ENT_UNCOLLAPSED_LEFT]},
+              { ST_ATTR_ENT_UNCOLLAPSED_WIDTH, old_props[ST_ATTR_ENT_UNCOLLAPSED_WIDTH]},
+              { ST_ATTR_ENT_UNCOLLAPSED_HEIGHT, old_props[ST_ATTR_ENT_UNCOLLAPSED_HEIGHT]} };
 
       cache.insert (id, old_pos_props);
     }
@@ -159,7 +164,8 @@ StructuralViewPlugin::updateFromModel ()
   _window->getView ()->clean ();
   clean ();
 
-  // Get the entities from the core again in the required order.
+  // Get the entities from the core again in the required order
+  // (nodes->interfaces->edges).
   QVector <Entity *> nodes, interfaces, edges;
   QStack<Entity *> stack;
   stack.push (project);
@@ -201,12 +207,14 @@ StructuralViewPlugin::updateFromModel ()
     }
   }
 
-  // Insert the nodes and interfaces entities in the view again (in the
-  // required order).
+  // Insert the nodes and interfaces entities in the view again.
   for (Entity *ent : nodes) insertInView (ent, false);
   for (Entity *ent : interfaces) insertInView (ent, false);
 
-  // Restore old position properties.
+  // Inset the edges again.
+  for (Entity *ent : edges) insertInView (ent);
+
+  // Restore the old position properties.
   QStrMap stgs = util::createSettings (false, false);
   for (StructuralEntity *ent : _struct_scene->getEntities ())
   {
@@ -221,9 +229,6 @@ StructuralViewPlugin::updateFromModel ()
                                    ent->getProperties (), stgs);
     }
   }
-
-  // Inset the edges again.
-  for (Entity *ent : edges) insertInView (ent);
 }
 
 void
@@ -232,32 +237,26 @@ StructuralViewPlugin::setReferences (QMap<QString, QString> &props)
   if (props.contains (ST_ATTR_REFERENCE_REFER_ID))
   {
     QString coreUid = getUidById (props.value (ST_ATTR_REFERENCE_REFER_ID));
-
-    if (_coreToView.contains (coreUid))
-      props.insert (ST_ATTR_REFERENCE_REFER_UID, _coreToView.value (coreUid));
+    CPR_ASSERT (_core2view.contains (coreUid));
+    props.insert (ST_ATTR_REFERENCE_REFER_UID, _core2view.value (coreUid));
   }
 
   if (props.contains (ST_ATTR_REFERENCE_COMPONENT_ID))
   {
     QString coreUid
         = getUidById (props.value (ST_ATTR_REFERENCE_COMPONENT_ID));
-
-    if (_coreToView.contains (coreUid))
-      props.insert (ST_ATTR_REFERENCE_COMPONENT_UID,
-                    _coreToView.value (coreUid));
+    CPR_ASSERT (_core2view.contains (coreUid));
+    props.insert (ST_ATTR_REFERENCE_COMPONENT_UID, _core2view.value (coreUid));
   }
 
   if (props.contains (ST_ATTR_REFERENCE_INTERFACE_ID))
   {
     bool hasReferInstead = false;
-
-    QMap<QString, StructuralEntity *> entities = _struct_scene->getEntities ();
-
-    if (entities.contains (props.value (ST_ATTR_REFERENCE_COMPONENT_UID)))
+    QMap<QString, StructuralEntity *> ents = _struct_scene->getEntities ();
+    if (ents.contains (props.value (ST_ATTR_REFERENCE_COMPONENT_UID)))
     {
       StructuralEntity *ent
-          = entities.value (props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
-
+          = ents.value (props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
       for (StructuralEntity *e : ent->getChildren ())
       {
         if (e->isReference ()
@@ -274,12 +273,9 @@ StructuralViewPlugin::setReferences (QMap<QString, QString> &props)
     {
       QString coreUid
           = getUidById (props.value (ST_ATTR_REFERENCE_INTERFACE_ID));
-
-      if (_coreToView.contains (coreUid))
-      {
-        props.insert (ST_ATTR_REFERENCE_INTERFACE_UID,
-                      _coreToView.value (coreUid));
-      }
+      CPR_ASSERT (_core2view.contains (coreUid));
+      props.insert (ST_ATTR_REFERENCE_INTERFACE_UID,
+                    _core2view.value (coreUid));
     }
   }
 }
@@ -287,8 +283,8 @@ StructuralViewPlugin::setReferences (QMap<QString, QString> &props)
 void
 StructuralViewPlugin::clean ()
 {
-  _coreToView.clear ();
-  _viewToCore.clear ();
+  _core2view.clear ();
+  _view2core.clear ();
 }
 
 void
@@ -303,8 +299,8 @@ StructuralViewPlugin::onEntityAdded (const QString &pluginID, Entity *ent)
   }
   else if (_waiting)
   {
-    _coreToView[ent->getUniqueId ()] = _notified;
-    _viewToCore[_notified] = ent->getUniqueId ();
+    _core2view[ent->getUniqueId ()] = _notified;
+    _view2core[_notified] = ent->getUniqueId ();
 
     _waiting = false;
   }
@@ -340,7 +336,7 @@ StructuralViewPlugin::onEntityRemoved (const QString &pluginID,
   if (pluginID != getPluginInstanceID ())
   {
     removeInView (getProject ()->getEntityById (entityID));
-    _coreToView.remove (entityID);
+    _core2view.remove (entityID);
   }
 }
 
@@ -369,7 +365,7 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
 {
   Structural::Type type = util::strToType (ent->getType ());
   QString coreParentUid = ent->getParentUniqueId ();
-  QString viewParentUid = _coreToView.value (coreParentUid, "");
+  QString viewParentUid = _core2view.value (coreParentUid, "");
 
   QStrMap viewProps = { { ST_ATTR_ENT_TYPE, ent->getType () } };
 
@@ -384,9 +380,9 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
   {
     QString coreUid
         = getUidById (viewProps.value (ST_ATTR_REFERENCE_COMPONENT_ID));
-    CPR_ASSERT (_coreToView.contains (coreUid));
+    CPR_ASSERT (_core2view.contains (coreUid));
     viewProps.insert (ST_ATTR_REFERENCE_COMPONENT_UID,
-                      _coreToView.value (coreUid));
+                      _core2view.value (coreUid));
   }
 
   if (viewProps.contains (ST_ATTR_REFERENCE_INTERFACE_ID))
@@ -394,9 +390,9 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
     QString coreUid
         = getUidById (viewProps.value (ST_ATTR_REFERENCE_INTERFACE_ID));
 
-    CPR_ASSERT (_coreToView.contains (coreUid));
+    CPR_ASSERT (_core2view.contains (coreUid));
     viewProps.insert (ST_ATTR_REFERENCE_INTERFACE_UID,
-                      _coreToView.value (coreUid));
+                      _core2view.value (coreUid));
   }
 
   if (type == Structural::Bind)
@@ -408,7 +404,7 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
 
       viewProps.insert (ST_ATTR_BIND_ROLE, util::roleToString (role));
       viewProps.insert (ST_ATTR_REFERENCE_LINK_UID,
-                        _coreToView.value (ent->getParentUniqueId ()));
+                        _core2view.value (ent->getParentUniqueId ()));
 
       if (util::isCondition (role))
       {
@@ -424,7 +420,7 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
         }
 
         viewProps.insert (ST_ATTR_EDGE_DEST,
-                          _coreToView.value (ent->getParentUniqueId ()));
+                          _core2view.value (ent->getParentUniqueId ()));
       }
       else if (util::isAction (role))
       {
@@ -440,7 +436,7 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
         }
 
         viewProps.insert (ST_ATTR_EDGE_ORIG,
-                          _coreToView.value (ent->getParentUniqueId ()));
+                          _core2view.value (ent->getParentUniqueId ()));
       }
     }
   }
@@ -451,14 +447,14 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
     if (viewProps.contains (ST_ATTR_REFERENCE_INTERFACE_UID))
     {
       viewProps.insert (ST_ATTR_EDGE_ORIG,
-                        _coreToView.value (ent->getParentUniqueId ()));
+                        _core2view.value (ent->getParentUniqueId ()));
       viewProps.insert (ST_ATTR_EDGE_DEST,
                         viewProps.value (ST_ATTR_REFERENCE_INTERFACE_UID));
     }
     else if (viewProps.contains (ST_ATTR_REFERENCE_COMPONENT_UID))
     {
       viewProps.insert (ST_ATTR_EDGE_ORIG,
-                        _coreToView.value (ent->getParentUniqueId ()));
+                        _core2view.value (ent->getParentUniqueId ()));
       viewProps.insert (ST_ATTR_EDGE_DEST,
                         viewProps.value (ST_ATTR_REFERENCE_COMPONENT_UID));
     }
@@ -470,7 +466,7 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
 void
 StructuralViewPlugin::insertInView (Entity *ent, bool undo)
 {
-  CPR_ASSERT (!_coreToView.contains (ent->getUniqueId ()));
+  CPR_ASSERT (!_core2view.contains (ent->getUniqueId ()));
 
   Structural::Type type = util::strToType (ent->getType ());
 
@@ -483,13 +479,13 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
     if (type == Structural::Bind)
       coreParentUid = ent->getParent ()->getParentUniqueId ();
 
-    QString viewParentUid = _coreToView.value (coreParentUid, "");
+    QString viewParentUid = _core2view.value (coreParentUid, "");
 
     QStrMap stgs = util::createSettings (undo, false);
     QStrMap props = getViewPropsFromCoreEntity (ent);
 
-    _coreToView.insert (uid, uid);
-    _viewToCore.insert (uid, uid);
+    _core2view.insert (uid, uid);
+    _view2core.insert (uid, uid);
 
     if (!undo)
       setReferences (props);
@@ -501,7 +497,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
     if (ent->hasAttr ("name") && ent->hasAttr ("value"))
     {
       StructuralEntity *e = _struct_scene->getEntity (
-          _coreToView.value (ent->getParentUniqueId ()));
+          _core2view.value (ent->getParentUniqueId ()));
 
       QString uid = ent->getUniqueId ();
       QMap<QString, QString> previous = e->getProperties ();
@@ -523,8 +519,8 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
       next[name + ":" + uid] = ent->getAttr ("name");
       next[value + ":" + uid] = ent->getAttr ("value");
 
-      _coreToView.insert (uid, uid);
-      _viewToCore.insert (uid, uid);
+      _core2view.insert (uid, uid);
+      _view2core.insert (uid, uid);
 
       _window->getView ()->change (e->getUid (), next, previous,
                                    util::createSettings (true, false));
@@ -541,7 +537,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
 void
 StructuralViewPlugin::removeInView (Entity *ent, bool undo)
 {
-  CPR_ASSERT (_coreToView.contains (ent->getUniqueId ()));
+  CPR_ASSERT (_core2view.contains (ent->getUniqueId ()));
 
   QMap<QString, QString> stgs = util::createSettings (undo, false);
 
@@ -560,9 +556,9 @@ StructuralViewPlugin::removeInView (Entity *ent, bool undo)
     }
 
     StructuralEntity *e = _struct_scene->getEntity (
-        _coreToView.value (ent->getParentUniqueId ()));
+        _core2view.value (ent->getParentUniqueId ()));
     CPR_ASSERT (e != nullptr);
-    QString uid = _coreToView.value (ent->getUniqueId ());
+    QString uid = _core2view.value (ent->getUniqueId ());
     QMap<QString, QString> previous = e->getProperties ();
     QMap<QString, QString> next = e->getProperties ();
 
@@ -577,12 +573,12 @@ StructuralViewPlugin::removeInView (Entity *ent, bool undo)
   }
   else
   {
-    _window->getView ()->remove (_coreToView.value (ent->getUniqueId ()),
+    _window->getView ()->remove (_core2view.value (ent->getUniqueId ()),
                                  stgs);
   }
 
-  _viewToCore.remove (_coreToView.value (ent->getUniqueId ()));
-  _coreToView.remove (ent->getUniqueId ());
+  _view2core.remove (_core2view.value (ent->getUniqueId ()));
+  _core2view.remove (ent->getUniqueId ());
 }
 
 void
@@ -603,7 +599,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
         props.insert (transls.value (key), ent->getAttr (key));
     }
 
-    if (_coreToView.contains (ent->getUniqueId ()))
+    if (_core2view.contains (ent->getUniqueId ()))
     {
       setReferences (props);
 
@@ -615,7 +611,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
 
           props.insert (ST_ATTR_BIND_ROLE, util::roleToString (role));
           props.insert (ST_ATTR_REFERENCE_LINK_UID,
-                        _coreToView.value (ent->getParentUniqueId ()));
+                        _core2view.value (ent->getParentUniqueId ()));
 
           if (util::isCondition (role))
           {
@@ -624,14 +620,14 @@ StructuralViewPlugin::changeInView (Entity *ent)
               props.insert (ST_ATTR_EDGE_ORIG,
                             props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
               props.insert (ST_ATTR_EDGE_DEST,
-                            _coreToView.value (ent->getParentUniqueId ()));
+                            _core2view.value (ent->getParentUniqueId ()));
             }
             else if (props.contains (ST_ATTR_REFERENCE_COMPONENT_UID))
             {
               props.insert (ST_ATTR_EDGE_ORIG,
                             props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
               props.insert (ST_ATTR_EDGE_DEST,
-                            _coreToView.value (ent->getParentUniqueId ()));
+                            _core2view.value (ent->getParentUniqueId ()));
             }
           }
           else if (util::isAction (role))
@@ -639,14 +635,14 @@ StructuralViewPlugin::changeInView (Entity *ent)
             if (props.contains (ST_ATTR_REFERENCE_INTERFACE_UID))
             {
               props.insert (ST_ATTR_EDGE_ORIG,
-                            _coreToView.value (ent->getParentUniqueId ()));
+                            _core2view.value (ent->getParentUniqueId ()));
               props.insert (ST_ATTR_EDGE_DEST,
                             props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
             }
             else if (props.contains (ST_ATTR_REFERENCE_COMPONENT_UID))
             {
               props.insert (ST_ATTR_EDGE_ORIG,
-                            _coreToView.value (ent->getParentUniqueId ()));
+                            _core2view.value (ent->getParentUniqueId ()));
               props.insert (ST_ATTR_EDGE_DEST,
                             props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
             }
@@ -658,14 +654,14 @@ StructuralViewPlugin::changeInView (Entity *ent)
         if (props.contains (ST_ATTR_REFERENCE_INTERFACE_UID))
         {
           props.insert (ST_ATTR_EDGE_ORIG,
-                        _coreToView.value (ent->getParentUniqueId ()));
+                        _core2view.value (ent->getParentUniqueId ()));
           props.insert (ST_ATTR_EDGE_DEST,
                         props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
         }
         else if (props.contains (ST_ATTR_REFERENCE_COMPONENT_UID))
         {
           props.insert (ST_ATTR_EDGE_ORIG,
-                        _coreToView.value (ent->getParentUniqueId ()));
+                        _core2view.value (ent->getParentUniqueId ()));
           props.insert (ST_ATTR_EDGE_DEST,
                         props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
         }
@@ -673,7 +669,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
 
       QMap<QString, QString> settings = util::createSettings (true, false);
 
-      QString uid = _coreToView[ent->getUniqueId ()];
+      QString uid = _core2view[ent->getUniqueId ()];
 
       if (_struct_scene->hasEntity (uid))
       {
@@ -687,7 +683,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
   {
 
     StructuralEntity *e = _struct_scene->getEntity (
-        _coreToView.value (ent->getParentUniqueId ()));
+        _core2view.value (ent->getParentUniqueId ()));
 
     QString uid;
     QMap<QString, QString> previous = e->getProperties ();
@@ -708,23 +704,23 @@ StructuralViewPlugin::changeInView (Entity *ent)
     if (ent->hasAttr ("name") && !ent->hasAttr ("value"))
     {
 
-      if (_coreToView.contains (ent->getUniqueId ()))
-        uid = _coreToView.value (ent->getUniqueId ());
+      if (_core2view.contains (ent->getUniqueId ()))
+        uid = _core2view.value (ent->getUniqueId ());
       else
         uid = ent->getUniqueId ();
 
       next[name + ":" + uid] = ent->getAttr ("name");
       next[value + ":" + uid] = ent->getAttr ("value");
 
-      _coreToView[uid] = uid;
-      _viewToCore[uid] = uid;
+      _core2view[uid] = uid;
+      _view2core[uid] = uid;
 
       _window->getView ()->change (e->getUid (), next, previous,
                                    util::createSettings (true, false));
     }
-    else if (_coreToView.contains (ent->getUniqueId ()))
+    else if (_core2view.contains (ent->getUniqueId ()))
     {
-      uid = _coreToView.value (ent->getUniqueId ());
+      uid = _core2view.value (ent->getUniqueId ());
 
       next[name + ":" + uid] = ent->getAttr ("name");
       next[value + ":" + uid] = ent->getAttr ("value");
@@ -739,7 +735,7 @@ void
 StructuralViewPlugin::selectInView (Entity *entity)
 {
   QString coreUid = entity->getUniqueId ();
-  QString viewUid = _coreToView.value (coreUid, "");
+  QString viewUid = _core2view.value (coreUid, "");
 
   if (_struct_scene->hasEntity (viewUid))
   {
@@ -766,12 +762,12 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
   if (type == Structural::Bind)
   {
     QString coreUid
-        = _viewToCore.value (props.value (ST_ATTR_REFERENCE_LINK_UID));
+        = _view2core.value (props.value (ST_ATTR_REFERENCE_LINK_UID));
     entParent = getProject ()->getEntityById (coreUid);
   }
   else if (type == Structural::Mapping)
   {
-    QString coreUid = _viewToCore.value (props.value (ST_ATTR_EDGE_ORIG));
+    QString coreUid = _view2core.value (props.value (ST_ATTR_EDGE_ORIG));
     entParent = getProject ()->getEntityById (coreUid);
   }
   else if (type == Structural::Body)
@@ -782,9 +778,9 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
     {
       Entity *body = list.first ();
 
-      _viewToCore.remove (_coreToView[body->getUniqueId ()]);
-      _coreToView[body->getUniqueId ()] = uid;
-      _viewToCore[uid] = body->getUniqueId ();
+      _view2core.remove (_core2view[body->getUniqueId ()]);
+      _core2view[body->getUniqueId ()] = uid;
+      _view2core[uid] = body->getUniqueId ();
 
       return;
     }
@@ -814,7 +810,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
   }
   else
   {
-    entParent = getProject ()->getEntityById (_viewToCore.value (parent));
+    entParent = getProject ()->getEntityById (_view2core.value (parent));
   }
 
   if (entParent)
@@ -864,7 +860,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
           _waiting = true;
           _notified = pUid;
 
-          emit addEntity (tag, _viewToCore.value (uid), pAttr);
+          emit addEntity (tag, _view2core.value (uid), pAttr);
         }
       }
     }
@@ -877,12 +873,12 @@ StructuralViewPlugin::removeInCore (QString uid,
 {
   Q_UNUSED (settings);
 
-  if (!_viewToCore.value (uid, "").isEmpty ())
+  if (!_view2core.value (uid, "").isEmpty ())
   {
-    emit removeEntity (getProject ()->getEntityById (_viewToCore.value (uid)));
+    emit removeEntity (getProject ()->getEntityById (_view2core.value (uid)));
 
-    _coreToView.remove (_viewToCore.value (uid));
-    _viewToCore.remove (uid);
+    _core2view.remove (_view2core.value (uid));
+    _view2core.remove (uid);
   }
 }
 
@@ -892,7 +888,7 @@ StructuralViewPlugin::selectInCore (QString uid,
 {
   Q_UNUSED (settings);
 
-  QString coreUid = _viewToCore.value (uid, "");
+  QString coreUid = _view2core.value (uid, "");
   if (!coreUid.isEmpty ())
   {
     emit sendBroadcastMessage ("changeSelectedEntity", new QString (coreUid));
@@ -907,7 +903,7 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
   Q_UNUSED (previous);
   Q_UNUSED (settings);
 
-  Entity *ent = getProject ()->getEntityById (_viewToCore.value (uid));
+  Entity *ent = getProject ()->getEntityById (_view2core.value (uid));
 
   if (ent)
   {
@@ -959,7 +955,7 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
               = { { "name", pName }, { "value", pValue } };
 
           Entity *param
-              = getProject ()->getEntityById (_viewToCore.value (pUid));
+              = getProject ()->getEntityById (_view2core.value (pUid));
 
           // Change a param entity in core that has been added by the view.
           if (param)
@@ -981,8 +977,8 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
             param = getProject ()->getEntityById (paramUids.at (index));
             paramUids.remove (index);
 
-            _coreToView[param->getUniqueId ()] = pUid;
-            _viewToCore[pUid] = param->getUniqueId ();
+            _core2view[param->getUniqueId ()] = pUid;
+            _view2core[pUid] = param->getUniqueId ();
 
             _waiting = true;
 
@@ -1041,8 +1037,8 @@ StructuralViewPlugin::validationError (QString pluginID, void *param)
   {
     pair<QString, QString> *p = (pair<QString, QString> *)param;
 
-    if (_coreToView.contains (p->first) && _struct_scene->hasEntity (p->first))
-      _window->getView ()->setError (_coreToView.value (p->first), p->second);
+    if (_core2view.contains (p->first) && _struct_scene->hasEntity (p->first))
+      _window->getView ()->setError (_core2view.value (p->first), p->second);
   }
 }
 

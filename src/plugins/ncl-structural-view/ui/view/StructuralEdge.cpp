@@ -147,10 +147,11 @@ StructuralEdge::adjust (bool collision, bool recursion)
 
     if (orig && dest)
     {
-      QLineF line = QLineF (QPointF (orig->getLeft () + orig->getWidth () / 2,
-                                     orig->getTop () + orig->getHeight () / 2),
-                            QPointF (dest->getLeft () + dest->getWidth () / 2,
-                                     dest->getTop () + dest->getHeight () / 2));
+      QLineF line
+          = QLineF (QPointF (orig->getLeft () + orig->getWidth () / 2,
+                             orig->getTop () + orig->getHeight () / 2),
+                    QPointF (dest->getLeft () + dest->getWidth () / 2,
+                             dest->getTop () + dest->getHeight () / 2));
 
       if (orig->getCategory () == Structural::Interface)
       {

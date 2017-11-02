@@ -682,7 +682,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                      _scene->getRefs ().keys (refer->getUid ()))
                 {
                   if (_scene->hasEntity (key) && key != ent->getUid ())
-                      adjustReferences (_scene->getEntity (key));
+                    adjustReferences (_scene->getEntity (key));
                 }
               }
             }
@@ -1767,11 +1767,11 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
       QString uid = util::createUid ();
 
       QStrMap props = {
-        {ST_ATTR_ENT_TYPE, util::typeToStr (Structural::Bind)},
-        {ST_ATTR_EDGE_ORIG, orig->getUid ()},
-        {ST_ATTR_EDGE_DEST, dest->getUid ()},
-        {ST_ATTR_BIND_ROLE, role},
-        {ST_ATTR_ENT_ID, role} // Why?
+        { ST_ATTR_ENT_TYPE, util::typeToStr (Structural::Bind) },
+        { ST_ATTR_EDGE_ORIG, orig->getUid () },
+        { ST_ATTR_EDGE_DEST, dest->getUid () },
+        { ST_ATTR_BIND_ROLE, role },
+        { ST_ATTR_ENT_ID, role } // Why?
       };
 
       StructuralEntity *entityLink = nullptr;
@@ -1941,8 +1941,8 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
         {
           props[ST_ATTR_REFERENCE_COMPONENT_ID] = entityNonLink->getId ();
           props[ST_ATTR_REFERENCE_COMPONENT_UID] = entityNonLink->getUid ();
-//          props[ST_ATTR_REFERENCE_INTERFACE_ID] = "";
-//          props[ST_ATTR_REFERENCE_INTERFACE_UID] = "";
+          //          props[ST_ATTR_REFERENCE_INTERFACE_ID] = "";
+          //          props[ST_ATTR_REFERENCE_INTERFACE_UID] = "";
         }
       }
 
@@ -1987,8 +1987,8 @@ StructuralView::createReference (StructuralEntity *orig,
       {
         props[ST_ATTR_REFERENCE_COMPONENT_ID] = dest->getId ();
         props[ST_ATTR_REFERENCE_COMPONENT_UID] = dest->getUid ();
-//        props[ST_ATTR_REFERENCE_INTERFACE_ID] = "";
-//        props[ST_ATTR_REFERENCE_INTERFACE_UID] = "";
+        //        props[ST_ATTR_REFERENCE_INTERFACE_ID] = "";
+        //        props[ST_ATTR_REFERENCE_INTERFACE_UID] = "";
       }
 
       setMode (Structural::Pointing);
