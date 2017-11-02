@@ -67,7 +67,7 @@ createCoreTranslations (StructuralType type)
     case Structural::Switch:
     {
       transls = { { NCL_ATTR_ID, ST_ATTR_ENT_ID },
-                  { NCL_ATTR_REFER, ST_ATTR_REFERENCE_REFER_ID } };
+                  { NCL_ATTR_REFER, ST_ATTR_REF_REFER_ID } };
 
       break;
     }
@@ -75,7 +75,7 @@ createCoreTranslations (StructuralType type)
     case Structural::Media:
     {
       transls = { { NCL_ATTR_ID, ST_ATTR_ENT_ID },
-                  { NCL_ATTR_REFER, ST_ATTR_REFERENCE_REFER_ID },
+                  { NCL_ATTR_REFER, ST_ATTR_REF_REFER_ID },
                   { NCL_ATTR_INSTANCE, ST_ATTR_NODE_INSTANCE },
                   { NCL_ATTR_TYPE, ST_ATTR_NODE_TYPE },
                   { NCL_ATTR_SRC, ST_ATTR_NODE_SRC },
@@ -86,8 +86,8 @@ createCoreTranslations (StructuralType type)
     case Structural::Port:
     {
       transls = { { NCL_ATTR_ID, ST_ATTR_ENT_ID },
-                  { NCL_ATTR_COMPONENT, ST_ATTR_REFERENCE_COMPONENT_ID },
-                  { NCL_ATTR_INTERFACE, ST_ATTR_REFERENCE_INTERFACE_ID } };
+                  { NCL_ATTR_COMPONENT, ST_ATTR_REF_COMPONENT_ID },
+                  { NCL_ATTR_INTERFACE, ST_ATTR_REF_INTERFACE_ID } };
 
       break;
     }
@@ -128,7 +128,7 @@ createCoreTranslations (StructuralType type)
     case Structural::Link:
     {
       transls = { { NCL_ATTR_ID, ST_ATTR_ENT_ID },
-                  { NCL_ATTR_XCONNECTOR, ST_ATTR_REFERENCE_XCONNECTOR_ID } };
+                  { NCL_ATTR_XCONNECTOR, ST_ATTR_REF_XCONNECTOR_ID } };
 
       break;
     }
@@ -136,9 +136,9 @@ createCoreTranslations (StructuralType type)
     case Structural::Bind:
     {
       transls = { { NCL_ATTR_ROLE, ST_ATTR_ENT_ID },
-                  { NCL_ATTR_XCONNECTOR, ST_ATTR_REFERENCE_XCONNECTOR_ID },
-                  { NCL_ATTR_COMPONENT, ST_ATTR_REFERENCE_COMPONENT_ID },
-                  { NCL_ATTR_INTERFACE, ST_ATTR_REFERENCE_INTERFACE_ID },
+                  { NCL_ATTR_XCONNECTOR, ST_ATTR_REF_XCONNECTOR_ID },
+                  { NCL_ATTR_COMPONENT, ST_ATTR_REF_COMPONENT_ID },
+                  { NCL_ATTR_INTERFACE, ST_ATTR_REF_INTERFACE_ID },
                   { NCL_ATTR_DESCRIPTOR, NCL_ATTR_DESCRIPTOR } };
 
       break;
@@ -146,8 +146,8 @@ createCoreTranslations (StructuralType type)
 
     case Structural::Mapping:
     {
-      transls = { { NCL_ATTR_COMPONENT, ST_ATTR_REFERENCE_COMPONENT_ID },
-                  { NCL_ATTR_INTERFACE, ST_ATTR_REFERENCE_INTERFACE_ID } };
+      transls = { { NCL_ATTR_COMPONENT, ST_ATTR_REF_COMPONENT_ID },
+                  { NCL_ATTR_INTERFACE, ST_ATTR_REF_INTERFACE_ID } };
 
       break;
     }

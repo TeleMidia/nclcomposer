@@ -21,12 +21,10 @@ public:
   void setView (StructuralView *view);
 
 protected slots:
-  void handleZoomChanged (int zoom);
-  void switchPointer (bool state);
-  void switchLink (bool state);
-  void switchBody (bool state);
+  void handleZoomChange (int zoom);
+  void handleInteractionModeChange (StructuralInteractionMode state);
 
-  void select (QString uid, QMap<QString, QString> settings);
+  void select (QString uid, QMap<QString, QString> stgs);
 
 private:
   void createActions ();

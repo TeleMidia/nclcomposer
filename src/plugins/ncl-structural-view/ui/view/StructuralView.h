@@ -46,8 +46,9 @@ public:
   StructuralScene *getScene ();
   StructuralLinkDialog *getDialog ();
 
-  StructuralMode getMode () const;
-  void setMode (StructuralMode mode);
+  StructuralInteractionMode getMode () const;
+  void setMode (StructuralInteractionMode mode, bool notify = false);
+  void toogleMode (bool notify = false);
 
   void setError (const QString &uid, const QString &error);
 
@@ -93,8 +94,6 @@ public slots:
   void redo ();
 
   void performAutostart ();
-  void performPointer ();
-  void performLink ();
   void performDelete ();
 
   void performCut ();
@@ -130,9 +129,7 @@ signals:
   void canPasteChanged (bool state);
   void canDeleteChanged (bool state);
 
-  void switchedSnapshot (bool state);
-  void switchedPointer (bool state);
-  void switchedLink (bool state);
+  void interactionModeChanged (StructuralInteractionMode mode);
 
   void zoomChanged (int zoom);
   void canAddBody (bool state);
@@ -177,7 +174,7 @@ private:
   void paste (StructuralEntity *entity, StructuralEntity *parent,
               const QString &code, bool adjust);
 
-  StructuralMode _mode;
+  StructuralInteractionMode _mode;
 
   int _zoom; // an integer in %  (varing from ZOOM_MIN to ZOOM_MAX)
   bool _linking;

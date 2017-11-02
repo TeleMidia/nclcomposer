@@ -12,84 +12,79 @@
 //
 
 // Entity defines
-#define ST_ATTR_ENT_ID ":ent:id"
-#define ST_ATTR_ENT_UID ":ent:uid"
-#define ST_ATTR_ENT_CATEGORY ":ent:category"
-#define ST_ATTR_ENT_TYPE ":ent:type"
+#define ST_ATTR_ENT_ID "ent:id"
+#define ST_ATTR_ENT_UID "ent:uid"
+#define ST_ATTR_ENT_CATEGORY "ent:category"
+#define ST_ATTR_ENT_TYPE "ent:type"
 
-#define ST_ATTR_ENT_TOP ":ent:top"
-#define ST_ATTR_ENT_LEFT ":ent:left"
-#define ST_ATTR_ENT_WIDTH ":ent:width"
-#define ST_ATTR_ENT_HEIGHT ":ent:height"
-#define ST_ATTR_ENT_ZINDEX ":ent:zindex"
-#define ST_ATTR_ENT_UNCOLLAPSED_TOP ":ent:uncollapsed:top"
-#define ST_ATTR_ENT_UNCOLLAPSED_LEFT ":ent:uncollapsed:left"
-#define ST_ATTR_ENT_UNCOLLAPSED_WIDTH ":ent:uncollapsed:width"
-#define ST_ATTR_ENT_UNCOLLAPSED_HEIGHT ":ent:uncollapsed:height"
+#define ST_ATTR_ENT_TOP "ent:top"
+#define ST_ATTR_ENT_LEFT "ent:left"
+#define ST_ATTR_ENT_WIDTH "ent:width"
+#define ST_ATTR_ENT_HEIGHT "ent:height"
+#define ST_ATTR_ENT_ZINDEX "ent:zindex"
+#define ST_ATTR_ENT_UNCOLLAPSED_TOP "ent:uncollapsed:top"
+#define ST_ATTR_ENT_UNCOLLAPSED_LEFT "ent:uncollapsed:left"
+#define ST_ATTR_ENT_UNCOLLAPSED_WIDTH "ent:uncollapsed:width"
+#define ST_ATTR_ENT_UNCOLLAPSED_HEIGHT "ent:uncollapsed:height"
 
-#define ST_ATTR_ENT_AUTOSTART ":ent:autostart"
-#define ST_ATTR_ENT_HIDDEN ":ent:hidden"
-#define ST_ATTR_ENT_REFERENCE ":ent:reference"
-#define ST_ATTR_ENT_COLLAPSED ":ent:collapsed"
+#define ST_ATTR_ENT_AUTOSTART "ent:autostart"
+#define ST_ATTR_ENT_HIDDEN "ent:hidden"
+#define ST_ATTR_ENT_REFERENCE "ent:reference"
+#define ST_ATTR_ENT_COLLAPSED "ent:collapsed"
 
 // Node defines
-#define ST_ATTR_NODE_SRC ":node:src"
-#define ST_ATTR_NODE_TYPE ":node:type"
-#define ST_ATTR_NODE_MIMETYPE ":node:mimetype"
-#define ST_ATTR_NODE_INSTANCE ":node:instance"
+#define ST_ATTR_NODE_SRC "node:src"
+#define ST_ATTR_NODE_TYPE "node:type"
+#define ST_ATTR_NODE_MIMETYPE "node:mimetype"
+#define ST_ATTR_NODE_INSTANCE "node:instance"
 
 // Link defines
-#define ST_ATTR_LINKPARAM_NAME ":linkparam:name"
-#define ST_ATTR_LINKPARAM_VALUE ":linkparam:value"
+#define ST_ATTR_LINKPARAM_NAME "linkparam:name"
+#define ST_ATTR_LINKPARAM_VALUE "linkparam:value"
 
 // Edge defines
-#define ST_ATTR_EDGE_ORIG ":edge:orig"
-#define ST_ATTR_EDGE_DEST ":edge:dest"
-#define ST_ATTR_EDGE_ANGLE ":edge:angle"
+#define ST_ATTR_EDGE_ORIG "edge:orig"
+#define ST_ATTR_EDGE_DEST "edge:dest"
+#define ST_ATTR_EDGE_ANGLE "edge:angle"
 
-#define ST_ATTR_BIND_ROLE ":bind:role"
+#define ST_ATTR_BIND_ROLE "bind:role"
 
-#define ST_ATTR_BINDPARAM_NAME ":bindparam:name"
-#define ST_ATTR_BINDPARAM_VALUE ":bindparam:value"
+#define ST_ATTR_BINDPARAM_NAME "bindparam:name"
+#define ST_ATTR_BINDPARAM_VALUE "bindparam:value"
 
 // Interface defines
 // nothing...
 
 // Reference defines
-#define ST_ATTR_REFERENCE_LINK_ID ":ref:link:id"
-#define ST_ATTR_REFERENCE_LINK_UID ":ref:link:uid"
+#define ST_ATTR_REF_LINK_ID "ref:link:id"
+#define ST_ATTR_REF_LINK_UID "ref:link:uid"
 
-#define ST_ATTR_REFERENCE_COMPONENT_ID ":ref:component:id"
-#define ST_ATTR_REFERENCE_COMPONENT_UID ":ref:component:uid"
+#define ST_ATTR_REF_COMPONENT_ID "ref:component:id"
+#define ST_ATTR_REF_COMPONENT_UID "ref:component:uid"
 
-#define ST_ATTR_REFERENCE_INTERFACE_ID ":ref:interface:id"
-#define ST_ATTR_REFERENCE_INTERFACE_UID ":ref:interface:uid"
+#define ST_ATTR_REF_INTERFACE_ID "ref:interface:id"
+#define ST_ATTR_REF_INTERFACE_UID "ref:interface:uid"
 
-#define ST_ATTR_REFERENCE_XCONNECTOR_ID ":ref:xconnector:id"
-#define ST_ATTR_REFERENCE_XCONNECTOR_UID ":ref:xconnector:uid"
+#define ST_ATTR_REF_XCONNECTOR_ID "ref:xconnector:id"
+#define ST_ATTR_REF_XCONNECTOR_UID "ref:xconnector:uid"
 
-#define ST_ATTR_REFERENCE_REFER_ID ":ref:refer:id"
-#define ST_ATTR_REFERENCE_REFER_UID ":ref:refer:uid"
+#define ST_ATTR_REF_REFER_ID "ref:refer:id"
+#define ST_ATTR_REF_REFER_UID "ref:refer:uid"
 
-//
 // Settings
-//
-#define ST_SETTINGS_UNDO ":settings:undo"
-#define ST_SETTINGS_UNDO_TRACE ":settings:undo:trace"
-#define ST_SETTINGS_NOTIFY ":settings:notify"
-#define ST_SETTINGS_CODE ":settings:code"
-#define ST_SETTINGS_ADJUST_REFERS ":settings:adjust:refers"
+#define ST_SETTINGS_UNDO "settings:undo"
+#define ST_SETTINGS_UNDO_TRACE "settings:undo:trace"
+#define ST_SETTINGS_NOTIFY "settings:notify"
+#define ST_SETTINGS_CODE "settings:code"
+#define ST_SETTINGS_ADJUST_REFERS "settings:adjust:refers"
 
-//
 // Values
-//
 #define ST_VALUE_TRUE "1"
 #define ST_VALUE_FALSE "0"
 
 //
 // Defaults
 //
-
 // Minimap defines
 #define ST_DEFAULT_MINIMAP_W 240
 #define ST_DEFAULT_MINIMAP_H 160
@@ -281,7 +276,7 @@ public:
     NoResize = 0
   };
 
-  enum Mode
+  enum InteractionMode
   {
     Pointing = 1,
     Linking = 2,
@@ -295,7 +290,7 @@ typedef Structural::Type StructuralType;
 typedef Structural::Resize StructuralResize;
 typedef Structural::MimeType StructuralMimeType;
 typedef Structural::Role StructuralRole;
-typedef Structural::Mode StructuralMode;
+typedef Structural::InteractionMode StructuralInteractionMode;
 
 #include <QMap>
 typedef QMap<QString, QString> QStrMap;

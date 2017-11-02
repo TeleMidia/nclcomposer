@@ -131,8 +131,8 @@ StructuralEntity::setType (StructuralType type)
         addRestriction (ST_ATTR_NODE_INSTANCE);
       }
 
-      addRestriction (ST_ATTR_REFERENCE_REFER_ID);
-      addRestriction (ST_ATTR_REFERENCE_REFER_UID);
+      addRestriction (ST_ATTR_REF_REFER_ID);
+      addRestriction (ST_ATTR_REF_REFER_UID);
 
       break;
     }
@@ -140,20 +140,20 @@ StructuralEntity::setType (StructuralType type)
     case Structural::Port:
     case Structural::Mapping:
     {
-      addRestriction (ST_ATTR_REFERENCE_COMPONENT_ID);
-      addRestriction (ST_ATTR_REFERENCE_COMPONENT_UID);
-      addRestriction (ST_ATTR_REFERENCE_INTERFACE_ID);
-      addRestriction (ST_ATTR_REFERENCE_INTERFACE_UID);
+      addRestriction (ST_ATTR_REF_COMPONENT_ID);
+      addRestriction (ST_ATTR_REF_COMPONENT_UID);
+      addRestriction (ST_ATTR_REF_INTERFACE_ID);
+      addRestriction (ST_ATTR_REF_INTERFACE_UID);
 
       break;
     }
 
     case Structural::Bind:
     {
-      addRestriction (ST_ATTR_REFERENCE_COMPONENT_ID);
-      addRestriction (ST_ATTR_REFERENCE_COMPONENT_UID);
-      addRestriction (ST_ATTR_REFERENCE_INTERFACE_ID);
-      addRestriction (ST_ATTR_REFERENCE_INTERFACE_UID);
+      addRestriction (ST_ATTR_REF_COMPONENT_ID);
+      addRestriction (ST_ATTR_REF_COMPONENT_UID);
+      addRestriction (ST_ATTR_REF_INTERFACE_ID);
+      addRestriction (ST_ATTR_REF_INTERFACE_UID);
 
       addRestriction (ST_ATTR_LINKPARAM_NAME);
       addRestriction (ST_ATTR_LINKPARAM_VALUE);
@@ -274,7 +274,7 @@ StructuralEntity::adjust (bool collision, bool recursion)
 
   setToolTip (
       StructuralUtil::getTooltip (_type, _id, _info, _warnning, _error,
-                                  _props[ST_ATTR_REFERENCE_XCONNECTOR_ID]));
+                                  _props[ST_ATTR_REF_XCONNECTOR_ID]));
 
   if (scene () != NULL)
     scene ()->update ();
@@ -638,10 +638,10 @@ StructuralEntity::getUncollapsedLeft () const
 }
 
 void
-StructuralEntity::setUncollapsedLeft (qreal uncollapedLeft)
+StructuralEntity::setUncollapsedLeft (qreal uncollapsedLeft)
 {
-  _uncollapsedLeft = uncollapedLeft;
-  _props[ST_ATTR_ENT_UNCOLLAPSED_LEFT] = QString::number (uncollapedLeft);
+  _uncollapsedLeft = uncollapsedLeft;
+  _props[ST_ATTR_ENT_UNCOLLAPSED_LEFT] = QString::number (uncollapsedLeft);
 }
 
 qreal
@@ -651,10 +651,10 @@ StructuralEntity::getUncollapsedWidth () const
 }
 
 void
-StructuralEntity::setUncollapsedWidth (qreal uncollapedWidth)
+StructuralEntity::setUncollapsedWidth (qreal uncollapsedWidth)
 {
-  _uncollapsedWidth = uncollapedWidth;
-  _props[ST_ATTR_ENT_UNCOLLAPSED_WIDTH] = QString::number (uncollapedWidth);
+  _uncollapsedWidth = uncollapsedWidth;
+  _props[ST_ATTR_ENT_UNCOLLAPSED_WIDTH] = QString::number (uncollapsedWidth);
 }
 
 qreal
@@ -664,10 +664,10 @@ StructuralEntity::getUncollapsedHeight () const
 }
 
 void
-StructuralEntity::setUncollapsedHeight (qreal uncollapedHeight)
+StructuralEntity::setUncollapsedHeight (qreal uncollapsedHeight)
 {
-  _uncollapsedHeight = uncollapedHeight;
-  _props[ST_ATTR_ENT_UNCOLLAPSED_HEIGHT] = QString::number (uncollapedHeight);
+  _uncollapsedHeight = uncollapsedHeight;
+  _props[ST_ATTR_ENT_UNCOLLAPSED_HEIGHT] = QString::number (uncollapsedHeight);
 }
 
 QRect
@@ -851,7 +851,7 @@ StructuralEntity::move (QGraphicsSceneMouseEvent *event)
   setMoveTop (nexty);
   setMoveLeft (nextx);
 
-  if (scene () != NULL)
+  if (scene ())
     scene ()->update ();
 }
 
@@ -1407,9 +1407,10 @@ StructuralEntity::dropEvent (QGraphicsSceneDragDropEvent *event)
   if (StructuralUtil::validateKinship (type, _type)
       && event->mimeData ()->text () != _uid)
   {
-    QMap<QString, QString> props;
-    props[ST_ATTR_ENT_TOP] = QString::number (event->pos ().y ());
-    props[ST_ATTR_ENT_LEFT] = QString::number (event->pos ().x ());
+    QMap<QString, QString> props = {
+      {ST_ATTR_ENT_TOP, QString::number (event->pos ().y ())},
+      {ST_ATTR_ENT_LEFT, QString::number (event->pos ().x ())}
+    };
 
     emit moveAsked (event->mimeData ()->text (), _uid, props,
                     StructuralUtil::createSettings ());

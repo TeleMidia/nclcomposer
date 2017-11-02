@@ -360,9 +360,9 @@ StructuralWindow::createConnections ()
            &StructuralView::performDelete);
 
   connect (_pointerAction, &QAction::triggered, _view,
-           &StructuralView::performPointer);
+           [&]() {_view->setMode (StructuralInteractionMode::Pointing); });
   connect (_linkAction, &QAction::triggered, _view,
-           &StructuralView::performLink);
+           [&]() {_view->setMode (StructuralInteractionMode::Linking);});
 
   connect (_autostartAction, &QAction::triggered, _view,
            &StructuralView::performAutostart);
@@ -409,24 +409,21 @@ StructuralWindow::createConnections ()
            &QAction::setEnabled);
   connect (_view, &StructuralView::canDeleteChanged, _deleteAction,
            &QAction::setEnabled);
-  connect (_view, &StructuralView::switchedSnapshot, _snapshotAction,
-           &QAction::setEnabled);
 
   connect (_view, &StructuralView::zoomChanged, this,
-           &StructuralWindow::handleZoomChanged);
+           &StructuralWindow::handleZoomChange);
 
-  connect (_view, &StructuralView::switchedPointer, this,
-           &StructuralWindow::switchPointer);
-  connect (_view, &StructuralView::switchedLink, this,
-           &StructuralWindow::switchLink);
-  connect (_view, &StructuralView::canAddBody, this,
-           &StructuralWindow::switchBody);
+  connect (_view, &StructuralView::interactionModeChanged, this,
+           &StructuralWindow::handleInteractionModeChange);
+
+  connect (_view, &StructuralView::canAddBody, _bodyAction,
+           &QAction::setEnabled);
 
   connect (_view, &StructuralView::selected, this, &StructuralWindow::select);
 }
 
 void
-StructuralWindow::handleZoomChanged (int zoom)
+StructuralWindow::handleZoomChange (int zoom)
 {
   if (zoom >= StructuralView::ZOOM_MAX)
   {
@@ -447,24 +444,12 @@ StructuralWindow::handleZoomChanged (int zoom)
 }
 
 void
-StructuralWindow::switchPointer (bool state)
+StructuralWindow::handleInteractionModeChange (StructuralInteractionMode mode)
 {
-  if (state)
-    _pointerAction->setChecked (true);
-  else
+  if (mode == StructuralInteractionMode::Linking)
     _linkAction->setChecked (true);
-}
-
-void
-StructuralWindow::switchLink (bool state)
-{
-  switchPointer (!state);
-}
-
-void
-StructuralWindow::switchBody (bool state)
-{
-  _bodyAction->setEnabled (state);
+  else
+    _pointerAction->setChecked (true);
 }
 
 void
@@ -476,7 +461,7 @@ StructuralWindow::select (QString uid, QMap<QString, QString> settings)
   if (_view->getScene ()->hasEntity (uid))
     ent = _view->getScene ()->getEntity (uid);
 
-  if (ent != nullptr)
+  if (ent)
   {
     StructuralType type = _view->getScene ()->getEntity (uid)->getType ();
 

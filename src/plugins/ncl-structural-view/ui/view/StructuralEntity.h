@@ -238,14 +238,8 @@ private:
   qreal _height;
 
   qreal _zindex;
-
-  qreal _moveTop;
-  qreal _moveLeft;
-
-  qreal _pressTop;
-  qreal _pressLeft;
-  qreal _pressWidth;
-  qreal _pressHeight;
+  qreal _moveTop, _moveLeft;
+  qreal _pressTop, _pressLeft, _pressWidth, _pressHeight;
 
   qreal _resizeTop;
   qreal _resizeLeft;
@@ -270,9 +264,7 @@ private:
 
   QVector<QString> _restrictions;
 
-  QString _info;
-  QString _error;
-  QString _warnning;
+  QString _info, _error, _warnning;
 
   StructuralMenu *_menu;
   StructuralResize _resize;
