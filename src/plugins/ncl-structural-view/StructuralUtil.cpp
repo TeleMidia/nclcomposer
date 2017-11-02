@@ -604,11 +604,10 @@ adjustEdges (StructuralEntity *ent)
 
   for (StructuralEntity *rel : relatives)
   {
-    if (rel->getCategory () == Structural::Edge)
+    StructuralEdge *edge = cast (StructuralEdge *, rel);
+    if (edge)
     {
-      StructuralEdge *edge = (StructuralEdge *)rel;
-
-      if (edge->getTail () == ent || edge->getHead () == ent)
+      if (edge->getOrigin () == ent || edge->getDestination () == ent)
         edge->adjust (true);
     }
   }

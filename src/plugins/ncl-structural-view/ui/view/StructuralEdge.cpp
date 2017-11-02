@@ -14,8 +14,8 @@ StructuralEdge::StructuralEdge (StructuralEntity *parent)
   setAlfa (0);
   setAngle (0);
 
-  setTail (NULL);
-  setHead (NULL);
+  setOrigin (NULL);
+  setDestination (NULL);
 }
 
 StructuralEdge::~StructuralEdge () {}
@@ -47,87 +47,87 @@ StructuralEdge::setAngle (qreal angle)
 }
 
 qreal
-StructuralEdge::getTailTop () const
+StructuralEdge::getOrigTop () const
 {
-  return _tailTop;
+  return _origTop;
 }
 
 void
-StructuralEdge::setTailTop (qreal tailTop)
+StructuralEdge::setOrigTop (qreal tailTop)
 {
-  _tailTop = tailTop;
+  _origTop = tailTop;
 }
 
 qreal
-StructuralEdge::getTailLeft () const
+StructuralEdge::getOrigLeft () const
 {
-  return _tailLeft;
+  return _origLeft;
 }
 
 void
-StructuralEdge::setTailLeft (qreal tailLeft)
+StructuralEdge::setOrigLeft (qreal tailLeft)
 {
-  _tailLeft = tailLeft;
+  _origLeft = tailLeft;
 }
 
 qreal
-StructuralEdge::getHeadTop () const
+StructuralEdge::getDestTop () const
 {
-  return _headTop;
+  return _destTop;
 }
 
 void
 StructuralEdge::setHeadTop (qreal headTop)
 {
-  _headTop = headTop;
+  _destTop = headTop;
 }
 
 qreal
-StructuralEdge::getHeadLeft () const
+StructuralEdge::getDestLeft () const
 {
-  return _headLeft;
+  return _destLeft;
 }
 
 void
-StructuralEdge::setHeadLeft (qreal headLeft)
+StructuralEdge::setDestLeft (qreal headLeft)
 {
-  _headLeft = headLeft;
+  _destLeft = headLeft;
 }
 
 StructuralEntity *
-StructuralEdge::getTail () const
+StructuralEdge::getOrigin () const
 {
-  return _tail;
+  return _orig;
 }
 
 void
-StructuralEdge::setTail (StructuralEntity *tail)
+StructuralEdge::setOrigin (StructuralEntity *tail)
 {
-  _tail = tail;
+  _orig = tail;
 }
 
 bool
-StructuralEdge::hasTail () const
+StructuralEdge::hasOrigin () const
 {
-  return (_tail != nullptr);
+  return (_orig != nullptr);
 }
 
 StructuralEntity *
-StructuralEdge::getHead () const
+StructuralEdge::getDestination () const
 {
-  return _head;
+  return _dest;
 }
 
 void
-StructuralEdge::setHead (StructuralEntity *head)
+StructuralEdge::setDestination (StructuralEntity *head)
 {
-  _head = head;
+  _dest = head;
 }
 
 bool
-StructuralEdge::hasHead () const
+StructuralEdge::hasDestination () const
 {
-  return (_head != nullptr);
+  return (_dest != nullptr);
 }
 
 void
@@ -145,8 +145,8 @@ StructuralEdge::adjust (bool collision, bool recursion)
   {
     qreal angle = getAngle ();
 
-    StructuralEntity *tail = getTail ();
-    StructuralEntity *head = getHead ();
+    StructuralEntity *tail = getOrigin ();
+    StructuralEntity *head = getDestination ();
 
     if (tail != NULL && head != NULL)
     {
@@ -180,10 +180,10 @@ StructuralEdge::adjust (bool collision, bool recursion)
         head->setSelectable (false);
 
         adjustExtreme (tail, line, 0.0, 0.01, angle);
-        line.setP1 (QPointF (getTailLeft (), getTailTop ()));
+        line.setP1 (QPointF (getOrigLeft (), getOrigTop ()));
 
         adjustExtreme (head, line, 1.0, -0.01, angle);
-        line.setP2 (QPointF (getHeadLeft (), getHeadTop ()));
+        line.setP2 (QPointF (getDestLeft (), getDestTop ()));
 
         tail->setSelectable (true);
         head->setSelectable (true);
@@ -229,10 +229,10 @@ StructuralEdge::adjustBox (QLineF line)
     h = ptail.y () - phead.y ();
   }
 
-  setTailTop (ptail.y ());
-  setTailLeft (ptail.x ());
+  setOrigTop (ptail.y ());
+  setOrigLeft (ptail.x ());
   setHeadTop (phead.y ());
-  setHeadLeft (phead.x ());
+  setDestLeft (phead.x ());
 
   setTop (y);
   setLeft (x);
@@ -279,7 +279,7 @@ StructuralEdge::adjustExtreme (StructuralEntity *extreme, QLineF line,
       p.setX (center.x () + ::cos ((gama)*PI / 180.0) * r);
       p.setY (center.y () - ::sin ((gama)*PI / 180.0) * r);
 
-      if (extreme == getTail ())
+      if (extreme == getOrigin ())
         setAlfa (alfa * (1 / index - 1));
       else
         setAlfa (alfa);
@@ -289,7 +289,7 @@ StructuralEdge::adjustExtreme (StructuralEntity *extreme, QLineF line,
       p = line.pointAt (index);
     }
 
-    if (extreme == getTail ())
+    if (extreme == getOrigin ())
       adjustBox (QLineF (p, line.p2 ()));
     else
       adjustBox (QLineF (line.p1 (), p));
@@ -302,35 +302,35 @@ StructuralEdge::adjustExtreme (StructuralEntity *extreme, QLineF line,
 QLineF
 StructuralEdge::getDrawLine (qreal padding) const
 {
-  QPointF ptail = QPointF (getTailLeft (), getTailTop ());
-  QPointF phead = QPointF (getHeadLeft (), getHeadTop ());
+  QPointF pOrig = QPointF (getOrigLeft (), getOrigTop ());
+  QPointF pDest = QPointF (getDestLeft (), getDestTop ());
 
   QLineF drawLine;
 
   int x = 0, y = 0, z = 0, w = 0;
 
-  if (ptail.x () <= phead.x () && ptail.y () <= phead.y ())
+  if (pOrig.x () <= pDest.x () && pOrig.y () <= pDest.y ())
   {
     x = ST_DEFAULT_ENTITY_PADDING;
     y = ST_DEFAULT_ENTITY_PADDING;
     z = getWidth () + ST_DEFAULT_ENTITY_PADDING;
     w = getHeight () + ST_DEFAULT_ENTITY_PADDING;
   }
-  else if (ptail.x () > phead.x () && ptail.y () <= phead.y ())
+  else if (pOrig.x () > pDest.x () && pOrig.y () <= pDest.y ())
   {
     x = getWidth () + ST_DEFAULT_ENTITY_PADDING;
     y = ST_DEFAULT_ENTITY_PADDING;
     z = ST_DEFAULT_ENTITY_PADDING;
     w = getHeight () + ST_DEFAULT_ENTITY_PADDING;
   }
-  else if (ptail.x () <= phead.x () && ptail.y () > phead.y ())
+  else if (pOrig.x () <= pDest.x () && pOrig.y () > pDest.y ())
   {
     x = ST_DEFAULT_ENTITY_PADDING;
     y = getHeight () + ST_DEFAULT_ENTITY_PADDING;
     z = getWidth () + ST_DEFAULT_ENTITY_PADDING;
     w = ST_DEFAULT_ENTITY_PADDING;
   }
-  else if (ptail.x () > phead.x () && ptail.y () > phead.y ())
+  else if (pOrig.x () > pDest.x () && pOrig.y () > pDest.y ())
   {
     x = getWidth () + ST_DEFAULT_ENTITY_PADDING;
     y = getHeight () + ST_DEFAULT_ENTITY_PADDING;

@@ -14,13 +14,13 @@ public:
   qreal getAngle () const;
   void setAngle (qreal angle);
 
-  StructuralEntity *getTail () const;
-  void setTail (StructuralEntity *tail);
-  bool hasTail () const;
+  StructuralEntity *getOrigin () const;
+  void setOrigin (StructuralEntity *orig);
+  bool hasOrigin () const;
 
-  StructuralEntity *getHead () const;
-  void setHead (StructuralEntity *head);
-  bool hasHead () const;
+  StructuralEntity *getDestination () const;
+  void setDestination (StructuralEntity *dest);
+  bool hasDestination () const;
 
   virtual void adjust (bool collision = false, bool recursion = true);
 
@@ -28,17 +28,17 @@ protected:
   qreal getAlfa () const;
   void setAlfa (qreal alfa);
 
-  qreal getTailTop () const;
-  void setTailTop (qreal tailTop);
+  qreal getOrigTop () const;
+  void setOrigTop (qreal tailTop);
 
-  qreal getTailLeft () const;
-  void setTailLeft (qreal tailLeft);
+  qreal getOrigLeft () const;
+  void setOrigLeft (qreal tailLeft);
 
-  qreal getHeadTop () const;
+  qreal getDestTop () const;
   void setHeadTop (qreal headTop);
 
-  qreal getHeadLeft () const;
-  void setHeadLeft (qreal headLeft);
+  qreal getDestLeft () const;
+  void setDestLeft (qreal headLeft);
 
   void adjustBox (QLineF line);
   void adjustExtreme (StructuralEntity *extreme, QLineF line, qreal index,
@@ -53,14 +53,12 @@ private:
   qreal _alfa;
   qreal _angle;
 
-  qreal _tailTop;
-  qreal _tailLeft;
+  qreal _origTop, _origLeft;
 
-  qreal _headTop;
-  qreal _headLeft;
+  qreal _destTop, _destLeft;
 
-  StructuralEntity *_tail;
-  StructuralEntity *_head;
+  StructuralEntity *_orig;
+  StructuralEntity *_dest;
 };
 
 #endif // STRUCTURALSEDGE_H

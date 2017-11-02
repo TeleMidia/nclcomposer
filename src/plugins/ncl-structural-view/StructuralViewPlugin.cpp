@@ -382,34 +382,34 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
 
       if (util::isCondition (role))
       {
-        if (!viewProps.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
+        if (viewProps.contains (ST_ATTR_REFERENCE_INTERFACE_UID))
         {
-          viewProps.insert (ST_ATTR_EDGE_TAIL,
+          viewProps.insert (ST_ATTR_EDGE_ORIG,
                             viewProps.value (ST_ATTR_REFERENCE_INTERFACE_UID));
         }
-        else if (!viewProps.value (ST_ATTR_REFERENCE_COMPONENT_UID).isEmpty ())
+        else if (viewProps.contains (ST_ATTR_REFERENCE_COMPONENT_UID))
         {
-          viewProps.insert (ST_ATTR_EDGE_TAIL,
+          viewProps.insert (ST_ATTR_EDGE_ORIG,
                             viewProps.value (ST_ATTR_REFERENCE_COMPONENT_UID));
         }
 
-        viewProps.insert (ST_ATTR_EDGE_HEAD,
+        viewProps.insert (ST_ATTR_EDGE_DEST,
                           _coreToView.value (ent->getParentUniqueId ()));
       }
       else if (util::isAction (role))
       {
-        if (!viewProps.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
+        if (viewProps.contains (ST_ATTR_REFERENCE_INTERFACE_UID))
         {
-          viewProps.insert (ST_ATTR_EDGE_HEAD,
+          viewProps.insert (ST_ATTR_EDGE_DEST,
                             viewProps.value (ST_ATTR_REFERENCE_INTERFACE_UID));
         }
-        else if (!viewProps.value (ST_ATTR_REFERENCE_COMPONENT_UID).isEmpty ())
+        else if (viewProps.contains (ST_ATTR_REFERENCE_COMPONENT_UID))
         {
-          viewProps.insert (ST_ATTR_EDGE_HEAD,
+          viewProps.insert (ST_ATTR_EDGE_DEST,
                             viewProps.value (ST_ATTR_REFERENCE_COMPONENT_UID));
         }
 
-        viewProps.insert (ST_ATTR_EDGE_TAIL,
+        viewProps.insert (ST_ATTR_EDGE_ORIG,
                           _coreToView.value (ent->getParentUniqueId ()));
       }
     }
@@ -418,18 +418,18 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
   {
     viewParentUid = ent->getParent ()->getParentUniqueId ();
 
-    if (!viewProps.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
+    if (viewProps.contains (ST_ATTR_REFERENCE_INTERFACE_UID))
     {
-      viewProps.insert (ST_ATTR_EDGE_TAIL,
+      viewProps.insert (ST_ATTR_EDGE_ORIG,
                         _coreToView.value (ent->getParentUniqueId ()));
-      viewProps.insert (ST_ATTR_EDGE_HEAD,
+      viewProps.insert (ST_ATTR_EDGE_DEST,
                         viewProps.value (ST_ATTR_REFERENCE_INTERFACE_UID));
     }
-    else if (!viewProps.value (ST_ATTR_REFERENCE_COMPONENT_UID).isEmpty ())
+    else if (viewProps.contains (ST_ATTR_REFERENCE_COMPONENT_UID))
     {
-      viewProps.insert (ST_ATTR_EDGE_TAIL,
+      viewProps.insert (ST_ATTR_EDGE_ORIG,
                         _coreToView.value (ent->getParentUniqueId ()));
-      viewProps.insert (ST_ATTR_EDGE_HEAD,
+      viewProps.insert (ST_ATTR_EDGE_DEST,
                         viewProps.value (ST_ATTR_REFERENCE_COMPONENT_UID));
     }
   }
@@ -587,16 +587,16 @@ StructuralViewPlugin::changeInView (Entity *ent)
           {
             if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
             {
-              props.insert (ST_ATTR_EDGE_TAIL,
+              props.insert (ST_ATTR_EDGE_ORIG,
                             props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
-              props.insert (ST_ATTR_EDGE_HEAD,
+              props.insert (ST_ATTR_EDGE_DEST,
                             _coreToView.value (ent->getParentUniqueId ()));
             }
             else if (!props.value (ST_ATTR_REFERENCE_COMPONENT_UID).isEmpty ())
             {
-              props.insert (ST_ATTR_EDGE_TAIL,
+              props.insert (ST_ATTR_EDGE_ORIG,
                             props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
-              props.insert (ST_ATTR_EDGE_HEAD,
+              props.insert (ST_ATTR_EDGE_DEST,
                             _coreToView.value (ent->getParentUniqueId ()));
             }
           }
@@ -604,16 +604,16 @@ StructuralViewPlugin::changeInView (Entity *ent)
           {
             if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
             {
-              props.insert (ST_ATTR_EDGE_TAIL,
+              props.insert (ST_ATTR_EDGE_ORIG,
                             _coreToView.value (ent->getParentUniqueId ()));
-              props.insert (ST_ATTR_EDGE_HEAD,
+              props.insert (ST_ATTR_EDGE_DEST,
                             props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
             }
             else if (!props.value (ST_ATTR_REFERENCE_COMPONENT_UID).isEmpty ())
             {
-              props.insert (ST_ATTR_EDGE_TAIL,
+              props.insert (ST_ATTR_EDGE_ORIG,
                             _coreToView.value (ent->getParentUniqueId ()));
-              props.insert (ST_ATTR_EDGE_HEAD,
+              props.insert (ST_ATTR_EDGE_DEST,
                             props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
             }
           }
@@ -623,16 +623,16 @@ StructuralViewPlugin::changeInView (Entity *ent)
       {
         if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
         {
-          props.insert (ST_ATTR_EDGE_TAIL,
+          props.insert (ST_ATTR_EDGE_ORIG,
                         _coreToView.value (ent->getParentUniqueId ()));
-          props.insert (ST_ATTR_EDGE_HEAD,
+          props.insert (ST_ATTR_EDGE_DEST,
                         props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
         }
         else if (!props.value (ST_ATTR_REFERENCE_COMPONENT_UID).isEmpty ())
         {
-          props.insert (ST_ATTR_EDGE_TAIL,
+          props.insert (ST_ATTR_EDGE_ORIG,
                         _coreToView.value (ent->getParentUniqueId ()));
-          props.insert (ST_ATTR_EDGE_HEAD,
+          props.insert (ST_ATTR_EDGE_DEST,
                         props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
         }
       }
@@ -740,7 +740,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
   }
   else if (type == Structural::Mapping)
   {
-    QString coreUid = _viewToCore.value (props.value (ST_ATTR_EDGE_TAIL));
+    QString coreUid = _viewToCore.value (props.value (ST_ATTR_EDGE_ORIG));
     entParent = getProject ()->getEntityById (coreUid);
   }
   else if (type == Structural::Body)

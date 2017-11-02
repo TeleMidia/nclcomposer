@@ -43,8 +43,8 @@
 #define ST_ATTR_LINKPARAM_VALUE ":linkparam:value"
 
 // Edge defines
-#define ST_ATTR_EDGE_TAIL ":edge:tail"
-#define ST_ATTR_EDGE_HEAD ":edge:head"
+#define ST_ATTR_EDGE_ORIG ":edge:orig"
+#define ST_ATTR_EDGE_DEST ":edge:dest"
 #define ST_ATTR_EDGE_ANGLE ":edge:angle"
 
 #define ST_ATTR_BIND_ROLE ":bind:role"
