@@ -14,7 +14,6 @@ set(NCL_STRUCTURAL_VIEW_SOURCES
   Structural.h
   StructuralUtil.h
   StructuralViewPlugin.h
-  StructuralViewFactory.h
   ui/Commands.h
   ui/StructuralWindow.h
   ui/view/StructuralView.h

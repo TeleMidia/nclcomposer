@@ -21,6 +21,7 @@
 #include <QMap>
 
 #include <extensions/IPlugin.h>
+#include <extensions/IPluginFactory.h>
 using namespace cpr::core;
 
 #include "StructuralScene.h"
@@ -98,6 +99,19 @@ private:
   QMap<QString, QString> _coreToView;
   QMap<QString, QString> _viewToCore;
   StructuralScene *_struct_scene;
+};
+
+class StructuralViewFactory : public QObject,
+    public IPluginFactoryTpl<StructuralViewPlugin>
+{
+  Q_OBJECT
+  CPR_PLUGIN_METADATA ("ncl-structural-view.json")
+
+public:
+  StructuralViewFactory (QObject *parent = 0) : QObject (parent) {}
+  virtual ~StructuralViewFactory () {}
+
+  QString id () const { return "br.puc-rio.telemidia.composer.structural"; }
 };
 
 #endif // STRUCTUALVIEWPLUGIN_H
