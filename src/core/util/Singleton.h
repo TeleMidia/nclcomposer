@@ -24,13 +24,13 @@ private:                                                                      \
   static T *m_pInstance;                                                      \
                                                                               \
 public:                                                                       \
-  static T *instance ()                                                    \
+  static T *instance ()                                                       \
   {                                                                           \
     if (m_pInstance == nullptr)                                               \
       return m_pInstance = new T ();                                          \
     return m_pInstance;                                                       \
   }                                                                           \
-  static void release ()                                              \
+  static void release ()                                                      \
   {                                                                           \
     if (m_pInstance != nullptr)                                               \
       delete m_pInstance;                                                     \

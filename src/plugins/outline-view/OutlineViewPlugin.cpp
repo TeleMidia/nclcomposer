@@ -251,7 +251,7 @@ OutlineViewPlugin::init ()
 
   QTreeWidgetItem *item;
   QStack<Entity *> stack;
-  Entity *entity = project->getEntityChildren ().first();
+  Entity *entity = project->getEntityChildren ().first ();
 
   QMap<QString, QString> attrs;
   QMap<QString, QString>::iterator begin, end, it;
@@ -269,7 +269,7 @@ OutlineViewPlugin::init ()
     entity = stack.top ();
     stack.pop ();
 
-    QList <Entity *> children = entity->getEntityChildren ();
+    QList<Entity *> children = entity->getEntityChildren ();
     foreach (Entity *child, children)
     {
       if (_idToItem.contains (child->getUniqueId ()))
@@ -278,9 +278,9 @@ OutlineViewPlugin::init ()
       attrs.clear ();
       attrs = child->getAttrs ();
 
-      item = _window->addElement (
-          _idToItem[entity->getUniqueId ()], -1, child->getType (),
-          child->getUniqueId (), attrs, 0, 0);
+      item = _window->addElement (_idToItem[entity->getUniqueId ()], -1,
+                                  child->getType (), child->getUniqueId (),
+                                  attrs, 0, 0);
 
       _idToItem[child->getUniqueId ()] = item;
       stack.push_front (child);

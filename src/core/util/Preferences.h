@@ -56,7 +56,7 @@ public:
   QString
   key ()
   {
-    return "cpr."+_category.toLower()+"."+_name;
+    return "cpr." + _category.toLower () + "." + _name;
   }
 
 private:
@@ -86,7 +86,7 @@ public:
   void restore () const;
 
   void registerPreference (const QString &key, Preference *pref);
-  void registerPreferences (const QMap <QString, Preference *> &prefs);
+  void registerPreferences (const QMap<QString, Preference *> &prefs);
 
   Preference *getValue (const QString &key) const;
   void setValue (const QString &key, const QVariant &value);

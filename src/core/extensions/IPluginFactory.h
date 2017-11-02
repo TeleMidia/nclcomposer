@@ -34,8 +34,8 @@ CPR_CORE_BEGIN_NAMESPACE
  * \brief Helper macro to avoid code duplication in an instance of
  * IPluginFactory.
  */
-#define CPR_PLUGIN_METADATA(FILENAME) \
-  Q_INTERFACES (IPluginFactory) \
+#define CPR_PLUGIN_METADATA(FILENAME)                                         \
+  Q_INTERFACES (IPluginFactory)                                               \
   Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE FILENAME)
 
 /*!
@@ -106,15 +106,23 @@ private:
   QJsonObject metadata_obj;
 };
 
+/**
+ * A helper template class to instantiate IPluginFactories
+ */
 template <typename T> class IPluginFactoryTpl : public IPluginFactory
 {
 public:
-  IPlugin *createPluginInstance() { return new T ();}
-
-  void releasePluginInstance (IPlugin *plugin)
+  IPlugin *
+  createPluginInstance ()
   {
-    CPR_ASSERT (instanceof (T*, plugin));
-    delete cast (T*, plugin);
+    return new T ();
+  }
+
+  void
+  releasePluginInstance (IPlugin *plugin)
+  {
+    CPR_ASSERT (instanceof (T *, plugin));
+    delete cast (T *, plugin);
   }
 };
 

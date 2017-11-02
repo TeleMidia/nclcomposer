@@ -22,8 +22,8 @@
 #include <QObject>
 #include <QStack>
 
-#include "model/Entity.h"
 #include "model/Comment.h"
+#include "model/Entity.h"
 #include "model/Exceptions.h"
 
 #include "util/Utilities.h"
@@ -232,7 +232,7 @@ protected:
 private:
   QMutex *_lockEntities;                 /*!< TODO */
   QMutex _lockLocation;                  /*!< TODO */
-  QMap<QString, Node*> _nodes;     /*!< TODO */
+  QMap<QString, Node *> _nodes;          /*!< TODO */
   QMap<QString, QByteArray> _pluginData; /*!< TODO */
 
   QString _projectLocation;  /*!< TODO */

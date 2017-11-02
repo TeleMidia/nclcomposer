@@ -224,70 +224,41 @@ void
 PluginControl::launchNewPlugin (IPlugin *plugin, MessageControl *mControl)
 {
   /* Connect signals from the plugin to slots of the core */
-  connect (plugin,
-           &IPlugin::addEntity,
-           mControl,
-           &MessageControl::addEntity,
+  connect (plugin, &IPlugin::addEntity, mControl, &MessageControl::addEntity,
            Qt::DirectConnection);
 
-  connect (plugin,
-           &IPlugin::addContent,
-           mControl,
-           &MessageControl::addContent,
+  connect (plugin, &IPlugin::addContent, mControl, &MessageControl::addContent,
            Qt::DirectConnection);
 
-  connect (plugin,
-           &IPlugin::addComment,
-           mControl,
-           &MessageControl::addComment,
+  connect (plugin, &IPlugin::addComment, mControl, &MessageControl::addComment,
            Qt::DirectConnection);
 
-  connect (plugin,
-           &IPlugin::setAttributes,
-           mControl,
-           &MessageControl::editEntity,
-           Qt::DirectConnection);
+  connect (plugin, &IPlugin::setAttributes, mControl,
+           &MessageControl::editEntity, Qt::DirectConnection);
 
-  connect (plugin,
-           &IPlugin::removeEntity,
-           mControl,
-           &MessageControl::removeEntity,
-           Qt::DirectConnection);
+  connect (plugin, &IPlugin::removeEntity, mControl,
+           &MessageControl::removeEntity, Qt::DirectConnection);
 
-  connect (plugin,
-           &IPlugin::setListenFilter,
-           mControl,
-           &MessageControl::setListenFilter,
-           Qt::DirectConnection);
+  connect (plugin, &IPlugin::setListenFilter, mControl,
+           &MessageControl::setListenFilter, Qt::DirectConnection);
 
-  connect (plugin,
-           &IPlugin::setCurrentProjectAsDirty,
-           mControl,
-           &MessageControl::setCurrentProjectAsDirty,
-           Qt::DirectConnection);
+  connect (plugin, &IPlugin::setCurrentProjectAsDirty, mControl,
+           &MessageControl::setCurrentProjectAsDirty, Qt::DirectConnection);
 
   // broadcastMessage
-  connect (plugin,
-           &IPlugin::sendBroadcastMessage,
-           this,
-           &PluginControl::sendBroadcastMessage,
-           Qt::DirectConnection);
+  connect (plugin, &IPlugin::sendBroadcastMessage, this,
+           &PluginControl::sendBroadcastMessage, Qt::DirectConnection);
 
   /* setPluginData */
-  connect (plugin,
-           &IPlugin::setPluginData,
-           mControl,
-           &MessageControl::setPluginData,
-           Qt::DirectConnection);
+  connect (plugin, &IPlugin::setPluginData, mControl,
+           &MessageControl::setPluginData, Qt::DirectConnection);
 }
 
 void
 PluginControl::connectParser (IDocumentParser *parser,
                               MessageControl *mControl)
 {
-  connect (parser,
-           &IDocumentParser::addEntity,
-           mControl,
+  connect (parser, &IDocumentParser::addEntity, mControl,
            &MessageControl::addEntity);
 }
 

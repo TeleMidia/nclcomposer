@@ -18,15 +18,15 @@
 #include "LayoutViewFactory.h"
 #include <util/Preferences.h>
 
-NCLLayoutViewFactory::NCLLayoutViewFactory(QObject* parent)
+NCLLayoutViewFactory::NCLLayoutViewFactory (QObject *parent)
 {
-  setParent(parent);
+  setParent (parent);
 
   QStringList default_resolutions (
-    {"640x480", "800x600", "1024x768", // 4x3
-     "854x480", "1280x720", "1920x1080", // 16x9
-     "320x400"} // other
-  );
+      { "640x480", "800x600", "1024x768",   // 4x3
+        "854x480", "1280x720", "1920x1080", // 16x9
+        "320x400" }                         // other
+      );
 
   Preferences::instance ()->registerPreference (
       "cpr.layout.resolutions",

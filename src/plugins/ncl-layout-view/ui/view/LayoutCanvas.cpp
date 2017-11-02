@@ -21,20 +21,18 @@
 
 #include <cmath>
 
-LayoutCanvas::LayoutCanvas(QWidget* parent) : QGraphicsView(parent)
+LayoutCanvas::LayoutCanvas (QWidget *parent) : QGraphicsView (parent)
 {
   _zoomStep = 0;
-  setBackgroundBrush(QBrush(QColor("#eee")));
+  setBackgroundBrush (QBrush (QColor ("#eee")));
 }
 
-LayoutCanvas::~LayoutCanvas()
-{
+LayoutCanvas::~LayoutCanvas () {}
 
-}
-
-void LayoutCanvas::resizeEvent(QResizeEvent* event)
+void
+LayoutCanvas::resizeEvent (QResizeEvent *event)
 {
-  QGraphicsView::resizeEvent(event);
+  QGraphicsView::resizeEvent (event);
 
   /* QSize size = event->size();
   QGraphicsScene* s = scene();
@@ -47,74 +45,79 @@ void LayoutCanvas::resizeEvent(QResizeEvent* event)
   }*/
 }
 
-void LayoutCanvas::wheelEvent(QWheelEvent *event)
+void
+LayoutCanvas::wheelEvent (QWheelEvent *event)
 {
-  if(event->modifiers() == Qt::ControlModifier)
+  if (event->modifiers () == Qt::ControlModifier)
   {
-    if (event->delta() > 0)
-      performZoomIn();
+    if (event->delta () > 0)
+      performZoomIn ();
     else
-      performZoomOut();
+      performZoomOut ();
 
-    event->accept();
+    event->accept ();
   }
   else
   {
     // call the parent wheelEvent
-    QGraphicsView::wheelEvent(event);
+    QGraphicsView::wheelEvent (event);
   }
 }
 
-void LayoutCanvas::keyPressEvent(QKeyEvent *event)
+void
+LayoutCanvas::keyPressEvent (QKeyEvent *event)
 {
 
-  if(event->modifiers() & Qt::ControlModifier)
+  if (event->modifiers () & Qt::ControlModifier)
   {
-    if(event->key() == Qt::Key_0)
+    if (event->key () == Qt::Key_0)
     {
-      performZoomReset();
-      event->accept();
+      performZoomReset ();
+      event->accept ();
     }
 
-    if(event->key() == Qt::Key_Minus)
+    if (event->key () == Qt::Key_Minus)
     {
-      performZoomOut();
-      event->accept();
+      performZoomOut ();
+      event->accept ();
     }
 
-    if(event->key() == Qt::Key_Plus)
+    if (event->key () == Qt::Key_Plus)
     {
-      performZoomIn();
-      event->accept();
+      performZoomIn ();
+      event->accept ();
       /* ctrl+plus was not working properly as a shortcut for action*/
     }
   }
 
-  QGraphicsView::keyPressEvent(event);
+  QGraphicsView::keyPressEvent (event);
 }
 
-void LayoutCanvas::performZoomIn()
+void
+LayoutCanvas::performZoomIn ()
 {
   if (_zoomStep > 0)
   {
     _zoomStep--;
-    resetMatrix();
-    scale(1 - _zoomStep*0.05, 1 - _zoomStep*0.05);
+    resetMatrix ();
+    scale (1 - _zoomStep * 0.05, 1 - _zoomStep * 0.05);
   }
 }
 
-void LayoutCanvas::performZoomOut()
+void
+LayoutCanvas::performZoomOut ()
 {
-  if (_zoomStep*0.05 < 0.9)
+  if (_zoomStep * 0.05 < 0.9)
   {
     _zoomStep++;
-    resetMatrix();
-    scale(1 - _zoomStep*0.05, 1 - _zoomStep*0.05);
+    resetMatrix ();
+    scale (1 - _zoomStep * 0.05, 1 - _zoomStep * 0.05);
   }
 }
 
-void LayoutCanvas::performZoomReset()
+void
+LayoutCanvas::performZoomReset ()
 {
   _zoomStep = 0;
-  resetMatrix();
+  resetMatrix ();
 }

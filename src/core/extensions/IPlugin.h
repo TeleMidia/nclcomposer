@@ -180,7 +180,8 @@ public slots:
    *
    * This call is invoked by the core when a new Comment is added in the model.
    */
-  virtual void onCommentAdded (const QString &pluginID, Comment *entity) /*= 0*/
+  virtual void onCommentAdded (const QString &pluginID,
+                               Comment *entity) /*= 0*/
   {
     Q_UNUSED (pluginID);
     Q_UNUSED (entity);

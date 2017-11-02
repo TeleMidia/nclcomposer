@@ -36,7 +36,7 @@ ProjectReader::readFile (const QString &location)
 
   QByteArray data = file.readAll ();
   QString content (qUncompress (data));
-//  QString content (data);
+  //  QString content (data);
   /* READING MODEL */
   QString startCpModelStr = "#COMPOSER_MODEL#\n";
   QString endCpModelStr = "\n#END_COMPOSER_MODEL#";
@@ -148,8 +148,7 @@ ProjectReader::startElement (const QString &namespaceURI,
     else
     {
       Entity *entity = new Entity (uniqueId, qName, atts,
-                                   _project->getDomDocument (),
-                                   _project);
+                                   _project->getDomDocument (), _project);
       _project->addEntity (entity, parentNode->getUniqueId ());
       node = entity;
     }

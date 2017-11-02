@@ -73,10 +73,10 @@ Entity::setAtrrs (const QMap<QString, QString> &newatts)
   QStringList oldAttrs;
   QDomNamedNodeMap domAttrs = _domNode.toElement ().attributes ();
   for (int i = 0; i < domAttrs.length (); i++)
-    oldAttrs << domAttrs.item (i).toAttr ().name();
+    oldAttrs << domAttrs.item (i).toAttr ().name ();
 
   foreach (const QString &att, oldAttrs)
-    _domNode.toElement().removeAttribute(att);
+    _domNode.toElement ().removeAttribute (att);
 
   // set new attributes
   foreach (const QString &att, newatts.keys ())

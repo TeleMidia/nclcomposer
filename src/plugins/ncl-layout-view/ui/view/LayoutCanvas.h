@@ -26,19 +26,19 @@
 class LayoutCanvas : public QGraphicsView
 {
 public:
-  LayoutCanvas(QWidget* parent = 0);
-  ~LayoutCanvas();
-  void performZoomIn();
-  void performZoomOut();
-  void performZoomReset();
+  LayoutCanvas (QWidget *parent = 0);
+  ~LayoutCanvas ();
+  void performZoomIn ();
+  void performZoomOut ();
+  void performZoomReset ();
 
 private:
   int _zoomStep;
 
 protected:
-  virtual void keyPressEvent(QKeyEvent *event);
-  virtual void resizeEvent(QResizeEvent* event);
-  virtual void wheelEvent(QWheelEvent* event);
+  virtual void keyPressEvent (QKeyEvent *event);
+  virtual void resizeEvent (QResizeEvent *event);
+  virtual void wheelEvent (QWheelEvent *event);
 };
 
 #endif // QNLYCANVAS_H

@@ -63,16 +63,23 @@ public slots:
 /*!
  * \brief Handles the creation and deletion of DebugConsolePlugin objects.
  */
-class DebugConsoleFactory :
-    public QObject,
-    public IPluginFactoryTpl<DebugConsolePlugin>
+class DebugConsoleFactory : public QObject,
+                            public IPluginFactoryTpl<DebugConsolePlugin>
 {
   Q_OBJECT
   CPR_PLUGIN_METADATA ("debug-console.json")
 
 public:
-  QString id () const { return "br.puc-rio.telemidia.DebugConsole"; }
-  QIcon icon () const { return QIcon (":/images/icon.png"); }
+  QString
+  id () const
+  {
+    return "br.puc-rio.telemidia.DebugConsole";
+  }
+  QIcon
+  icon () const
+  {
+    return QIcon (":/images/icon.png");
+  }
 };
 
 #endif // DEBUGCONSOLEPLUGIN_H

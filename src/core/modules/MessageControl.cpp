@@ -173,7 +173,7 @@ MessageControl::addEntity (const QString &type, const QString &parentEntityId,
     sendMessageToPlugins (Message::ENTITY_ADDED, senderId, ent);
 
     if (parser)
-      parser->onEntityAdded(senderId, ent);
+      parser->onEntityAdded (senderId, ent);
   }
   catch (exception &e)
   {
@@ -291,7 +291,8 @@ MessageControl::addComment (const QString &content, const QString &parentId)
   Comment *comment = nullptr;
   try
   {
-    comment = new Comment (content, _project->getDomDocument (), _project->getEntityById(parentId));
+    comment = new Comment (content, _project->getDomDocument (),
+                           _project->getEntityById (parentId));
     _qUndoStack->push (new AddCommentCmd (_project, comment, parentId));
 
     sendCommentMessageToPlugins (Message::COMMENT_ADDED, senderId, comment);
@@ -534,15 +535,15 @@ MessageControl::sendCommentMessageToPlugins (Message message,
   // \fixme: Now I call for the plugin that asked the message.
   if (pluginMsgSrc != nullptr)
   {
-      switch (message)
-      {
-        case Message::COMMENT_ADDED:
-          pluginMsgSrc->onCommentAdded (senderId, comment);
-          break;
-        default:
-          qFatal ("Send comment message to plugins called with unknown type.");
-          break;
-      }
+    switch (message)
+    {
+      case Message::COMMENT_ADDED:
+        pluginMsgSrc->onCommentAdded (senderId, comment);
+        break;
+      default:
+        qFatal ("Send comment message to plugins called with unknown type.");
+        break;
+    }
   }
 }
 bool

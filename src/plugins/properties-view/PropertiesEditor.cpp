@@ -41,8 +41,8 @@ PropertiesEditor::PropertiesEditor (QWidget *parent) : QWidget (parent)
   _ui->tableWidget->setItemDelegate (delegate);
   delegate->setTableWidget (_ui->tableWidget);
 
-  connect (_ui->tableWidget, SIGNAL (itemChanged (QTableWidgetItem *)),
-           this, SLOT (updateWithItemChanges (QTableWidgetItem *)),
+  connect (_ui->tableWidget, SIGNAL (itemChanged (QTableWidgetItem *)), this,
+           SLOT (updateWithItemChanges (QTableWidgetItem *)),
            Qt::DirectConnection);
 
   connect (_ui->filterLineEdit, SIGNAL (filterTextChanged (const QString &)),
@@ -66,8 +66,7 @@ PropertiesEditor::PropertiesEditor (QWidget *parent) : QWidget (parent)
 PropertiesEditor::~PropertiesEditor () {}
 
 void
-PropertiesEditor::setTagname (const QString &tagname,
-                              const QString &name,
+PropertiesEditor::setTagname (const QString &tagname, const QString &name,
                               const QStringList &attrs,
                               const QStringList &attrs_datatype,
                               const QList<QStringList> &attrs_suggestions)
@@ -80,11 +79,11 @@ PropertiesEditor::setTagname (const QString &tagname,
     delegate->setCurrentTagname (tagname);
 
   // Clear previous items
-  _attrs.clear();
-  _attrDatatype.clear();
+  _attrs.clear ();
+  _attrDatatype.clear ();
   _attr2Line.clear ();
   _attrValue.clear ();
-  _attrValueSuggestions.clear();
+  _attrValueSuggestions.clear ();
 
   while (_ui->tableWidget->rowCount ())
     _ui->tableWidget->removeRow (0);
@@ -97,9 +96,9 @@ PropertiesEditor::setTagname (const QString &tagname,
     _attrValue[a] = "";
     _attrs.push_back (a);
 
-    if (attrs_suggestions.size())
+    if (attrs_suggestions.size ())
     {
-      setAttributeSuggestions(a, attrs_suggestions.at(i));
+      setAttributeSuggestions (a, attrs_suggestions.at (i));
     }
 
     i++;
@@ -170,7 +169,7 @@ PropertiesEditor::setAttributeSuggestions (const QString &property,
 QStringList
 PropertiesEditor::getAttributeSuggestions (const QString &property)
 {
-  if (_attrValueSuggestions.contains(property))
+  if (_attrValueSuggestions.contains (property))
     return _attrValueSuggestions[property];
   else
     return QStringList ();
@@ -179,7 +178,8 @@ PropertiesEditor::getAttributeSuggestions (const QString &property)
 QString
 PropertiesEditor::getAttributeDatatype (const QString &attr)
 {
-  return NCLStructure::instance ()->getAttributeDatatype (_currentTagname, attr);
+  return NCLStructure::instance ()->getAttributeDatatype (_currentTagname,
+                                                          attr);
 }
 
 void

@@ -72,11 +72,11 @@ public:
    *
    * \param tagname The current tagname.
    */
-  void setTagname (const QString &tagname,
-                   const QString &name,
+  void setTagname (const QString &tagname, const QString &name,
                    const QStringList &attrs = QStringList (),
                    const QStringList &attrs_datatype = QStringList (),
-                   const QList<QStringList> &attrs_suggestions = QList<QStringList> ());
+                   const QList<QStringList> &attrs_suggestions
+                   = QList<QStringList> ());
 
   /*!
    * \brief Get the current tagname.
@@ -115,7 +115,8 @@ public:
    */
   void setAttributeValue (const QString &property, const QString &value);
 
-  void setAttributeSuggestions (const QString &prop, const QStringList &suggestions);
+  void setAttributeSuggestions (const QString &prop,
+                                const QStringList &suggestions);
 
   QStringList getAttributeSuggestions (const QString &prop);
   QString getAttributeDatatype (const QString &prop);
@@ -164,14 +165,13 @@ private:
 #endif
 };
 
-
 class ComboBoxDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 
 public:
-  ComboBoxDelegate (PropertiesEditor *propEditor, QWidget *parent = 0) :
-    QStyledItemDelegate (parent)
+  ComboBoxDelegate (PropertiesEditor *propEditor, QWidget *parent = 0)
+      : QStyledItemDelegate (parent)
   {
     this->_propEditor = propEditor;
   }
@@ -184,9 +184,9 @@ public:
 
     if (index.column () == 1)
     {
-      QString attr = _tableWidget->item (index.row (), 0)->text();
+      QString attr = _tableWidget->item (index.row (), 0)->text ();
       QString datatype = _propEditor->getAttributeDatatype (attr);
-      QStringList suggestions = _propEditor->getAttributeSuggestions(attr);
+      QStringList suggestions = _propEditor->getAttributeSuggestions (attr);
 
       if (suggestions.size ())
       {

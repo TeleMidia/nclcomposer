@@ -21,8 +21,8 @@
 CPR_CORE_BEGIN_NAMESPACE
 
 EditEntityCmd::EditEntityCmd (Project *project, Entity *entity,
-                          QMap<QString, QString> newAttrs,
-                          QUndoCommand *parent)
+                              QMap<QString, QString> newAttrs,
+                              QUndoCommand *parent)
     : QUndoCommand (parent)
 {
   this->_project = project;
@@ -47,7 +47,7 @@ EditEntityCmd::redo ()
 }
 
 RemoveEntityCmd::RemoveEntityCmd (Project *project, Entity *entity,
-                              QUndoCommand *parent)
+                                  QUndoCommand *parent)
 {
   Q_UNUSED (parent)
 
@@ -87,7 +87,7 @@ RemoveEntityCmd::redo ()
 }
 
 AddEntityCmd::AddEntityCmd (Project *project, Entity *entity,
-                        QString parentUniqueId, QUndoCommand *parent)
+                            QString parentUniqueId, QUndoCommand *parent)
 {
   Q_UNUSED (parent)
 
@@ -142,7 +142,7 @@ void
 AddCommentCmd::undo ()
 {
   this->_comment = this->_comment->cloneComment ();
-//  _msgControl->anonymousRemoveComment (this->_entity->getUniqueId ());
+  //  _msgControl->anonymousRemoveComment (this->_entity->getUniqueId ());
   _first = false;
 }
 

@@ -192,15 +192,22 @@ private slots:
  \brief Handles the creation and deletion of OutlineView objects.
 */
 class OutlineViewFactory : public QObject,
-    public IPluginFactoryTpl <OutlineViewPlugin>
+                           public IPluginFactoryTpl<OutlineViewPlugin>
 {
   Q_OBJECT
   CPR_PLUGIN_METADATA ("outline-view.json")
 
 public:
-  QString id () const { return "br.puc-rio.telemidia.OutlineView"; }
-  QIcon icon () const { return QIcon (":/images/ncl.png"); }
+  QString
+  id () const
+  {
+    return "br.puc-rio.telemidia.OutlineView";
+  }
+  QIcon
+  icon () const
+  {
+    return QIcon (":/images/ncl.png");
+  }
 };
-
 
 #endif // OUTLINEVIEWPLUGIN_H

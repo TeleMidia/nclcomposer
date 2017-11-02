@@ -22,7 +22,7 @@ ValidatorPlugin::ValidatorPlugin ()
   table = new ValidatorTreeWidget ();
   table->setColumnCount (3);
   QStringList headers;
-  headers << "" << tr("Elemento") << tr("Mensagem");
+  headers << "" << tr ("Elemento") << tr ("Mensagem");
   table->setHeaderLabels (headers);
   table->setColumnWidth (0, 40);
 

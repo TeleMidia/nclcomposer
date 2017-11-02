@@ -145,10 +145,10 @@ private slots:
   void updateCurrentEntityAttr (QString attr, QString value);
 
 private:
-  QListWidget *_list;      /*! TODO */
+  QListWidget *_list;        /*! TODO */
   PropertiesEditor *_window; /*! TODO */
-  Entity *_currentEntity;  /*! \todo Change pointer reference to
-                                    the currentEntityId */
+  Entity *_currentEntity;    /*! \todo Change pointer reference to
+                                      the currentEntityId */
   QString _currentEntityId;
 
   QStringList getAttributes (const QString &tagname);
@@ -161,14 +161,22 @@ private:
 
 */
 class PropertiesViewFactory : public QObject,
-    public IPluginFactoryTpl <PropertiesViewPlugin>
+                              public IPluginFactoryTpl<PropertiesViewPlugin>
 {
   Q_OBJECT
   CPR_PLUGIN_METADATA ("properties-view.json")
 
 public:
-  QString id () const { return "br.puc-rio.telemidia.PropertiesView"; }
-  QIcon icon () const { return QIcon (":/images/icon.png"); }
+  QString
+  id () const
+  {
+    return "br.puc-rio.telemidia.PropertiesView";
+  }
+  QIcon
+  icon () const
+  {
+    return QIcon (":/images/icon.png");
+  }
 };
 
 #endif // PROPERTIESVIEWPLUGIN_H

@@ -111,8 +111,8 @@ ProjectControl::launchProject (const QString &location)
     PluginControl::instance ()->launchProject (project);
 
     _openProjects[location] = project;
-    connect (project, SIGNAL (dirtyProject (bool)),
-             this, SLOT (projectIsDirty (bool)));
+    connect (project, SIGNAL (dirtyProject (bool)), this,
+             SLOT (projectIsDirty (bool)));
   }
   else
     qCDebug (CPR_CORE) << tr ("Project could not be open!");
@@ -180,7 +180,7 @@ ProjectControl::importFromDocument (const QString &docLocation,
 
   emit endOpenProject (projLocation);
 
-  QCoreApplication::processEvents();
+  QCoreApplication::processEvents ();
 
   if (project != nullptr)
   {
@@ -226,7 +226,7 @@ ProjectControl::saveProject (const QString &location)
 
   QString content = project->toString ();
   fout.write (qCompress (content.toLatin1 (), content.size ()));
-//  fout.write (content.toLatin1 ());
+  //  fout.write (content.toLatin1 ());
   fout.close ();
   project->setDirty (false);
 }
@@ -280,7 +280,7 @@ ProjectControl::saveTemporaryProject (const QString &location)
 
   QString content = project->toString ();
   fout.write (qCompress (content.toLatin1 (), content.size ()));
-//  fout.write (content.toLatin1 ());
+  //  fout.write (content.toLatin1 ());
   fout.close ();
   //  project->setDirty(false);
 }

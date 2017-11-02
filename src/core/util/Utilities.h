@@ -104,30 +104,27 @@ private:
 };
 
 COMPOSERCORESHARED_EXPORT
-    Q_DECLARE_LOGGING_CATEGORY (CPR_CORE) COMPOSERCORESHARED_EXPORT
-    Q_DECLARE_LOGGING_CATEGORY (CPR_GUI)
-
+Q_DECLARE_LOGGING_CATEGORY (CPR_CORE)
+COMPOSERCORESHARED_EXPORT Q_DECLARE_LOGGING_CATEGORY (CPR_GUI)
 
 // Assert macros.
-#define CPR_ASSERT(cond) \
-  ((!(cond)) ? qt_assert(#cond,__FILE__,__LINE__) : qt_noop())
+#define CPR_ASSERT(cond)                                                      \
+  ((!(cond)) ? qt_assert (#cond, __FILE__, __LINE__) : qt_noop ())
 
-#define CPR_ASSERT_X(cond, where, what) \
-  ((!(cond)) ? qt_assert_x(where, what,__FILE__,__LINE__) : qt_noop())
+#define CPR_ASSERT_X(cond, where, what)                                       \
+  ((!(cond)) ? qt_assert_x (where, what, __FILE__, __LINE__) : qt_noop ())
 
-#define CPR_ASSERT_NON_NULL(var) \
-  CPR_ASSERT(var != nullptr)
+#define CPR_ASSERT_NON_NULL(var) CPR_ASSERT (var != nullptr)
 
-#define CPR_ASSERT_NOT_REACHED() \
-  CPR_ASSERT_X(false,"","Should not reach here.")
+#define CPR_ASSERT_NOT_REACHED()                                              \
+  CPR_ASSERT_X (false, "", "Should not reach here.")
 
 // Cast utilities.
-#undef cast
-#define cast(a, b)       (dynamic_cast<a>((b)))
-#define instanceof(a, b) (cast (a,(b)) != nullptr)
+#define cast(a, b) (dynamic_cast<a> ((b)))
+#define instanceof(a, b) (cast (a, (b)) != nullptr)
 
 #define not_null(a) (a != nullptr)
 
-CPR_CORE_END_NAMESPACE
+    CPR_CORE_END_NAMESPACE
 
 #endif // DEFINITIONS_H

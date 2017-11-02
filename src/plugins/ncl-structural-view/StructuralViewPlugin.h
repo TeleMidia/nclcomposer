@@ -102,7 +102,7 @@ private:
 };
 
 class StructuralViewFactory : public QObject,
-    public IPluginFactoryTpl<StructuralViewPlugin>
+                              public IPluginFactoryTpl<StructuralViewPlugin>
 {
   Q_OBJECT
   CPR_PLUGIN_METADATA ("ncl-structural-view.json")
@@ -111,7 +111,11 @@ public:
   StructuralViewFactory (QObject *parent = 0) : QObject (parent) {}
   virtual ~StructuralViewFactory () {}
 
-  QString id () const { return "br.puc-rio.telemidia.composer.structural"; }
+  QString
+  id () const
+  {
+    return "br.puc-rio.telemidia.composer.structural";
+  }
 };
 
 #endif // STRUCTUALVIEWPLUGIN_H

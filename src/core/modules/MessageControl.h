@@ -26,8 +26,8 @@ using namespace std;
 
 #include "extensions/IDocumentParser.h"
 #include "extensions/IPlugin.h"
-#include "model/Entity.h"
 #include "model/Comment.h"
+#include "model/Entity.h"
 #include "model/Project.h"
 using namespace cpr::core;
 
@@ -134,7 +134,7 @@ public slots:
    * \brief TODO.
    */
   void anonymousAddComment (Comment *comment, const QString &parentEntityId,
-                             bool notifyPlugins = true);
+                            bool notifyPlugins = true);
 
   /*!
    * \brief This message is here, mainly for test purposes.

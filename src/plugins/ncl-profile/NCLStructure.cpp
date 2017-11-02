@@ -154,8 +154,8 @@ NCLStructure::loadStructure ()
     }
     else if (tokens[0].toLower () == "scope")
     {
-      qWarning() << "I'm reading a new SCOPE element. "
-                    "This is not supported yet";
+      qWarning () << "I'm reading a new SCOPE element. "
+                     "This is not supported yet";
     }
     else if (tokens[0].toLower () == "reference")
     {

@@ -38,20 +38,23 @@ public:
    * \param _element
    * \param _id
    */
-  CreationFailed(QString _element, QString _id) : element(_element), id(_id) { }
-  ~CreationFailed() throw() { }
+  CreationFailed (QString _element, QString _id) : element (_element), id (_id)
+  {
+  }
+  ~CreationFailed () throw () {}
 
-  const char* what() const throw()
+  const char *
+  what () const throw ()
   {
     QString ret = "Entity (" + element + ") with id (" + id + ") could "
-        + "not be created!";
+                  + "not be created!";
 
-    return ret.toStdString().c_str();
+    return ret.toStdString ().c_str ();
   }
 
 private:
   QString element; /*!< TODO */
-  QString id; /*!< TODO */
+  QString id;      /*!< TODO */
 };
 
 /*!
@@ -68,29 +71,29 @@ public:
    \param _element
    \param _id
   */
-  EntityNotFound(const QString &element, const QString &id) :
-    _element(element), _id(id)
+  EntityNotFound (const QString &element, const QString &id)
+      : _element (element), _id (id)
   {
-
   }
 
   /*!
       \brief Destructor.
   */
-  ~EntityNotFound() throw() {}
+  ~EntityNotFound () throw () {}
 
   /*!
     \brief return a description of what the exception represents.
   */
-  const char* what() const throw()
+  const char *
+  what () const throw ()
   {
     QString ret = "Entity (" + _element + ") with id (" + _id + ") not found!";
-    return ret.toStdString().c_str();
+    return ret.toStdString ().c_str ();
   }
 
 private:
   QString _element; /*!< TODO */
-  QString _id; /*!< TODO */
+  QString _id;      /*!< TODO */
 };
 
 /*!
@@ -107,29 +110,32 @@ public:
    * \param parent
    * \param id
    */
-  ParentNotFound( const QString &element, const QString &parent,
-                  const QString &id ) :
-    _element(element), _parent(parent), _id(id) {}
+  ParentNotFound (const QString &element, const QString &parent,
+                  const QString &id)
+      : _element (element), _parent (parent), _id (id)
+  {
+  }
 
   /*!
    * \brief Descriptor
    */
-  ~ParentNotFound() throw() {}
+  ~ParentNotFound () throw () {}
 
   /*!
    * \brief return a description of what the exception represents.
    */
-  const char* what() const throw()
+  const char *
+  what () const throw ()
   {
     QString ret = "Entity (" + _parent + ") parent of " + _element + "(" + _id
-        + ") could not be found!";
-    return ret.toStdString().c_str();
+                  + ") could not be found!";
+    return ret.toStdString ().c_str ();
   }
 
 private:
   QString _element; /*!< TODO */
-  QString _parent; /*!< TODO */
-  QString _id; /*!< TODO */
+  QString _parent;  /*!< TODO */
+  QString _id;      /*!< TODO */
 };
 
 CPR_CORE_END_NAMESPACE

@@ -499,7 +499,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
   {
     qWarning () << "Trying to insert a entity of type " << ent->getType ()
                 << " which is not handled by structural.";
-//    CPR_ASSERT_NOT_REACHED ();
+    //    CPR_ASSERT_NOT_REACHED ();
   }
 }
 

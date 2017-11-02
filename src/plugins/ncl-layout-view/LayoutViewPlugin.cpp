@@ -20,364 +20,374 @@
 #include "LayoutViewPlugin_global.h"
 
 #include <QAbstractButton>
-#include <QPushButton>
-#include <QMessageBox>
 #include <QInputDialog>
+#include <QMessageBox>
+#include <QPushButton>
 #include <QToolBar>
 
-Q_LOGGING_CATEGORY(CPR_PLUGIN_LAYOUT, "cpr.plugin.layout")
+Q_LOGGING_CATEGORY (CPR_PLUGIN_LAYOUT, "cpr.plugin.layout")
 
-NCLLayoutViewPlugin::NCLLayoutViewPlugin(QObject* parent)
+NCLLayoutViewPlugin::NCLLayoutViewPlugin (QObject *parent)
 {
-  setParent(parent);
+  setParent (parent);
 
-  createView();
-  createConnections();
+  createView ();
+  createConnections ();
 
   selectedId = NULL;
 }
 
-NCLLayoutViewPlugin::~NCLLayoutViewPlugin()
+NCLLayoutViewPlugin::~NCLLayoutViewPlugin ()
 {
-  if(selectedId != NULL)
+  if (selectedId != NULL)
     delete selectedId;
-  delete(view);
+  delete (view);
 }
 
-void NCLLayoutViewPlugin::createView()
+void
+NCLLayoutViewPlugin::createView ()
 {
-  mainWindow = new LayoutWindow();
+  mainWindow = new LayoutWindow ();
 
-  view = new LayoutView(mainWindow);
-  mainWindow->setQnlyView(view);
+  view = new LayoutView (mainWindow);
+  mainWindow->setQnlyView (view);
 }
 
-void NCLLayoutViewPlugin::createConnections()
+void
+NCLLayoutViewPlugin::createConnections ()
 {
   /* ADD */
-  connect(view,
-          SIGNAL(regionAdded(QString,QString,QString,QMap<QString,QString>)),
-          SLOT(addRegion(QString,QString,QString,QMap<QString,QString>)));
+  connect (
+      view,
+      SIGNAL (regionAdded (QString, QString, QString, QMap<QString, QString>)),
+      SLOT (addRegion (QString, QString, QString, QMap<QString, QString>)));
 
-  connect(view,
-          SIGNAL(regionBaseAdded(QString,QMap<QString,QString>)),
-          SLOT(addRegionBase(QString,QMap<QString,QString>)));
+  connect (view, SIGNAL (regionBaseAdded (QString, QMap<QString, QString>)),
+           SLOT (addRegionBase (QString, QMap<QString, QString>)));
 
   /* REMOVE */
-  connect(view,
-          SIGNAL(regionRemoved(QString,QString)),
-          SLOT(removeRegion(QString,QString)));
+  connect (view, SIGNAL (regionRemoved (QString, QString)),
+           SLOT (removeRegion (QString, QString)));
 
-  connect(view,
-          SIGNAL(regionBaseRemoved(QString)),
-          SLOT(removeRegionBase(QString)));
+  connect (view, SIGNAL (regionBaseRemoved (QString)),
+           SLOT (removeRegionBase (QString)));
 
   /* CHANGE */
-  connect(view,
-          SIGNAL(regionChanged(QString,QString,QMap<QString,QString>)),
-          SLOT(changeRegion(QString,QString,QMap<QString,QString>)));
+  connect (view,
+           SIGNAL (regionChanged (QString, QString, QMap<QString, QString>)),
+           SLOT (changeRegion (QString, QString, QMap<QString, QString>)));
 
-  connect(view,
-          SIGNAL(regionBaseChanged(QString,QMap<QString,QString>)),
-          SLOT(changeRegionBase(QString,QMap<QString,QString>)));
+  connect (view, SIGNAL (regionBaseChanged (QString, QMap<QString, QString>)),
+           SLOT (changeRegionBase (QString, QMap<QString, QString>)));
 
   /* SELECTION */
-  connect(view,
-          SIGNAL(regionSelected(QString,QString)),
-          SLOT(selectRegion(QString,QString)));
+  connect (view, SIGNAL (regionSelected (QString, QString)),
+           SLOT (selectRegion (QString, QString)));
 
-  connect(view,
-          SIGNAL(regionBaseSelected(QString)),
-          SLOT(selectRegionBase(QString)));
+  connect (view, SIGNAL (regionBaseSelected (QString)),
+           SLOT (selectRegionBase (QString)));
 
-  connect(mainWindow,
-          SIGNAL(regionBaseSelectedFromComboBox(QString)),
-          SLOT(selectRegionBase(QString)));
+  connect (mainWindow, SIGNAL (regionBaseSelectedFromComboBox (QString)),
+           SLOT (selectRegionBase (QString)));
 
-  connect(mainWindow,
-          SIGNAL(createNewRegionBase(QString,QMap<QString,QString>)),
-          SLOT(addRegionBase(QString,QMap<QString,QString>)));
+  connect (mainWindow,
+           SIGNAL (createNewRegionBase (QString, QMap<QString, QString>)),
+           SLOT (addRegionBase (QString, QMap<QString, QString>)));
 
   /* OTHERS */
-  connect(view,
-          SIGNAL(mediaOverRegionAction(QString, QString)),
-          SLOT(performMediaOverRegionAction(QString, QString)));
+  connect (view, SIGNAL (mediaOverRegionAction (QString, QString)),
+           SLOT (performMediaOverRegionAction (QString, QString)));
 }
 
-void NCLLayoutViewPlugin::updateFromModel()
+void
+NCLLayoutViewPlugin::updateFromModel ()
 {
   QRectF previousRect;
   bool isGridVisible = false;
 
-  LayoutRegionBase *currentRegionBase = view->getSelectedRegionBase();
-  if(currentRegionBase != nullptr)
+  LayoutRegionBase *currentRegionBase = view->getSelectedRegionBase ();
+  if (currentRegionBase != nullptr)
   {
-    previousRect = currentRegionBase->sceneRect();
-    isGridVisible = currentRegionBase->isGridVisible();
+    previousRect = currentRegionBase->sceneRect ();
+    isGridVisible = currentRegionBase->isGridVisible ();
   }
 
-  clear();
+  clear ();
 
-  loadRegionbase();
+  loadRegionbase ();
 
-  currentRegionBase = view->getSelectedRegionBase();
-  if(currentRegionBase != nullptr)
+  currentRegionBase = view->getSelectedRegionBase ();
+  if (currentRegionBase != nullptr)
   {
-    currentRegionBase->changeResolution(previousRect.width(),
-                                        previousRect.height());
-    currentRegionBase->setGridVisible(isGridVisible);
+    currentRegionBase->changeResolution (previousRect.width (),
+                                         previousRect.height ());
+    currentRegionBase->setGridVisible (isGridVisible);
   }
 }
 
-void NCLLayoutViewPlugin::loadRegionbase()
+void
+NCLLayoutViewPlugin::loadRegionbase ()
 {
-  QList<Entity*> regionbaseList =
-      getProject()->getEntitiesbyType("regionBase");
+  QList<Entity *> regionbaseList
+      = getProject ()->getEntitiesbyType ("regionBase");
 
-  if (!regionbaseList.isEmpty())
+  if (!regionbaseList.isEmpty ())
   {
-    foreach(Entity* regionbaseEntity, regionbaseList)
+    foreach (Entity *regionbaseEntity, regionbaseList)
     {
-      addRegionBaseToView(regionbaseEntity);
+      addRegionBaseToView (regionbaseEntity);
 
-      QList<Entity*> children = regionbaseEntity->getEntityChildren ();
+      QList<Entity *> children = regionbaseEntity->getEntityChildren ();
 
-      foreach(Entity* child, children)
+      foreach (Entity *child, children)
       {
-        loadRegion(child);
+        loadRegion (child);
       }
     }
   }
 }
 
-void NCLLayoutViewPlugin::loadRegion(Entity* region)
+void
+NCLLayoutViewPlugin::loadRegion (Entity *region)
 {
   if (region != NULL)
   {
-    addRegionToView(region);
+    addRegionToView (region);
 
-    foreach(Entity* child, region->getEntityChildren ())
+    foreach (Entity *child, region->getEntityChildren ())
     {
-      loadRegion(child);
+      loadRegion (child);
     }
   }
 }
 
-QWidget* NCLLayoutViewPlugin::getWidget()
+QWidget *
+NCLLayoutViewPlugin::getWidget ()
 {
   return mainWindow;
 }
 
-bool NCLLayoutViewPlugin::saveSubsession()
+bool
+NCLLayoutViewPlugin::saveSubsession ()
 {
   QByteArray data;
   QString line;
-  QVariant gridVisible(QVariant::Bool),
-      resolutionWidth(QVariant::Int),
-      resolutionHeight(QVariant::Int);
+  QVariant gridVisible (QVariant::Bool), resolutionWidth (QVariant::Int),
+      resolutionHeight (QVariant::Int);
 
-  if(view->getSelectedRegionBase() != NULL)
+  if (view->getSelectedRegionBase () != NULL)
   {
-    gridVisible.setValue(
-          view->getSelectedRegionBase()->isGridVisible());
-    resolutionWidth.setValue(
-          view->getSelectedRegionBase()->sceneRect().width());
-    resolutionHeight.setValue(
-          view->getSelectedRegionBase()->sceneRect().height());
+    gridVisible.setValue (view->getSelectedRegionBase ()->isGridVisible ());
+    resolutionWidth.setValue (
+        view->getSelectedRegionBase ()->sceneRect ().width ());
+    resolutionHeight.setValue (
+        view->getSelectedRegionBase ()->sceneRect ().height ());
   }
   else
   {
-    gridVisible.setValue(false);
-    resolutionWidth.setValue(0);
-    resolutionHeight.setValue(0);
+    gridVisible.setValue (false);
+    resolutionWidth.setValue (0);
+    resolutionHeight.setValue (0);
   }
 
-  line += QString("gridVisible=") + gridVisible.toString() + "\n";
-  line += QString("resolutionWidth=") + resolutionWidth.toString() + "\n";
-  line += QString("resolutionHeight=") + resolutionHeight.toString() + "\n";
-  data.append(line);
+  line += QString ("gridVisible=") + gridVisible.toString () + "\n";
+  line += QString ("resolutionWidth=") + resolutionWidth.toString () + "\n";
+  line += QString ("resolutionHeight=") + resolutionHeight.toString () + "\n";
+  data.append (line);
 
-  emit setPluginData(data);
+  emit setPluginData (data);
 
   return true;
 }
 
-void NCLLayoutViewPlugin::init()
+void
+NCLLayoutViewPlugin::init ()
 {
   // \todo Load specific contents.
-  QString data = project->getPluginData("br.puc-rio.telemidia.qncllayout");
-  QStringList lines = data.split("\n");
+  QString data = project->getPluginData ("br.puc-rio.telemidia.qncllayout");
+  QStringList lines = data.split ("\n");
 
   bool gridVisible = false, ok = true;
   int resolutionWidth = 0, resolutionHeight = 0;
 
-  for(int i = 0; i < lines.size(); i++)
+  for (int i = 0; i < lines.size (); i++)
   {
-    QStringList list = lines[i].split("=");
-    for(int j = 0; !(list.size()%2) && j < list.size(); j += 2)
+    QStringList list = lines[i].split ("=");
+    for (int j = 0; !(list.size () % 2) && j < list.size (); j += 2)
     {
       QString key = list[j];
-      QString value = list[j+1];
-      if(key == "gridVisible")
+      QString value = list[j + 1];
+      if (key == "gridVisible")
       {
-        if(value == "true")
+        if (value == "true")
           gridVisible = true;
       }
-      else if(key == "resolutionWidth")
+      else if (key == "resolutionWidth")
       {
-        resolutionWidth = value.toInt(&ok);
-        if(!ok) resolutionWidth = 0;
+        resolutionWidth = value.toInt (&ok);
+        if (!ok)
+          resolutionWidth = 0;
       }
-      else if(key == "resolutionHeight")
+      else if (key == "resolutionHeight")
       {
-        resolutionHeight = value.toInt(&ok);
-        if(!ok) resolutionHeight = 0;
+        resolutionHeight = value.toInt (&ok);
+        if (!ok)
+          resolutionHeight = 0;
       }
     }
   }
 
   // Update layout model from core model.
-  QStack <Entity*> stack;
-  stack.push(project);
+  QStack<Entity *> stack;
+  stack.push (project);
 
-  while(stack.size())
+  while (stack.size ())
   {
-    Entity *current = stack.top();
-    stack.pop();
+    Entity *current = stack.top ();
+    stack.pop ();
 
-    if(current->getType() == "regionBase")
+    if (current->getType () == "regionBase")
     {
-      addRegionBaseToView(current);
+      addRegionBaseToView (current);
 
       // \todo In the future we should support saving individual
       // resolutions foreach regionBase
-      if (view->getSelectedRegion())
-        view->getSelectedRegionBase()->changeResolution(resolutionWidth, resolutionHeight);
+      if (view->getSelectedRegion ())
+        view->getSelectedRegionBase ()->changeResolution (resolutionWidth,
+                                                          resolutionHeight);
     }
-    else if(current->getType() == "region")
+    else if (current->getType () == "region")
     {
-      addRegionToView(current);
+      addRegionToView (current);
     }
 
     foreach (Entity *child, current->getEntityChildren ())
     {
-      stack.push(child);
+      stack.push (child);
     }
   }
 
-  view->setGridVisible(gridVisible);
+  view->setGridVisible (gridVisible);
 }
 
-void NCLLayoutViewPlugin::errorMessage(const QString &error)
+void
+NCLLayoutViewPlugin::errorMessage (const QString &error)
 {
-  Q_UNUSED(error)
-  //TODO: void QnlyComposerPlugin::errorMessage(QString error)
+  Q_UNUSED (error)
+  // TODO: void QnlyComposerPlugin::errorMessage(QString error)
 }
 
-void NCLLayoutViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
+void
+NCLLayoutViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
 {
-  Q_UNUSED(pluginID)
+  Q_UNUSED (pluginID)
 
   if (entity != NULL)
   {
-    if (entity->getType() == "region")
+    if (entity->getType () == "region")
     {
-      addRegionToView(entity);
-      updateDescriptors();
+      addRegionToView (entity);
+      updateDescriptors ();
     }
-    else if (entity->getType() == "regionBase")
+    else if (entity->getType () == "regionBase")
     {
-      addRegionBaseToView(entity);
+      addRegionBaseToView (entity);
     }
-    else if (entity->getType() == "descriptor")
+    else if (entity->getType () == "descriptor")
     {
-      addDescriptorToView(entity);
-      updateDescriptors();
+      addDescriptorToView (entity);
+      updateDescriptors ();
     }
   }
 }
 
-void NCLLayoutViewPlugin::onEntityRemoved( const QString &pluginID,
-                                           const QString &entityID )
+void
+NCLLayoutViewPlugin::onEntityRemoved (const QString &pluginID,
+                                      const QString &entityID)
 {
-  Q_UNUSED(pluginID)
+  Q_UNUSED (pluginID)
 
-  if (!entityID.isEmpty())
+  if (!entityID.isEmpty ())
   {
-    if (regions.contains(entityID))
+    if (regions.contains (entityID))
     {
-      removeRegionFromView(entityID);
+      removeRegionFromView (entityID);
     }
-    else if (regionbases.contains(entityID))
+    else if (regionbases.contains (entityID))
     {
-      removeRegionBaseFromView(entityID);
+      removeRegionBaseFromView (entityID);
     }
-    else if (descriptors.contains(entityID))
+    else if (descriptors.contains (entityID))
     {
-      removeDescriptorFromView(entityID);
-      updateDescriptors();
+      removeDescriptorFromView (entityID);
+      updateDescriptors ();
     }
   }
 }
 
-void NCLLayoutViewPlugin::onEntityChanged(const QString &pluginID, Entity *entity)
+void
+NCLLayoutViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
 {
-  Q_UNUSED(pluginID)
+  Q_UNUSED (pluginID)
 
   if (entity != NULL)
   {
-    if (entity->getType() == "region")
+    if (entity->getType () == "region")
     {
-      changeRegionInView(entity);
-      updateDescriptors();
+      changeRegionInView (entity);
+      updateDescriptors ();
     }
-    else if (entity->getType() == "regionBase")
+    else if (entity->getType () == "regionBase")
     {
-      changeRegionBaseInView(entity);
+      changeRegionBaseInView (entity);
     }
-    else if (entity->getType() == "descriptor")
+    else if (entity->getType () == "descriptor")
     {
-      addDescriptorToView(entity);
-      updateDescriptors();
+      addDescriptorToView (entity);
+      updateDescriptors ();
     }
   }
 }
 
-void NCLLayoutViewPlugin::changeSelectedEntity (const QString &pluginID, void* param)
+void
+NCLLayoutViewPlugin::changeSelectedEntity (const QString &pluginID,
+                                           void *param)
 {
-  Q_UNUSED(pluginID)
+  Q_UNUSED (pluginID)
 
-  //if(pluginID != this->pluginInstanceID)
+  // if(pluginID != this->pluginInstanceID)
   // {
-  QString* entityUID = (QString*) param;
+  QString *entityUID = (QString *)param;
 
-  if(entityUID != NULL)
+  if (entityUID != NULL)
   {
-    if (regions.contains(*entityUID))
-      selectRegionInView(*entityUID);
-    else if (regionbases.contains(*entityUID))
-      selectRegionBaseInView(*entityUID);
+    if (regions.contains (*entityUID))
+      selectRegionInView (*entityUID);
+    else if (regionbases.contains (*entityUID))
+      selectRegionBaseInView (*entityUID);
   }
   // }
 }
 
-void NCLLayoutViewPlugin::addRegionToView(Entity* entity)
+void
+NCLLayoutViewPlugin::addRegionToView (Entity *entity)
 {
   if (entity != NULL)
   {
-    if (entity->getType() == "region")
+    if (entity->getType () == "region")
     {
       // setting
       QString entityUID;
 
-      if (!entity->getUniqueId().isEmpty())
+      if (!entity->getUniqueId ().isEmpty ())
       {
-        entityUID = entity->getUniqueId();
+        entityUID = entity->getUniqueId ();
       }
       else
       {
-        qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::addRegion:"
-                   << "Tried to add a region with empty UID.";
+        qCWarning (CPR_PLUGIN_LAYOUT)
+            << "QnlyComposerPlugin::addRegion:"
+            << "Tried to add a region with empty UID.";
 
         return; // abort addition
       }
@@ -386,9 +396,9 @@ void NCLLayoutViewPlugin::addRegionToView(Entity* entity)
 
       QString parentUID;
 
-      if (regions.contains(entity->getParentUniqueId()))
+      if (regions.contains (entity->getParentUniqueId ()))
       {
-        parentUID = entity->getParentUniqueId();
+        parentUID = entity->getParentUniqueId ();
       }
       else
       {
@@ -397,67 +407,68 @@ void NCLLayoutViewPlugin::addRegionToView(Entity* entity)
 
       QString regionbaseUID;
 
-      if (regions.contains(parentUID))
+      if (regions.contains (parentUID))
       {
         regionbaseUID = relations[parentUID];
       }
-      else if (regionbases.contains(entity->getParentUniqueId()))
+      else if (regionbases.contains (entity->getParentUniqueId ()))
       {
-        regionbaseUID = entity->getParentUniqueId();
+        regionbaseUID = entity->getParentUniqueId ();
       }
       else
       {
-        qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::addRegion:"
-                   << "Tried to add a region without regionbase UID.";
+        qCWarning (CPR_PLUGIN_LAYOUT)
+            << "QnlyComposerPlugin::addRegion:"
+            << "Tried to add a region without regionbase UID.";
 
         return; // abort addition
       }
 
       QMap<QString, QString> attributes;
 
-      if (!entity->getAttr("id").isEmpty())
+      if (!entity->getAttr ("id").isEmpty ())
       {
-        attributes["id"] =  entity->getAttr("id");
+        attributes["id"] = entity->getAttr ("id");
       }
 
-      if (!entity->getAttr("title").isEmpty())
+      if (!entity->getAttr ("title").isEmpty ())
       {
-        attributes["title"] =  entity->getAttr("title");
+        attributes["title"] = entity->getAttr ("title");
       }
 
-      if (!entity->getAttr("zIndex").isEmpty())
+      if (!entity->getAttr ("zIndex").isEmpty ())
       {
-        attributes["zIndex"] =  entity->getAttr("zIndex");
+        attributes["zIndex"] = entity->getAttr ("zIndex");
       }
 
-      if (!entity->getAttr("top").isEmpty())
+      if (!entity->getAttr ("top").isEmpty ())
       {
-        attributes["top"] =  entity->getAttr("top");
+        attributes["top"] = entity->getAttr ("top");
       }
 
-      if (!entity->getAttr("left").isEmpty())
+      if (!entity->getAttr ("left").isEmpty ())
       {
-        attributes["left"] =  entity->getAttr("left");
+        attributes["left"] = entity->getAttr ("left");
       }
 
-      if (!entity->getAttr("bottom").isEmpty())
+      if (!entity->getAttr ("bottom").isEmpty ())
       {
-        attributes["bottom"] =  entity->getAttr("bottom");
+        attributes["bottom"] = entity->getAttr ("bottom");
       }
 
-      if (!entity->getAttr("right").isEmpty())
+      if (!entity->getAttr ("right").isEmpty ())
       {
-        attributes["right"] =  entity->getAttr("right");
+        attributes["right"] = entity->getAttr ("right");
       }
 
-      if (!entity->getAttr("width").isEmpty())
+      if (!entity->getAttr ("width").isEmpty ())
       {
-        attributes["width"] =  entity->getAttr("width");
+        attributes["width"] = entity->getAttr ("width");
       }
 
-      if (!entity->getAttr("height").isEmpty())
+      if (!entity->getAttr ("height").isEmpty ())
       {
-        attributes["height"] =  entity->getAttr("height");
+        attributes["height"] = entity->getAttr ("height");
       }
 
       // adding
@@ -465,19 +476,17 @@ void NCLLayoutViewPlugin::addRegionToView(Entity* entity)
 
       relations[regionUID] = regionbaseUID;
 
-      view->addRegion(regionUID,
-                      parentUID,
-                      regionbaseUID,
-                      attributes);
+      view->addRegion (regionUID, parentUID, regionbaseUID, attributes);
     }
   }
 }
 
-void NCLLayoutViewPlugin::removeRegionFromView(QString entityUID)
+void
+NCLLayoutViewPlugin::removeRegionFromView (QString entityUID)
 {
-  if (!entityUID.isEmpty())
+  if (!entityUID.isEmpty ())
   {
-    if (regions.contains(entityUID))
+    if (regions.contains (entityUID))
     {
       // setting
       QString regionUID;
@@ -486,46 +495,48 @@ void NCLLayoutViewPlugin::removeRegionFromView(QString entityUID)
 
       QString regionbaseUID;
 
-      if (relations.contains(regionUID))
+      if (relations.contains (regionUID))
       {
         regionbaseUID = relations[regionUID];
       }
       else
       {
         qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::removeRegion:"
-                   << "Tried to remove a region without"
-                   << "regionbase UID.";
+                                      << "Tried to remove a region without"
+                                      << "regionbase UID.";
 
         return; // abort remotion
       }
 
-      regions.remove(regionUID);
+      regions.remove (regionUID);
 
-      relations.remove(entityUID);
+      relations.remove (entityUID);
 
       // removing
-      view->removeRegion(regionUID, regionbaseUID);
+      view->removeRegion (regionUID, regionbaseUID);
     }
   }
 }
 
-void NCLLayoutViewPlugin::changeRegionInView(Entity* entity)
+void
+NCLLayoutViewPlugin::changeRegionInView (Entity *entity)
 {
   if (entity != NULL)
   {
-    if (entity->getType() == "region")
+    if (entity->getType () == "region")
     {
       // setting
       QString entityUID;
 
-      if (!entity->getUniqueId().isEmpty())
+      if (!entity->getUniqueId ().isEmpty ())
       {
-        entityUID = entity->getUniqueId();
+        entityUID = entity->getUniqueId ();
       }
       else
       {
-        qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::addRegion:"
-                   << "Tried to add an region with empty UID.";
+        qCWarning (CPR_PLUGIN_LAYOUT)
+            << "QnlyComposerPlugin::addRegion:"
+            << "Tried to add an region with empty UID.";
 
         return; // abort addition
       }
@@ -536,9 +547,9 @@ void NCLLayoutViewPlugin::changeRegionInView(Entity* entity)
 
       QString parentUID;
 
-      if (regions.contains(entity->getParentUniqueId()))
+      if (regions.contains (entity->getParentUniqueId ()))
       {
-        parentUID = entity->getParentUniqueId();
+        parentUID = entity->getParentUniqueId ();
       }
       else
       {
@@ -547,85 +558,82 @@ void NCLLayoutViewPlugin::changeRegionInView(Entity* entity)
 
       QString regionbaseUID;
 
-      if (regions.contains(parentUID))
+      if (regions.contains (parentUID))
       {
         regionbaseUID = relations[parentUID];
-
       }
-      else if (regionbases.contains(entity->getParentUniqueId()))
+      else if (regionbases.contains (entity->getParentUniqueId ()))
       {
-        regionbaseUID = entity->getParentUniqueId();
-
+        regionbaseUID = entity->getParentUniqueId ();
       }
       else
       {
         qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::addRegion:"
-                   << "Tried to add an region without"
-                   << "regionbase UID.";
+                                      << "Tried to add an region without"
+                                      << "regionbase UID.";
 
         return; // abort addition
       }
 
       QMap<QString, QString> attributes;
 
-      if (!entity->getAttr("id").isEmpty())
+      if (!entity->getAttr ("id").isEmpty ())
       {
-        attributes["id"] =  entity->getAttr("id");
+        attributes["id"] = entity->getAttr ("id");
       }
 
-      if (!entity->getAttr("title").isEmpty())
+      if (!entity->getAttr ("title").isEmpty ())
       {
-        attributes["title"] =  entity->getAttr("title");
+        attributes["title"] = entity->getAttr ("title");
       }
 
-      if (!entity->getAttr("zIndex").isEmpty())
+      if (!entity->getAttr ("zIndex").isEmpty ())
       {
-        attributes["zIndex"] =  entity->getAttr("zIndex");
+        attributes["zIndex"] = entity->getAttr ("zIndex");
       }
 
-      if (!entity->getAttr("top").isEmpty())
+      if (!entity->getAttr ("top").isEmpty ())
       {
-        attributes["top"] =  entity->getAttr("top");
+        attributes["top"] = entity->getAttr ("top");
       }
 
-      if (!entity->getAttr("left").isEmpty())
+      if (!entity->getAttr ("left").isEmpty ())
       {
-        attributes["left"] =  entity->getAttr("left");
+        attributes["left"] = entity->getAttr ("left");
       }
 
-      if (!entity->getAttr("bottom").isEmpty())
+      if (!entity->getAttr ("bottom").isEmpty ())
       {
-        attributes["bottom"] =  entity->getAttr("bottom");
+        attributes["bottom"] = entity->getAttr ("bottom");
       }
 
-      if (!entity->getAttr("right").isEmpty())
+      if (!entity->getAttr ("right").isEmpty ())
       {
-        attributes["right"] =  entity->getAttr("right");
+        attributes["right"] = entity->getAttr ("right");
       }
 
-      if (!entity->getAttr("width").isEmpty())
+      if (!entity->getAttr ("width").isEmpty ())
       {
-        attributes["width"] =  entity->getAttr("width");
+        attributes["width"] = entity->getAttr ("width");
       }
 
-      if (!entity->getAttr("height").isEmpty())
+      if (!entity->getAttr ("height").isEmpty ())
       {
-        attributes["height"] =  entity->getAttr("height");
+        attributes["height"] = entity->getAttr ("height");
       }
 
       // change
-      view->changeRegion(regionUID,
-                         regionbaseUID,
-                         attributes);
+      view->changeRegion (regionUID, regionbaseUID, attributes);
     }
   }
 }
 
-void NCLLayoutViewPlugin::selectRegionInView(QString entityUID)
+void
+NCLLayoutViewPlugin::selectRegionInView (QString entityUID)
 {
-  if (!entityUID.isEmpty())
+  if (!entityUID.isEmpty ())
   {
-    if (regions.contains(entityUID))
+    if (regions.contains (entityUID))
     {
       // setting
       QString regionUID;
@@ -634,42 +642,44 @@ void NCLLayoutViewPlugin::selectRegionInView(QString entityUID)
 
       QString regionbaseUID;
 
-      if (relations.contains(regionUID))
+      if (relations.contains (regionUID))
       {
         regionbaseUID = relations[regionUID];
       }
       else
       {
         qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::selectRegion:"
-                   << "Tried to select a region without"
-                   << "regionbase UID.";
+                                      << "Tried to select a region without"
+                                      << "regionbase UID.";
 
         return; // abort remotion
       }
 
       // select
-      view->selectRegion(regionUID, regionbaseUID);
+      view->selectRegion (regionUID, regionbaseUID);
     }
   }
 }
 
-void NCLLayoutViewPlugin::addRegionBaseToView(Entity* entity)
+void
+NCLLayoutViewPlugin::addRegionBaseToView (Entity *entity)
 {
   if (entity != NULL)
   {
-    if (entity->getType() == "regionBase")
+    if (entity->getType () == "regionBase")
     {
       // setting
       QString entityUID;
 
-      if (!entity->getUniqueId().isEmpty())
+      if (!entity->getUniqueId ().isEmpty ())
       {
-        entityUID = entity->getUniqueId();
+        entityUID = entity->getUniqueId ();
       }
       else
       {
-        qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::addRegion:"
-                   << "Tried to add a region with empty UID.";
+        qCWarning (CPR_PLUGIN_LAYOUT)
+            << "QnlyComposerPlugin::addRegion:"
+            << "Tried to add a region with empty UID.";
 
         return; // abort addition
       }
@@ -680,36 +690,37 @@ void NCLLayoutViewPlugin::addRegionBaseToView(Entity* entity)
 
       QMap<QString, QString> attributes;
 
-      if (!entity->getAttr("id").isEmpty())
+      if (!entity->getAttr ("id").isEmpty ())
       {
-        attributes["id"] =  entity->getAttr("id");
+        attributes["id"] = entity->getAttr ("id");
       }
 
-      if (!entity->getAttr("region").isEmpty())
+      if (!entity->getAttr ("region").isEmpty ())
       {
-        attributes["region"] =  entity->getAttr("region");
+        attributes["region"] = entity->getAttr ("region");
       }
 
-      if (!entity->getAttr("device").isEmpty())
+      if (!entity->getAttr ("device").isEmpty ())
       {
-        attributes["device"] =  entity->getAttr("device");
+        attributes["device"] = entity->getAttr ("device");
       }
 
       // adding
       regionbases[regionbaseUID] = entity;
 
-      view->addRegionBase(regionbaseUID, attributes);
-      mainWindow->addRegionBaseToCombobox(regionbaseUID, attributes);
-      mainWindow->selectRegionBaseInComboBox(regionbaseUID);
+      view->addRegionBase (regionbaseUID, attributes);
+      mainWindow->addRegionBaseToCombobox (regionbaseUID, attributes);
+      mainWindow->selectRegionBaseInComboBox (regionbaseUID);
     }
   }
 }
 
-void NCLLayoutViewPlugin::removeRegionBaseFromView(QString entityUID)
+void
+NCLLayoutViewPlugin::removeRegionBaseFromView (QString entityUID)
 {
-  if (!entityUID.isEmpty())
+  if (!entityUID.isEmpty ())
   {
-    if (regionbases.contains(entityUID))
+    if (regionbases.contains (entityUID))
     {
       // setting
       QString regionbaseUID;
@@ -717,34 +728,36 @@ void NCLLayoutViewPlugin::removeRegionBaseFromView(QString entityUID)
       regionbaseUID = entityUID;
 
       // select
-      view->removeRegionBase(regionbaseUID);
+      view->removeRegionBase (regionbaseUID);
 
-      regionbases.remove(regionbaseUID);
+      regionbases.remove (regionbaseUID);
 
-      relations.remove(entityUID);
+      relations.remove (entityUID);
 
-      mainWindow->removeRegionBaseFromCombobox(regionbaseUID);
+      mainWindow->removeRegionBaseFromCombobox (regionbaseUID);
     }
   }
 }
 
-void NCLLayoutViewPlugin::changeRegionBaseInView(Entity* entity)
+void
+NCLLayoutViewPlugin::changeRegionBaseInView (Entity *entity)
 {
   if (entity != NULL)
   {
-    if (entity->getType() == "regionBase")
+    if (entity->getType () == "regionBase")
     {
       // setting
       QString entityUID;
 
-      if (!entity->getUniqueId().isEmpty())
+      if (!entity->getUniqueId ().isEmpty ())
       {
-        entityUID = entity->getUniqueId();
+        entityUID = entity->getUniqueId ();
       }
       else
       {
-        qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::addRegion:"
-                   << "Tried to add a region with empty UID.";
+        qCWarning (CPR_PLUGIN_LAYOUT)
+            << "QnlyComposerPlugin::addRegion:"
+            << "Tried to add a region with empty UID.";
         return; // abort addition
       }
 
@@ -753,37 +766,37 @@ void NCLLayoutViewPlugin::changeRegionBaseInView(Entity* entity)
 
       QMap<QString, QString> attributes;
 
-      if (!entity->getAttr("id").isEmpty())
+      if (!entity->getAttr ("id").isEmpty ())
       {
-        attributes["id"] =  entity->getAttr("id");
+        attributes["id"] = entity->getAttr ("id");
       }
 
-      if (!entity->getAttr("region").isEmpty())
+      if (!entity->getAttr ("region").isEmpty ())
       {
-        attributes["region"] =  entity->getAttr("region");
+        attributes["region"] = entity->getAttr ("region");
       }
 
-      if (!entity->getAttr("device").isEmpty())
+      if (!entity->getAttr ("device").isEmpty ())
       {
-        attributes["device"] =  entity->getAttr("device");
+        attributes["device"] = entity->getAttr ("device");
       }
 
       // adding
       regionbases[regionbaseUID] = entity;
 
-      view->changeRegionBase(regionbaseUID,
-                             attributes);
+      view->changeRegionBase (regionbaseUID, attributes);
 
-      mainWindow->updateRegionBaseInComboBox(regionbaseUID, attributes);
+      mainWindow->updateRegionBaseInComboBox (regionbaseUID, attributes);
     }
   }
 }
 
-void NCLLayoutViewPlugin::selectRegionBaseInView(QString entityUID)
+void
+NCLLayoutViewPlugin::selectRegionBaseInView (QString entityUID)
 {
-  if (!entityUID.isEmpty())
+  if (!entityUID.isEmpty ())
   {
-    if (regionbases.contains(entityUID))
+    if (regionbases.contains (entityUID))
     {
       // setting
       QString regionbaseUID;
@@ -791,23 +804,26 @@ void NCLLayoutViewPlugin::selectRegionBaseInView(QString entityUID)
       regionbaseUID = entityUID;
 
       // select
-      view->selectRegionBase(regionbaseUID);
+      view->selectRegionBase (regionbaseUID);
 
-      mainWindow->selectRegionBaseInComboBox(regionbaseUID);
+      mainWindow->selectRegionBaseInComboBox (regionbaseUID);
     }
   }
 }
 
-void NCLLayoutViewPlugin::addDescriptorToView(Entity* entity)
+void
+NCLLayoutViewPlugin::addDescriptorToView (Entity *entity)
 {
   if (entity != NULL)
   {
-    if (entity->getType() == "descriptor" && !entity->getAttr("id").isEmpty() && !entity->getAttr("region").isEmpty())
+    if (entity->getType () == "descriptor"
+        && !entity->getAttr ("id").isEmpty ()
+        && !entity->getAttr ("region").isEmpty ())
     {
-      //QList<Entity*> model_regions = project->getEntitiesbyType("region");
+      // QList<Entity*> model_regions = project->getEntitiesbyType("region");
       QMap<QString, QString> descriptorsIDs;
-      descriptorsIDs[entity->getAttr("region")] = entity->getAttr("id");
-      descriptors[entity->getUniqueId()] = descriptorsIDs;
+      descriptorsIDs[entity->getAttr ("region")] = entity->getAttr ("id");
+      descriptors[entity->getUniqueId ()] = descriptorsIDs;
       /*
       for(Entity *rg : regions.values())
       {
@@ -816,14 +832,15 @@ void NCLLayoutViewPlugin::addDescriptorToView(Entity* entity)
           view->addDescriptor(rg->getUniqueId(),entity->getAttr("id"));
         }
       }
-      */ //is this step done twice if updateDescriptors is after add?
+      */ // is this step done twice if updateDescriptors is after add?
     }
   }
 }
 
-void NCLLayoutViewPlugin::removeDescriptorFromView(const QString &entityUID)
+void
+NCLLayoutViewPlugin::removeDescriptorFromView (const QString &entityUID)
 {
-  if(descriptors.contains(entityUID))
+  if (descriptors.contains (entityUID))
   {
     /*
     for(Entity *rg : regions.values())
@@ -832,295 +849,306 @@ void NCLLayoutViewPlugin::removeDescriptorFromView(const QString &entityUID)
       {
         view->addDescriptor(rg->getUniqueId(),"");// remove descriptor id from view, passing ""
       }
-    }*/ //done twice if used before updateDescriptors?
-    descriptors.remove(entityUID);
+    }*/ // done twice if used before updateDescriptors?
+    descriptors.remove (entityUID);
   }
 }
 
-void NCLLayoutViewPlugin::updateDescriptors()
+void
+NCLLayoutViewPlugin::updateDescriptors ()
 {
-  for(Entity *rg : regions.values())
+  for (Entity *rg : regions.values ())
   {
     bool visited = false;
-    for(QMap<QString,QString> descriptorsID : descriptors.values())
+    for (QMap<QString, QString> descriptorsID : descriptors.values ())
     {
-      if(descriptorsID.contains(rg->getAttr("id")) )
+      if (descriptorsID.contains (rg->getAttr ("id")))
       {
-        view->addDescriptor(rg->getUniqueId(),descriptorsID.value(rg->getAttr("id")));
+        view->addDescriptor (rg->getUniqueId (),
+                             descriptorsID.value (rg->getAttr ("id")));
         visited = true;
       }
     }
-    if(!visited)
+    if (!visited)
     {
-      view->addDescriptor(rg->getUniqueId(),"");// remove descriptor id from view, passing ""
+      view->addDescriptor (rg->getUniqueId (),
+                           ""); // remove descriptor id from view, passing ""
     }
   }
 }
 
-void NCLLayoutViewPlugin::addRegion(const QString &regionUID,
-                                    const QString &parentUID,
-                                    const QString &regionbaseUID,
-                                    const QMap<QString, QString> &attributes)
+void
+NCLLayoutViewPlugin::addRegion (const QString &regionUID,
+                                const QString &parentUID,
+                                const QString &regionbaseUID,
+                                const QMap<QString, QString> &attributes)
 {
-  Q_UNUSED(regionUID)
+  Q_UNUSED (regionUID)
 
   // setting
   QMap<QString, QString> standard;
 
-  if (attributes.contains("id"))
+  if (attributes.contains ("id"))
     standard["id"] = attributes["id"];
   else
-    standard["id"] = project->generateUniqueAttrId("region");
+    standard["id"] = project->generateUniqueAttrId ("region");
 
-  if (attributes.contains("title"))
+  if (attributes.contains ("title"))
     standard["title"] = attributes["title"];
 
-  if (attributes.contains("top"))
+  if (attributes.contains ("top"))
     standard["top"] = attributes["top"];
 
-  if (attributes.contains("left"))
+  if (attributes.contains ("left"))
     standard["left"] = attributes["left"];
 
-  if (attributes.contains("bottom"))
+  if (attributes.contains ("bottom"))
     standard["bottom"] = attributes["bottom"];
 
-  if (attributes.contains("right"))
+  if (attributes.contains ("right"))
     standard["right"] = attributes["right"];
 
-  if (attributes.contains("width"))
+  if (attributes.contains ("width"))
     standard["width"] = attributes["width"];
 
-  if (attributes.contains("height"))
+  if (attributes.contains ("height"))
     standard["height"] = attributes["height"];
 
-  if (attributes.contains("zIndex"))
+  if (attributes.contains ("zIndex"))
     standard["zIndex"] = attributes["zIndex"];
 
   // emitting
-  if (!parentUID.isEmpty())
-    emit addEntity("region", parentUID, standard);
+  if (!parentUID.isEmpty ())
+    emit addEntity ("region", parentUID, standard);
   else
-    emit addEntity("region", regionbaseUID, standard);
+    emit addEntity ("region", regionbaseUID, standard);
 }
 
-void NCLLayoutViewPlugin::removeRegion(const QString &regionUID,
-                                       const QString &regionbaseUID)
+void
+NCLLayoutViewPlugin::removeRegion (const QString &regionUID,
+                                   const QString &regionbaseUID)
 {
-  Q_UNUSED(regionbaseUID)
+  Q_UNUSED (regionbaseUID)
 
-  if (regions.contains(regionUID))
+  if (regions.contains (regionUID))
   {
-    emit removeEntity(regions[regionUID]);
+    emit removeEntity (regions[regionUID]);
   }
 }
 
-void NCLLayoutViewPlugin::changeRegion(const QString &regionUID,
-                                       const QString &regionbaseUID,
-                                       const QMap<QString, QString> &attributes)
+void
+NCLLayoutViewPlugin::changeRegion (const QString &regionUID,
+                                   const QString &regionbaseUID,
+                                   const QMap<QString, QString> &attributes)
 {
-  Q_UNUSED(regionbaseUID)
+  Q_UNUSED (regionbaseUID)
 
-  if (regions.contains(regionUID))
+  if (regions.contains (regionUID))
   {
     // setting
     QMap<QString, QString> standard;
 
-    if (attributes.contains("id"))
+    if (attributes.contains ("id"))
       standard["id"] = attributes["id"];
 
-    if (attributes.contains("title"))
+    if (attributes.contains ("title"))
       standard["title"] = attributes["title"];
 
-    if (attributes.contains("top"))
+    if (attributes.contains ("top"))
       standard["top"] = attributes["top"];
 
-    if (attributes.contains("left"))
+    if (attributes.contains ("left"))
       standard["left"] = attributes["left"];
 
-    if (attributes.contains("bottom"))
+    if (attributes.contains ("bottom"))
       standard["bottom"] = attributes["bottom"];
 
-    if (attributes.contains("right"))
+    if (attributes.contains ("right"))
       standard["right"] = attributes["right"];
 
-    if (attributes.contains("width"))
+    if (attributes.contains ("width"))
       standard["width"] = attributes["width"];
 
-    if (attributes.contains("height"))
+    if (attributes.contains ("height"))
       standard["height"] = attributes["height"];
 
-    if (attributes.contains("zIndex"))
+    if (attributes.contains ("zIndex"))
       standard["zIndex"] = attributes["zIndex"];
 
     // emitting
-    emit setAttributes(regions[regionUID], standard);
+    emit setAttributes (regions[regionUID], standard);
   }
 }
 
-void NCLLayoutViewPlugin::selectRegion(const QString &regionUID,
-                                       const QString &regionbaseUID)
+void
+NCLLayoutViewPlugin::selectRegion (const QString &regionUID,
+                                   const QString &regionbaseUID)
 {
-  Q_UNUSED(regionbaseUID)
+  Q_UNUSED (regionbaseUID)
 
-  if(selectedId != NULL)
+  if (selectedId != NULL)
   {
     delete selectedId;
     selectedId = NULL;
   }
 
-  if (!regionUID.isEmpty())
+  if (!regionUID.isEmpty ())
   {
-    selectedId = new QString(regionUID);
-    emit sendBroadcastMessage("changeSelectedEntity", selectedId);
+    selectedId = new QString (regionUID);
+    emit sendBroadcastMessage ("changeSelectedEntity", selectedId);
   }
 }
 
-void NCLLayoutViewPlugin::addRegionBase(const QString &regionbaseUID,
-                                        const QMap<QString, QString> &attributes)
+void
+NCLLayoutViewPlugin::addRegionBase (const QString &regionbaseUID,
+                                    const QMap<QString, QString> &attributes)
 {
-  Q_UNUSED(regionbaseUID)
+  Q_UNUSED (regionbaseUID)
 
   // setting
   QMap<QString, QString> standard;
 
-  if (attributes.contains("id"))
+  if (attributes.contains ("id"))
     standard["id"] = attributes["id"];
 
-  if (attributes.contains("region"))
+  if (attributes.contains ("region"))
     standard["region"] = attributes["region"];
 
-  if (attributes.contains("device"))
+  if (attributes.contains ("device"))
     standard["device"] = attributes["device"];
 
-  QString headUID = getHeadUid();
+  QString headUID = getHeadUid ();
   // emitting
-  emit addEntity("regionBase", headUID, standard);
+  emit addEntity ("regionBase", headUID, standard);
 }
 
-void NCLLayoutViewPlugin::removeRegionBase(const QString &regionbaseUID)
+void
+NCLLayoutViewPlugin::removeRegionBase (const QString &regionbaseUID)
 {
-  if (regionbases.contains(regionbaseUID))
+  if (regionbases.contains (regionbaseUID))
   {
-    mainWindow->removeRegionBaseFromCombobox(regionbaseUID);
+    mainWindow->removeRegionBaseFromCombobox (regionbaseUID);
 
-    emit removeEntity(regionbases[regionbaseUID]);
+    emit removeEntity (regionbases[regionbaseUID]);
   }
 }
 
-void NCLLayoutViewPlugin::changeRegionBase(
-    const QString &regionbaseUID,
-    const QMap<QString, QString> &attributes)
+void
+NCLLayoutViewPlugin::changeRegionBase (
+    const QString &regionbaseUID, const QMap<QString, QString> &attributes)
 {
-  if (regionbases.contains(regionbaseUID))
+  if (regionbases.contains (regionbaseUID))
   {
     // setting
     QMap<QString, QString> standard;
 
-    if (attributes.contains("id"))
+    if (attributes.contains ("id"))
       standard["id"] = attributes["id"];
 
-    if (attributes.contains("title"))
+    if (attributes.contains ("title"))
       standard["title"] = attributes["title"];
 
-    if (attributes.contains("top"))
+    if (attributes.contains ("top"))
       standard["top"] = attributes["top"];
 
-    if (attributes.contains("left"))
+    if (attributes.contains ("left"))
       standard["left"] = attributes["left"];
 
-    if (attributes.contains("bottom"))
+    if (attributes.contains ("bottom"))
       standard["bottom"] = attributes["bottom"];
 
-    if (attributes.contains("right"))
+    if (attributes.contains ("right"))
       standard["right"] = attributes["right"];
 
-    if (attributes.contains("width"))
+    if (attributes.contains ("width"))
       standard["width"] = attributes["width"];
 
-    if (attributes.contains("height"))
+    if (attributes.contains ("height"))
       standard["height"] = attributes["height"];
 
-    if (attributes.contains("zIndex"))
+    if (attributes.contains ("zIndex"))
       standard["zIndex"] = attributes["zIndex"];
 
     // emitting
-    emit setAttributes(regionbases[regionbaseUID],standard);
+    emit setAttributes (regionbases[regionbaseUID], standard);
 
-    mainWindow->updateRegionBaseInComboBox(regionbaseUID, attributes);
+    mainWindow->updateRegionBaseInComboBox (regionbaseUID, attributes);
   }
 }
 
-void NCLLayoutViewPlugin::clear()
+void
+NCLLayoutViewPlugin::clear ()
 {
-  while(!regions.empty())
+  while (!regions.empty ())
   {
-    Entity* regionEntity = regions.begin().value();
+    Entity *regionEntity = regions.begin ().value ();
 
-    removeRegionFromView(regionEntity->getUniqueId());
+    removeRegionFromView (regionEntity->getUniqueId ());
   }
 
-  while(!regionbases.empty())
+  while (!regionbases.empty ())
   {
-    Entity* regionbaseEntity = regionbases.begin().value();
+    Entity *regionbaseEntity = regionbases.begin ().value ();
 
-    removeRegionBaseFromView(regionbaseEntity->getUniqueId());
+    removeRegionBaseFromView (regionbaseEntity->getUniqueId ());
   }
 
-  regions.clear();
-  regionbases.clear();
-  relations.clear();
+  regions.clear ();
+  regionbases.clear ();
+  relations.clear ();
 }
 
-void NCLLayoutViewPlugin::selectRegionBase(const QString &regionbaseUID)
+void
+NCLLayoutViewPlugin::selectRegionBase (const QString &regionbaseUID)
 {
-  if(selectedId != NULL)
+  if (selectedId != NULL)
   {
-    if(*selectedId == regionbaseUID)
+    if (*selectedId == regionbaseUID)
       return; // Do nothing! It is already selected
 
     delete selectedId;
     selectedId = NULL;
   }
 
-  if (!regionbaseUID.isEmpty())
+  if (!regionbaseUID.isEmpty ())
   {
-    selectedId = new QString(regionbaseUID);
-    mainWindow->selectRegionBaseInComboBox(regionbaseUID);
+    selectedId = new QString (regionbaseUID);
+    mainWindow->selectRegionBaseInComboBox (regionbaseUID);
 
-    emit sendBroadcastMessage("changeSelectedEntity", selectedId);
+    emit sendBroadcastMessage ("changeSelectedEntity", selectedId);
   }
 }
 
-QString NCLLayoutViewPlugin::getHeadUid()
+QString
+NCLLayoutViewPlugin::getHeadUid ()
 {
-  if (getProject()->getEntitiesbyType("head").isEmpty())
+  if (getProject ()->getEntitiesbyType ("head").isEmpty ())
   {
-    if (getProject()->getEntitiesbyType("ncl").isEmpty())
+    if (getProject ()->getEntitiesbyType ("ncl").isEmpty ())
     {
       QMap<QString, QString> atts;
 
-      emit addEntity("ncl",
-                     getProject()->getUniqueId(),
-                     atts);
+      emit addEntity ("ncl", getProject ()->getUniqueId (), atts);
     }
 
-    QString nclUID =
-        getProject()->getEntitiesbyType("ncl").at(0)->getUniqueId();
+    QString nclUID
+        = getProject ()->getEntitiesbyType ("ncl").at (0)->getUniqueId ();
 
     QMap<QString, QString> atts;
 
-    emit addEntity("head", nclUID, atts);
+    emit addEntity ("head", nclUID, atts);
   }
 
-  return getProject()->getEntitiesbyType("head").at(0)->getUniqueId();
+  return getProject ()->getEntitiesbyType ("head").at (0)->getUniqueId ();
 }
 
-QMap <QString, QString> NCLLayoutViewPlugin::getRegionAttributes(Entity *region)
+QMap<QString, QString>
+NCLLayoutViewPlugin::getRegionAttributes (Entity *region)
 {
-  QVector <double> widths;
-  QVector <double> heights;
-  QVector <double> tops;
-  QVector <double> lefts;
+  QVector<double> widths;
+  QVector<double> heights;
+  QVector<double> tops;
+  QVector<double> lefts;
 
   double top = 1.0, left = 1.0;
   double cvalue = 0.0;
@@ -1129,213 +1157,216 @@ QMap <QString, QString> NCLLayoutViewPlugin::getRegionAttributes(Entity *region)
 
   // Here, we will compose all the hierachy values to get the final values of
   // left, top, width and height.
-  while(currentRegion != NULL && currentRegion->getType() == "region")
+  while (currentRegion != NULL && currentRegion->getType () == "region")
   {
-    QMap <QString, QString> attrs = currentRegion->getAttrs();
-    foreach (const QString &key, attrs.keys())
+    QMap<QString, QString> attrs = currentRegion->getAttrs ();
+    foreach (const QString &key, attrs.keys ())
     {
       QString name = key;
       QString value = attrs[key];
-      if(value.endsWith("%"))
-        cvalue = value.mid(0, value.indexOf("%")).toDouble();
+      if (value.endsWith ("%"))
+        cvalue = value.mid (0, value.indexOf ("%")).toDouble ();
       else
         cvalue = 100.0;
 
       cvalue /= 100.0;
 
-      if(name == "width") widths.push_back(cvalue);
-      else if(name == "height") heights.push_back(cvalue);
-      else if(name == "top") tops.push_back(cvalue);
-      else if(name == "left") lefts.push_back(cvalue);
+      if (name == "width")
+        widths.push_back (cvalue);
+      else if (name == "height")
+        heights.push_back (cvalue);
+      else if (name == "top")
+        tops.push_back (cvalue);
+      else if (name == "left")
+        lefts.push_back (cvalue);
     }
 
-    currentRegion = static_cast <Entity *> (currentRegion->getParent());
+    currentRegion = static_cast<Entity *> (currentRegion->getParent ());
   }
 
   int i;
-  //width
-  heights.push_back(1.0f);
-  widths.push_back(1.0f);
+  // width
+  heights.push_back (1.0f);
+  widths.push_back (1.0f);
 
-  for(i = widths.size()-1; i > 0; --i)
-    widths[i-1] *= widths[i];
-  //height
-  for(i = heights.size()-1; i > 0; --i)
-    heights[i-1] *= heights[i];
+  for (i = widths.size () - 1; i > 0; --i)
+    widths[i - 1] *= widths[i];
+  // height
+  for (i = heights.size () - 1; i > 0; --i)
+    heights[i - 1] *= heights[i];
 
-  //left
+  // left
   left = top = 0.0;
-  for(i = lefts.size()-1; i >= 0; --i)
-    left += lefts[i] * widths[i+1];
+  for (i = lefts.size () - 1; i >= 0; --i)
+    left += lefts[i] * widths[i + 1];
 
-  for(i = tops.size()-1; i >= 0; --i)
-    top += tops[i] * heights[i+1];
+  for (i = tops.size () - 1; i >= 0; --i)
+    top += tops[i] * heights[i + 1];
 
-  QMap <QString, QString> attrs;
-  attrs.insert( "width",  QString::number(widths[0]*100.0)+"%" );
-  attrs.insert( "height", QString::number(heights[0]*100.0)+"%" );
-  attrs.insert( "left",   QString::number(left*100.0)+"%" );
-  attrs.insert( "top",    QString::number(top*100.0)+"%" );
+  QMap<QString, QString> attrs;
+  attrs.insert ("width", QString::number (widths[0] * 100.0) + "%");
+  attrs.insert ("height", QString::number (heights[0] * 100.0) + "%");
+  attrs.insert ("left", QString::number (left * 100.0) + "%");
+  attrs.insert ("top", QString::number (top * 100.0) + "%");
 
   // Add also the zIndex to the list of properties.
-  if(region->hasAttr ("zIndex"))
-    attrs.insert("zIndex", region->getAttr("zIndex"));
+  if (region->hasAttr ("zIndex"))
+    attrs.insert ("zIndex", region->getAttr ("zIndex"));
   else
-    attrs.insert("zIndex", "0");
+    attrs.insert ("zIndex", "0");
 
   return attrs;
 }
 
-void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
-                                                       const QString &regionUID)
+void
+NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
+                                                   const QString &regionUID)
 {
   bool error = false;
-  Entity *region = project->getEntityById(regionUID);
+  Entity *region = project->getEntityById (regionUID);
   Entity *media = NULL;
-  QList <Entity*> medias = project->getEntitiesbyType("media");
+  QList<Entity *> medias = project->getEntitiesbyType ("media");
 
   const bool askDescOrProperties = true; // \todo This must be a preference.
 
-  for(int i = 0; i < medias.size(); i++)
+  for (int i = 0; i < medias.size (); i++)
   {
-    if(medias.at(i)->hasAttr ("id") &&
-       medias.at(i)->getAttr ("id") == mediaId)
+    if (medias.at (i)->hasAttr ("id")
+        && medias.at (i)->getAttr ("id") == mediaId)
     {
-      media = medias.at(i);
+      media = medias.at (i);
       break;
     }
   }
 
-  if(region == NULL)
+  if (region == NULL)
   {
-    qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::performMediaOverRegionAction Region\
-                  does not exists. Nothing will be done." ;
+    qCWarning (CPR_PLUGIN_LAYOUT)
+        << "QnlyComposerPlugin::performMediaOverRegionAction Region\
+                  does not exists. Nothing will be done.";
     error = 1;
   }
 
-  if(media == NULL)
+  if (media == NULL)
   {
-    int ret = QMessageBox::warning(this->getWidget(), tr("Error"),
-                                   tr("Sorry. \"") + mediaId +
-                                   tr("\" is not a valid media."),
-                                   QMessageBox::Ok,
-                                   QMessageBox::Ok);
+    int ret = QMessageBox::warning (this->getWidget (), tr ("Error"),
+                                    tr ("Sorry. \"") + mediaId
+                                        + tr ("\" is not a valid media."),
+                                    QMessageBox::Ok, QMessageBox::Ok);
 
-    Q_UNUSED(ret)
+    Q_UNUSED (ret)
     error = 1;
   }
 
-  if(!error)
+  if (!error)
   {
-    if(askDescOrProperties)
+    if (askDescOrProperties)
     {
       QMessageBox msgBox;
-      msgBox.setText(tr("Please, tell what do you want to do"));
+      msgBox.setText (tr ("Please, tell what do you want to do"));
       // \todo Enable detailed text.
       //    msgBox.setDetailedText(tr("Detailed text"));
 
-      QPushButton *createDescButton =
-          msgBox.addButton( tr("Use a descriptor"),
-                            QMessageBox::ActionRole);
+      QPushButton *createDescButton = msgBox.addButton (
+          tr ("Use a descriptor"), QMessageBox::ActionRole);
 
-      QPushButton *importPropButton =
-          msgBox.addButton(tr("Import region properties to media object"),
-                           QMessageBox::ActionRole);
+      QPushButton *importPropButton
+          = msgBox.addButton (tr ("Import region properties to media object"),
+                              QMessageBox::ActionRole);
       //  importPropButton->setEnabled(false);
 
-      QPushButton *cancelButton =
-          msgBox.addButton(tr("Nothing!"),
-                           QMessageBox::ActionRole);
-      Q_UNUSED(cancelButton)
+      QPushButton *cancelButton
+          = msgBox.addButton (tr ("Nothing!"), QMessageBox::ActionRole);
+      Q_UNUSED (cancelButton)
 
       //  msgBox.setIcon(QMessageBox::Question);
-      msgBox.exec();
-      if (msgBox.clickedButton() == createDescButton) // create a new descriptor
+      msgBox.exec ();
+      if (msgBox.clickedButton ()
+          == createDescButton) // create a new descriptor
       {
-        QMap <QString,QString> attrs;
-        QList <Entity*> descritorBases =
-            project->getEntitiesbyType("descriptorBase");
+        QMap<QString, QString> attrs;
+        QList<Entity *> descritorBases
+            = project->getEntitiesbyType ("descriptorBase");
 
         // create the descriptor
-        QString newDescriptorID = project->generateUniqueAttrId("descriptor");
+        QString newDescriptorID = project->generateUniqueAttrId ("descriptor");
         QStringList alredyExistentsDescriptorsIds, descriptorsIds;
         descriptorsIds << newDescriptorID;
 
-        QList <Entity*> descriptors = project->getEntitiesbyType("descriptor");
-        foreach (Entity *desc, descriptors) {
-          if(desc != NULL)
+        QList<Entity *> descriptors
+            = project->getEntitiesbyType ("descriptor");
+        foreach (Entity *desc, descriptors)
+        {
+          if (desc != NULL)
           {
-            if(desc->getAttr("region") == region->getAttr("id"))
+            if (desc->getAttr ("region") == region->getAttr ("id"))
             {
-              alredyExistentsDescriptorsIds << desc->getAttr("id");
-              descriptorsIds << desc->getAttr("id");
+              alredyExistentsDescriptorsIds << desc->getAttr ("id");
+              descriptorsIds << desc->getAttr ("id");
             }
           }
         }
 
         bool ok;
-        newDescriptorID = QInputDialog::getItem(NULL,
-                                                tr("Descriptor id:"),
-                                                tr("Please, enter the "
-                                                   "descriptor id"),
-                                                descriptorsIds,
-                                                0,
-                                                true,
-                                                &ok);
+        newDescriptorID = QInputDialog::getItem (NULL, tr ("Descriptor id:"),
+                                                 tr ("Please, enter the "
+                                                     "descriptor id"),
+                                                 descriptorsIds, 0, true, &ok);
 
-        if(ok)
+        if (ok)
         {
-          if(!descritorBases.size()) // if does not exists any descriptorBase
+          if (!descritorBases.size ()) // if does not exists any descriptorBase
             // create one
-            emit addEntity("descriptorBase", getHeadUid(), attrs);
+            emit addEntity ("descriptorBase", getHeadUid (), attrs);
 
           // If we choose the new descriptor (create it)
-          if(!alredyExistentsDescriptorsIds.contains(newDescriptorID))
+          if (!alredyExistentsDescriptorsIds.contains (newDescriptorID))
           {
-            Entity *descriptorBase =
-                project->getEntitiesbyType("descriptorBase").at(0);
-            attrs.insert("id", newDescriptorID);
-            attrs.insert("region", region->getAttr("id"));
+            Entity *descriptorBase
+                = project->getEntitiesbyType ("descriptorBase").at (0);
+            attrs.insert ("id", newDescriptorID);
+            attrs.insert ("region", region->getAttr ("id"));
 
-            emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs);
+            emit addEntity ("descriptor", descriptorBase->getUniqueId (),
+                            attrs);
           }
 
-          //update the media to refer to this descriptor
-          attrs.clear();
-          attrs = media->getAttrs();
+          // update the media to refer to this descriptor
+          attrs.clear ();
+          attrs = media->getAttrs ();
           attrs["descriptor"] = newDescriptorID;
-          emit setAttributes(media, attrs);
+          emit setAttributes (media, attrs);
         }
       }
       // import properties from region to media element
-      else if (msgBox.clickedButton() == importPropButton)
+      else if (msgBox.clickedButton () == importPropButton)
       {
-        QMap <QString, QString> propertyNameToUID;
+        QMap<QString, QString> propertyNameToUID;
 
         foreach (Entity *propEntity, media->getEntityChildren ())
         {
-          if(propEntity->hasAttr ("name"))
+          if (propEntity->hasAttr ("name"))
           {
-            propertyNameToUID.insert(propEntity->getAttr("name"),
-                                     propEntity->getUniqueId());
+            propertyNameToUID.insert (propEntity->getAttr ("name"),
+                                      propEntity->getUniqueId ());
           }
         }
 
-        QMap <QString, QString> newAttrs = getRegionAttributes(region);
+        QMap<QString, QString> newAttrs = getRegionAttributes (region);
         QString key;
-        foreach(key, newAttrs.keys())
+        foreach (key, newAttrs.keys ())
         {
-          QMap <QString, QString> attrs;
-          attrs.insert("name", key);
-          attrs.insert("value", newAttrs.value(key));
+          QMap<QString, QString> attrs;
+          attrs.insert ("name", key);
+          attrs.insert ("value", newAttrs.value (key));
 
-          if(propertyNameToUID.keys().contains(key))
+          if (propertyNameToUID.keys ().contains (key))
           {
-            QString propUID = propertyNameToUID.value(key);
-            emit setAttributes(project->getEntityById(propUID), attrs);
+            QString propUID = propertyNameToUID.value (key);
+            emit setAttributes (project->getEntityById (propUID), attrs);
           }
           else
-            emit addEntity("property", media->getUniqueId(), attrs);
+            emit addEntity ("property", media->getUniqueId (), attrs);
         }
       }
     }
@@ -1343,43 +1374,44 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
     {
       // Does not ask the descriptor or media properties
 
-      QMap <QString,QString> attrs;
-      QList <Entity*> descritorBases =
-          project->getEntitiesbyType("descriptorBase");
+      QMap<QString, QString> attrs;
+      QList<Entity *> descritorBases
+          = project->getEntitiesbyType ("descriptorBase");
 
       // create the descriptor
-      QString newDescriptorID = project->generateUniqueAttrId("descriptor");
+      QString newDescriptorID = project->generateUniqueAttrId ("descriptor");
 
-      if(!descritorBases.size()) // if does not exists any descriptorBase
+      if (!descritorBases.size ()) // if does not exists any descriptorBase
         // create one
-        emit addEntity("descriptorBase", getHeadUid(), attrs);
+        emit addEntity ("descriptorBase", getHeadUid (), attrs);
 
-      Entity *descriptorBase =
-          project->getEntitiesbyType("descriptorBase").at(0);
-      attrs.insert("id", newDescriptorID);
-      attrs.insert("region", region->getAttr("id"));
+      Entity *descriptorBase
+          = project->getEntitiesbyType ("descriptorBase").at (0);
+      attrs.insert ("id", newDescriptorID);
+      attrs.insert ("region", region->getAttr ("id"));
 
-      emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs);
+      emit addEntity ("descriptor", descriptorBase->getUniqueId (), attrs);
 
-      //update the media to refer to this descriptor
-      attrs.clear();
-      attrs = media->getAttrs();
+      // update the media to refer to this descriptor
+      attrs.clear ();
+      attrs = media->getAttrs ();
       attrs["descriptor"] = newDescriptorID;
-      emit setAttributes(media, attrs);
+      emit setAttributes (media, attrs);
 
-      if(media->hasAttr ("type") && media->getAttr ("type") == "text/html")
+      if (media->hasAttr ("type") && media->getAttr ("type") == "text/html")
       {
-        attrs.clear();
-        QMap <QString, QString>::iterator begin, end, it;
-        QList <Entity*> descriptors = project->getEntityByAttrId(newDescriptorID);
+        attrs.clear ();
+        QMap<QString, QString>::iterator begin, end, it;
+        QList<Entity *> descriptors
+            = project->getEntityByAttrId (newDescriptorID);
 
-        if(descriptors.size())
+        if (descriptors.size ())
         {
-          Entity *desc = descriptors.at(0);
-          attrs = desc->getAttrs();
+          Entity *desc = descriptors.at (0);
+          attrs = desc->getAttrs ();
           attrs["focusIndex"] = "1";
-          if(descriptors.size())
-            emit setAttributes(desc, attrs);
+          if (descriptors.size ())
+            emit setAttributes (desc, attrs);
         }
       }
     }

@@ -20,18 +20,18 @@
 #define VALIDATORPLUGIN_H
 
 #include <QHBoxLayout>
+#include <QSize>
 #include <QVector>
 #include <QWidget>
-#include <QSize>
 
 #include <extensions/IPlugin.h>
 #include <extensions/IPluginFactory.h>
 using namespace cpr::core;
 
 #include "NCLComposerAdapter.h"
+#include "ValidatorTreewidgetItem.h"
 #include "nclmodel/nclmodel.h"
 #include "validation/Validator.h"
-#include "ValidatorTreewidgetItem.h"
 
 class ValidatorTreeWidget : public QTreeWidget
 {
@@ -94,14 +94,22 @@ private:
  * \brief The ValidatorFactory class
  */
 class ValidatorFactory : public QObject,
-    public IPluginFactoryTpl<ValidatorPlugin>
+                         public IPluginFactoryTpl<ValidatorPlugin>
 {
   Q_OBJECT
   CPR_PLUGIN_METADATA ("validator-plugin.json")
 
 public:
-  QString id () const { return "br.ufma.deinf.laws.validator"; }
-  QIcon icon () const { return QIcon (); }
+  QString
+  id () const
+  {
+    return "br.ufma.deinf.laws.validator";
+  }
+  QIcon
+  icon () const
+  {
+    return QIcon ();
+  }
 };
 
 #endif // VALIDATORPLUGIN_H

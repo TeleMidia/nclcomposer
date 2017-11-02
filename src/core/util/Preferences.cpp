@@ -24,8 +24,8 @@ using namespace cpr::core;
 
 CPR_CORE_BEGIN_NAMESPACE
 
-Preference::Preference (const QString &name,
-                        const QVariant &defaultValue, const QString &category)
+Preference::Preference (const QString &name, const QVariant &defaultValue,
+                        const QString &category)
     : _name (name), _category (category)
 {
   _value = defaultValue;
@@ -67,7 +67,7 @@ void
 Preferences::registerPreferences (const QMap<QString, Preference *> &prefs)
 {
   for (auto k : prefs.keys ())
-    registerPreference (k, prefs.value(k));
+    registerPreference (k, prefs.value (k));
 }
 
 void

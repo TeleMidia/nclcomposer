@@ -21,10 +21,7 @@
 
 CPR_CORE_BEGIN_NAMESPACE
 
-Project::Project (QDomDocument &doc) : Entity (doc)
-{
-  init ();
-}
+Project::Project (QDomDocument &doc) : Entity (doc) { init (); }
 
 Project::Project (const QMap<QString, QString> &atts, QDomDocument &doc)
     : Entity (atts, doc)
@@ -75,7 +72,7 @@ Project::getEntityById (const QString &id)
   QMutexLocker locker (_lockEntities);
   Node *node = _nodes.contains (id) ? _nodes[id] : nullptr;
 
-  return dynamic_cast <Entity *> (node);
+  return dynamic_cast<Entity *> (node);
 }
 
 QList<Entity *>
@@ -88,7 +85,7 @@ Project::getEntitiesbyType (const QString &type)
   while (it.hasNext ())
   {
     it.next ();
-    Entity *ent = dynamic_cast <Entity *> (it.value());
+    Entity *ent = dynamic_cast<Entity *> (it.value ());
     if (ent && ent->getType () == type)
       listRet.append (ent);
   }
@@ -138,7 +135,7 @@ Project::addEntity (Entity *entity,
 bool
 Project::addComment (Comment *comment,
                      const QString &parentId) throw (EntityNotFound,
-                                                    ParentNotFound)
+                                                     ParentNotFound)
 {
   assert (comment != nullptr);
 
@@ -185,8 +182,8 @@ Project::removeEntity (Entity *entity, bool appendChild) throw (EntityNotFound)
         stack.pop ();
         _nodes.remove (currentEntity->getUniqueId ());
 
-        QList <Node *> children = currentEntity->getChildren ();
-        for (auto i = children.begin(); i != children.end (); ++i)
+        QList<Node *> children = currentEntity->getChildren ();
+        for (auto i = children.begin (); i != children.end (); ++i)
           stack.push (*i);
       }
 
@@ -218,8 +215,8 @@ Project::toString (int ntabs, bool writeuid)
   Q_UNUSED (writeuid);
 
   QString result = "";
-  result += "#COMPOSER_PROJECT name=\"" + this->_projectName
-            + "\" version=\"" + NCLCOMPOSER_CORE_VERSION + "\"#\n";
+  result += "#COMPOSER_PROJECT name=\"" + this->_projectName + "\" version=\""
+            + NCLCOMPOSER_CORE_VERSION + "\"#\n";
 
   result += "#COMPOSER_MODEL#\n";
   result += Entity::toString (0);
@@ -296,7 +293,7 @@ Project::getEntityByAttrId (const QString &id)
   while (it.hasNext ())
   {
     it.next ();
-    Entity *ent = dynamic_cast <Entity *> (it.value ());
+    Entity *ent = dynamic_cast<Entity *> (it.value ());
     if (ent && ent->hasAttr ("id") && ent->getAttr ("id") == id)
       listRet.append (ent);
   }

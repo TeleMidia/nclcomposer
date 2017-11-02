@@ -16,11 +16,11 @@
 #ifndef DOCUMENTCONTROL_H
 #define DOCUMENTCONTROL_H
 
+#include <QCoreApplication>
 #include <QFile>
 #include <QObject>
 #include <QProcess>
 #include <QTextStream>
-#include <QCoreApplication>
 
 #include <iostream>
 

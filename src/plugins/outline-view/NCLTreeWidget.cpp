@@ -334,7 +334,7 @@ NCLTreeWidget::userAddNewElement ()
   }
   else
     strlist << "ncl"; //\fixme this should be loaded from element that has not
-                      //parents.
+                      // parents.
 
   QString element = QInputDialog::getItem (
       this, tr ("&Add child"), tr ("Element name:"), strlist, 0, true, &ok);

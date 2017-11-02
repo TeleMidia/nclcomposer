@@ -826,8 +826,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
           atts.insert (item.nodeName (), item.nodeValue ());
         }
 
-        QMap<QString, QString> elementAttrs
-            = entityChildren[j]->getAttrs ();
+        QMap<QString, QString> elementAttrs = entityChildren[j]->getAttrs ();
         bool changed = false;
         int entityChildrenAttrSize = 0;
         foreach (const QString &key, elementAttrs.keys ())

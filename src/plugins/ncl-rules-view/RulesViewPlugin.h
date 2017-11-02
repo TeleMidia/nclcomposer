@@ -62,14 +62,22 @@ private:
  * \brief Handles the creation and deletion of RulesViewPlugin objects.
  */
 class RulesViewFactory : public QObject,
-    public IPluginFactoryTpl <RulesViewPlugin>
+                         public IPluginFactoryTpl<RulesViewPlugin>
 {
   Q_OBJECT
   CPR_PLUGIN_METADATA ("ncl-rules-view.json")
 
 public:
-  QString id () const override { return "br.puc-rio.telemidia.RulesView"; }
-  QIcon icon () const override { return QIcon (); }
+  QString
+  id () const override
+  {
+    return "br.puc-rio.telemidia.RulesView";
+  }
+  QIcon
+  icon () const override
+  {
+    return QIcon ();
+  }
 };
 
 #endif // RULESVIEWPLUGIN_H
