@@ -15,8 +15,8 @@ StructuralEdge::StructuralEdge (StructuralEntity *parent)
   setAlfa (0);
   setAngle (0);
 
-  setOrigin (NULL);
-  setDestination (NULL);
+  setOrigin (nullptr);
+  setDestination (nullptr);
 }
 
 StructuralEdge::~StructuralEdge () {}
@@ -154,17 +154,17 @@ StructuralEdge::adjust (bool collision, bool recursion)
 
       if (orig->getCategory () == Structural::Interface)
       {
-        if (parent != NULL)
+        if (parent)
           line.setP1 (parent->mapFromItem (orig->getParent (), line.p1 ()));
-        else if (orig->getParent () != NULL)
+        else if (orig->getParent ())
           line.setP1 (orig->getParent ()->mapToScene (line.p1 ()));
       }
 
       if (dest->getCategory () == Structural::Interface)
       {
-        if (parent != NULL)
+        if (parent)
           line.setP2 (parent->mapFromItem (dest->getParent (), line.p2 ()));
-        else if (dest->getParent () != NULL)
+        else if (dest->getParent ())
           line.setP2 (dest->getParent ()->mapToScene (line.p2 ()));
       }
 

@@ -373,7 +373,7 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
   QStrMap transls = util::createCoreTranslations (type);
   for (const QString &key : transls.keys ())
   {
-    if (ent->hasAttr (key))
+    if (ent->hasAttr (key) && !ent->getAttr (key).isEmpty())
       viewProps.insert (transls.value (key), ent->getAttr (key));
   }
 
@@ -390,6 +390,7 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
   {
     QString coreUid
         = getUidById (viewProps.value (ST_ATTR_REFERENCE_INTERFACE_ID));
+
     CPR_ASSERT (_coreToView.contains (coreUid));
     viewProps.insert (ST_ATTR_REFERENCE_INTERFACE_UID,
                       _coreToView.value (coreUid));
@@ -398,8 +399,6 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
   if (type == Structural::Bind)
   {
     viewParentUid = ent->getParent ()->getParentUniqueId ();
-    assert (viewParentUid != nullptr);
-
     if (viewProps.contains (ST_ATTR_ENT_ID))
     {
       StructuralRole role = util::strToRole (viewProps.value (ST_ATTR_ENT_ID));
@@ -461,6 +460,8 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
                         viewProps.value (ST_ATTR_REFERENCE_COMPONENT_UID));
     }
   }
+
+  qWarning () << viewProps;
 
   return viewProps;
 }
@@ -686,9 +687,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
     QMap<QString, QString> previous = e->getProperties ();
     QMap<QString, QString> next = e->getProperties ();
 
-    QString name;
-    QString value;
-
+    QString name, value;
     if (ent->getType () == "linkParam")
     {
       name = QString (ST_ATTR_LINKPARAM_NAME);
@@ -819,7 +818,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
 
     for (const QString &key : transls.keys ())
     {
-      if (props.contains (key))
+      if (props.contains (key) && !props.value (key).isEmpty())
         attrs.insert (transls.value (key), props.value (key));
     }
 
@@ -906,105 +905,19 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
 
   if (ent)
   {
-    QMap<QString, QString> attributes;
-
     Structural::Type type = util::strToType (props[ST_ATTR_ENT_TYPE]);
+    QMap<QString, QString> transls = util::createPluginTranslations (type);
 
-    QMap<QString, QString> translations
-        = util::createPluginTranslations (type);
-
-    for (const QString &key : translations.keys ())
+    QMap<QString, QString> attrs;
+    for (const QString &key : transls.keys ())
     {
       if (props.contains (key))
-        attributes.insert (translations.value (key), props.value (key));
+        attrs.insert (transls.value (key), props.value (key));
     }
-
-    // The code below should not be here. The logic was moved to
-    // StructuralView::performAutostart (). However, i am keeping this
-    // for later review.
-
-    /*
-    if (!ST_DEFAULT_WITH_BODY && !ST_DEFAULT_WITH_FLOATING_INTERFACES)
-    {
-      if (properties.contains (ST_ATTR_ENT_AUTOSTART))
-      {
-        bool isInterface = false;
-
-        if (properties[ST_ATTR_ENT_CATEGORY]
-            == util::translateCategoryToString (
-                   Structural::Interface))
-        {
-          isInterface = true;
-        }
-
-        bool hasPort = false;
-
-        QList<Entity *> list = getProject ()->getEntitiesbyType ("port");
-
-        foreach (Entity *current, list)
-        {
-          if (isInterface
-              && current->getAttribute ("interface")
-                     == properties[ST_ATTR_ENT_ID])
-          {
-            hasPort = true;
-
-            if (properties[ST_ATTR_ENT_AUTOSTART] == ST_VALUE_FALSE)
-              _window->getView ()->remove (
-                  _mapCoreToView[current->getUniqueId ()], settings);
-          }
-          else if (current->getAttribute ("component")
-                       == properties[ST_ATTR_ENT_ID]
-                   && current->getAttribute ("interface").isEmpty ())
-          {
-            hasPort = true;
-
-            if (properties[ST_ATTR_ENT_AUTOSTART] == ST_VALUE_FALSE)
-              _window->getView ()->remove (
-                  _mapCoreToView[current->getUniqueId ()], settings);
-          }
-        }
-
-        if (!hasPort
-            && (properties[ST_ATTR_ENT_AUTOSTART] == ST_VALUE_TRUE))
-        {
-          QString parent = _mapCoreToView.value (entity->getParentUniqueId ());
-
-          QMap<QString, QString> pp;
-          pp[ST_ATTR_ENT_TYPE]
-              = util::translateTypeToString (Structural::Port);
-          pp.insert (ST_ATTR_ENT_ID,
-                     "p" + properties.value (ST_ATTR_ENT_ID));
-
-          if (isInterface)
-          {
-            pp.insert (ST_ATTR_REFERENCE_INTERFACE_ID,
-                       entity->getAttribute ("id"));
-            pp.insert (ST_ATTR_REFERENCE_COMPONENT_ID,
-                       ((Entity *)entity->getParent ())->getAttribute ("id"));
-
-            parent = _mapCoreToView.value (
-                entity->getParent ()->getParentUniqueId ());
-          }
-          else
-          {
-            pp.insert (ST_ATTR_REFERENCE_COMPONENT_ID,
-                       properties[ST_ATTR_ENT_ID]);
-          }
-
-          setReferences (pp);
-
-          _window->getView ()->insert (util::createUid (), parent,
-                                       pp, settings);
-        }
-      }
-    }
-    */
 
     if (type == Structural::Link || type == Structural::Bind)
     {
       QString tag, name, value;
-
       if (type == Structural::Link)
       {
         tag = "linkParam";
@@ -1019,7 +932,6 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
       }
 
       QVector<QString> paramUids, paramNames;
-
       for (Entity *c : ent->getEntityChildren ())
       {
         if (c->getType () == tag)
@@ -1043,9 +955,8 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
           Entity *param
               = getProject ()->getEntityById (_viewToCore.value (pUid));
 
-          // Change a param entity in core that
-          // has been added by the view.
-          if (param != nullptr)
+          // Change a param entity in core that has been added by the view.
+          if (param)
           {
             if (paramUids.contains (param->getUniqueId ()))
               paramUids.remove (paramUids.indexOf (param->getUniqueId ()));
@@ -1087,7 +998,7 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
 
     _waiting = true;
 
-    emit setAttributes (ent, attributes);
+    emit setAttributes (ent, attrs);
   }
 }
 
@@ -1227,13 +1138,12 @@ void
 StructuralViewPlugin::adjustConnectors ()
 {
   // TODO: this function should be called only when a change occurs in
-  // <connectorBase>. Currently, this function is called every time the
+  // <connectorBase>.  Currently, this function is called every time the
   // link's dialog is displayed.
   auto connectorBases = getProject ()->getEntitiesbyType ("connectorBase");
   if (!connectorBases.isEmpty ())
   {
     Entity *connBase = connectorBases.first ();
-
     QMap<QString, QVector<QString> > conditions, actions, params;
 
     for (Entity *e : connBase->getEntityChildren ())
@@ -1241,13 +1151,10 @@ StructuralViewPlugin::adjustConnectors ()
       // loading data from local causalConnector
       if (e->getType () == "causalConnector")
       {
-        QString connId;
         QVector<QString> connConditions, connActions, connParams;
-
-        connId = e->getAttr ("id");
+        QString connId = e->getAttr ("id");
 
         QStack<Entity *> next;
-
         for (Entity *ec : e->getEntityChildren ())
           next.push (ec);
 
@@ -1255,20 +1162,20 @@ StructuralViewPlugin::adjustConnectors ()
         {
           Entity *current = next.pop ();
 
-          if (current->getType () == "simpleCondition")
-            if (current->hasAttr ("role"))
+          if (current->getType () == "simpleCondition"
+              && current->hasAttr ("role"))
               connConditions.append (current->getAttr ("role"));
 
-          if (current->getType () == "attributeAssessment")
-            if (current->hasAttr ("role"))
+          if (current->getType () == "attributeAssessment"
+              && current->hasAttr ("role"))
               connConditions.append (current->getAttr ("role"));
 
-          if (current->getType () == "simpleAction")
-            if (current->hasAttr ("role"))
+          if (current->getType () == "simpleAction"
+              && current->hasAttr ("role"))
               connActions.append (current->getAttr ("role"));
 
-          if (current->getType () == "connectorParam")
-            if (current->hasAttr ("name"))
+          if (current->getType () == "connectorParam"
+              && current->hasAttr ("name"))
               connParams.append (current->getAttr ("name"));
 
           if (current->getType () == "compoundCondition"
@@ -1304,7 +1211,6 @@ StructuralViewPlugin::adjustConnectors ()
           QDomDocument d;
           if (d.setContent (&importFile))
           {
-
             QDomElement r = d.firstChildElement (); // <ncl>
             QDomElement h = r.firstChildElement (); // <head>
             QDomElement b;                          // <connectorBase>
