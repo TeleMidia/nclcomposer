@@ -195,6 +195,7 @@ StructuralView::insert (QString uid, QString parent, QStrMap props,
 
   // 5. Adjust the entity
   adjustEntity (e, props, stgs);
+  adjustReferences (e);
 
   connect (e, &StructuralEntity::insertAsked, this, &StructuralView::insert);
   connect (e, &StructuralEntity::changeAsked, this,
@@ -289,7 +290,6 @@ StructuralView::getNewAngle (StructuralBind *bind)
               && (bind->getDestination () == b->getDestination ()
                   || bind->getDestination () == b->getOrigin ()))
           {
-
             int current = b->getAngle ();
 
             if (b->getDestination ()->getType () != Structural::Link)
@@ -677,11 +677,14 @@ StructuralView::adjustReferences (StructuralEntity *ent)
               }
 
               if (hasNewEntity)
+              {
                 for (const QString &key :
                      _scene->getRefs ().keys (refer->getUid ()))
-                  if (_scene->hasEntity (key))
-                    if (key != ent->getUid ())
+                {
+                  if (_scene->hasEntity (key) && key != ent->getUid ())
                       adjustReferences (_scene->getEntity (key));
+                }
+              }
             }
 
             _scene->getRefs ()[ent->getUid ()] = refer->getUid ();
@@ -804,7 +807,6 @@ StructuralView::adjustReferences (StructuralEntity *ent)
       CPR_ASSERT_NON_NULL (edge);
 
       StructuralEntity *orig = nullptr, *dest = nullptr;
-
       if (_scene->hasEntity (ent->getProperty (ST_ATTR_EDGE_ORIG)))
         orig = _scene->getEntity (ent->getProperty (ST_ATTR_EDGE_ORIG));
 
@@ -1495,48 +1497,48 @@ StructuralView::performPaste ()
 }
 
 void
-StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
+StructuralView::createLink (StructuralEntity *orig, StructuralEntity *dest)
 {
-  StructuralEntity *parentTail = tail->getParent ();
-  StructuralEntity *parentHead = head->getParent ();
+  StructuralEntity *parentOrig = orig->getParent ();
+  StructuralEntity *parentDest = dest->getParent ();
 
-  if ((parentTail && parentHead) || !ST_OPT_WITH_BODY)
+  if ((parentOrig && parentDest) || !ST_OPT_WITH_BODY)
   {
     StructuralEntity *parent = nullptr;
-    QPointF ptail, phead;
+    QPointF pOrig, pDest;
 
-    if (parentTail == parentHead)
+    if (parentOrig == parentDest)
     {
-      ptail = QPointF (tail->getLeft (), tail->getTop ());
-      phead = QPointF (head->getLeft (), head->getTop ());
+      pOrig = QPointF (orig->getLeft (), orig->getTop ());
+      pDest = QPointF (dest->getLeft (), dest->getTop ());
 
-      parent = parentTail;
+      parent = parentOrig;
     }
-    else if (parentTail && (parentTail->getParent () == parentHead)
-             && (tail->getCategory () == Structural::Interface))
+    else if (parentOrig && (parentOrig->getParent () == parentDest)
+             && (orig->getCategory () == Structural::Interface))
     {
-      phead = QPointF (head->getLeft (), head->getTop ());
-      ptail = parentTail->mapToParent (tail->getLeft (), tail->getTop ());
+      pDest = QPointF (dest->getLeft (), dest->getTop ());
+      pOrig = parentOrig->mapToParent (orig->getLeft (), orig->getTop ());
 
-      parent = parentHead;
+      parent = parentDest;
     }
-    else if (parentHead && (parentTail == parentHead->getParent ())
-             && (head->getCategory () == Structural::Interface))
+    else if (parentDest && (parentOrig == parentDest->getParent ())
+             && (dest->getCategory () == Structural::Interface))
     {
-      ptail = QPointF (tail->getLeft (), tail->getTop ());
-      phead = parentHead->mapToParent (head->getLeft (), head->getTop ());
+      pOrig = QPointF (orig->getLeft (), orig->getTop ());
+      pDest = parentDest->mapToParent (dest->getLeft (), dest->getTop ());
 
-      parent = parentTail;
+      parent = parentOrig;
     }
-    else if ((parentTail && parentHead)
-             && (parentTail->getParent () == parentHead->getParent ())
-             && (tail->getCategory () == Structural::Interface)
-             && (head->getCategory () == Structural::Interface))
+    else if ((parentOrig && parentDest)
+             && (parentOrig->getParent () == parentDest->getParent ())
+             && (orig->getCategory () == Structural::Interface)
+             && (dest->getCategory () == Structural::Interface))
     {
-      ptail = parentTail->mapToParent (tail->getLeft (), tail->getTop ());
-      phead = parentHead->mapToParent (head->getLeft (), head->getTop ());
+      pOrig = parentOrig->mapToParent (orig->getLeft (), orig->getTop ());
+      pDest = parentDest->mapToParent (dest->getLeft (), dest->getTop ());
 
-      parent = parentTail->getParent ();
+      parent = parentOrig->getParent ();
     }
 
     setMode (Structural::Pointing);
@@ -1546,38 +1548,38 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
     {
       emit updateRequested ();
 
-      if (tail->getCategory () == Structural::Interface)
+      if (orig->getCategory () == Structural::Interface)
       {
-        for (StructuralEntity *ent : parentTail->getChildren ())
+        for (StructuralEntity *ent : parentOrig->getChildren ())
         {
           _dialog->addConditionInterface (ent->getUid (), ent->getId (),
                                           util::getIcon (ent->getType ()));
         }
 
-        _dialog->setConditionInterface (tail->getId ());
+        _dialog->setConditionInterface (orig->getId ());
       }
       else
       {
-        for (StructuralEntity *ent : tail->getChildren ())
+        for (StructuralEntity *ent : orig->getChildren ())
         {
           _dialog->addConditionInterface (ent->getUid (), ent->getId (),
                                           util::getIcon (ent->getType ()));
         }
       }
 
-      if (head->getCategory () == Structural::Interface)
+      if (dest->getCategory () == Structural::Interface)
       {
-        for (StructuralEntity *ent : parentHead->getChildren ())
+        for (StructuralEntity *ent : parentDest->getChildren ())
         {
           _dialog->addActionInterface (ent->getUid (), ent->getId (),
                                        util::getIcon (ent->getType ()));
         }
 
-        _dialog->setActionInterface (head->getId ());
+        _dialog->setActionInterface (dest->getId ());
       }
       else
       {
-        for (StructuralEntity *ent : head->getChildren ())
+        for (StructuralEntity *ent : dest->getChildren ())
         {
           _dialog->addActionInterface (ent->getUid (), ent->getId (),
                                        util::getIcon (ent->getType ()));
@@ -1595,11 +1597,11 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
 
           if (_scene->hasEntity (uid))
           {
-            tail = _scene->getEntity (uid);
-            parentTail = tail->getParent ();
+            orig = _scene->getEntity (uid);
+            parentOrig = orig->getParent ();
 
-            ptail
-                = parentTail->mapToParent (tail->getLeft (), tail->getTop ());
+            pOrig
+                = parentOrig->mapToParent (orig->getLeft (), orig->getTop ());
           }
         }
 
@@ -1609,18 +1611,18 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
 
           if (_scene->hasEntity (uid))
           {
-            head = _scene->getEntity (uid);
-            parentHead = head->getParent ();
+            dest = _scene->getEntity (uid);
+            parentDest = dest->getParent ();
 
-            phead
-                = parentHead->mapToParent (head->getLeft (), head->getTop ());
+            pDest
+                = parentDest->mapToParent (dest->getLeft (), dest->getTop ());
           }
         }
 
-        ptail.setX (ptail.x () + tail->getWidth () / 2);
-        ptail.setY (ptail.y () + tail->getHeight () / 2);
-        phead.setX (phead.x () + head->getWidth () / 2);
-        phead.setY (phead.y () + head->getHeight () / 2);
+        pOrig.setX (pOrig.x () + orig->getWidth () / 2);
+        pOrig.setY (pOrig.y () + orig->getHeight () / 2);
+        pDest.setX (pDest.x () + dest->getWidth () / 2);
+        pDest.setY (pDest.y () + dest->getHeight () / 2);
 
         QString uid = util::createUid ();
 
@@ -1630,84 +1632,83 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
 
         qreal x = 0.0, y = 0.0;
 
-        if (ptail.x () <= phead.x () && ptail.y () <= phead.y ())
+        if (pOrig.x () <= pDest.x () && pOrig.y () <= pDest.y ())
         {
-          if (ptail.x () + tail->getWidth () / 2
-              < phead.x () - head->getWidth () / 2)
-            x = (ptail.x () + tail->getWidth () / 2 + phead.x ()
-                 - head->getWidth () / 2)
+          if (pOrig.x () + orig->getWidth () / 2
+              < pDest.x () - dest->getWidth () / 2)
+            x = (pOrig.x () + orig->getWidth () / 2 + pDest.x ()
+                 - dest->getWidth () / 2)
                 / 2;
           else
-            x = ptail.x () + (phead.x () - ptail.x ()) / 2;
+            x = pOrig.x () + (pDest.x () - pOrig.x ()) / 2;
 
-          if (ptail.y () + tail->getHeight () / 2
-              < phead.y () - head->getHeight () / 2)
-            y = (ptail.y () + tail->getHeight () / 2 + phead.y ()
-                 - head->getHeight () / 2)
+          if (pOrig.y () + orig->getHeight () / 2
+              < pDest.y () - dest->getHeight () / 2)
+            y = (pOrig.y () + orig->getHeight () / 2 + pDest.y ()
+                 - dest->getHeight () / 2)
                 / 2;
           else
-            y = ptail.y () + (phead.y () - ptail.y ()) / 2;
+            y = pOrig.y () + (pDest.y () - pOrig.y ()) / 2;
         }
-        else if (ptail.x () > phead.x () && ptail.y () <= phead.y ())
+        else if (pOrig.x () > pDest.x () && pOrig.y () <= pDest.y ())
         {
-          if (phead.x () + head->getWidth () / 2
-              < ptail.x () - tail->getWidth () / 2)
-            x = (phead.x () + head->getWidth () / 2 + ptail.x ()
-                 - tail->getWidth () / 2)
+          if (pDest.x () + dest->getWidth () / 2
+              < pOrig.x () - orig->getWidth () / 2)
+            x = (pDest.x () + dest->getWidth () / 2 + pOrig.x ()
+                 - orig->getWidth () / 2)
                 / 2;
           else
-            x = phead.x () + (ptail.x () - phead.x ()) / 2;
+            x = pDest.x () + (pOrig.x () - pDest.x ()) / 2;
 
-          if (ptail.y () + tail->getHeight () / 2
-              < phead.y () - head->getHeight () / 2)
-            y = (ptail.y () + tail->getHeight () / 2 + phead.y ()
-                 - head->getHeight () / 2)
+          if (pOrig.y () + orig->getHeight () / 2
+              < pDest.y () - dest->getHeight () / 2)
+            y = (pOrig.y () + orig->getHeight () / 2 + pDest.y ()
+                 - dest->getHeight () / 2)
                 / 2;
           else
-            y = ptail.y () + (phead.y () - ptail.y ()) / 2;
+            y = pOrig.y () + (pDest.y () - pOrig.y ()) / 2;
         }
-        else if (ptail.x () <= phead.x () && ptail.y () > phead.y ())
+        else if (pOrig.x () <= pDest.x () && pOrig.y () > pDest.y ())
         {
-          if (ptail.x () + tail->getWidth () / 2
-              < phead.x () - head->getWidth () / 2)
-            x = (ptail.x () + tail->getWidth () / 2 + phead.x ()
-                 - head->getWidth () / 2)
+          if (pOrig.x () + orig->getWidth () / 2
+              < pDest.x () - dest->getWidth () / 2)
+            x = (pOrig.x () + orig->getWidth () / 2 + pDest.x ()
+                 - dest->getWidth () / 2)
                 / 2;
           else
-            x = ptail.x () + (phead.x () - ptail.x ()) / 2;
+            x = pOrig.x () + (pDest.x () - pOrig.x ()) / 2;
 
-          if (phead.y () + head->getHeight () / 2
-              < ptail.y () - tail->getHeight () / 2)
-            y = (phead.y () + head->getHeight () / 2 + ptail.y ()
-                 - tail->getHeight () / 2)
+          if (pDest.y () + dest->getHeight () / 2
+              < pOrig.y () - orig->getHeight () / 2)
+            y = (pDest.y () + dest->getHeight () / 2 + pOrig.y ()
+                 - orig->getHeight () / 2)
                 / 2;
           else
-            y = phead.y () + (ptail.y () - phead.y ()) / 2;
+            y = pDest.y () + (pOrig.y () - pDest.y ()) / 2;
         }
-        else if (ptail.x () > phead.x () && ptail.y () > phead.y ())
+        else if (pOrig.x () > pDest.x () && pOrig.y () > pDest.y ())
         {
-          if (phead.x () + head->getWidth () / 2
-              < ptail.x () - tail->getWidth () / 2)
-            x = (phead.x () + head->getWidth () / 2 + ptail.x ()
-                 - tail->getWidth () / 2)
+          if (pDest.x () + dest->getWidth () / 2
+              < pOrig.x () - orig->getWidth () / 2)
+            x = (pDest.x () + dest->getWidth () / 2 + pOrig.x ()
+                 - orig->getWidth () / 2)
                 / 2;
           else
-            x = phead.x () + (ptail.x () - phead.x ()) / 2;
+            x = pDest.x () + (pOrig.x () - pDest.x ()) / 2;
 
-          if (phead.y () + head->getHeight () / 2
-              < ptail.y () - tail->getHeight () / 2)
-            y = (phead.y () + head->getHeight () / 2 + ptail.y ()
-                 - tail->getHeight () / 2)
+          if (pDest.y () + dest->getHeight () / 2
+              < pOrig.y () - orig->getHeight () / 2)
+            y = (pDest.y () + dest->getHeight () / 2 + pOrig.y ()
+                 - orig->getHeight () / 2)
                 / 2;
           else
-            y = phead.y () + (ptail.y () - phead.y ()) / 2;
+            y = pDest.y () + (pOrig.y () - pDest.y ()) / 2;
         }
 
         props[ST_ATTR_ENT_TOP] = QString::number (y);
         props[ST_ATTR_ENT_LEFT] = QString::number (x);
 
         QStrMap params = _dialog->getConnectorParams ();
-
         for (const QString &key : params.keys ())
         {
           if (!params.value (key).isEmpty ())
@@ -1726,9 +1727,9 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
                 settings);
 
         CPR_ASSERT (_scene->hasEntity (uid));
-        createBind (tail, _scene->getEntity (uid), _dialog->getCondition (),
+        createBind (orig, _scene->getEntity (uid), _dialog->getCondition (),
                     settings.value (ST_SETTINGS_CODE));
-        createBind (_scene->getEntity (uid), head, _dialog->getAction (),
+        createBind (_scene->getEntity (uid), dest, _dialog->getAction (),
                     settings.value (ST_SETTINGS_CODE));
       }
     }
@@ -1736,52 +1737,52 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
 }
 
 void
-StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
+StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
                             const QString &role, const QString &code)
 {
-  StructuralEntity *parentTail = tail->getParent ();
-  StructuralEntity *parentHead = head->getParent ();
+  StructuralEntity *parentOrig = orig->getParent ();
+  StructuralEntity *parentDest = dest->getParent ();
 
-  if ((parentTail && parentHead) || !ST_OPT_WITH_BODY)
+  if ((parentOrig && parentDest) || !ST_OPT_WITH_BODY)
   {
     StructuralEntity *parent = nullptr;
 
-    if (parentTail == parentHead)
+    if (parentOrig == parentDest)
     {
-      parent = parentTail;
+      parent = parentOrig;
     }
-    else if (parentTail && (parentTail->getParent () == parentHead)
-             && (tail->getCategory () == Structural::Interface))
+    else if (parentOrig && (parentOrig->getParent () == parentDest)
+             && (orig->getCategory () == Structural::Interface))
     {
-      parent = parentHead;
+      parent = parentDest;
     }
-    else if (parentHead && (parentTail == parentHead->getParent ())
-             && (head->getCategory () == Structural::Interface))
+    else if (parentDest && (parentOrig == parentDest->getParent ())
+             && (dest->getCategory () == Structural::Interface))
     {
-      parent = parentTail;
+      parent = parentOrig;
     }
 
     if (parent || !ST_OPT_WITH_BODY)
     {
       QString uid = util::createUid ();
 
-      QStrMap props;
-      props[ST_ATTR_ENT_TYPE] = util::typeToStr (Structural::Bind);
-      props[ST_ATTR_EDGE_ORIG] = tail->getUid ();
-      props[ST_ATTR_EDGE_DEST] = head->getUid ();
-
-      props[ST_ATTR_BIND_ROLE] = role;
-      props[ST_ATTR_ENT_ID] = role;
+      QStrMap props = {
+        {ST_ATTR_ENT_TYPE, util::typeToStr (Structural::Bind)},
+        {ST_ATTR_EDGE_ORIG, orig->getUid ()},
+        {ST_ATTR_EDGE_DEST, dest->getUid ()},
+        {ST_ATTR_BIND_ROLE, role},
+        {ST_ATTR_ENT_ID, role} // Why?
+      };
 
       StructuralEntity *entityLink = nullptr;
       StructuralEntity *entityNonLink = nullptr;
       StructuralEntity *parentNonLink = nullptr;
 
-      if (tail->getType () == Structural::Link)
+      if (orig->getType () == Structural::Link)
       {
-        entityLink = tail;
-        entityNonLink = head;
-        parentNonLink = parentHead;
+        entityLink = orig;
+        entityNonLink = dest;
+        parentNonLink = parentDest;
 
         if (role.isEmpty ())
         {
@@ -1850,11 +1851,11 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
           }
         }
       }
-      else if (head->getType () == Structural::Link)
+      else if (dest->getType () == Structural::Link)
       {
-        entityLink = head;
-        entityNonLink = tail;
-        parentNonLink = parentTail;
+        entityLink = dest;
+        entityNonLink = orig;
+        parentNonLink = parentOrig;
 
         if (role.isEmpty ())
         {
@@ -1940,8 +1941,8 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
         {
           props[ST_ATTR_REFERENCE_COMPONENT_ID] = entityNonLink->getId ();
           props[ST_ATTR_REFERENCE_COMPONENT_UID] = entityNonLink->getUid ();
-          props[ST_ATTR_REFERENCE_INTERFACE_ID] = "";
-          props[ST_ATTR_REFERENCE_INTERFACE_UID] = "";
+//          props[ST_ATTR_REFERENCE_INTERFACE_ID] = "";
+//          props[ST_ATTR_REFERENCE_INTERFACE_UID] = "";
         }
       }
 
@@ -1957,52 +1958,52 @@ StructuralView::createBind (StructuralEntity *tail, StructuralEntity *head,
 }
 
 void
-StructuralView::createReference (StructuralEntity *tail,
-                                 StructuralEntity *head)
+StructuralView::createReference (StructuralEntity *orig,
+                                 StructuralEntity *dest)
 {
-  if (tail->getType () == Structural::Port
-      || tail->getType () == Structural::SwitchPort)
+  if (orig->getType () == Structural::Port
+      || orig->getType () == Structural::SwitchPort)
   {
-    StructuralEntity *parentTail = tail->getParent ();
-    StructuralEntity *parentHead = head->getParent ();
+    StructuralEntity *parentTail = orig->getParent ();
+    StructuralEntity *parentHead = dest->getParent ();
 
     if (parentTail == parentHead
         || (parentHead && parentTail == parentHead->getParent ()))
     {
-      QStrMap previous = tail->getProperties ();
+      QStrMap previous = orig->getProperties ();
       QStrMap props;
 
-      if (tail->getType () == Structural::Port)
-        props = tail->getProperties ();
+      if (orig->getType () == Structural::Port)
+        props = orig->getProperties ();
 
-      if (head->getCategory () == Structural::Interface)
+      if (dest->getCategory () == Structural::Interface)
       {
-        props[ST_ATTR_REFERENCE_INTERFACE_ID] = head->getId ();
-        props[ST_ATTR_REFERENCE_INTERFACE_UID] = head->getUid ();
+        props[ST_ATTR_REFERENCE_INTERFACE_ID] = dest->getId ();
+        props[ST_ATTR_REFERENCE_INTERFACE_UID] = dest->getUid ();
         props[ST_ATTR_REFERENCE_COMPONENT_ID] = parentHead->getId ();
         props[ST_ATTR_REFERENCE_COMPONENT_UID] = parentHead->getUid ();
       }
       else
       {
-        props[ST_ATTR_REFERENCE_COMPONENT_ID] = head->getId ();
-        props[ST_ATTR_REFERENCE_COMPONENT_UID] = head->getUid ();
-        props[ST_ATTR_REFERENCE_INTERFACE_ID] = "";
-        props[ST_ATTR_REFERENCE_INTERFACE_UID] = "";
+        props[ST_ATTR_REFERENCE_COMPONENT_ID] = dest->getId ();
+        props[ST_ATTR_REFERENCE_COMPONENT_UID] = dest->getUid ();
+//        props[ST_ATTR_REFERENCE_INTERFACE_ID] = "";
+//        props[ST_ATTR_REFERENCE_INTERFACE_UID] = "";
       }
 
       setMode (Structural::Pointing);
       emit switchedPointer (true);
 
-      if (tail->getType () == Structural::Port)
+      if (orig->getType () == Structural::Port)
       {
-        change (tail->getUid (), props, previous,
+        change (orig->getUid (), props, previous,
                 util::createSettings (true, true));
       }
-      else if (tail->getType () == Structural::SwitchPort)
+      else if (orig->getType () == Structural::SwitchPort)
       {
         props[ST_ATTR_ENT_TYPE] = util::typeToStr (Structural::Mapping);
-        props[ST_ATTR_EDGE_ORIG] = tail->getUid ();
-        props[ST_ATTR_EDGE_DEST] = head->getUid ();
+        props[ST_ATTR_EDGE_ORIG] = orig->getUid ();
+        props[ST_ATTR_EDGE_DEST] = dest->getUid ();
 
         insert (util::createUid (), parentTail->getUid (), props,
                 util::createSettings (true, true));
@@ -2214,64 +2215,60 @@ StructuralView::mouseReleaseEvent (QMouseEvent *evt)
 
     if (tailItems.count () && headtems.count ())
     {
-      StructuralEntity *tail = (StructuralEntity *)tailItems.first ();
-      StructuralEntity *head = (StructuralEntity *)headtems.first ();
+      StructuralEntity *orig = (StructuralEntity *)tailItems.first ();
+      StructuralEntity *dest = (StructuralEntity *)headtems.first ();
 
-      if (tail != head)
+      if (orig != dest)
       {
         // if linking NODE to NODE
-        if (tail->getCategory () == Structural::Node
-            && head->getCategory () == Structural::Node)
+        if (orig->getCategory () == Structural::Node
+            && dest->getCategory () == Structural::Node)
         {
-
-          if (tail->getType () != Structural::Link
-              && head->getType () != Structural::Link)
-            createLink (tail, head);
-          else if (tail->getType () == Structural::Link)
-            createBind (tail, head);
-          else if (head->getType () == Structural::Link)
-            createBind (tail, head);
-
-          // if linking NODE to INTERFACE
+          if (orig->getType () != Structural::Link
+              && dest->getType () != Structural::Link)
+            createLink (orig, dest);
+          else if (orig->getType () == Structural::Link)
+            createBind (orig, dest);
+          else if (dest->getType () == Structural::Link)
+            createBind (orig, dest);
         }
-        else if (tail->getCategory () == Structural::Node
-                 && head->getCategory () == Structural::Interface)
+        // if linking NODE to INTERFACE
+        else if (orig->getCategory () == Structural::Node
+                 && dest->getCategory () == Structural::Interface)
         {
-          if (tail->getType () != Structural::Link)
-            createLink (tail, head);
+          if (orig->getType () != Structural::Link)
+            createLink (orig, dest);
           else
-            createBind (tail, head);
-
-          // if linking INTERFACE to NODE
+            createBind (orig, dest);
         }
-        else if (tail->getCategory () == Structural::Interface
-                 && head->getCategory () == Structural::Node)
+        // if linking INTERFACE to NODE
+        else if (orig->getCategory () == Structural::Interface
+                 && dest->getCategory () == Structural::Node)
         {
-          StructuralEntity *parentTail = tail->getParent ();
-          StructuralEntity *parentHead = head->getParent ();
+          StructuralEntity *parentTail = orig->getParent ();
+          StructuralEntity *parentHead = dest->getParent ();
 
           if (parentTail == parentHead
-              && (tail->getType () == Structural::Port
-                  || tail->getType () == Structural::SwitchPort))
-            createReference (tail, head);
-          else if (head->getType () != Structural::Link)
-            createLink (tail, head);
+              && (orig->getType () == Structural::Port
+                  || orig->getType () == Structural::SwitchPort))
+            createReference (orig, dest);
+          else if (dest->getType () != Structural::Link)
+            createLink (orig, dest);
           else
-            createBind (tail, head);
-
-          // if linking INTERFACE to INTERFACE
+            createBind (orig, dest);
         }
-        else if (tail->getCategory () == Structural::Interface
-                 && head->getCategory () == Structural::Interface)
+        // if linking INTERFACE to INTERFACE
+        else if (orig->getCategory () == Structural::Interface
+                 && dest->getCategory () == Structural::Interface)
         {
 
-          StructuralEntity *parentTail = tail->getParent ();
-          StructuralEntity *parentHead = head->getParent ();
+          StructuralEntity *parentTail = orig->getParent ();
+          StructuralEntity *parentHead = dest->getParent ();
 
           if (parentHead && parentTail == parentHead->getParent ())
-            createReference (tail, head);
+            createReference (orig, dest);
           else
-            createLink (tail, head);
+            createLink (orig, dest);
         }
       }
     }

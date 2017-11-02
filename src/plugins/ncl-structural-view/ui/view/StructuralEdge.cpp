@@ -1,7 +1,6 @@
 #include "StructuralEdge.h"
 
 #include <math.h>
-#include <QDebug>
 
 StructuralEdge::StructuralEdge (StructuralEntity *parent)
     : StructuralEntity (parent)
@@ -145,6 +144,7 @@ StructuralEdge::adjust (bool collision, bool recursion)
 
     StructuralEntity *orig = getOrigin ();
     StructuralEntity *dest = getDestination ();
+
     if (orig && dest)
     {
       QLineF line = QLineF (QPointF (orig->getLeft () + orig->getWidth () / 2,
@@ -191,44 +191,44 @@ StructuralEdge::adjust (bool collision, bool recursion)
 void
 StructuralEdge::adjustBox (QLineF line)
 {
-  QPointF porig = line.p1 ();
-  QPointF pdest = line.p2 ();
+  QPointF pOrig = line.p1 ();
+  QPointF pDest = line.p2 ();
 
   qreal x = 0.0, y = 0.0, w = 0.0, h = 0.0;
 
-  if (porig.x () <= pdest.x () && porig.y () <= pdest.y ())
+  if (pOrig.x () <= pDest.x () && pOrig.y () <= pDest.y ())
   {
-    x = porig.x ();
-    y = porig.y ();
-    w = pdest.x () - porig.x ();
-    h = pdest.y () - porig.y ();
+    x = pOrig.x ();
+    y = pOrig.y ();
+    w = pDest.x () - pOrig.x ();
+    h = pDest.y () - pOrig.y ();
   }
-  else if (porig.x () > pdest.x () && porig.y () <= pdest.y ())
+  else if (pOrig.x () > pDest.x () && pOrig.y () <= pDest.y ())
   {
-    x = pdest.x ();
-    y = porig.y ();
-    w = porig.x () - pdest.x ();
-    h = pdest.y () - porig.y ();
+    x = pDest.x ();
+    y = pOrig.y ();
+    w = pOrig.x () - pDest.x ();
+    h = pDest.y () - pOrig.y ();
   }
-  else if (porig.x () <= pdest.x () && porig.y () > pdest.y ())
+  else if (pOrig.x () <= pDest.x () && pOrig.y () > pDest.y ())
   {
-    x = porig.x ();
-    y = pdest.y ();
-    w = pdest.x () - porig.x ();
-    h = porig.y () - pdest.y ();
+    x = pOrig.x ();
+    y = pDest.y ();
+    w = pDest.x () - pOrig.x ();
+    h = pOrig.y () - pDest.y ();
   }
-  else if (porig.x () > pdest.x () && porig.y () > pdest.y ())
+  else if (pOrig.x () > pDest.x () && pOrig.y () > pDest.y ())
   {
-    x = pdest.x ();
-    y = pdest.y ();
-    w = porig.x () - pdest.x ();
-    h = porig.y () - pdest.y ();
+    x = pDest.x ();
+    y = pDest.y ();
+    w = pOrig.x () - pDest.x ();
+    h = pOrig.y () - pDest.y ();
   }
 
-  setOrigTop (porig.y ());
-  setOrigLeft (porig.x ());
-  setDestTop (pdest.y ());
-  setDestLeft (pdest.x ());
+  setOrigTop (pOrig.y ());
+  setOrigLeft (pOrig.x ());
+  setDestTop (pDest.y ());
+  setDestLeft (pDest.x ());
 
   setTop (y);
   setLeft (x);
@@ -300,7 +300,6 @@ StructuralEdge::getDrawLine (qreal padding) const
   QPointF pDest = QPointF (getDestLeft (), getDestTop ());
 
   QLineF drawLine;
-
   int x = 0, y = 0, z = 0, w = 0;
 
   if (pOrig.x () <= pDest.x () && pOrig.y () <= pDest.y ())

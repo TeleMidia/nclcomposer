@@ -201,10 +201,10 @@ StructuralViewPlugin::updateFromModel ()
     }
   }
 
-  // Intert the core entities in the view again (in the required order).
+  // Insert the nodes and interfaces entities in the view again (in the
+  // required order).
   for (Entity *ent : nodes) insertInView (ent, false);
   for (Entity *ent : interfaces) insertInView (ent, false);
-  for (Entity *ent : edges) insertInView (ent);
 
   // Restore old position properties.
   QStrMap stgs = util::createSettings (false, false);
@@ -221,6 +221,9 @@ StructuralViewPlugin::updateFromModel ()
                                    ent->getProperties (), stgs);
     }
   }
+
+  // Inset the edges again.
+  for (Entity *ent : edges) insertInView (ent);
 }
 
 void
@@ -461,8 +464,6 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
     }
   }
 
-  qWarning () << viewProps;
-
   return viewProps;
 }
 
@@ -477,6 +478,11 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
   {
     QString uid = ent->getUniqueId ();
     QString coreParentUid = ent->getParentUniqueId ();
+    // If we are adding a bind, the parent will be the above context (not the
+    // link).
+    if (type == Structural::Bind)
+      coreParentUid = ent->getParent ()->getParentUniqueId ();
+
     QString viewParentUid = _coreToView.value (coreParentUid, "");
 
     QStrMap stgs = util::createSettings (undo, false);
