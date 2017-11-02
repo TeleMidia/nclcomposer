@@ -1,6 +1,7 @@
 #include "StructuralEdge.h"
 
 #include <math.h>
+#include <QDebug>
 
 StructuralEdge::StructuralEdge (StructuralEntity *parent)
     : StructuralEntity (parent)
@@ -53,9 +54,9 @@ StructuralEdge::getOrigTop () const
 }
 
 void
-StructuralEdge::setOrigTop (qreal tailTop)
+StructuralEdge::setOrigTop (qreal origTop)
 {
-  _origTop = tailTop;
+  _origTop = origTop;
 }
 
 qreal
@@ -65,9 +66,9 @@ StructuralEdge::getOrigLeft () const
 }
 
 void
-StructuralEdge::setOrigLeft (qreal tailLeft)
+StructuralEdge::setOrigLeft (qreal origLeft)
 {
-  _origLeft = tailLeft;
+  _origLeft = origLeft;
 }
 
 qreal
@@ -77,9 +78,9 @@ StructuralEdge::getDestTop () const
 }
 
 void
-StructuralEdge::setHeadTop (qreal headTop)
+StructuralEdge::setDestTop (qreal destTop)
 {
-  _destTop = headTop;
+  _destTop = destTop;
 }
 
 qreal
@@ -89,9 +90,9 @@ StructuralEdge::getDestLeft () const
 }
 
 void
-StructuralEdge::setDestLeft (qreal headLeft)
+StructuralEdge::setDestLeft (qreal destLeft)
 {
-  _destLeft = headLeft;
+  _destLeft = destLeft;
 }
 
 StructuralEntity *
@@ -101,9 +102,9 @@ StructuralEdge::getOrigin () const
 }
 
 void
-StructuralEdge::setOrigin (StructuralEntity *tail)
+StructuralEdge::setOrigin (StructuralEntity *orig)
 {
-  _orig = tail;
+  _orig = orig;
 }
 
 bool
@@ -135,58 +136,53 @@ StructuralEdge::adjust (bool collision, bool recursion)
 {
   StructuralEntity::adjust (collision, recursion);
 
-  // Adjusting properties...
   setAngle (getProperty (ST_ATTR_EDGE_ANGLE).toDouble ());
 
-  // Adjusting position...
   StructuralEntity *parent = getParent ();
-
-  if (parent != NULL || !ST_OPT_WITH_BODY)
+  if (parent || !ST_OPT_WITH_BODY)
   {
     qreal angle = getAngle ();
 
-    StructuralEntity *tail = getOrigin ();
-    StructuralEntity *head = getDestination ();
-
-    if (tail != NULL && head != NULL)
+    StructuralEntity *orig = getOrigin ();
+    StructuralEntity *dest = getDestination ();
+    if (orig && dest)
     {
-      QLineF line
-          = QLineF (QPointF (tail->getLeft () + tail->getWidth () / 2,
-                             tail->getTop () + tail->getHeight () / 2),
-                    QPointF (head->getLeft () + head->getWidth () / 2,
-                             head->getTop () + head->getHeight () / 2));
+      QLineF line = QLineF (QPointF (orig->getLeft () + orig->getWidth () / 2,
+                                     orig->getTop () + orig->getHeight () / 2),
+                            QPointF (dest->getLeft () + dest->getWidth () / 2,
+                                     dest->getTop () + dest->getHeight () / 2));
 
-      if (tail->getCategory () == Structural::Interface)
+      if (orig->getCategory () == Structural::Interface)
       {
         if (parent != NULL)
-          line.setP1 (parent->mapFromItem (tail->getParent (), line.p1 ()));
-        else if (tail->getParent () != NULL)
-          line.setP1 (tail->getParent ()->mapToScene (line.p1 ()));
+          line.setP1 (parent->mapFromItem (orig->getParent (), line.p1 ()));
+        else if (orig->getParent () != NULL)
+          line.setP1 (orig->getParent ()->mapToScene (line.p1 ()));
       }
 
-      if (head->getCategory () == Structural::Interface)
+      if (dest->getCategory () == Structural::Interface)
       {
         if (parent != NULL)
-          line.setP2 (parent->mapFromItem (head->getParent (), line.p2 ()));
-        else if (head->getParent () != NULL)
-          line.setP2 (head->getParent ()->mapToScene (line.p2 ()));
+          line.setP2 (parent->mapFromItem (dest->getParent (), line.p2 ()));
+        else if (dest->getParent () != NULL)
+          line.setP2 (dest->getParent ()->mapToScene (line.p2 ()));
       }
 
       adjustBox (line);
 
-      if (tail != head)
+      if (orig != dest)
       {
-        tail->setSelectable (false);
-        head->setSelectable (false);
+        orig->setSelectable (false);
+        dest->setSelectable (false);
 
-        adjustExtreme (tail, line, 0.0, 0.01, angle);
+        adjustExtreme (orig, line, 0.0, 0.01, angle);
         line.setP1 (QPointF (getOrigLeft (), getOrigTop ()));
 
-        adjustExtreme (head, line, 1.0, -0.01, angle);
+        adjustExtreme (dest, line, 1.0, -0.01, angle);
         line.setP2 (QPointF (getDestLeft (), getDestTop ()));
 
-        tail->setSelectable (true);
-        head->setSelectable (true);
+        orig->setSelectable (true);
+        dest->setSelectable (true);
       }
     }
   }
@@ -195,44 +191,44 @@ StructuralEdge::adjust (bool collision, bool recursion)
 void
 StructuralEdge::adjustBox (QLineF line)
 {
-  QPointF ptail = line.p1 ();
-  QPointF phead = line.p2 ();
+  QPointF porig = line.p1 ();
+  QPointF pdest = line.p2 ();
 
   qreal x = 0.0, y = 0.0, w = 0.0, h = 0.0;
 
-  if (ptail.x () <= phead.x () && ptail.y () <= phead.y ())
+  if (porig.x () <= pdest.x () && porig.y () <= pdest.y ())
   {
-    x = ptail.x ();
-    y = ptail.y ();
-    w = phead.x () - ptail.x ();
-    h = phead.y () - ptail.y ();
+    x = porig.x ();
+    y = porig.y ();
+    w = pdest.x () - porig.x ();
+    h = pdest.y () - porig.y ();
   }
-  else if (ptail.x () > phead.x () && ptail.y () <= phead.y ())
+  else if (porig.x () > pdest.x () && porig.y () <= pdest.y ())
   {
-    x = phead.x ();
-    y = ptail.y ();
-    w = ptail.x () - phead.x ();
-    h = phead.y () - ptail.y ();
+    x = pdest.x ();
+    y = porig.y ();
+    w = porig.x () - pdest.x ();
+    h = pdest.y () - porig.y ();
   }
-  else if (ptail.x () <= phead.x () && ptail.y () > phead.y ())
+  else if (porig.x () <= pdest.x () && porig.y () > pdest.y ())
   {
-    x = ptail.x ();
-    y = phead.y ();
-    w = phead.x () - ptail.x ();
-    h = ptail.y () - phead.y ();
+    x = porig.x ();
+    y = pdest.y ();
+    w = pdest.x () - porig.x ();
+    h = porig.y () - pdest.y ();
   }
-  else if (ptail.x () > phead.x () && ptail.y () > phead.y ())
+  else if (porig.x () > pdest.x () && porig.y () > pdest.y ())
   {
-    x = phead.x ();
-    y = phead.y ();
-    w = ptail.x () - phead.x ();
-    h = ptail.y () - phead.y ();
+    x = pdest.x ();
+    y = pdest.y ();
+    w = porig.x () - pdest.x ();
+    h = porig.y () - pdest.y ();
   }
 
-  setOrigTop (ptail.y ());
-  setOrigLeft (ptail.x ());
-  setHeadTop (phead.y ());
-  setDestLeft (phead.x ());
+  setOrigTop (porig.y ());
+  setOrigLeft (porig.x ());
+  setDestTop (pdest.y ());
+  setDestLeft (pdest.x ());
 
   setTop (y);
   setLeft (x);
@@ -258,9 +254,7 @@ StructuralEdge::adjustExtreme (StructuralEntity *extreme, QLineF line,
       qreal r;
       qreal len;
 
-      qreal alfa;
-      qreal beta;
-      qreal gama;
+      qreal alfa, beta, gama;
 
       QPointF center;
 

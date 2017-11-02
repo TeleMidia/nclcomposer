@@ -336,16 +336,16 @@ StructuralComposition::dropEvent (QGraphicsSceneDragDropEvent *event)
     {
       QString filename = url.toLocalFile ();
 
-      QMap<QString, QString> props;
-      props[ST_ATTR_ENT_TYPE] = StructuralUtil::typeToStr (Structural::Media);
-      props[ST_ATTR_ENT_ID]
-          = StructuralUtil::formatId (QFileInfo (filename).baseName ());
-      props[ST_ATTR_NODE_SRC] = filename;
-
-      props[ST_ATTR_ENT_TOP]
-          = QString::number (event->pos ().y () - ST_DEFAULT_CONTENT_H / 2);
-      props[ST_ATTR_ENT_LEFT]
-          = QString::number (event->pos ().x () - ST_DEFAULT_CONTENT_W / 2);
+      QMap<QString, QString> props = {
+        { ST_ATTR_ENT_TYPE, StructuralUtil::typeToStr (Structural::Media) },
+        { ST_ATTR_ENT_ID,
+          StructuralUtil::formatId (QFileInfo (filename).baseName ()) },
+        { ST_ATTR_NODE_SRC, filename },
+        { ST_ATTR_ENT_TOP,
+          QString::number (event->pos ().y () - ST_DEFAULT_CONTENT_H / 2) },
+        { ST_ATTR_ENT_LEFT,
+          QString::number (event->pos ().x () - ST_DEFAULT_CONTENT_W / 2) }
+      };
 
       insertAsked (StructuralUtil::createUid (), getUid (), props,
                    StructuralUtil::createSettings ());

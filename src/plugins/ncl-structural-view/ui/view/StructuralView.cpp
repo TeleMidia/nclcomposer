@@ -1725,13 +1725,11 @@ StructuralView::createLink (StructuralEntity *tail, StructuralEntity *head)
         insert (uid, (parent != nullptr ? parent->getUid () : ""), props,
                 settings);
 
-        if (_scene->hasEntity (uid))
-        {
-          createBind (tail, _scene->getEntity (uid), _dialog->getCondition (),
-                      settings.value (ST_SETTINGS_CODE));
-          createBind (_scene->getEntity (uid), head, _dialog->getAction (),
-                      settings.value (ST_SETTINGS_CODE));
-        }
+        CPR_ASSERT (_scene->hasEntity (uid));
+        createBind (tail, _scene->getEntity (uid), _dialog->getCondition (),
+                    settings.value (ST_SETTINGS_CODE));
+        createBind (_scene->getEntity (uid), head, _dialog->getAction (),
+                    settings.value (ST_SETTINGS_CODE));
       }
     }
   }

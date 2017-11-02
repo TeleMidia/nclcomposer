@@ -35,7 +35,7 @@ protected:
   void setOrigLeft (qreal tailLeft);
 
   qreal getDestTop () const;
-  void setHeadTop (qreal headTop);
+  void setDestTop (qreal destTop);
 
   qreal getDestLeft () const;
   void setDestLeft (qreal headLeft);
@@ -53,12 +53,11 @@ private:
   qreal _alfa;
   qreal _angle;
 
+  StructuralEntity *_orig;
   qreal _origTop, _origLeft;
 
-  qreal _destTop, _destLeft;
-
-  StructuralEntity *_orig;
   StructuralEntity *_dest;
+  qreal _destTop, _destLeft;
 };
 
 #endif // STRUCTURALSEDGE_H

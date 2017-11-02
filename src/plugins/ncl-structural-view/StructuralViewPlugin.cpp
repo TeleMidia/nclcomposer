@@ -159,10 +159,10 @@ StructuralViewPlugin::updateFromModel ()
   _window->getView ()->clean ();
   clean ();
 
-  // Insert the entities from the core again.
+  // Get the entities from the core again in the required order.
+  QVector <Entity *> nodes, interfaces, edges;
   QStack<Entity *> stack;
   stack.push (project);
-
   while (stack.size ())
   {
     Entity *current = stack.top ();
@@ -171,12 +171,40 @@ StructuralViewPlugin::updateFromModel ()
     for (Entity *child : current->getEntityChildren ())
     {
       StructuralType t = util::strToType (child->getType ());
-      if (t != Structural::NoType)
-        insertInView (child, false);
+      switch (t)
+      {
+        case Structural::Media:
+        case Structural::Body:
+        case StructuralType::Context:
+        case StructuralType::Switch:
+        case StructuralType::Link:
+          nodes.push_back (child);
+          break;
+
+        case Structural::Port:
+        case Structural::SwitchPort:
+        case Structural::Area:
+        case Structural::Property:
+          interfaces.push_back (child);
+          break;
+        case Structural::Bind:
+        case Structural::Reference:
+        case Structural::Mapping:
+          edges.push_back (child);
+          break;
+        default:
+          // do nothing.
+          break;
+      }
 
       stack.push (child);
     }
   }
+
+  // Intert the core entities in the view again (in the required order).
+  for (Entity *ent : nodes) insertInView (ent, false);
+  for (Entity *ent : interfaces) insertInView (ent, false);
+  for (Entity *ent : edges) insertInView (ent);
 
   // Restore old position properties.
   QStrMap stgs = util::createSettings (false, false);
