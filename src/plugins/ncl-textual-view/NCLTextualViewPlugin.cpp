@@ -790,25 +790,25 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
       bool sameNCLID = false;
 
       if (children[i].hasAttribute ("id")
-          && entityChildren.at (j)->hasAttribute ("id"))
+          && entityChildren.at (j)->hasAttr ("id"))
       {
         if (children[i].attribute ("id")
-            == entityChildren.at (j)->getAttribute ("id"))
+            == entityChildren.at (j)->getAttr ("id"))
           sameNCLID = true;
       }
       else if (children[i].hasAttribute ("name")
-               && entityChildren.at (j)->hasAttribute ("name"))
+               && entityChildren.at (j)->hasAttr ("name"))
       {
         if (children[i].attribute ("name")
-            == entityChildren.at (j)->getAttribute ("name"))
+            == entityChildren.at (j)->getAttr ("name"))
           sameNCLID = true;
       }
       // testing for alias - remove after
       else if (children[i].hasAttribute ("alias")
-               && entityChildren.at (j)->hasAttribute ("alias"))
+               && entityChildren.at (j)->hasAttr ("alias"))
       {
         if (children[i].attribute ("alias")
-            == entityChildren.at (j)->getAttribute ("alias"))
+            == entityChildren.at (j)->getAttr ("alias"))
           sameNCLID = true;
       }
       else
@@ -827,7 +827,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
         }
 
         QMap<QString, QString> elementAttrs
-            = entityChildren[j]->getAttributes ();
+            = entityChildren[j]->getAttrs ();
         bool changed = false;
         int entityChildrenAttrSize = 0;
         foreach (const QString &key, elementAttrs.keys ())
@@ -1132,10 +1132,10 @@ NCLTextualViewPlugin::getEntityAttributesAsString (/*const */ Entity *entity)
   {
     for (uint i = 0; i < attributes_ordered->size (); i++)
     {
-      if (entity->hasAttribute ((*attributes_ordered)[i]))
+      if (entity->hasAttr ((*attributes_ordered)[i]))
       {
         line += " " + (*attributes_ordered)[i] + "=\""
-                + entity->getAttribute ((*attributes_ordered)[i]) + "\"";
+                + entity->getAttr ((*attributes_ordered)[i]) + "\"";
       }
     }
   }
@@ -1144,7 +1144,7 @@ NCLTextualViewPlugin::getEntityAttributesAsString (/*const */ Entity *entity)
       = NCLStructure::instance ()->getAttributes (entity->getType ());
   // Search if there is any other attribute that is not part of NCL Language
   // but the user fills it.
-  QMap<QString, QString> attrs = entity->getAttributes ();
+  QMap<QString, QString> attrs = entity->getAttrs ();
   foreach (const QString &key, attrs.keys ())
   {
     if (attributes == nullptr || !attributes->count (key))

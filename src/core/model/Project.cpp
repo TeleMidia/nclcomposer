@@ -274,8 +274,8 @@ Project::generateUniqueAttrId (const QString &tagname)
   QList<QString> currentElementsNCLID;
   for (int i = 0; i < elements.size (); i++)
   {
-    if (elements.at (i)->hasAttribute ("id"))
-      currentElementsNCLID.push_back (elements.at (i)->getAttribute ("id"));
+    if (elements.at (i)->hasAttr ("id"))
+      currentElementsNCLID.push_back (elements.at (i)->getAttr ("id"));
   }
 
   for (int i = 1;; i++)
@@ -297,7 +297,7 @@ Project::getEntityByAttrId (const QString &id)
   {
     it.next ();
     Entity *ent = dynamic_cast <Entity *> (it.value ());
-    if (ent && ent->hasAttribute ("id") && ent->getAttribute ("id") == id)
+    if (ent && ent->hasAttr ("id") && ent->getAttr ("id") == id)
       listRet.append (ent);
   }
   return listRet;

@@ -123,10 +123,10 @@ PropertiesViewPlugin::updateCurrentEntity (QString errorMessage)
 {
   QString tagname = _currentEntity->getType ();
   QString name;
-  if (_currentEntity->hasAttribute ("id"))
-    name = _currentEntity->getAttribute ("id");
-  else if (_currentEntity->hasAttribute ("name"))
-    name = _currentEntity->getAttribute ("name");
+  if (_currentEntity->hasAttr ("id"))
+    name = _currentEntity->getAttr ("id");
+  else if (_currentEntity->hasAttr ("name"))
+    name = _currentEntity->getAttr ("name");
   else
     name = "Unknown";
 
@@ -138,7 +138,7 @@ PropertiesViewPlugin::updateCurrentEntity (QString errorMessage)
 
   _window->setErrorMessage (errorMessage);
 
-  QMap<QString, QString> attrs = _currentEntity->getAttributes ();
+  QMap<QString, QString> attrs = _currentEntity->getAttrs ();
   foreach (const QString &key, attrs.keys())
   {
     _window->setAttributeValue (key, attrs[key]);
@@ -148,17 +148,17 @@ PropertiesViewPlugin::updateCurrentEntity (QString errorMessage)
 void
 PropertiesViewPlugin::updateCurrentEntityAttr (QString attr, QString value)
 {
-  if (_currentEntity != nullptr)
+  if (_currentEntity)
   {
-    if (_currentEntity->hasAttribute (attr)
-        && _currentEntity->getAttribute (attr) == value)
+    if (_currentEntity->hasAttr (attr)
+        && _currentEntity->getAttr (attr) == value)
     {
       // do nothing
       return;
     }
     else
     {
-      QMap<QString, QString> attrs = _currentEntity->getAttributes ();
+      QMap<QString, QString> attrs = _currentEntity->getAttrs ();
       attrs[attr] = value;
 
       if (value.isNull() || value.isEmpty() || value == "")
@@ -285,17 +285,17 @@ PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
          if (userDefinedScope.startsWith ("$THIS"))
          {
            attr_scope = userDefinedScope.mid (6);
-           idEntityScope = _currentEntity->getAttribute (attr_scope);
+           idEntityScope = _currentEntity->getAttr (attr_scope);
          }
          else if (userDefinedScope.startsWith ("$PARENT"))
          {
            attr_scope = userDefinedScope.mid (8);
-           idEntityScope = static_cast <Entity *> (_currentEntity->getParent())->getAttribute(attr_scope);
+           idEntityScope = static_cast <Entity *> (_currentEntity->getParent())->getAttr(attr_scope);
          }
          else if (userDefinedScope.startsWith ("$GRANDPARENT"))
          {
            attr_scope = userDefinedScope.mid (13);
-           idEntityScope = static_cast <Entity *> (_currentEntity->getParent()->getParent())->getAttribute(attr_scope);
+           idEntityScope = static_cast <Entity *> (_currentEntity->getParent()->getParent())->getAttr(attr_scope);
          }
 
          QList <Entity *> ents = project->getEntityByAttrId (idEntityScope);
@@ -316,13 +316,13 @@ PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
              parent_scope = dynamic_cast <Entity *> (parent_scope->getParent());
            }
 
-           if (ent->hasAttribute(ref_attr))
+           if (ent->hasAttr (ref_attr))
            {
              if ((scope == AttributeReferences::ANY_SCOPE) // ANY_SCOPE
                  || (parent_scope != nullptr
                      && parent_scope == entityTargetScope) )
 
-               attr_suggestions << ent->getAttribute(ref_attr);
+               attr_suggestions << ent->getAttr(ref_attr);
            }
          }
        }

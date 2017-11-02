@@ -90,13 +90,13 @@ Entity::setType (const QString &type)
 }
 
 QString
-Entity::getAttribute (const QString &name) const
+Entity::getAttr (const QString &name) const
 {
   return _domNode.toElement ().attribute (name);
 }
 
 QMap<QString, QString>
-Entity::getAttributes () const
+Entity::getAttrs () const
 {
   QMap<QString, QString> attrs;
   QDomNamedNodeMap domAttrs = _domNode.toElement ().attributes ();
@@ -110,7 +110,7 @@ Entity::getAttributes () const
 }
 
 bool
-Entity::hasAttribute (const QString &name) const
+Entity::hasAttr (const QString &name) const
 {
   return _domNode.toElement ().attributes ().contains (name);
 }
@@ -141,7 +141,7 @@ Entity::toString (int ntab, bool writeuid)
 
   out += "<";
   out.append (getType ().toLatin1 ());
-  QMap<QString, QString> atts = getAttributes ();
+  QMap<QString, QString> atts = getAttrs ();
   for (const QString &attr : atts.keys ())
   {
     out += " ";
@@ -177,7 +177,7 @@ Entity::toString (int ntab, bool writeuid)
 Entity *
 Entity::clone ()
 {
-  return new Entity (getUniqueId (), getType (), getAttributes (), this->_doc,
+  return new Entity (getUniqueId (), getType (), getAttrs (), this->_doc,
                      (Entity *)this->_parent);
 }
 

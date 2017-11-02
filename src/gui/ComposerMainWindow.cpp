@@ -398,7 +398,7 @@ ComposerMainWindow::addPluginWidget (IPluginFactory *fac, IPlugin *plugin,
 {
   QToolWindowManager *w;
   QString location = project->getLocation ();
-  QString projectId = project->getAttribute ("id");
+  QString projectId = project->getAttr ("id");
 
 #ifdef USE_MDI
   QMdiArea *mdiArea;
@@ -508,7 +508,7 @@ ComposerMainWindow::tabClosed (int index)
 
   if (project != nullptr && project->isDirty ())
   {
-    int ret = QMessageBox::warning (this, project->getAttribute ("id"),
+    int ret = QMessageBox::warning (this, project->getAttr ("id"),
                                     tr ("The project has been modified.\n"
                                         "Do you want to save your changes?"),
                                     QMessageBox::Yes | QMessageBox::Default,
@@ -781,7 +781,7 @@ ComposerMainWindow::closeEvent (QCloseEvent *event)
     {
       _tabProjects->setCurrentIndex (index);
       int ret = QMessageBox::warning (
-          this, project->getAttribute ("id"),
+          this, project->getAttr ("id"),
           tr ("The project %1 has been modified.\n"
               "Do you want to save your changes?")
               .arg (location),
@@ -1571,7 +1571,7 @@ ComposerMainWindow::setProjectAsDirty (QString location, bool isDirty)
 
   QString projectId = ProjectControl::instance ()
                           ->getOpenProject (location)
-                          ->getAttribute ("id");
+                          ->getAttr ("id");
 
   int index = _tabProjects->indexOf (window);
 
@@ -1812,7 +1812,7 @@ ComposerMainWindow::updateTabWithProject (int index, QString newLocation)
       = ProjectControl::instance ()->getOpenProject (newLocation);
   if (project != nullptr)
   {
-    QString projectId = project->getAttribute ("id");
+    QString projectId = project->getAttr ("id");
     _tabProjects->setTabText (index, projectId);
   }
 }

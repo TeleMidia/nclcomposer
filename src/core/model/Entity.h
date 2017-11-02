@@ -47,14 +47,14 @@ public:
    * \param name - The name of the attribute been requested
    * \return A string with the requested attribute.
    */
-  QString getAttribute (const QString &name) const;
+  QString getAttr (const QString &name) const;
 
   /*!
    * \brief Gets the attributes of the entity.
    *
    * \return a QMap with the attributes of the entity
    */
-  QMap<QString, QString> getAttributes () const;
+  QMap<QString, QString> getAttrs () const;
 
   /*!
    * \brief This method is used to verify if this element has certain
@@ -63,7 +63,7 @@ public:
    * \param name - The name of the attribute to be verified.
    * \return an boolean depending of the existence of the attribute.
   */
-  bool hasAttribute (const QString &name) const;
+  bool hasAttr (const QString &name) const;
 
   QString getType () const;
 

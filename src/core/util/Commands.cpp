@@ -28,7 +28,7 @@ EditEntityCmd::EditEntityCmd (Project *project, Entity *entity,
   this->_project = project;
 
   this->_uniqueId = entity->getUniqueId ();
-  _attrs = entity->getAttributes ();
+  _attrs = entity->getAttrs ();
   this->_newAttrs = newAttrs;
 
   _msgControl = PluginControl::instance ()->getMessageControl (project);

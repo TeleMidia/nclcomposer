@@ -96,7 +96,7 @@ ComposerNCLAdapter::validate ()
 std::vector<Attribute>
 ComposerNCLAdapter::createVectorAttribute (Entity *entity)
 {
-  QMap<QString, QString> attrs = entity->getAttributes ();
+  QMap<QString, QString> attrs = entity->getAttrs ();
 
   std::vector<Attribute> attributes;
 

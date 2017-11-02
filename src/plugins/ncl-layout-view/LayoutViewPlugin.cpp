@@ -415,49 +415,49 @@ void NCLLayoutViewPlugin::addRegionToView(Entity* entity)
 
       QMap<QString, QString> attributes;
 
-      if (!entity->getAttribute("id").isEmpty())
+      if (!entity->getAttr("id").isEmpty())
       {
-        attributes["id"] =  entity->getAttribute("id");
+        attributes["id"] =  entity->getAttr("id");
       }
 
-      if (!entity->getAttribute("title").isEmpty())
+      if (!entity->getAttr("title").isEmpty())
       {
-        attributes["title"] =  entity->getAttribute("title");
+        attributes["title"] =  entity->getAttr("title");
       }
 
-      if (!entity->getAttribute("zIndex").isEmpty())
+      if (!entity->getAttr("zIndex").isEmpty())
       {
-        attributes["zIndex"] =  entity->getAttribute("zIndex");
+        attributes["zIndex"] =  entity->getAttr("zIndex");
       }
 
-      if (!entity->getAttribute("top").isEmpty())
+      if (!entity->getAttr("top").isEmpty())
       {
-        attributes["top"] =  entity->getAttribute("top");
+        attributes["top"] =  entity->getAttr("top");
       }
 
-      if (!entity->getAttribute("left").isEmpty())
+      if (!entity->getAttr("left").isEmpty())
       {
-        attributes["left"] =  entity->getAttribute("left");
+        attributes["left"] =  entity->getAttr("left");
       }
 
-      if (!entity->getAttribute("bottom").isEmpty())
+      if (!entity->getAttr("bottom").isEmpty())
       {
-        attributes["bottom"] =  entity->getAttribute("bottom");
+        attributes["bottom"] =  entity->getAttr("bottom");
       }
 
-      if (!entity->getAttribute("right").isEmpty())
+      if (!entity->getAttr("right").isEmpty())
       {
-        attributes["right"] =  entity->getAttribute("right");
+        attributes["right"] =  entity->getAttr("right");
       }
 
-      if (!entity->getAttribute("width").isEmpty())
+      if (!entity->getAttr("width").isEmpty())
       {
-        attributes["width"] =  entity->getAttribute("width");
+        attributes["width"] =  entity->getAttr("width");
       }
 
-      if (!entity->getAttribute("height").isEmpty())
+      if (!entity->getAttr("height").isEmpty())
       {
-        attributes["height"] =  entity->getAttribute("height");
+        attributes["height"] =  entity->getAttr("height");
       }
 
       // adding
@@ -568,49 +568,49 @@ void NCLLayoutViewPlugin::changeRegionInView(Entity* entity)
 
       QMap<QString, QString> attributes;
 
-      if (!entity->getAttribute("id").isEmpty())
+      if (!entity->getAttr("id").isEmpty())
       {
-        attributes["id"] =  entity->getAttribute("id");
+        attributes["id"] =  entity->getAttr("id");
       }
 
-      if (!entity->getAttribute("title").isEmpty())
+      if (!entity->getAttr("title").isEmpty())
       {
-        attributes["title"] =  entity->getAttribute("title");
+        attributes["title"] =  entity->getAttr("title");
       }
 
-      if (!entity->getAttribute("zIndex").isEmpty())
+      if (!entity->getAttr("zIndex").isEmpty())
       {
-        attributes["zIndex"] =  entity->getAttribute("zIndex");
+        attributes["zIndex"] =  entity->getAttr("zIndex");
       }
 
-      if (!entity->getAttribute("top").isEmpty())
+      if (!entity->getAttr("top").isEmpty())
       {
-        attributes["top"] =  entity->getAttribute("top");
+        attributes["top"] =  entity->getAttr("top");
       }
 
-      if (!entity->getAttribute("left").isEmpty())
+      if (!entity->getAttr("left").isEmpty())
       {
-        attributes["left"] =  entity->getAttribute("left");
+        attributes["left"] =  entity->getAttr("left");
       }
 
-      if (!entity->getAttribute("bottom").isEmpty())
+      if (!entity->getAttr("bottom").isEmpty())
       {
-        attributes["bottom"] =  entity->getAttribute("bottom");
+        attributes["bottom"] =  entity->getAttr("bottom");
       }
 
-      if (!entity->getAttribute("right").isEmpty())
+      if (!entity->getAttr("right").isEmpty())
       {
-        attributes["right"] =  entity->getAttribute("right");
+        attributes["right"] =  entity->getAttr("right");
       }
 
-      if (!entity->getAttribute("width").isEmpty())
+      if (!entity->getAttr("width").isEmpty())
       {
-        attributes["width"] =  entity->getAttribute("width");
+        attributes["width"] =  entity->getAttr("width");
       }
 
-      if (!entity->getAttribute("height").isEmpty())
+      if (!entity->getAttr("height").isEmpty())
       {
-        attributes["height"] =  entity->getAttribute("height");
+        attributes["height"] =  entity->getAttr("height");
       }
 
       // change
@@ -680,19 +680,19 @@ void NCLLayoutViewPlugin::addRegionBaseToView(Entity* entity)
 
       QMap<QString, QString> attributes;
 
-      if (!entity->getAttribute("id").isEmpty())
+      if (!entity->getAttr("id").isEmpty())
       {
-        attributes["id"] =  entity->getAttribute("id");
+        attributes["id"] =  entity->getAttr("id");
       }
 
-      if (!entity->getAttribute("region").isEmpty())
+      if (!entity->getAttr("region").isEmpty())
       {
-        attributes["region"] =  entity->getAttribute("region");
+        attributes["region"] =  entity->getAttr("region");
       }
 
-      if (!entity->getAttribute("device").isEmpty())
+      if (!entity->getAttr("device").isEmpty())
       {
-        attributes["device"] =  entity->getAttribute("device");
+        attributes["device"] =  entity->getAttr("device");
       }
 
       // adding
@@ -753,19 +753,19 @@ void NCLLayoutViewPlugin::changeRegionBaseInView(Entity* entity)
 
       QMap<QString, QString> attributes;
 
-      if (!entity->getAttribute("id").isEmpty())
+      if (!entity->getAttr("id").isEmpty())
       {
-        attributes["id"] =  entity->getAttribute("id");
+        attributes["id"] =  entity->getAttr("id");
       }
 
-      if (!entity->getAttribute("region").isEmpty())
+      if (!entity->getAttr("region").isEmpty())
       {
-        attributes["region"] =  entity->getAttribute("region");
+        attributes["region"] =  entity->getAttr("region");
       }
 
-      if (!entity->getAttribute("device").isEmpty())
+      if (!entity->getAttr("device").isEmpty())
       {
-        attributes["device"] =  entity->getAttribute("device");
+        attributes["device"] =  entity->getAttr("device");
       }
 
       // adding
@@ -802,18 +802,18 @@ void NCLLayoutViewPlugin::addDescriptorToView(Entity* entity)
 {
   if (entity != NULL)
   {
-    if (entity->getType() == "descriptor" && !entity->getAttribute("id").isEmpty() && !entity->getAttribute("region").isEmpty())
+    if (entity->getType() == "descriptor" && !entity->getAttr("id").isEmpty() && !entity->getAttr("region").isEmpty())
     {
       //QList<Entity*> model_regions = project->getEntitiesbyType("region");
       QMap<QString, QString> descriptorsIDs;
-      descriptorsIDs[entity->getAttribute("region")] = entity->getAttribute("id");
+      descriptorsIDs[entity->getAttr("region")] = entity->getAttr("id");
       descriptors[entity->getUniqueId()] = descriptorsIDs;
       /*
       for(Entity *rg : regions.values())
       {
-        if (entity->getAttribute("region") == rg->getAttribute("id"))
+        if (entity->getAttr("region") == rg->getAttr("id"))
         {
-          view->addDescriptor(rg->getUniqueId(),entity->getAttribute("id"));
+          view->addDescriptor(rg->getUniqueId(),entity->getAttr("id"));
         }
       }
       */ //is this step done twice if updateDescriptors is after add?
@@ -828,7 +828,7 @@ void NCLLayoutViewPlugin::removeDescriptorFromView(const QString &entityUID)
     /*
     for(Entity *rg : regions.values())
     {
-      if (descriptors[entityUID].contains(rg->getAttribute("id")))
+      if (descriptors[entityUID].contains(rg->getAttr("id")))
       {
         view->addDescriptor(rg->getUniqueId(),"");// remove descriptor id from view, passing ""
       }
@@ -844,9 +844,9 @@ void NCLLayoutViewPlugin::updateDescriptors()
     bool visited = false;
     for(QMap<QString,QString> descriptorsID : descriptors.values())
     {
-      if(descriptorsID.contains(rg->getAttribute("id")) )
+      if(descriptorsID.contains(rg->getAttr("id")) )
       {
-        view->addDescriptor(rg->getUniqueId(),descriptorsID.value(rg->getAttribute("id")));
+        view->addDescriptor(rg->getUniqueId(),descriptorsID.value(rg->getAttr("id")));
         visited = true;
       }
     }
@@ -1131,7 +1131,7 @@ QMap <QString, QString> NCLLayoutViewPlugin::getRegionAttributes(Entity *region)
   // left, top, width and height.
   while(currentRegion != NULL && currentRegion->getType() == "region")
   {
-    QMap <QString, QString> attrs = currentRegion->getAttributes();
+    QMap <QString, QString> attrs = currentRegion->getAttrs();
     foreach (const QString &key, attrs.keys())
     {
       QString name = key;
@@ -1178,8 +1178,8 @@ QMap <QString, QString> NCLLayoutViewPlugin::getRegionAttributes(Entity *region)
   attrs.insert( "top",    QString::number(top*100.0)+"%" );
 
   // Add also the zIndex to the list of properties.
-  if(region->hasAttribute("zIndex"))
-    attrs.insert("zIndex", region->getAttribute("zIndex"));
+  if(region->hasAttr ("zIndex"))
+    attrs.insert("zIndex", region->getAttr("zIndex"));
   else
     attrs.insert("zIndex", "0");
 
@@ -1198,8 +1198,8 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
 
   for(int i = 0; i < medias.size(); i++)
   {
-    if(medias.at(i)->hasAttribute("id") &&
-       medias.at(i)->getAttribute("id") == mediaId)
+    if(medias.at(i)->hasAttr ("id") &&
+       medias.at(i)->getAttr ("id") == mediaId)
     {
       media = medias.at(i);
       break;
@@ -1265,10 +1265,10 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
         foreach (Entity *desc, descriptors) {
           if(desc != NULL)
           {
-            if(desc->getAttribute("region") == region->getAttribute("id"))
+            if(desc->getAttr("region") == region->getAttr("id"))
             {
-              alredyExistentsDescriptorsIds << desc->getAttribute("id");
-              descriptorsIds << desc->getAttribute("id");
+              alredyExistentsDescriptorsIds << desc->getAttr("id");
+              descriptorsIds << desc->getAttr("id");
             }
           }
         }
@@ -1295,14 +1295,14 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
             Entity *descriptorBase =
                 project->getEntitiesbyType("descriptorBase").at(0);
             attrs.insert("id", newDescriptorID);
-            attrs.insert("region", region->getAttribute("id"));
+            attrs.insert("region", region->getAttr("id"));
 
             emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs);
           }
 
           //update the media to refer to this descriptor
           attrs.clear();
-          attrs = media->getAttributes();
+          attrs = media->getAttrs();
           attrs["descriptor"] = newDescriptorID;
           emit setAttributes(media, attrs);
         }
@@ -1314,9 +1314,9 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
 
         foreach (Entity *propEntity, media->getEntityChildren ())
         {
-          if(propEntity->hasAttribute("name"))
+          if(propEntity->hasAttr ("name"))
           {
-            propertyNameToUID.insert(propEntity->getAttribute("name"),
+            propertyNameToUID.insert(propEntity->getAttr("name"),
                                      propEntity->getUniqueId());
           }
         }
@@ -1357,18 +1357,17 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
       Entity *descriptorBase =
           project->getEntitiesbyType("descriptorBase").at(0);
       attrs.insert("id", newDescriptorID);
-      attrs.insert("region", region->getAttribute("id"));
+      attrs.insert("region", region->getAttr("id"));
 
       emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs);
 
       //update the media to refer to this descriptor
       attrs.clear();
-      attrs = media->getAttributes();
+      attrs = media->getAttrs();
       attrs["descriptor"] = newDescriptorID;
       emit setAttributes(media, attrs);
 
-      if(media->hasAttribute("type") &&
-         media->getAttribute("type") == "text/html")
+      if(media->hasAttr ("type") && media->getAttr ("type") == "text/html")
       {
         attrs.clear();
         QMap <QString, QString>::iterator begin, end, it;
@@ -1377,7 +1376,7 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
         if(descriptors.size())
         {
           Entity *desc = descriptors.at(0);
-          attrs = desc->getAttributes();
+          attrs = desc->getAttrs();
           attrs["focusIndex"] = "1";
           if(descriptors.size())
             emit setAttributes(desc, attrs);

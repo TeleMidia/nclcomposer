@@ -345,8 +345,8 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
   QStrMap transls = util::createCoreTranslations (type);
   for (const QString &key : transls.keys ())
   {
-    if (ent->hasAttribute (key))
-      viewProps.insert (transls.value (key), ent->getAttribute (key));
+    if (ent->hasAttr (key))
+      viewProps.insert (transls.value (key), ent->getAttr (key));
   }
 
   if (viewProps.contains (ST_ATTR_REFERENCE_COMPONENT_ID))
@@ -463,7 +463,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
   }
   else if (ent->getType () == "linkParam" || ent->getType () == "bindParam")
   {
-    if (ent->hasAttribute ("name") && ent->hasAttribute ("value"))
+    if (ent->hasAttr ("name") && ent->hasAttr ("value"))
     {
       StructuralEntity *e = _struct_scene->getEntity (
           _coreToView.value (ent->getParentUniqueId ()));
@@ -485,8 +485,8 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
         value = QString (ST_ATTR_BINDPARAM_VALUE);
       }
 
-      next[name + ":" + uid] = ent->getAttribute ("name");
-      next[value + ":" + uid] = ent->getAttribute ("value");
+      next[name + ":" + uid] = ent->getAttr ("name");
+      next[value + ":" + uid] = ent->getAttr ("value");
 
       _coreToView.insert (uid, uid);
       _viewToCore.insert (uid, uid);
@@ -564,8 +564,8 @@ StructuralViewPlugin::changeInView (Entity *ent)
 
     for (const QString &key : transls.keys ())
     {
-      if (ent->hasAttribute (key))
-        props.insert (transls.value (key), ent->getAttribute (key));
+      if (ent->hasAttr (key))
+        props.insert (transls.value (key), ent->getAttr (key));
     }
 
     if (_coreToView.contains (ent->getUniqueId ()))
@@ -672,7 +672,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
       value = QString (ST_ATTR_BINDPARAM_VALUE);
     }
 
-    if (ent->hasAttribute ("name") && !ent->hasAttribute ("value"))
+    if (ent->hasAttr ("name") && !ent->hasAttr ("value"))
     {
 
       if (_coreToView.contains (ent->getUniqueId ()))
@@ -680,8 +680,8 @@ StructuralViewPlugin::changeInView (Entity *ent)
       else
         uid = ent->getUniqueId ();
 
-      next[name + ":" + uid] = ent->getAttribute ("name");
-      next[value + ":" + uid] = ent->getAttribute ("value");
+      next[name + ":" + uid] = ent->getAttr ("name");
+      next[value + ":" + uid] = ent->getAttr ("value");
 
       _coreToView[uid] = uid;
       _viewToCore[uid] = uid;
@@ -693,8 +693,8 @@ StructuralViewPlugin::changeInView (Entity *ent)
     {
       uid = _coreToView.value (ent->getUniqueId ());
 
-      next[name + ":" + uid] = ent->getAttribute ("name");
-      next[value + ":" + uid] = ent->getAttribute ("value");
+      next[name + ":" + uid] = ent->getAttr ("name");
+      next[value + ":" + uid] = ent->getAttr ("value");
 
       _window->getView ()->change (e->getUid (), next, previous,
                                    util::createSettings (true, false));
@@ -997,7 +997,7 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
         if (c->getType () == tag)
         {
           paramUids.append (c->getUniqueId ());
-          paramNames.append (c->getAttribute ("name"));
+          paramNames.append (c->getAttr ("name"));
         }
       }
 
@@ -1116,7 +1116,7 @@ StructuralViewPlugin::createCacheId (StructuralEntity *ent)
 
     if (body != nullptr)
     {
-      cacheId = body->getAttribute ("id");
+      cacheId = body->getAttr ("id");
     }
   }
 
@@ -1150,12 +1150,12 @@ StructuralViewPlugin::getUidById (const QString &id, Entity *ent)
 
   if (ent->getType () == "property")
   {
-    if (ent->getAttribute ("name") == id)
+    if (ent->getAttr ("name") == id)
       return ent->getUniqueId ();
   }
   else
   {
-    if (ent->getAttribute ("id") == id)
+    if (ent->getAttr ("id") == id)
       return ent->getUniqueId ();
   }
 
@@ -1178,7 +1178,7 @@ StructuralViewPlugin::getUidByName (const QString &name, Entity *entity)
 {
   QString uid = "";
 
-  if (entity->getAttribute ("name") == name)
+  if (entity->getAttr ("name") == name)
     return entity->getUniqueId ();
 
   for (Entity *child : entity->getEntityChildren ())
@@ -1216,7 +1216,7 @@ StructuralViewPlugin::adjustConnectors ()
         QString connId;
         QVector<QString> connConditions, connActions, connParams;
 
-        connId = e->getAttribute ("id");
+        connId = e->getAttr ("id");
 
         QStack<Entity *> next;
 
@@ -1228,20 +1228,20 @@ StructuralViewPlugin::adjustConnectors ()
           Entity *current = next.pop ();
 
           if (current->getType () == "simpleCondition")
-            if (current->hasAttribute ("role"))
-              connConditions.append (current->getAttribute ("role"));
+            if (current->hasAttr ("role"))
+              connConditions.append (current->getAttr ("role"));
 
           if (current->getType () == "attributeAssessment")
-            if (current->hasAttribute ("role"))
-              connConditions.append (current->getAttribute ("role"));
+            if (current->hasAttr ("role"))
+              connConditions.append (current->getAttr ("role"));
 
           if (current->getType () == "simpleAction")
-            if (current->hasAttribute ("role"))
-              connActions.append (current->getAttribute ("role"));
+            if (current->hasAttr ("role"))
+              connActions.append (current->getAttr ("role"));
 
           if (current->getType () == "connectorParam")
-            if (current->hasAttribute ("name"))
-              connParams.append (current->getAttribute ("name"));
+            if (current->hasAttr ("name"))
+              connParams.append (current->getAttr ("name"));
 
           if (current->getType () == "compoundCondition"
               || current->getType () == "compoundAction"
@@ -1262,8 +1262,8 @@ StructuralViewPlugin::adjustConnectors ()
       {
         QString importAlias, importURI, projectURI;
 
-        importAlias = e->getAttribute ("alias");
-        importURI = e->getAttribute ("documentURI");
+        importAlias = e->getAttr ("alias");
+        importURI = e->getAttr ("documentURI");
 
         // projectURI use '/' as separator
         projectURI = getProject ()->getLocation ();

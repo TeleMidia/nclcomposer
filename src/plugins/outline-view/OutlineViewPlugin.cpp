@@ -72,7 +72,7 @@ OutlineViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
   QMap<QString, QString> attrs;
   QMap<QString, QString>::iterator begin, end, it;
 
-  attrs = entity->getAttributes ();
+  attrs = entity->getAttrs ();
 
   if (_idToItem.contains (entity->getParentUniqueId ()))
   {
@@ -127,7 +127,7 @@ OutlineViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
   QMap<QString, QString> attrs;
   QMap<QString, QString>::iterator begin, end, it;
 
-  attrs = entity->getAttributes ();
+  attrs = entity->getAttrs ();
 
   // \fixme This "if" should not be here. It is here because after adding an
   // entity, layout view change their content (before outline add the region)
@@ -256,7 +256,7 @@ OutlineViewPlugin::init ()
   QMap<QString, QString> attrs;
   QMap<QString, QString>::iterator begin, end, it;
 
-  attrs = entity->getAttributes ();
+  attrs = entity->getAttrs ();
 
   item = _window->addElement (0, -1, entity->getType (),
                               entity->getUniqueId (), attrs, 0, 0);
@@ -276,7 +276,7 @@ OutlineViewPlugin::init ()
         continue;
 
       attrs.clear ();
-      attrs = child->getAttributes ();
+      attrs = child->getAttrs ();
 
       item = _window->addElement (
           _idToItem[entity->getUniqueId ()], -1, child->getType (),
@@ -402,11 +402,11 @@ OutlineViewPlugin::openWithDefaultSystemEditor (QString entityId)
 
   if (entity->getType () == "media")
   {
-    url = entity->getAttribute ("src");
+    url = entity->getAttr ("src");
   }
   else if (entity->getType () == "importBase")
   {
-    url = entity->getAttribute ("documentURI");
+    url = entity->getAttr ("documentURI");
   }
 
   if (!QFile::exists (url))
