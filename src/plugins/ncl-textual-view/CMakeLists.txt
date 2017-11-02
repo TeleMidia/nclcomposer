@@ -10,35 +10,35 @@ configure_file(ncl-textual-view.json.in ncl-textual-view.json)
 find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 
 set (NCL_TEXTUAL_VIEW_SOURCES
-  src/NCLTextEditorMainWindow.cpp
-  src/NCLTextEditor.cpp
-  src/QsciLexerNCL.cpp
-  src/QsciNCLAPIs.cpp
-  src/MyLexer.cpp
+  NCLTextEditorMainWindow.cpp
+  NCLTextEditor.cpp
+  QsciLexerNCL.cpp
+  QsciNCLAPIs.cpp
+  MyLexer.cpp
   ../outline-view/NCLParser.cpp
   ../outline-view/NCLTreeWidget.cpp
-  src/NCLTextualViewPlugin.cpp
-  src/NCLTextualViewPluginFactory.cpp
-  src/SearchLineEdit.cpp
-  src/SearchBox.cpp
+  NCLTextualViewPlugin.cpp
+  NCLTextualViewPluginFactory.cpp
+  SearchLineEdit.cpp
+  SearchBox.cpp
   
-  src/NCLTextEditorMainWindow.h
-  src/NCLTextEditor.h
-  src/QsciLexerNCL.h
-  src/QsciNCLAPIs.h
-  src/MyLexer.h
+  NCLTextEditorMainWindow.h
+  NCLTextEditor.h
+  QsciLexerNCL.h
+  QsciNCLAPIs.h
+  MyLexer.h
   ../outline-view/NCLParser.h
   ../outline-view/NCLTreeWidget.h
-  src/NCLTextualViewPlugin.h
-  src/NCLTextualViewPluginFactory.h
-  src/NCLTextualViewPlugin_global.h
-  src/SearchLineEdit.h
-  src/SearchBox.h
+  NCLTextualViewPlugin.h
+  NCLTextualViewPluginFactory.h
+  NCLTextualViewPlugin_global.h
+  SearchLineEdit.h
+  SearchBox.h
 )
 
 qt5_wrap_ui(UI_GENERATED_HEADERS
-  src/TextualPluginPreferencesWidget.ui
-  src/SearchBox.ui
+  TextualPluginPreferencesWidget.ui
+  SearchBox.ui
 )
 
 add_library(ncl_textual_view SHARED
@@ -53,7 +53,7 @@ target_compile_definitions(ncl_textual_view
 add_subdirectory(deps/QScintilla_gpl-2.10.1/Qt4Qt5)
 
 target_include_directories(ncl_textual_view PRIVATE
-  src
+  .
   "../outline-view/"
   ${CMAKE_CURRENT_BINARY_DIR}
 )
