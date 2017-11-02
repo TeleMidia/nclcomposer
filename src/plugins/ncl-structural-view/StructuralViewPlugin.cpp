@@ -372,7 +372,7 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
     viewParentUid = ent->getParent ()->getParentUniqueId ();
     assert (viewParentUid != nullptr);
 
-    if (!viewProps.value (ST_ATTR_ENT_ID).isEmpty ())
+    if (viewProps.contains (ST_ATTR_ENT_ID))
     {
       StructuralRole role = util::strToRole (viewProps.value (ST_ATTR_ENT_ID));
 
@@ -463,8 +463,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
   }
   else if (ent->getType () == "linkParam" || ent->getType () == "bindParam")
   {
-    if (!ent->getAttribute ("name").isEmpty ()
-        && !ent->getAttribute ("value").isEmpty ())
+    if (ent->hasAttribute ("name") && ent->hasAttribute ("value"))
     {
       StructuralEntity *e = _struct_scene->getEntity (
           _coreToView.value (ent->getParentUniqueId ()));
@@ -565,7 +564,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
 
     for (const QString &key : transls.keys ())
     {
-      if (!ent->getAttribute (key).isEmpty ())
+      if (ent->hasAttribute (key))
         props.insert (transls.value (key), ent->getAttribute (key));
     }
 
@@ -575,7 +574,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
 
       if (type == Structural::Bind)
       {
-        if (!props.value (ST_ATTR_ENT_ID).isEmpty ())
+        if (props.contains (ST_ATTR_ENT_ID))
         {
           StructuralRole role = util::strToRole (props.value (ST_ATTR_ENT_ID));
 
@@ -585,14 +584,14 @@ StructuralViewPlugin::changeInView (Entity *ent)
 
           if (util::isCondition (role))
           {
-            if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
+            if (props.contains (ST_ATTR_REFERENCE_INTERFACE_UID))
             {
               props.insert (ST_ATTR_EDGE_ORIG,
                             props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
               props.insert (ST_ATTR_EDGE_DEST,
                             _coreToView.value (ent->getParentUniqueId ()));
             }
-            else if (!props.value (ST_ATTR_REFERENCE_COMPONENT_UID).isEmpty ())
+            else if (props.contains (ST_ATTR_REFERENCE_COMPONENT_UID))
             {
               props.insert (ST_ATTR_EDGE_ORIG,
                             props.value (ST_ATTR_REFERENCE_COMPONENT_UID));
@@ -602,14 +601,14 @@ StructuralViewPlugin::changeInView (Entity *ent)
           }
           else if (util::isAction (role))
           {
-            if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
+            if (props.contains (ST_ATTR_REFERENCE_INTERFACE_UID))
             {
               props.insert (ST_ATTR_EDGE_ORIG,
                             _coreToView.value (ent->getParentUniqueId ()));
               props.insert (ST_ATTR_EDGE_DEST,
                             props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
             }
-            else if (!props.value (ST_ATTR_REFERENCE_COMPONENT_UID).isEmpty ())
+            else if (props.contains (ST_ATTR_REFERENCE_COMPONENT_UID))
             {
               props.insert (ST_ATTR_EDGE_ORIG,
                             _coreToView.value (ent->getParentUniqueId ()));
@@ -621,14 +620,14 @@ StructuralViewPlugin::changeInView (Entity *ent)
       }
       else if (type == Structural::Mapping)
       {
-        if (!props.value (ST_ATTR_REFERENCE_INTERFACE_UID).isEmpty ())
+        if (props.contains (ST_ATTR_REFERENCE_INTERFACE_UID))
         {
           props.insert (ST_ATTR_EDGE_ORIG,
                         _coreToView.value (ent->getParentUniqueId ()));
           props.insert (ST_ATTR_EDGE_DEST,
                         props.value (ST_ATTR_REFERENCE_INTERFACE_UID));
         }
-        else if (!props.value (ST_ATTR_REFERENCE_COMPONENT_UID).isEmpty ())
+        else if (props.contains (ST_ATTR_REFERENCE_COMPONENT_UID))
         {
           props.insert (ST_ATTR_EDGE_ORIG,
                         _coreToView.value (ent->getParentUniqueId ()));
@@ -673,8 +672,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
       value = QString (ST_ATTR_BINDPARAM_VALUE);
     }
 
-    if (!ent->getAttribute ("name").isEmpty ()
-        && !ent->getAttribute ("value").isEmpty ())
+    if (ent->hasAttribute ("name") && !ent->hasAttribute ("value"))
     {
 
       if (_coreToView.contains (ent->getUniqueId ()))
@@ -786,14 +784,14 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
     entParent = getProject ()->getEntityById (_viewToCore.value (parent));
   }
 
-  if (entParent != nullptr)
+  if (entParent)
   {
     QMap<QString, QString> attrs;
     QMap<QString, QString> transls = util::createPluginTranslations (type);
 
     for (const QString &key : transls.keys ())
     {
-      if (!props.value (key).isEmpty ())
+      if (props.contains (key))
         attrs.insert (transls.value (key), props.value (key));
     }
 
@@ -889,7 +887,7 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
 
     for (const QString &key : translations.keys ())
     {
-      if (!props.value (key).isEmpty ())
+      if (props.contains (key))
         attributes.insert (translations.value (key), props.value (key));
     }
 
@@ -1200,19 +1198,17 @@ StructuralViewPlugin::getUidByName (const QString &name, Entity *entity)
 void
 StructuralViewPlugin::adjustConnectors ()
 {
-  // TODO: this function should be calling only when a change occurs in
-  // <connectorBase>. Currently, this function is calling every time the
+  // TODO: this function should be called only when a change occurs in
+  // <connectorBase>. Currently, this function is called every time the
   // link's dialog is displayed.
-  if (!getProject ()->getEntitiesbyType ("connectorBase").isEmpty ())
+  auto connectorBases = getProject ()->getEntitiesbyType ("connectorBase");
+  if (!connectorBases.isEmpty ())
   {
-    Entity *connectorBase
-        = getProject ()->getEntitiesbyType ("connectorBase").first ();
+    Entity *connBase = connectorBases.first ();
 
-    QMap<QString, QVector<QString> > conditions;
-    QMap<QString, QVector<QString> > actions;
-    QMap<QString, QVector<QString> > params;
+    QMap<QString, QVector<QString> > conditions, actions, params;
 
-    for (Entity *e : connectorBase->getEntityChildren ())
+    for (Entity *e : connBase->getEntityChildren ())
     {
       // loading data from local causalConnector
       if (e->getType () == "causalConnector")
