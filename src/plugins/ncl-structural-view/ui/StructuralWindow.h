@@ -15,7 +15,7 @@ class StructuralWindow : public QMainWindow
 
 public:
   StructuralWindow (QWidget *parent = 0);
-  virtual ~StructuralWindow ();
+  virtual ~StructuralWindow () {}
 
   StructuralView *getView () const;
   void setView (StructuralView *view);
@@ -30,13 +30,11 @@ private:
   void createActions ();
   void createToolbar ();
   void createWidgets ();
-  void createStatusbar ();
   void createConnections ();
 
   QToolBar *_editToolbar, *_insertToolbar, *_windowToolbar;
 
   QAction *_undoAction, *_redoAction;
-
   QAction *_cutAction, *_copyAction, *_pasteAction, *_deleteAction;
 
   QAction *_snapshotAction, *_zoominAction, *_zoomoutAction, *_zoomresetAction,

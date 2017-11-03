@@ -272,9 +272,8 @@ StructuralEntity::adjust (bool collision, bool recursion)
   setCollapsed (
       (_props[ST_ATTR_ENT_COLLAPSED] == ST_VALUE_TRUE ? true : false));
 
-  setToolTip (
-      StructuralUtil::getTooltip (_type, _id, _info, _warnning, _error,
-                                  _props[ST_ATTR_REF_XCONNECTOR_ID]));
+  setToolTip (StructuralUtil::getTooltip (_type, _id, _info, _warnning, _error,
+                                          _props[ST_ATTR_REF_XCONNECTOR_ID]));
 
   if (scene () != NULL)
     scene ()->update ();
@@ -1407,10 +1406,9 @@ StructuralEntity::dropEvent (QGraphicsSceneDragDropEvent *event)
   if (StructuralUtil::validateKinship (type, _type)
       && event->mimeData ()->text () != _uid)
   {
-    QMap<QString, QString> props = {
-      {ST_ATTR_ENT_TOP, QString::number (event->pos ().y ())},
-      {ST_ATTR_ENT_LEFT, QString::number (event->pos ().x ())}
-    };
+    QMap<QString, QString> props
+        = { { ST_ATTR_ENT_TOP, QString::number (event->pos ().y ()) },
+            { ST_ATTR_ENT_LEFT, QString::number (event->pos ().x ()) } };
 
     emit moveAsked (event->mimeData ()->text (), _uid, props,
                     StructuralUtil::createSettings ());

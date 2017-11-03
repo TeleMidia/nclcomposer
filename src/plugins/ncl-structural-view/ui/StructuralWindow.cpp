@@ -5,13 +5,10 @@ StructuralWindow::StructuralWindow (QWidget *parent)
 {
   createActions ();
   createToolbar ();
-  createStatusbar ();
   createConnections ();
 
   setCentralWidget (_view);
 }
-
-StructuralWindow::~StructuralWindow () {}
 
 StructuralView *
 StructuralWindow::getView () const
@@ -329,12 +326,6 @@ StructuralWindow::createToolbar ()
 }
 
 void
-StructuralWindow::createStatusbar ()
-{
-  // TODO
-}
-
-void
 StructuralWindow::createConnections ()
 {
   connect (_snapshotAction, &QAction::triggered, _view,
@@ -360,9 +351,9 @@ StructuralWindow::createConnections ()
            &StructuralView::performDelete);
 
   connect (_pointerAction, &QAction::triggered, _view,
-           [&]() {_view->setMode (StructuralInteractionMode::Pointing); });
+           [&]() { _view->setMode (StructuralInteractionMode::Pointing); });
   connect (_linkAction, &QAction::triggered, _view,
-           [&]() {_view->setMode (StructuralInteractionMode::Linking);});
+           [&]() { _view->setMode (StructuralInteractionMode::Linking); });
 
   connect (_autostartAction, &QAction::triggered, _view,
            &StructuralView::performAutostart);
@@ -477,10 +468,8 @@ StructuralWindow::select (QString uid, QMap<QString, QString> settings)
         _propertyAction->setEnabled (true);
         _portAction->setEnabled (false);
         _switchportAction->setEnabled (false);
-
         break;
       }
-
       case Structural::Context:
       {
         _mediaAction->setEnabled (true);
@@ -491,10 +480,8 @@ StructuralWindow::select (QString uid, QMap<QString, QString> settings)
         _propertyAction->setEnabled (true);
         _portAction->setEnabled (true);
         _switchportAction->setEnabled (false);
-
         break;
       }
-
       case Structural::Switch:
       {
         _mediaAction->setEnabled (true);
@@ -505,10 +492,8 @@ StructuralWindow::select (QString uid, QMap<QString, QString> settings)
         _propertyAction->setEnabled (true);
         _portAction->setEnabled (false);
         _switchportAction->setEnabled (true);
-
         break;
       }
-
       case Structural::Body:
       {
         _mediaAction->setEnabled (true);
@@ -519,10 +504,8 @@ StructuralWindow::select (QString uid, QMap<QString, QString> settings)
         _propertyAction->setEnabled (true);
         _portAction->setEnabled (true);
         _switchportAction->setEnabled (false);
-
         break;
       }
-
       case Structural::Area:
       case Structural::Property:
       case Structural::Port:
@@ -536,10 +519,8 @@ StructuralWindow::select (QString uid, QMap<QString, QString> settings)
         _propertyAction->setEnabled (false);
         _portAction->setEnabled (false);
         _switchportAction->setEnabled (false);
-
         break;
       }
-
       default:
       {
         break;
