@@ -156,6 +156,8 @@ StructuralView::insert (QString uid, QString parent, QStrMap props,
 {
   CPR_ASSERT (!_scene->hasEntity (uid));
 
+  qWarning (CPR_PLUGIN_STRUCT) << "Insert: " << uid << parent << props << stgs;
+
   // 1. Create the new entity.
   StructuralType type = util::strToType (props[ST_ATTR_ENT_TYPE]);
   StructuralEntity *e = _scene->createEntity (type);
@@ -195,7 +197,8 @@ StructuralView::insert (QString uid, QString parent, QStrMap props,
 
   // 5. Adjust the entity
   adjustEntity (e, props, stgs);
-  adjustReferences (e);
+  if (stgs.value (ST_SETTINGS_ADJUST_REFERS, "") != ST_VALUE_FALSE)
+    adjustReferences (e);
 
   connect (e, &StructuralEntity::insertAsked, this, &StructuralView::insert);
   connect (e, &StructuralEntity::changeAsked, this,
@@ -513,6 +516,27 @@ StructuralView::change (QString uid, QStrMap props, QStrMap stgs)
 
   if (stgs[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
     emit changed (uid, props, prev, stgs);
+}
+
+void
+StructuralView::adjustAllReferences ()
+{
+  for (const QString &uid : _scene->getEntities().keys ())
+  {
+    // warn: getEntities can be changed by the adjustReferences and adjust
+    // bellow
+    StructuralEntity *e = _scene->getEntity (uid);
+    if (_scene->hasEntity (uid))
+    {
+      CPR_ASSERT_NON_NULL (e);
+      if (e->getCategory () == Structural::Edge
+          || e->getType () == Structural::Port || e->isReference ())
+      {
+        adjustReferences (e);
+        e->adjust (true);
+      }
+    }
+  }
 }
 
 void

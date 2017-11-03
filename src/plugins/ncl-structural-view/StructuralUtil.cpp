@@ -141,7 +141,7 @@ createCoreTranslations (StructuralType type)
     }
 
     default:
-      CPR_ASSERT_NOT_REACHED ();
+//      CPR_ASSERT_NOT_REACHED ();
       break;
   }
 

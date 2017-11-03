@@ -9,8 +9,8 @@ public:
   StructuralComposition (StructuralEntity *parent = 0);
   virtual ~StructuralComposition () {}
 
-  void collapse (bool notify = false);
-  void uncollapse (bool notify = false);
+  void collapse ();
+  void uncollapse ();
 
 protected:
   virtual void draw (QPainter *painter);

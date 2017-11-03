@@ -19,11 +19,9 @@ StructuralComposition::StructuralComposition (StructuralEntity *parent)
 }
 
 void
-StructuralComposition::collapse (bool notify)
+StructuralComposition::collapse ()
 {
   CPR_ASSERT (!isCollapsed ());
-
-  QMap<QString, QString> previous = getProperties ();
 
   setHoverable (true);
   setResizable (false);
@@ -61,20 +59,13 @@ StructuralComposition::collapse (bool notify)
   }
 
   setCollapsed (true);
-
-  if (notify)
-  {
-    emit changeAsked (getUid (), getProperties (), previous,
-                      StructuralUtil::createSettings (true, false));
-  }
 }
 
 void
-StructuralComposition::uncollapse (bool notify)
+StructuralComposition::uncollapse ()
 {
   CPR_ASSERT (isCollapsed ());
 
-  QMap<QString, QString> previous = getProperties ();
   QRect uncollapsed = getUncollapsedRect ();
 
   setHoverable (false);
@@ -110,12 +101,6 @@ StructuralComposition::uncollapse (bool notify)
   }
 
   setCollapsed (false);
-
-  if (notify)
-  {
-    emit changeAsked (getUid (), getProperties (), previous,
-                      StructuralUtil::createSettings (true, false));
-  }
 }
 
 void
@@ -361,8 +346,13 @@ void
 StructuralComposition::mouseDoubleClickEvent (QGraphicsSceneMouseEvent *event)
 {
   Q_UNUSED (event);
+  QStrMap previous = getProperties ();
+
   if (!isCollapsed ())
-    collapse (true);
+    collapse ();
   else
-    uncollapse (true);
+    uncollapse ();
+
+  emit changeAsked (getUid (), getProperties (), previous,
+                    StructuralUtil::createSettings (true, false));
 }

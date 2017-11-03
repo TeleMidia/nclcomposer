@@ -145,18 +145,6 @@ StructuralScene::load (const QString &data)
       _refs[elt.attribute ("uid")] = elt.attribute ("refer");
     }
   }
-
-  for (const QString &key : _entities.keys ())
-  {
-    StructuralEntity *e = _entities.value (key);
-
-    if (e->getCategory () == Structural::Edge
-        || e->getType () == Structural::Port || e->isReference ())
-    {
-      _view->adjustReferences (e);
-      e->adjust (true);
-    }
-  }
 }
 
 void

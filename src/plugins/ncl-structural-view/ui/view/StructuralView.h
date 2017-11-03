@@ -105,6 +105,7 @@ public slots:
 
   void clean ();
 
+  void adjustAllReferences ();
   void adjustReferences (StructuralEntity *entity);
 
 signals:
