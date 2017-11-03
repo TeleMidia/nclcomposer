@@ -391,7 +391,6 @@ StructuralView::remove (QString uid, QStrMap stgs)
               // Note:
               // The 'tail' of a 'Structural::Reference' edge
               // is always a 'Structural::Port' entity.
-              auto previous = edge->getOrigin ()->getProperties ();
               auto props = edge->getOrigin ()->getProperties ();
 
               props[ST_ATTR_REF_COMPONENT_ID] = "";
@@ -399,7 +398,7 @@ StructuralView::remove (QString uid, QStrMap stgs)
               props[ST_ATTR_REF_INTERFACE_ID] = "";
               props[ST_ATTR_REF_INTERFACE_UID] = "";
 
-              change (edge->getOrigin ()->getUid (), props, previous,
+              change (edge->getOrigin ()->getUid (), props,
                       util::createSettings (ST_VALUE_TRUE,
                                             stgs.value (ST_SETTINGS_NOTIFY),
                                             stgs.value (ST_SETTINGS_CODE)));
@@ -468,12 +467,14 @@ StructuralView::remove (QString uid, QStrMap stgs)
 }
 
 void
-StructuralView::change (QString uid, QStrMap props, QStrMap prev, QStrMap stgs)
+StructuralView::change (QString uid, QStrMap props, QStrMap stgs)
 {
   CPR_ASSERT (_scene->hasEntity (uid));
 
   StructuralEntity *ent = _scene->getEntity (uid);
   auto *comp = dynamic_cast<StructuralComposition *> (ent);
+
+  QStrMap prev = ent->getProperties ();
 
   if (ent->isCollapsed ()
       && props.value (ST_ATTR_ENT_COLLAPSED) == ST_VALUE_FALSE)
@@ -989,8 +990,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
               props = interf->getProperties ();
               props[ST_ATTR_ENT_AUTOSTART] = ST_VALUE_TRUE;
 
-              change (interf->getUid (), props, ent->getProperties (),
-                      settings);
+              change (interf->getUid (), props, settings);
             }
           }
           else if (comp != nullptr)
@@ -998,7 +998,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
             props = comp->getProperties ();
             props[ST_ATTR_ENT_AUTOSTART] = ST_VALUE_TRUE;
 
-            change (comp->getUid (), props, ent->getProperties (), settings);
+            change (comp->getUid (), props, settings);
           }
         }
       }
@@ -1267,8 +1267,7 @@ StructuralView::performAutostart ()
     props[ST_ATTR_ENT_AUTOSTART] = ST_VALUE_TRUE;
   }
 
-  change (e->getUid (), props, e->getProperties (),
-          util::createSettings (true, true));
+  change (e->getUid (), props, util::createSettings (true, true));
 }
 
 void
@@ -1983,8 +1982,7 @@ StructuralView::createReference (StructuralEntity *orig,
 
       if (orig->getType () == Structural::Port)
       {
-        change (orig->getUid (), props, previous,
-                util::createSettings (true, true));
+        change (orig->getUid (), props, util::createSettings (true, true));
       }
       else if (orig->getType () == Structural::SwitchPort)
       {
@@ -2505,7 +2503,7 @@ StructuralView::performLinkDialog (StructuralLink *ent)
 
     QStrMap settings = util::createSettings (true, true);
 
-    change (ent->getUid (), props, prev, settings);
+    change (ent->getUid (), props, settings);
   }
 }
 
@@ -2999,7 +2997,6 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
 
     change (entity->getStructuralUid (),
             util::createProperties (nextTop, nextLeft, nextWidth, nextHeight),
-            entity->getStructuralProperties (),
             util::createSettings (ST_VALUE_TRUE, ST_VALUE_FALSE, code));
   }
 
@@ -3032,7 +3029,7 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
     properties[ST_ATTR_ENT_TOP] = QString::number (nextTop);
     properties[ST_ATTR_ENT_LEFT] = QString::number (nextLeft);
 
-    change (e->getStructuralUid (), properties, e->getStructuralProperties (),
+    change (e->getStructuralUid (), properties,
             util::createSettings (ST_VALUE_TRUE, ST_VALUE_FALSE, code));
   }
 
@@ -3186,7 +3183,6 @@ StructuralView::adjustLayout (StructuralEntity *entity, const QString &code)
           properties[ST_ATTR_ENT_LEFT] = QString::number (nextLeft);
 
           change (link->getStructuralUid (), properties,
-                  link->getStructuralProperties (),
                   util::createSettings (ST_VALUE_TRUE, ST_VALUE_FALSE, code));
 
           break;

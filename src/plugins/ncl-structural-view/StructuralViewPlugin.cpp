@@ -240,8 +240,7 @@ StructuralViewPlugin::updateFromModel ()
       for (const QString &key : cache[id].keys ())
         props[key] = cache[id][key];
 
-      _struct_view->change (ent->getUid (), props, ent->getProperties (),
-                            stgs);
+      _struct_view->change (ent->getUid (), props, stgs);
     }
   }
 }
@@ -557,11 +556,9 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
       QString viewParentUid = _core2view.value (coreParentUid);
       StructuralEntity *parent = _struct_scene->getEntity (viewParentUid);
 
-      QStrMap prev = parent->getProperties ();
-
       _core2view_insert (uid, uid);
 
-      _struct_view->change (parent->getUid (), props, prev, stgs);
+      _struct_view->change (parent->getUid (), props, stgs);
     }
   }
   else
@@ -596,7 +593,6 @@ StructuralViewPlugin::removeInView (Entity *ent, bool undo)
         _core2view.value (ent->getParentUniqueId ()));
     CPR_ASSERT (e != nullptr);
     QString uid = _core2view.value (ent->getUniqueId ());
-    QStrMap previous = e->getProperties ();
     QStrMap next = e->getProperties ();
 
     if (next.contains (name + ":" + uid) || next.contains (value + ":" + uid))
@@ -604,7 +600,7 @@ StructuralViewPlugin::removeInView (Entity *ent, bool undo)
       next.remove (name + ":" + uid);
       next.remove (value + ":" + uid);
 
-      _struct_view->change (e->getUid (), next, previous,
+      _struct_view->change (e->getUid (), next,
                             util::createSettings (undo, false));
     }
   }
@@ -633,8 +629,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
     QStrMap props = getViewPropsFromCoreEntity (ent);
     setReferences (props);
 
-    _struct_view->change (
-        uid, props, _struct_scene->getEntity (uid)->getProperties (), stgs);
+    _struct_view->change (uid, props, stgs);
   }
   else if (ent->getType () == "linkParam" || ent->getType () == "bindParam")
   {
@@ -642,12 +637,11 @@ StructuralViewPlugin::changeInView (Entity *ent)
         _core2view.value (ent->getParentUniqueId ()));
 
     QString uid = ent->getUniqueId ();
-    QStrMap previous = parent->getProperties ();
     QStrMap next = getViewPropsFromCoreEntity (ent);
 
     _core2view_insert (uid, uid);
 
-    _struct_view->change (parent->getUid (), next, previous, stgs);
+    _struct_view->change (parent->getUid (), next, stgs);
   }
 }
 
@@ -983,7 +977,6 @@ StructuralViewPlugin::getUidById (const QString &id, Entity *ent)
   for (Entity *child : ent->getEntityChildren ())
   {
     QString result = getUidById (id, child);
-
     if (result != "")
     {
       uid = result;

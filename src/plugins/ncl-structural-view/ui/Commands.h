@@ -37,11 +37,9 @@ public:
   virtual void redo ();
 
 private:
-  QString _uid;
-  QString _parent;
+  QString _uid, _parent;
 
-  QMap<QString, QString> _properties;
-  QMap<QString, QString> _settings;
+  QStrMap _props, _stgs;
 };
 
 class Remove : public Command
@@ -56,11 +54,9 @@ public:
   virtual void redo ();
 
 private:
-  QString _uid;
-  QString _parent;
+  QString _uid, _parent;
 
-  QMap<QString, QString> _properties;
-  QMap<QString, QString> _settings;
+  QStrMap _props, _stgs;
 };
 
 class Change : public Command
@@ -78,9 +74,7 @@ public:
 private:
   QString _uid;
 
-  QMap<QString, QString> _properties;
-  QMap<QString, QString> _previous;
-  QMap<QString, QString> _settings;
+  QStrMap _props, _previous, _stgs;
 };
 
 #endif // COMMAND_H

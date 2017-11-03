@@ -73,15 +73,11 @@ public slots:
   void removeEntity (QString uid, QStrMap settings);
 
   // "Internal" methods
-  void insert (QString uid, QString parent, QStrMap properties,
-               QStrMap settings);
-  void remove (QString uid, QStrMap settings);
-  void change (QString uid, QStrMap properties, QStrMap previous,
-               QStrMap settings);
-  void select (QString uid, QStrMap settings);
-
-  void move (QString uid, QString parent, QStrMap properties,
-             QStrMap settings);
+  void insert (QString uid, QString parent, QStrMap props, QStrMap stgs);
+  void remove (QString uid, QStrMap stgs);
+  void change (QString uid, QStrMap props, QStrMap stgs);
+  void select (QString uid, QStrMap stgs);
+  void move (QString uid, QString parent, QStrMap props, QStrMap stgs);
 
   void zoomIn ();
   void zoomOut ();

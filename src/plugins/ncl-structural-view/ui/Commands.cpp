@@ -14,25 +14,25 @@ Insert::Insert (StructuralView *view, const QString &uid,
 {
   _uid = uid;
   _parent = parent;
-  _properties = props;
-  _settings = settings;
+  _props = props;
+  _stgs = settings;
 }
 
 void
 Insert::undo ()
 {
-  _settings[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
-  _settings[ST_SETTINGS_NOTIFY] = ST_VALUE_TRUE;
+  _stgs[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
+  _stgs[ST_SETTINGS_NOTIFY] = ST_VALUE_TRUE;
 
-  _view->remove (_uid, _settings);
+  _view->remove (_uid, _stgs);
 }
 
 void
 Insert::redo ()
 {
-  _settings[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
+  _stgs[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
 
-  _view->insert (_uid, _parent, _properties, _settings);
+  _view->insert (_uid, _parent, _props, _stgs);
 }
 
 Remove::Remove (StructuralView *view, const QString &uid,
@@ -42,26 +42,26 @@ Remove::Remove (StructuralView *view, const QString &uid,
 {
   _uid = uid;
   _parent = parent;
-  _properties = props;
-  _settings = settings;
+  _props = props;
+  _stgs = settings;
 }
 
 void
 Remove::undo ()
 {
-  _settings[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
-  _settings[ST_SETTINGS_NOTIFY] = ST_VALUE_TRUE;
+  _stgs[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
+  _stgs[ST_SETTINGS_NOTIFY] = ST_VALUE_TRUE;
 
-  _view->insert (_uid, _parent, _properties, _settings);
+  _view->insert (_uid, _parent, _props, _stgs);
 }
 
 void
 Remove::redo ()
 {
-  _settings[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
-  _settings[ST_SETTINGS_UNDO_TRACE] = ST_VALUE_TRUE;
+  _stgs[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
+  _stgs[ST_SETTINGS_UNDO_TRACE] = ST_VALUE_TRUE;
 
-  _view->remove (_uid, _settings);
+  _view->remove (_uid, _stgs);
 }
 
 Change::Change (StructuralView *view, const QString &uid,
@@ -71,24 +71,24 @@ Change::Change (StructuralView *view, const QString &uid,
     : Command (view)
 {
   _uid = uid;
-  _properties = props;
+  _props = props;
   _previous = previous;
-  _settings = settings;
+  _stgs = settings;
 }
 
 void
 Change::undo ()
 {
-  _settings[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
-  _settings[ST_SETTINGS_NOTIFY] = ST_VALUE_TRUE;
+  _stgs[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
+  _stgs[ST_SETTINGS_NOTIFY] = ST_VALUE_TRUE;
 
-  _view->change (_uid, _previous, _properties, _settings);
+  _view->change (_uid, _previous, _stgs);
 }
 
 void
 Change::redo ()
 {
-  _settings[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
+  _stgs[ST_SETTINGS_UNDO] = ST_VALUE_FALSE;
 
-  _view->change (_uid, _properties, _previous, _settings);
+  _view->change (_uid, _props, _stgs);
 }
