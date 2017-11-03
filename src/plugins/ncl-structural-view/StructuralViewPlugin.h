@@ -75,8 +75,6 @@ public slots:
 private:
   void createConnections ();
 
-  QString createCacheId (StructuralEntity *entity);
-
   QString getUidById (const QString &id);
   QString getUidById (const QString &id, Entity *entity);
   QString getUidByName (const QString &name, Entity *entity);
@@ -99,6 +97,7 @@ private:
 
   QStrMap _core2view, _view2core;
   StructuralScene *_struct_scene;
+  StructuralView *_struct_view;
 };
 
 class StructuralViewFactory : public QObject,
