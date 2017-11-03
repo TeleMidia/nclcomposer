@@ -100,8 +100,6 @@ public slots:
   void performAutoAdjust ();
 #endif
 
-  void performInsert (StructuralType type, QStrMap properties);
-
   void performLinkDialog (StructuralLink *entity);
   void performBindDialog (StructuralBind *entity);
 

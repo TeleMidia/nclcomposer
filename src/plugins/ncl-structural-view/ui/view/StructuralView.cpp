@@ -2048,12 +2048,6 @@ StructuralView::performAutoAdjust ()
 #endif
 
 void
-StructuralView::performInsert (StructuralType type, QStrMap props)
-{
-  createEntity (type, props, util::createSettings ());
-}
-
-void
 StructuralView::mouseMoveEvent (QMouseEvent *evt)
 {
   if (_linking)
