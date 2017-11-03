@@ -59,19 +59,15 @@ createCoreTranslations (StructuralType type)
     case Structural::Body:
     {
       transls = { { NCL_ATTR_ID, ST_ATTR_ENT_ID } };
-
       break;
     }
-
     case Structural::Context:
     case Structural::Switch:
     {
       transls = { { NCL_ATTR_ID, ST_ATTR_ENT_ID },
                   { NCL_ATTR_REFER, ST_ATTR_REF_REFER_ID } };
-
       break;
     }
-
     case Structural::Media:
     {
       transls = { { NCL_ATTR_ID, ST_ATTR_ENT_ID },
@@ -82,16 +78,13 @@ createCoreTranslations (StructuralType type)
                   { NCL_ATTR_DESCRIPTOR, NCL_ATTR_DESCRIPTOR } };
       break;
     }
-
     case Structural::Port:
     {
       transls = { { NCL_ATTR_ID, ST_ATTR_ENT_ID },
                   { NCL_ATTR_COMPONENT, ST_ATTR_REF_COMPONENT_ID },
                   { NCL_ATTR_INTERFACE, ST_ATTR_REF_INTERFACE_ID } };
-
       break;
     }
-
     case Structural::Property:
     {
       transls = { { NCL_ATTR_NAME, ST_ATTR_ENT_ID },
@@ -114,14 +107,12 @@ createCoreTranslations (StructuralType type)
                   { NCL_ATTR_LAST, NCL_ATTR_LAST },
                   { NCL_ATTR_LABEL, NCL_ATTR_LABEL },
                   { NCL_ATTR_CLIP, NCL_ATTR_CLIP } };
-
       break;
     }
 
     case Structural::SwitchPort:
     {
       transls = { { NCL_ATTR_ID, ST_ATTR_ENT_ID } };
-
       break;
     }
 
@@ -129,7 +120,6 @@ createCoreTranslations (StructuralType type)
     {
       transls = { { NCL_ATTR_ID, ST_ATTR_ENT_ID },
                   { NCL_ATTR_XCONNECTOR, ST_ATTR_REF_XCONNECTOR_ID } };
-
       break;
     }
 
@@ -140,7 +130,6 @@ createCoreTranslations (StructuralType type)
                   { NCL_ATTR_COMPONENT, ST_ATTR_REF_COMPONENT_ID },
                   { NCL_ATTR_INTERFACE, ST_ATTR_REF_INTERFACE_ID },
                   { NCL_ATTR_DESCRIPTOR, NCL_ATTR_DESCRIPTOR } };
-
       break;
     }
 
@@ -148,7 +137,6 @@ createCoreTranslations (StructuralType type)
     {
       transls = { { NCL_ATTR_COMPONENT, ST_ATTR_REF_COMPONENT_ID },
                   { NCL_ATTR_INTERFACE, ST_ATTR_REF_INTERFACE_ID } };
-
       break;
     }
 
