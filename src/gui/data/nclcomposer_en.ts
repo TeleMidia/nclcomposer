@@ -112,7 +112,7 @@ A complete list of contributors can be found at the NCL Composer&apos;s website 
     <name>ComposerMainWindow</name>
     <message>
         <location filename="../ComposerMainWindow.ui" line="26"/>
-        <location filename="../ComposerMainWindow.cpp" line="314"/>
+        <location filename="../ComposerMainWindow.cpp" line="304"/>
         <source>NCL Composer</source>
         <translation>NCL Composer</translation>
     </message>
@@ -236,7 +236,7 @@ A complete list of contributors can be found at the NCL Composer&apos;s website 
     </message>
     <message>
         <location filename="../ComposerMainWindow.ui" line="327"/>
-        <location filename="../ComposerMainWindow.cpp" line="1398"/>
+        <location filename="../ComposerMainWindow.cpp" line="1411"/>
         <source>Clear Recent Projects</source>
         <translation>Apagar a lista de projetos recentes</translation>
     </message>
@@ -480,54 +480,54 @@ A complete list of contributors can be found at the NCL Composer&apos;s website 
         <translation type="unfinished">Recarregando última sessão...</translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="190"/>
+        <location filename="../ComposerMainWindow.cpp" line="180"/>
         <source>The extensions directory is not set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="191"/>
+        <location filename="../ComposerMainWindow.cpp" line="181"/>
         <source>Do you want to try the defaultone (%1)?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="200"/>
+        <location filename="../ComposerMainWindow.cpp" line="190"/>
         <source>Select Directory</source>
         <translation type="unfinished">Selecionar Diretório</translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="248"/>
-        <location filename="../ComposerMainWindow.cpp" line="1418"/>
+        <location filename="../ComposerMainWindow.cpp" line="238"/>
+        <location filename="../ComposerMainWindow.cpp" line="1432"/>
         <source>File does not exists anymore.</source>
         <translation type="unfinished">Arquivo não existe mais.</translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="249"/>
+        <location filename="../ComposerMainWindow.cpp" line="239"/>
         <source>The File %1 does not exists, but the last time you have closed NCL Composer this files was open. Do you want to create a new (empty) project in the same path?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="349"/>
+        <location filename="../ComposerMainWindow.cpp" line="339"/>
         <source>Welcome</source>
         <translation type="unfinished">Bem Vindo</translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="471"/>
+        <location filename="../ComposerMainWindow.cpp" line="461"/>
         <source>Reload View&apos;s Model</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="475"/>
+        <location filename="../ComposerMainWindow.cpp" line="465"/>
         <source>F5</source>
         <comment>Update from Model</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="485"/>
+        <location filename="../ComposerMainWindow.cpp" line="475"/>
         <source>Close view</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="523"/>
+        <location filename="../ComposerMainWindow.cpp" line="512"/>
         <source>The project has been modified.
 Do you want to save your changes?</source>
         <translation type="unfinished">O projeto foi modificado. Você deseja salvar suas alterações?</translation>
@@ -538,136 +538,136 @@ Do you want to save your changes?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="786"/>
+        <location filename="../ComposerMainWindow.cpp" line="785"/>
         <source>The project %1 has been modified.
 Do you want to save your changes?</source>
         <translation type="unfinished">O projeto %1 foi modificado. Você deseja salvar as alterações?</translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="908"/>
-        <location filename="../ComposerMainWindow.cpp" line="978"/>
-        <location filename="../ComposerMainWindow.cpp" line="998"/>
+        <location filename="../ComposerMainWindow.cpp" line="912"/>
+        <location filename="../ComposerMainWindow.cpp" line="983"/>
+        <location filename="../ComposerMainWindow.cpp" line="1004"/>
         <source>Information</source>
         <translation type="unfinished">Informação</translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="909"/>
-        <location filename="../ComposerMainWindow.cpp" line="979"/>
+        <location filename="../ComposerMainWindow.cpp" line="913"/>
+        <location filename="../ComposerMainWindow.cpp" line="984"/>
         <source>There aren&apos;t a project to be saved.</source>
         <translation type="unfinished">Não existe um projeto selecionado para ser salvo.</translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="928"/>
+        <location filename="../ComposerMainWindow.cpp" line="933"/>
         <source>Save as NCL Composer Project</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="930"/>
-        <location filename="../ComposerMainWindow.cpp" line="1267"/>
-        <location filename="../ComposerMainWindow.cpp" line="1333"/>
+        <location filename="../ComposerMainWindow.cpp" line="935"/>
+        <location filename="../ComposerMainWindow.cpp" line="1277"/>
+        <location filename="../ComposerMainWindow.cpp" line="1345"/>
         <source>NCL Composer Projects (*.cpr)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="999"/>
+        <location filename="../ComposerMainWindow.cpp" line="1005"/>
         <source>There aren&apos;t a layout open to be saved.</source>
         <translation type="unfinished">Não existe uma perpectiva aberta para ser salva.</translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1088"/>
+        <location filename="../ComposerMainWindow.cpp" line="1098"/>
         <source>File already exists!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1089"/>
+        <location filename="../ComposerMainWindow.cpp" line="1099"/>
         <source>The file &quot;%1&quot; already exists. Do you want overwrite it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1207"/>
-        <location filename="../ComposerMainWindow.cpp" line="1217"/>
-        <location filename="../ComposerMainWindow.cpp" line="1446"/>
+        <location filename="../ComposerMainWindow.cpp" line="1216"/>
+        <location filename="../ComposerMainWindow.cpp" line="1226"/>
+        <location filename="../ComposerMainWindow.cpp" line="1460"/>
         <source>Error!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1208"/>
+        <location filename="../ComposerMainWindow.cpp" line="1217"/>
         <source>There was an error copying the defaultConnector Base. You will need to add a Connector Base by hand in your NCL code.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1212"/>
         <location filename="../ComposerMainWindow.cpp" line="1221"/>
+        <location filename="../ComposerMainWindow.cpp" line="1230"/>
         <source>Ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1218"/>
+        <location filename="../ComposerMainWindow.cpp" line="1227"/>
         <source>The default Connector Base %1 does not exists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1265"/>
+        <location filename="../ComposerMainWindow.cpp" line="1275"/>
         <source>Open NCL Composer Project</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1292"/>
+        <location filename="../ComposerMainWindow.cpp" line="1302"/>
         <source>Temporary file is newer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1293"/>
+        <location filename="../ComposerMainWindow.cpp" line="1303"/>
         <source>There is a temporary file related to %1 that is newer. Do you want replace the %1 file with it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1321"/>
+        <location filename="../ComposerMainWindow.cpp" line="1333"/>
         <source>Choose the NCL file to be imported</source>
         <translation type="unfinished">Escolha o arquivo NCL para ser importado</translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1322"/>
+        <location filename="../ComposerMainWindow.cpp" line="1334"/>
         <source>NCL Documents (*.ncl)</source>
         <translation type="unfinished">Documentos NCL (*.ncl)</translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1330"/>
+        <location filename="../ComposerMainWindow.cpp" line="1342"/>
         <source>Choose the NCL Composer Project where the NCL document must be imported</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1380"/>
+        <location filename="../ComposerMainWindow.cpp" line="1394"/>
         <source>empty</source>
         <translation type="unfinished">vazio</translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1419"/>
+        <location filename="../ComposerMainWindow.cpp" line="1433"/>
         <source>The File %1 does not exists anymore. Do you want to create this file again?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1447"/>
+        <location filename="../ComposerMainWindow.cpp" line="1461"/>
         <source>Error creating directory structure</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1502"/>
+        <location filename="../ComposerMainWindow.cpp" line="1521"/>
         <source>English</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1502"/>
+        <location filename="../ComposerMainWindow.cpp" line="1521"/>
         <source>Portugues (Brasil)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1838"/>
+        <location filename="../ComposerMainWindow.cpp" line="1873"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ComposerMainWindow.cpp" line="1839"/>
+        <location filename="../ComposerMainWindow.cpp" line="1874"/>
         <source>It was not possible to create the file from the template!</source>
         <translation type="unfinished"></translation>
     </message>

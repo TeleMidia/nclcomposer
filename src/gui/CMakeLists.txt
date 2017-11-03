@@ -53,9 +53,9 @@ set_directory_properties (PROPERTIES CLEAN_NO_CUSTOM 1)
 qt5_create_translation (QM_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}
 
-  translations/nclcomposer_en.ts
-  translations/nclcomposer_es_ES.ts
-  translations/nclcomposer_pt_BR.ts
+  data/nclcomposer_en.ts
+  data/nclcomposer_es_ES.ts
+  data/nclcomposer_pt_BR.ts
 
   OPTIONS
   -extensions h,cpp,c,cc,ui
