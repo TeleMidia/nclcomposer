@@ -19,6 +19,18 @@
 
 namespace util = StructuralUtil;
 
+#define _core2view_insert(key,value) \
+  _core2view.insert (key, value); \
+  _view2core.insert (value, key);
+
+#define _core2view_remove(key) \
+  _view2core.remove (_core2view.value (key)); \
+  _core2view.remove (key);
+
+#define _core2view_clear() \
+  _core2view.clear (); \
+  _view2core.clear ();
+
 StructuralViewPlugin::StructuralViewPlugin (QObject *parent)
     : _window (new StructuralWindow ())
 {
@@ -81,8 +93,7 @@ StructuralViewPlugin::init ()
   {
     QStringList list = (c.mid (li, ni - li)).split ("=");
 
-    _core2view[list.at (0)] = list.at (1);
-    _view2core[list.at (1)] = list.at (0);
+    _core2view_insert (list.at (0), list.at (1))
 
     li = ni + 1;
     ni = c.indexOf (":", ni + 1);
@@ -214,7 +225,7 @@ StructuralViewPlugin::updateFromModel ()
   for (Entity *ent : interfaces)
     insertInView (ent, false);
 
-  // Inset the edges again.
+  // Insert the edges again.
   for (Entity *ent : edges)
     insertInView (ent);
 
@@ -300,8 +311,7 @@ StructuralViewPlugin::onEntityAdded (const QString &pluginID, Entity *ent)
   }
   else if (_waiting)
   {
-    _core2view[ent->getUniqueId ()] = _notified;
-    _view2core[_notified] = ent->getUniqueId ();
+    _core2view_insert (ent->getUniqueId (), _notified);
 
     _waiting = false;
   }
@@ -314,14 +324,14 @@ StructuralViewPlugin::errorMessage (const QString &error)
 }
 
 void
-StructuralViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
+StructuralViewPlugin::onEntityChanged (const QString &pluginID, Entity *ent)
 {
   if (_syncing)
     return;
 
   if (pluginID != getPluginInstanceID () && !_waiting)
   {
-    changeInView (entity);
+    changeInView (ent);
   }
 
   _waiting = false;
@@ -329,15 +339,15 @@ StructuralViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
 
 void
 StructuralViewPlugin::onEntityRemoved (const QString &pluginID,
-                                       const QString &entityID)
+                                       const QString &entID)
 {
   if (_syncing)
     return;
 
   if (pluginID != getPluginInstanceID ())
   {
-    removeInView (getProject ()->getEntityById (entityID));
-    _core2view.remove (entityID);
+    removeInView (getProject ()->getEntityById (entID));
+    _core2view_remove (entID);
   }
 }
 
@@ -488,8 +498,7 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
       next[name + ":" + uid] = ent->getAttr ("name");
       next[value + ":" + uid] = ent->getAttr ("value");
 
-      _core2view[uid] = uid;
-      _view2core[uid] = uid;
+      _core2view_insert (uid, uid);
     }
     else if (_core2view.contains (ent->getUniqueId ()))
     {
@@ -506,49 +515,50 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
 void
 StructuralViewPlugin::insertInView (Entity *ent, bool undo)
 {
+  CPR_ASSERT_NON_NULL (ent);
   CPR_ASSERT (!_core2view.contains (ent->getUniqueId ()));
 
+  QStrMap stgs = util::createSettings (undo, false);
   Structural::Type type = util::strToType (ent->getType ());
+  QString uid = ent->getUniqueId ();
+  QString coreParentUid = ent->getParentUniqueId ();
+  QStrMap props = getViewPropsFromCoreEntity (ent);
 
   if (type != Structural::NoType)
   {
-    QString uid = ent->getUniqueId ();
-    QString coreParentUid = ent->getParentUniqueId ();
     // If we are adding a bind, the parent will be the above context (not the
     // link!).
     if (type == Structural::Bind)
+    {
+      CPR_ASSERT (_core2view.contains (coreParentUid));
       coreParentUid = ent->getParent ()->getParentUniqueId ();
+    }
 
     QString viewParentUid = _core2view.value (coreParentUid, "");
-    QStrMap stgs = util::createSettings (undo, false);
-    QStrMap props = getViewPropsFromCoreEntity (ent);
 
-    _core2view.insert (uid, uid);
-    _view2core.insert (uid, uid);
+    _core2view_insert (uid, uid);
 
     if (!undo)
       setReferences (props);
 
     _window->getView ()->insert (uid, viewParentUid, props, stgs);
   }
+  // LinkParam and BindParam are not represented as independent entities in
+  // StructuralView, thus instead of creating a new entity, we need to update
+  // the associated link.
   else if (ent->getType () == "linkParam" || ent->getType () == "bindParam")
   {
-
     if (ent->hasAttr ("name") && ent->hasAttr ("value"))
     {
+      CPR_ASSERT (_core2view.contains (coreParentUid));
+      QString viewParentUid = _core2view.value (coreParentUid);
+      StructuralEntity *parent = _struct_scene->getEntity (viewParentUid);
 
-      StructuralEntity *parent = _struct_scene->getEntity (
-          _core2view.value (ent->getParentUniqueId ()));
+      QStrMap prev = parent->getProperties ();
 
-      QString uid = ent->getUniqueId ();
-      QMap<QString, QString> previous = parent->getProperties ();
-      QMap<QString, QString> next = getViewPropsFromCoreEntity (ent);
+      _core2view_insert (uid, uid);
 
-      _core2view.insert (uid, uid);
-      _view2core.insert (uid, uid);
-
-      _window->getView ()->change (parent->getUid (), next, previous,
-                                   util::createSettings (true, false));
+      _window->getView ()->change (parent->getUid (), props, prev, stgs);
     }
   }
   else
@@ -600,8 +610,7 @@ StructuralViewPlugin::removeInView (Entity *ent, bool undo)
     _window->getView ()->remove (_core2view.value (ent->getUniqueId ()), stgs);
   }
 
-  _view2core.remove (_core2view.value (ent->getUniqueId ()));
-  _core2view.remove (ent->getUniqueId ());
+  _core2view_remove (ent->getUniqueId ());
 }
 
 void
@@ -633,8 +642,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
     QStrMap previous = parent->getProperties ();
     QStrMap next = getViewPropsFromCoreEntity (ent);
 
-    _core2view.insert (uid, uid);
-    _view2core.insert (uid, uid);
+    _core2view_insert (uid, uid);
 
     _window->getView ()->change (parent->getUid (), next, previous, stgs);
   }
@@ -656,6 +664,22 @@ StructuralViewPlugin::selectInView (Entity *entity)
         << "Trying to select an entity that is not in the view.";
     _window->getView ()->select ("", util::createSettings ());
   }
+}
+
+QStrMap
+StructuralViewPlugin::getCoreAttrsFromStructuralEntity (const QStrMap &props)
+{
+  StructuralType type = util::strToType (props[ST_ATTR_ENT_TYPE]);
+
+  QStrMap attrs;
+  QStrMap transls = util::createPluginTranslations (type);
+  for (const QString &key : transls.keys ())
+  {
+    if (props.contains (key) && !props.value (key).isEmpty ())
+      attrs.insert (transls.value (key), props.value (key));
+  }
+
+  return attrs;
 }
 
 void
@@ -712,7 +736,6 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
   else if (parent.isEmpty () && !ST_OPT_WITH_BODY)
   {
     QList<Entity *> list = getProject ()->getEntitiesbyType ("body");
-
     if (!list.isEmpty ())
       entParent = list.first ();
   }
@@ -723,14 +746,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
 
   if (entParent)
   {
-    QStrMap attrs;
-    QStrMap transls = util::createPluginTranslations (type);
-
-    for (const QString &key : transls.keys ())
-    {
-      if (props.contains (key) && !props.value (key).isEmpty ())
-        attrs.insert (transls.value (key), props.value (key));
-    }
+    QStrMap attrs = getCoreAttrsFromStructuralEntity (props);
 
     _waiting = true;
     _notified = uid;
@@ -776,17 +792,15 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
 }
 
 void
-StructuralViewPlugin::removeInCore (QString uid,
-                                    QMap<QString, QString> settings)
+StructuralViewPlugin::removeInCore (QString uid, QMap<QString, QString> stgs)
 {
-  Q_UNUSED (settings);
+  Q_UNUSED (stgs);
 
   if (!_view2core.value (uid, "").isEmpty ())
   {
     emit removeEntity (getProject ()->getEntityById (_view2core.value (uid)));
 
-    _core2view.remove (_view2core.value (uid));
-    _view2core.remove (uid);
+    _core2view_remove (uid);
   }
 }
 
@@ -812,19 +826,11 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
   Q_UNUSED (settings);
 
   Entity *ent = getProject ()->getEntityById (_view2core.value (uid));
-
   if (ent)
   {
-    Structural::Type type = util::strToType (props[ST_ATTR_ENT_TYPE]);
-    QStrMap transls = util::createPluginTranslations (type);
+    QStrMap attrs = getCoreAttrsFromStructuralEntity (props);
 
-    QMap<QString, QString> attrs;
-    for (const QString &key : transls.keys ())
-    {
-      if (props.contains (key))
-        attrs.insert (transls.value (key), props.value (key));
-    }
-
+    StructuralType type = util::strToType (props[ST_ATTR_ENT_TYPE]);
     if (type == Structural::Link || type == Structural::Bind)
     {
       QString tag, name, value;

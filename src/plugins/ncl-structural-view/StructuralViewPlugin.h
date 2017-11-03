@@ -84,6 +84,7 @@ private:
   void setReferences (QStrMap &properties);
 
   QStrMap getViewPropsFromCoreEntity (const Entity *ent);
+  QStrMap getCoreAttrsFromStructuralEntity (const QStrMap &props);
 
   void clean ();
 
