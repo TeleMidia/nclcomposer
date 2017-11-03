@@ -77,7 +77,7 @@ StructuralViewPlugin::init ()
 
   QString sc = "-- EXTRA DATA";
   QString ec = "-- END OF PLUGIN DATA";
-  QString c = "";
+  QString c;
 
   int si = data.indexOf (sc);
   int ei = data.indexOf (ec);
@@ -101,7 +101,6 @@ StructuralViewPlugin::init ()
 
   sc = "-- VIEW DATA";
   ec = "-- EXTRA DATA";
-  c = "";
 
   si = data.indexOf (sc);
   ei = data.indexOf (ec);
@@ -143,7 +142,7 @@ void
 StructuralViewPlugin::updateFromModel ()
 {
   // Cache the old entity positions.
-  QMap<QString, QMap<QString, QString> > cache;
+  QMap<QString, QStrMap> cache;
   for (const QString &key : _struct_scene->getEntities ().keys ())
   {
     StructuralEntity *ent = _struct_scene->getEntity (key);
@@ -222,6 +221,7 @@ StructuralViewPlugin::updateFromModel ()
   // Insert the nodes and interfaces entities in the view again.
   for (Entity *ent : nodes)
     insertInView (ent, false);
+
   for (Entity *ent : interfaces)
     insertInView (ent, false);
 
@@ -246,7 +246,7 @@ StructuralViewPlugin::updateFromModel ()
 }
 
 void
-StructuralViewPlugin::setReferences (QMap<QString, QString> &props)
+StructuralViewPlugin::setReferences (QStrMap &props)
 {
   if (props.contains (ST_ATTR_REF_REFER_ID))
   {
@@ -574,7 +574,7 @@ StructuralViewPlugin::removeInView (Entity *ent, bool undo)
 {
   CPR_ASSERT (_core2view.contains (ent->getUniqueId ()));
 
-  QMap<QString, QString> stgs = util::createSettings (undo, false);
+  QStrMap stgs = util::createSettings (undo, false);
   if (ent->getType () == "linkParam" || ent->getType () == "bindParam")
   {
     QString name, value;
@@ -591,7 +591,8 @@ StructuralViewPlugin::removeInView (Entity *ent, bool undo)
 
     StructuralEntity *e = _struct_scene->getEntity (
         _core2view.value (ent->getParentUniqueId ()));
-    CPR_ASSERT (e != nullptr);
+    CPR_ASSERT_NON_NULL (e);
+
     QString uid = _core2view.value (ent->getUniqueId ());
     QStrMap next = e->getProperties ();
 
@@ -680,9 +681,8 @@ StructuralViewPlugin::getCoreAttrsFromStructuralEntity (const QStrMap &props)
 }
 
 void
-StructuralViewPlugin::insertInCore (QString uid, QString parent,
-                                    QMap<QString, QString> props,
-                                    QMap<QString, QString> settings)
+StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
+                                    QStrMap settings)
 {
   Q_UNUSED (settings);
 
@@ -721,7 +721,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
     {
       Entity *proj = getProject ();
       CPR_ASSERT_NON_NULL (proj);
-      QMap<QString, QString> attrs;
+      QStrMap attrs;
 
       emit addEntity ("ncl", proj->getUniqueId (), attrs);
     }
@@ -774,7 +774,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
         {
           QString pUid = key.right (key.length () - key.lastIndexOf (':') - 1);
 
-          QMap<QString, QString> pAttr;
+          QStrMap pAttr;
           pAttr.insert ("name", props.value (key));
           pAttr.insert ("value", props.value (value + ":" + pUid));
 
@@ -789,35 +789,30 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent,
 }
 
 void
-StructuralViewPlugin::removeInCore (QString uid, QMap<QString, QString> stgs)
+StructuralViewPlugin::removeInCore (QString uid, QStrMap stgs)
 {
   Q_UNUSED (stgs);
 
   if (!_view2core.value (uid, "").isEmpty ())
   {
     emit removeEntity (getProject ()->getEntityById (_view2core.value (uid)));
-
     _core2view_remove (uid);
   }
 }
 
 void
-StructuralViewPlugin::selectInCore (QString uid,
-                                    QMap<QString, QString> settings)
+StructuralViewPlugin::selectInCore (QString uid, QStrMap settings)
 {
   Q_UNUSED (settings);
 
   QString coreUid = _view2core.value (uid, "");
   if (!coreUid.isEmpty ())
-  {
     emit sendBroadcastMessage ("changeSelectedEntity", new QString (coreUid));
-  }
 }
 
 void
-StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
-                                    QMap<QString, QString> previous,
-                                    QMap<QString, QString> settings)
+StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
+                                    QStrMap previous, QStrMap settings)
 {
   Q_UNUSED (previous);
   Q_UNUSED (settings);
@@ -862,8 +857,7 @@ StructuralViewPlugin::changeInCore (QString uid, QMap<QString, QString> props,
           QString pName = props.value (key);
           QString pValue = props.value (value + ":" + pUid);
 
-          QMap<QString, QString> pAttr
-              = { { "name", pName }, { "value", pValue } };
+          QStrMap pAttr = { { "name", pName }, { "value", pValue } };
 
           Entity *param
               = getProject ()->getEntityById (_view2core.value (pUid));

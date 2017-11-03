@@ -370,8 +370,7 @@ StructuralView::remove (QString uid, QStrMap stgs)
     {
       if (rel->getCategory () == Structural::Edge)
       {
-        StructuralEdge *edge = (StructuralEdge *)rel;
-
+        StructuralEdge *edge = cast (StructuralEdge *, rel);
         if (edge->getOrigin () == e || edge->getDestination () == e)
         {
           if (edge->getType () != Structural::Reference)
@@ -778,8 +777,8 @@ StructuralView::adjustReferences (StructuralEntity *ent)
         // Adjusting relative ports
         else if (rel->getCategory () == Structural::Interface)
         {
-          StructuralInterface *interface = (StructuralInterface *)rel;
-
+          StructuralInterface *interface = cast (StructuralInterface *, rel);
+          CPR_ASSERT_NON_NULL (interface);
           if (!ST_OPT_SHOW_INTERFACES)
           {
             if (interface->getType () == Structural::Port)
@@ -1280,51 +1279,6 @@ StructuralView::undo ()
     while (code == _commands.undoText ())
       _commands.undo ();
   }
-
-  //  for (const QString &key : _scene->getRefs ().keys ())
-  //  {
-  //    CPR_ASSERT (_scene->hasEntity (key));
-  //    StructuralEntity *ent = _scene->getEntity (key);
-  //    if (ent->getType () == Structural::Media)
-  //      adjustReferences (ent);
-  //  }
-
-  //  for (const QString &key : _scene->getEntities ().keys ())
-  //  {
-  //    StructuralEntity *ent = _scene->getEntity (key);
-
-  //    if (ent->getCategory () == Structural::Edge)
-  //    {
-  //      QString compUid = ent->getProperty (ST_ATTR_REF_COMPONENT_UID);
-  //      QString interfUid = ent->getProperty
-  //      (ST_ATTR_REF_INTERFACE_UID);
-  //      CPR_ASSERT (_scene->hasEntity (compUid));
-  //      CPR_ASSERT (_scene->hasEntity (interfUid));
-
-  //      StructuralEntity *c = _scene->getEntity (compUid);
-  //      for (StructuralEntity *r : c->getChildren ())
-  //      {
-  //        if (r->getId () == ent->getProperty
-  //        (ST_ATTR_REF_INTERFACE_ID))
-  //        {
-  //          ent->setProperty (ST_ATTR_REF_INTERFACE_UID, r->getUid ());
-
-  //          StructuralEdge *edge = cast (StructuralEdge *, ent);
-  //          CPR_ASSERT_NON_NULL (edge);
-
-  //          if (edge->hasTail ())
-  //            ent->setProperty (ST_ATTR_EDGE_HEAD, r->getUid ());
-  //          else
-  //            ent->setProperty (ST_ATTR_EDGE_TAIL, r->getUid ());
-
-  //          adjustReferences (ent);
-  //          ent->adjust (true);
-
-  //          break;
-  //        }
-  //      }
-  //    }
-  //  }
 }
 
 void

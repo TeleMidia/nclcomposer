@@ -444,9 +444,9 @@ StructuralWindow::handleInteractionModeChange (StructuralInteractionMode mode)
 }
 
 void
-StructuralWindow::select (QString uid, QMap<QString, QString> settings)
+StructuralWindow::select (QString uid, QStrMap stgs)
 {
-  Q_UNUSED (settings);
+  Q_UNUSED (stgs);
 
   StructuralEntity *ent = nullptr;
   if (_view->getScene ()->hasEntity (uid))

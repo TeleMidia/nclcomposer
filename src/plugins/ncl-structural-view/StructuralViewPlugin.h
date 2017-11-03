@@ -43,11 +43,10 @@ public:
 public slots:
   virtual void updateFromModel ();
 
-  virtual void onEntityAdded (const QString &pluginID, Entity *entity);
-  virtual void onEntityChanged (const QString &pluginID, Entity *entity);
-  virtual void onEntityRemoved (const QString &pluginID,
-                                const QString &entityID);
-  virtual void changeSelectedEntity (const QString &pluginID, void *entityUID);
+  virtual void onEntityAdded (const QString &pluginID, Entity *ent);
+  virtual void onEntityChanged (const QString &pluginID, Entity *ent);
+  virtual void onEntityRemoved (const QString &pluginID, const QString &entID);
+  virtual void changeSelectedEntity (const QString &pluginID, void *entUID);
 
   virtual void errorMessage (const QString &error);
   void clearValidationMessages (QString pluginID, void *param);
@@ -58,14 +57,11 @@ public slots:
   void changeInView (Entity *entity);
   void selectInView (Entity *entity);
 
-  void insertInCore (QString uid, QString parent,
-                     QMap<QString, QString> properties,
-                     QMap<QString, QString> settings);
-  void removeInCore (QString uid, QMap<QString, QString> settings);
-  void changeInCore (QString uid, QMap<QString, QString> properties,
-                     QMap<QString, QString> previous,
-                     QMap<QString, QString> settings);
-  void selectInCore (QString uid, QMap<QString, QString> settings);
+  void insertInCore (QString uid, QString parent, QStrMap props, QStrMap stgs);
+  void removeInCore (QString uid, QStrMap stgs);
+  void changeInCore (QString uid, QStrMap props, QStrMap previous,
+                     QStrMap settings);
+  void selectInCore (QString uid, QStrMap stgs);
 
   void adjustConnectors ();
 
@@ -76,10 +72,10 @@ private:
   void createConnections ();
 
   QString getUidById (const QString &id);
-  QString getUidById (const QString &id, Entity *entity);
-  QString getUidByName (const QString &name, Entity *entity);
+  QString getUidById (const QString &id, Entity *ent);
+  QString getUidByName (const QString &name, Entity *ent);
 
-  void setReferences (QStrMap &properties);
+  void setReferences (QStrMap &props);
 
   QStrMap getViewPropsFromCoreEntity (const Entity *ent);
   QStrMap getCoreAttrsFromStructuralEntity (const QStrMap &props);
