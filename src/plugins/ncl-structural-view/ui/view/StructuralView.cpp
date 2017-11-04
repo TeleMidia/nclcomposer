@@ -524,9 +524,9 @@ StructuralView::adjustAllReferences ()
   for (const QString &uid : _scene->entities ().keys ())
   {
     // warn: getEntities can be changed by the adjustReferences bellow
-    StructuralEntity *e = _scene->entity (uid);
     if (_scene->hasEntity (uid))
     {
+      StructuralEntity *e = _scene->entity (uid);
       CPR_ASSERT_NON_NULL (e);
       if (e->category () == Structural::Edge
           || e->structuralType () == Structural::Port || e->isReference ())
