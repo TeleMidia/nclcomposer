@@ -14,13 +14,12 @@ StructuralNode::~StructuralNode () {}
 void
 StructuralNode::inside ()
 {
-  StructuralEntity *parent = structuralParent();
+  StructuralEntity *parent = structuralParent ();
 
   if (parent)
   {
-    QLineF line
-        = QLineF (left () + width () / 2, top () + height () / 2,
-                  parent->width () / 2, parent->height () / 2);
+    QLineF line = QLineF (left () + width () / 2, top () + height () / 2,
+                          parent->width () / 2, parent->height () / 2);
 
     int max = 1000;
     int n = 0;
@@ -92,9 +91,9 @@ StructuralNode::adjust (bool collision, bool recursion)
 
             while (collidesWithItem (ent, Qt::IntersectsItemBoundingRect))
             {
-              QLineF line = QLineF (
-                  left () + width () / 2, top () + height () / 2,
-                  ent->width () / 2, ent->height () / 2);
+              QLineF line
+                  = QLineF (left () + width () / 2, top () + height () / 2,
+                            ent->width () / 2, ent->height () / 2);
 
               line.setAngle (qrand () % 360);
 

@@ -183,8 +183,8 @@ signals:
                     QMap<QString, QString> settings);
 
   void selectAsked (QString uid, QMap<QString, QString> stgs);
-  void moveAsked (QString uid, QString structuralParent, QMap<QString, QString> props,
-                  QMap<QString, QString> stgs);
+  void moveAsked (QString uid, QString structuralParent,
+                  QMap<QString, QString> props, QMap<QString, QString> stgs);
 
 protected:
   virtual void draw (QPainter *painter) = 0;

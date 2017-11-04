@@ -1026,8 +1026,7 @@ StructuralEntity::paint (QPainter *painter,
     painter->setPen (QPen (QBrush (Qt::black), 0, Qt::DashLine));
 
     painter->drawRect (ST_DEFAULT_ENTITY_ANCHOR_W / 2,
-                       ST_DEFAULT_ENTITY_ANCHOR_H / 2, width (),
-                       height ());
+                       ST_DEFAULT_ENTITY_ANCHOR_H / 2, width (), height ());
 
     if (_resizable)
     {

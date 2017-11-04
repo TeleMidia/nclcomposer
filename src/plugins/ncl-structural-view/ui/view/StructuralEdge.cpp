@@ -145,16 +145,16 @@ StructuralEdge::adjust (bool collision, bool recursion)
 
     if (orig && dest)
     {
-      QLineF line
-          = QLineF (QPointF (orig->left () + orig->width () / 2,
-                             orig->top () + orig->height () / 2),
-                    QPointF (dest->left () + dest->width () / 2,
-                             dest->top () + dest->height () / 2));
+      QLineF line = QLineF (QPointF (orig->left () + orig->width () / 2,
+                                     orig->top () + orig->height () / 2),
+                            QPointF (dest->left () + dest->width () / 2,
+                                     dest->top () + dest->height () / 2));
 
       if (orig->category () == Structural::Interface)
       {
         if (parent)
-          line.setP1 (parent->mapFromItem (orig->structuralParent (), line.p1 ()));
+          line.setP1 (
+              parent->mapFromItem (orig->structuralParent (), line.p1 ()));
         else if (orig->structuralParent ())
           line.setP1 (orig->structuralParent ()->mapToScene (line.p1 ()));
       }
@@ -162,7 +162,8 @@ StructuralEdge::adjust (bool collision, bool recursion)
       if (dest->category () == Structural::Interface)
       {
         if (parent)
-          line.setP2 (parent->mapFromItem (dest->structuralParent (), line.p2 ()));
+          line.setP2 (
+              parent->mapFromItem (dest->structuralParent (), line.p2 ()));
         else if (dest->structuralParent ())
           line.setP2 (dest->structuralParent ()->mapToScene (line.p2 ()));
       }
@@ -346,15 +347,17 @@ StructuralEdge::draw (QPainter *painter)
   QLineF drawLine = getDrawLine (ST_DEFAULT_EDGE_PADDING);
 
   // Drawing line...
-  painter->setPen (QPen (QBrush (QColor (StructuralUtil::color (structuralType ()))),
-                         1, Qt::DashLine));
+  painter->setPen (
+      QPen (QBrush (QColor (StructuralUtil::color (structuralType ()))), 1,
+            Qt::DashLine));
   painter->drawLine (drawLine);
 
   // Drawing tail...
   // nothing...
 
   // Drawing head...
-  painter->setBrush (QBrush (QColor (StructuralUtil::color (structuralType ()))));
+  painter->setBrush (
+      QBrush (QColor (StructuralUtil::color (structuralType ()))));
   painter->setPen (Qt::NoPen);
 
   qreal angle;

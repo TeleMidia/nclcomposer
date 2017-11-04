@@ -47,9 +47,9 @@ StructuralInterface::adjust (bool collision, bool recursion)
 
             while (collidesWithItem (ent, Qt::IntersectsItemBoundingRect))
             {
-              QLineF line = QLineF (
-                  left () + width () / 2, top () + height () / 2,
-                  ent->width () / 2, ent->height () / 2);
+              QLineF line
+                  = QLineF (left () + width () / 2, top () + height () / 2,
+                            ent->width () / 2, ent->height () / 2);
 
               line.setAngle (qrand () % 360);
 

@@ -80,8 +80,7 @@ StructuralComposition::uncollapse ()
   {
     if (ent->category () == Structural::Interface)
     {
-      ent->setTop (ent->top () * uncollapsed.height ()
-                   / ST_DEFAULT_CONTENT_H);
+      ent->setTop (ent->top () * uncollapsed.height () / ST_DEFAULT_CONTENT_H);
       ent->setLeft (ent->left () * uncollapsed.width ()
                     / ST_DEFAULT_CONTENT_W);
     }
@@ -145,8 +144,7 @@ StructuralComposition::draw (QPainter *painter)
 #endif
 
     painter->drawComposition (ST_DEFAULT_ENTITY_PADDING,
-                              ST_DEFAULT_ENTITY_PADDING, width (),
-                              height ());
+                              ST_DEFAULT_ENTITY_PADDING, width (), height ());
 
     painter->setBrush (Qt::NoBrush);
 
@@ -159,8 +157,8 @@ StructuralComposition::draw (QPainter *painter)
     else if (isResizing ())
       painter->drawComposition (
           resizeLeft () + ST_DEFAULT_ENTITY_PADDING - left (),
-          resizeTop () + ST_DEFAULT_ENTITY_PADDING - top (),
-          resizeWidth (), resizeHeight ());
+          resizeTop () + ST_DEFAULT_ENTITY_PADDING - top (), resizeWidth (),
+          resizeHeight ());
   }
   else
   {
@@ -265,8 +263,7 @@ StructuralComposition::draw (QPainter *painter)
                        ST_DEFAULT_CONTENT_TEXT_H, Qt::AlignCenter, text);
 
     if (isMoving ())
-      painter->drawRect (moveLeft () + ST_DEFAULT_ENTITY_PADDING
-                             - left (),
+      painter->drawRect (moveLeft () + ST_DEFAULT_ENTITY_PADDING - left (),
                          moveTop () + ST_DEFAULT_ENTITY_PADDING - top (),
                          width (), height ());
   }

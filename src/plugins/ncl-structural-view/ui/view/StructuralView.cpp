@@ -572,8 +572,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
               {
                 if (_scene->hasEntity (
                         child->property (ST_ATTR_REF_REFER_UID)))
-                  if (_scene
-                          ->entity (child->property (ST_ATTR_REF_REFER_UID))
+                  if (_scene->entity (child->property (ST_ATTR_REF_REFER_UID))
                           ->structuralParent ()
                       != refer)
                     remove (child->uid (),
@@ -696,8 +695,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
 
               if (hasNewEntity)
               {
-                for (const QString &key :
-                     _scene->refs ().keys (refer->uid ()))
+                for (const QString &key : _scene->refs ().keys (refer->uid ()))
                 {
                   if (_scene->hasEntity (key) && key != ent->uid ())
                     adjustReferences (_scene->entity (key));
@@ -724,8 +722,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
             }
             else
             {
-              for (const QString &key :
-                   _scene->refs ().keys (child->uid ()))
+              for (const QString &key : _scene->refs ().keys (child->uid ()))
                 remove (key, util::createSettings (false, false));
             }
           }
@@ -764,20 +761,20 @@ StructuralView::adjustReferences (StructuralEntity *ent)
               if (ent->id () == compId)
               {
                 if (bind->hasDestination ()
-                    && bind->getDestination ()->structuralType () == Structural::Link)
+                    && bind->getDestination ()->structuralType ()
+                           == Structural::Link)
                 {
                   bind->setOrigin (ent);
                   bind->setProperty (ST_ATTR_EDGE_ORIG, ent->uid ());
-                  bind->setProperty (ST_ATTR_REF_COMPONENT_UID,
-                                     ent->uid ());
+                  bind->setProperty (ST_ATTR_REF_COMPONENT_UID, ent->uid ());
                 }
                 else if (bind->hasOrigin ()
-                         && bind->getOrigin ()->structuralType () == Structural::Link)
+                         && bind->getOrigin ()->structuralType ()
+                                == Structural::Link)
                 {
                   bind->setDestination (ent);
                   bind->setProperty (ST_ATTR_EDGE_DEST, ent->uid ());
-                  bind->setProperty (ST_ATTR_REF_COMPONENT_UID,
-                                     ent->uid ());
+                  bind->setProperty (ST_ATTR_REF_COMPONENT_UID, ent->uid ());
                 }
 
                 adjustReferences (bind);
@@ -796,8 +793,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
           {
             if (interf->structuralType () == Structural::Port)
             {
-              if (interf->property (ST_ATTR_REF_COMPONENT_ID)
-                  == ent->id ())
+              if (interf->property (ST_ATTR_REF_COMPONENT_ID) == ent->id ())
               {
                 ent->setProperty (ST_ATTR_ENT_AUTOSTART, ST_VALUE_TRUE);
               }
@@ -837,7 +833,8 @@ StructuralView::adjustReferences (StructuralEntity *ent)
         //        if (dest->getCategory () == Structural::Interface)
         //          edge->setDestination (dest->getParent ());
 
-        if (ent->structuralParent () && ent->structuralParent ()->isCollapsed ())
+        if (ent->structuralParent ()
+            && ent->structuralParent ()->isCollapsed ())
           isVisible = false;
       }
       else
@@ -878,13 +875,15 @@ StructuralView::adjustReferences (StructuralEntity *ent)
               if (ent->id () == interId)
               {
                 if (bind->hasDestination ()
-                    && bind->getDestination ()->structuralType () == Structural::Link)
+                    && bind->getDestination ()->structuralType ()
+                           == Structural::Link)
                 {
                   bind->setOrigin (ent);
                   bind->setProperty (ST_ATTR_EDGE_ORIG, ent->uid ());
                 }
                 else if (bind->hasOrigin ()
-                         && bind->getOrigin ()->structuralType () == Structural::Link)
+                         && bind->getOrigin ()->structuralType ()
+                                == Structural::Link)
                 {
                   bind->setDestination (ent);
                   bind->setProperty (ST_ATTR_EDGE_DEST, ent->uid ());
@@ -1037,7 +1036,8 @@ StructuralView::select (QString uid, QStrMap stgs)
       if (_clipboard && !_clipboard->isChild (ent)
           && ent->uid () != _clipboard->uid ())
       {
-        if (util::validateKinship (_clipboard->structuralType (), ent->structuralType ()))
+        if (util::validateKinship (_clipboard->structuralType (),
+                                   ent->structuralType ()))
           canPaste = true;
       }
 
@@ -1064,7 +1064,8 @@ StructuralView::unselect ()
   bool canPaste = false;
   if (_clipboard && !ST_OPT_WITH_BODY)
   {
-    if (util::validateKinship (_clipboard->structuralType (), Structural::Body))
+    if (util::validateKinship (_clipboard->structuralType (),
+                               Structural::Body))
       canPaste = true;
   }
 
@@ -1167,8 +1168,7 @@ StructuralView::removeEntity (QString uid, QStrMap stgs)
     if (p)
       parent = p->uid ();
 
-    Remove *cmd
-        = new Remove (this, e->uid (), parent, e->properties (), stgs);
+    Remove *cmd = new Remove (this, e->uid (), parent, e->properties (), stgs);
     cmd->setText (stgs[ST_SETTINGS_CODE]);
 
     _commands.push (cmd);
@@ -1233,8 +1233,10 @@ StructuralView::performAutostart ()
     {
       if (e->structuralParent ())
       {
-        pProps.insert (ST_ATTR_REF_COMPONENT_UID, e->structuralParent ()->uid ());
-        pProps.insert (ST_ATTR_REF_COMPONENT_ID, e->structuralParent ()->id ());
+        pProps.insert (ST_ATTR_REF_COMPONENT_UID,
+                       e->structuralParent ()->uid ());
+        pProps.insert (ST_ATTR_REF_COMPONENT_ID,
+                       e->structuralParent ()->id ());
 
         pProps.insert (ST_ATTR_REF_INTERFACE_UID, e->uid ());
         pProps.insert (ST_ATTR_REF_INTERFACE_ID, e->id ());
@@ -1249,7 +1251,9 @@ StructuralView::performAutostart ()
       pProps.insert (ST_ATTR_REF_COMPONENT_UID, e->uid ());
       pProps.insert (ST_ATTR_REF_COMPONENT_ID, e->id ());
 
-      pParent = e->structuralParent () != nullptr ? e->structuralParent ()->uid () : "";
+      pParent = e->structuralParent () != nullptr
+                    ? e->structuralParent ()->uid ()
+                    : "";
     }
 
     insert (util::createUid (), pParent, pProps, stgs);
@@ -1345,17 +1349,19 @@ StructuralView::paste ()
     bool isValidPaste = false;
     if (!ST_OPT_WITH_BODY)
     {
-      if (util::validateKinship (_clipboard->structuralType (), Structural::Body))
+      if (util::validateKinship (_clipboard->structuralType (),
+                                 Structural::Body))
         isValidPaste = true;
     }
     else
     {
       if (parent)
       {
-        isValidPaste = (_clipboard->uid () != parent->uid ())
-                       && (util::validateKinship (_clipboard->structuralType (),
-                                                  parent->structuralType ()))
-                       && (!_clipboard->isChild (parent));
+        isValidPaste
+            = (_clipboard->uid () != parent->uid ())
+              && (util::validateKinship (_clipboard->structuralType (),
+                                         parent->structuralType ()))
+              && (!_clipboard->isChild (parent));
       }
     }
 
@@ -1459,8 +1465,8 @@ StructuralView::createLink (StructuralEntity *orig, StructuralEntity *dest)
 
       parent = parentOrig;
     }
-    else if ((parentOrig && parentDest)
-             && (parentOrig->structuralParent () == parentDest->structuralParent ())
+    else if ((parentOrig && parentDest) && (parentOrig->structuralParent ()
+                                            == parentDest->structuralParent ())
              && (orig->category () == Structural::Interface)
              && (dest->category () == Structural::Interface))
     {
@@ -1528,8 +1534,7 @@ StructuralView::createLink (StructuralEntity *orig, StructuralEntity *dest)
             orig = _scene->entity (uid);
             parentOrig = orig->structuralParent ();
 
-            pOrig
-                = parentOrig->mapToParent (orig->left (), orig->top ());
+            pOrig = parentOrig->mapToParent (orig->left (), orig->top ());
           }
         }
 
@@ -1542,8 +1547,7 @@ StructuralView::createLink (StructuralEntity *orig, StructuralEntity *dest)
             dest = _scene->entity (uid);
             parentDest = dest->structuralParent ();
 
-            pDest
-                = parentDest->mapToParent (dest->left (), dest->top ());
+            pDest = parentDest->mapToParent (dest->left (), dest->top ());
           }
         }
 
@@ -1722,8 +1726,9 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
           {
             for (StructuralEntity *ent : parentNonLink->children ())
             {
-              _dialog->addActionInterface (ent->uid (), ent->id (),
-                                           util::icon (ent->structuralType ()));
+              _dialog->addActionInterface (
+                  ent->uid (), ent->id (),
+                  util::icon (ent->structuralType ()));
             }
 
             _dialog->setActionInterface (entityNonLink->id ());
@@ -1732,14 +1737,14 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
           {
             for (StructuralEntity *ent : entityNonLink->children ())
             {
-              _dialog->addActionInterface (ent->uid (), ent->id (),
-                                           util::icon (ent->structuralType ()));
+              _dialog->addActionInterface (
+                  ent->uid (), ent->id (),
+                  util::icon (ent->structuralType ()));
             }
           }
 
-          _dialog->setMode (
-              entityLink->property (ST_ATTR_REF_XCONNECTOR_ID), "", "",
-              StructuralLinkDialog::CreateAction);
+          _dialog->setMode (entityLink->property (ST_ATTR_REF_XCONNECTOR_ID),
+                            "", "", StructuralLinkDialog::CreateAction);
 
           if (_dialog->exec ())
           {
@@ -1794,8 +1799,9 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
           {
             for (StructuralEntity *ent : parentNonLink->children ())
             {
-              _dialog->addConditionInterface (ent->uid (), ent->id (),
-                                              util::icon (ent->structuralType ()));
+              _dialog->addConditionInterface (
+                  ent->uid (), ent->id (),
+                  util::icon (ent->structuralType ()));
             }
 
             _dialog->setConditionInterface (entityNonLink->id ());
@@ -1804,14 +1810,14 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
           {
             for (StructuralEntity *ent : entityNonLink->children ())
             {
-              _dialog->addConditionInterface (ent->uid (), ent->id (),
-                                              util::icon (ent->structuralType ()));
+              _dialog->addConditionInterface (
+                  ent->uid (), ent->id (),
+                  util::icon (ent->structuralType ()));
             }
           }
 
-          _dialog->setMode (
-              entityLink->property (ST_ATTR_REF_XCONNECTOR_ID), "", "",
-              StructuralLinkDialog::CreateCondition);
+          _dialog->setMode (entityLink->property (ST_ATTR_REF_XCONNECTOR_ID),
+                            "", "", StructuralLinkDialog::CreateCondition);
 
           if (_dialog->exec ())
           {
@@ -1877,8 +1883,7 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
       if (!code.isEmpty ())
         settings[ST_SETTINGS_CODE] = code;
 
-      insert (uid, (parent != nullptr ? parent->uid () : ""), props,
-              settings);
+      insert (uid, (parent != nullptr ? parent->uid () : ""), props, settings);
     }
   }
 }
@@ -2459,8 +2464,8 @@ StructuralView::performBindDialog (StructuralBind *ent)
   if (util::isCondition (ent->getRole ()))
   {
     _dialog->setMode (
-        ent->getDestination ()->property (ST_ATTR_REF_XCONNECTOR_ID), "",
-        "", StructuralLinkDialog::EditCondition);
+        ent->getDestination ()->property (ST_ATTR_REF_XCONNECTOR_ID), "", "",
+        StructuralLinkDialog::EditCondition);
 
     _dialog->setCondition (ent->id ());
     _dialog->setConditionParams (pBind);
@@ -2488,8 +2493,7 @@ StructuralView::performBindDialog (StructuralBind *ent)
       if (!ST_OPT_SHOW_INTERFACES)
       {
         if (ent->hasProperty (ST_ATTR_REF_INTERFACE_UID)
-            && _scene->hasEntity (
-                   ent->property (ST_ATTR_REF_INTERFACE_UID)))
+            && _scene->hasEntity (ent->property (ST_ATTR_REF_INTERFACE_UID)))
         {
           StructuralEntity *interface = _scene->entity (
               ent->property (ST_ATTR_REF_INTERFACE_UID));
@@ -2501,9 +2505,8 @@ StructuralView::performBindDialog (StructuralBind *ent)
   }
   else if (util::isAction (ent->getRole ()))
   {
-    _dialog->setMode (
-        ent->getOrigin ()->property (ST_ATTR_REF_XCONNECTOR_ID), "", "",
-        StructuralLinkDialog::EditAction);
+    _dialog->setMode (ent->getOrigin ()->property (ST_ATTR_REF_XCONNECTOR_ID),
+                      "", "", StructuralLinkDialog::EditAction);
 
     _dialog->setAction (ent->id ());
     _dialog->setActionParams (pBind);
@@ -2517,8 +2520,7 @@ StructuralView::performBindDialog (StructuralBind *ent)
                                      util::icon (e->structuralType ()));
       }
 
-      _dialog->setActionInterface (
-          ent->property (ST_ATTR_REF_INTERFACE_ID));
+      _dialog->setActionInterface (ent->property (ST_ATTR_REF_INTERFACE_ID));
     }
     else
     {
@@ -2531,8 +2533,7 @@ StructuralView::performBindDialog (StructuralBind *ent)
       if (!ST_OPT_SHOW_INTERFACES)
       {
         if (ent->hasProperty (ST_ATTR_REF_INTERFACE_UID)
-            && _scene->hasEntity (
-                   ent->property (ST_ATTR_REF_INTERFACE_UID)))
+            && _scene->hasEntity (ent->property (ST_ATTR_REF_INTERFACE_UID)))
         {
           StructuralEntity *interface = _scene->entity (
               ent->property (ST_ATTR_REF_INTERFACE_UID));
