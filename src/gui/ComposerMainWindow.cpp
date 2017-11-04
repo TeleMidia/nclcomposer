@@ -398,7 +398,7 @@ ComposerMainWindow::addPluginWidget (IPluginFactory *fac, IPlugin *plugin,
 {
   QToolWindowManager *w;
   QString location = project->getLocation ();
-  QString projectId = project->getAttr ("id");
+  QString projectId = project->attr ("id");
 
 #ifdef USE_MDI
   QMdiArea *mdiArea;
@@ -508,7 +508,7 @@ ComposerMainWindow::tabClosed (int index)
 
   if (project != nullptr && project->isDirty ())
   {
-    int ret = QMessageBox::warning (this, project->getAttr ("id"),
+    int ret = QMessageBox::warning (this, project->attr ("id"),
                                     tr ("The project has been modified.\n"
                                         "Do you want to save your changes?"),
                                     QMessageBox::Yes | QMessageBox::Default,
@@ -781,7 +781,7 @@ ComposerMainWindow::closeEvent (QCloseEvent *event)
     {
       _tabProjects->setCurrentIndex (index);
       int ret = QMessageBox::warning (
-          this, project->getAttr ("id"),
+          this, project->attr ("id"),
           tr ("The project %1 has been modified.\n"
               "Do you want to save your changes?")
               .arg (location),
@@ -900,9 +900,9 @@ ComposerMainWindow::saveCurrentProject ()
     if (file.open (QFile::WriteOnly | QIODevice::Truncate))
     {
       // Write FILE!!
-      if (project->getChildren ().size ())
+      if (project->children ().size ())
         file.write (
-            project->getChildren ().at (0)->toString (0, false).toLatin1 ());
+            project->children ().at (0)->toString (0, false).toLatin1 ());
 
       file.close ();
     }
@@ -965,8 +965,8 @@ ComposerMainWindow::saveAsCurrentProject ()
         if (file.open (QFile::WriteOnly | QIODevice::Truncate))
         {
           // Write FILE!!
-          if (project->getChildren ().size ())
-            file.write (project->getChildren ()
+          if (project->children ().size ())
+            file.write (project->children ()
                             .at (0)
                             ->toString (0, false)
                             .toLatin1 ());
@@ -1150,13 +1150,13 @@ ComposerMainWindow::addDefaultStructureToProject (
   Entity *nclEntity;
   MessageControl *msgControl
       = PluginControl::instance ()->getMessageControl (project);
-  msgControl->anonymousAddEntity ("ncl", project->getUniqueId (), nclAttrs);
+  msgControl->anonymousAddEntity ("ncl", project->uid (), nclAttrs);
 
   nclEntity = project->getEntitiesbyType ("ncl").first ();
 
   if (nclEntity != nullptr)
   {
-    QString nclEntityId = nclEntity->getUniqueId ();
+    QString nclEntityId = nclEntity->uid ();
     msgControl->anonymousAddEntity ("head", nclEntityId, headAttrs);
 
     bodyAttrs.insert ("id", defaultBodyID);
@@ -1202,14 +1202,14 @@ ComposerMainWindow::addDefaultStructureToProject (
 
         // add connectorBase element
         Entity *head = project->getEntitiesbyType ("head").at (0);
-        msgControl->anonymousAddEntity ("connectorBase", head->getUniqueId (),
+        msgControl->anonymousAddEntity ("connectorBase", head->uid (),
                                         connBaseAttrs);
 
         // add importBase element
         Entity *connectorBase
             = project->getEntitiesbyType ("connectorBase").at (0);
         msgControl->anonymousAddEntity (
-            "importBase", connectorBase->getUniqueId (), importBaseAttrs);
+            "importBase", connectorBase->uid (), importBaseAttrs);
       }
       else // error
       {
@@ -1241,7 +1241,7 @@ ComposerMainWindow::addDefaultStructureToProject (
     {
       regionBaseAttrs.insert ("id", defaultRegionBaseID);
       Entity *head = project->getEntitiesbyType ("head").at (0);
-      msgControl->anonymousAddEntity ("regionBase", head->getUniqueId (),
+      msgControl->anonymousAddEntity ("regionBase", head->uid (),
                                       regionBaseAttrs);
     }
 
@@ -1253,7 +1253,7 @@ ComposerMainWindow::addDefaultStructureToProject (
     regionAttrs.insert ("width", "100%");
     regionAttrs.insert ("height", "100%");
     regionAttrs.insert ("zIndex", "1");
-    msgControl->anonymousAddEntity ("region", regionBase->getUniqueId (),
+    msgControl->anonymousAddEntity ("region", regionBase->uid (),
                                     regionAttrs);
   }
 
@@ -1571,7 +1571,7 @@ ComposerMainWindow::setProjectAsDirty (QString location, bool isDirty)
 
   QString projectId = ProjectControl::instance ()
                           ->getOpenProject (location)
-                          ->getAttr ("id");
+                          ->attr ("id");
 
   int index = _tabProjects->indexOf (window);
 
@@ -1812,7 +1812,7 @@ ComposerMainWindow::updateTabWithProject (int index, QString newLocation)
       = ProjectControl::instance ()->getOpenProject (newLocation);
   if (project != nullptr)
   {
-    QString projectId = project->getAttr ("id");
+    QString projectId = project->attr ("id");
     _tabProjects->setTabText (index, projectId);
   }
 }

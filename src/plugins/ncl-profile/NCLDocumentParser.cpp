@@ -66,7 +66,7 @@ NCLDocumentParser::startElement (const QString &, const QString &,
                                  const QXmlAttributes &attributes)
 {
   QMap<QString, QString> atts;
-  QString parentId = _project->getUniqueId ();
+  QString parentId = _project->uid ();
 
   if (qName != "ncl")
   {
@@ -75,7 +75,7 @@ NCLDocumentParser::startElement (const QString &, const QString &,
       _lockStack.lock ();
       Entity *parentEntity = _elementStack.top ();
       _lockStack.unlock ();
-      parentId = parentEntity->getUniqueId ();
+      parentId = parentEntity->uid ();
     }
   }
 

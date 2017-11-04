@@ -187,9 +187,9 @@ StructuralViewPlugin::updateFromModel ()
     Entity *current = stack.top ();
     stack.pop ();
 
-    for (Entity *child : current->getEntityChildren ())
+    for (Entity *child : current->entityChildren ())
     {
-      StructuralType t = util::strToType (child->getType ());
+      StructuralType t = util::strToType (child->type ());
       switch (t)
       {
         case Structural::Media:
@@ -314,7 +314,7 @@ StructuralViewPlugin::onEntityAdded (const QString &pluginID, Entity *ent)
   }
   else if (_waiting)
   {
-    _core2view_insert (ent->getUniqueId (), _notified);
+    _core2view_insert (ent->uid (), _notified);
 
     _waiting = false;
   }
@@ -379,18 +379,18 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
 {
   QStrMap viewProps;
 
-  StructuralType type = util::strToType (ent->getType ());
-  QString coreParentUid = ent->getParentUniqueId ();
+  StructuralType type = util::strToType (ent->type ());
+  QString coreParentUid = ent->parentUid ();
   QString viewParentUid = _core2view.value (coreParentUid, "");
 
   QStrMap transls = util::createCoreTranslations (type);
   if (type != Structural::NoType)
   {
-    viewProps = { { ST_ATTR_ENT_TYPE, ent->getType () } };
+    viewProps = { { ST_ATTR_ENT_TYPE, ent->type () } };
     for (const QString &key : transls.keys ())
     {
-      if (ent->hasAttr (key) && !ent->getAttr (key).isEmpty ())
-        viewProps.insert (transls.value (key), ent->getAttr (key));
+      if (ent->hasAttr (key) && !ent->attr (key).isEmpty ())
+        viewProps.insert (transls.value (key), ent->attr (key));
     }
 
     if (viewProps.contains (ST_ATTR_REF_COMPONENT_ID))
@@ -411,7 +411,7 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
 
     if (type == Structural::Bind)
     {
-      viewParentUid = ent->getParent ()->getParentUniqueId ();
+      viewParentUid = ent->parent ()->parentUid ();
       if (viewProps.contains (ST_ATTR_ENT_ID))
       {
         StructuralRole role
@@ -419,7 +419,7 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
 
         viewProps.insert (ST_ATTR_BIND_ROLE, util::roleToString (role));
         viewProps.insert (ST_ATTR_REF_LINK_UID,
-                          _core2view.value (ent->getParentUniqueId ()));
+                          _core2view.value (ent->parentUid ()));
 
         if (util::isCondition (role))
         {
@@ -435,7 +435,7 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
           }
 
           viewProps.insert (ST_ATTR_EDGE_DEST,
-                            _core2view.value (ent->getParentUniqueId ()));
+                            _core2view.value (ent->parentUid ()));
         }
         else if (util::isAction (role))
         {
@@ -451,16 +451,16 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
           }
 
           viewProps.insert (ST_ATTR_EDGE_ORIG,
-                            _core2view.value (ent->getParentUniqueId ()));
+                            _core2view.value (ent->parentUid ()));
         }
       }
     }
     else if (type == Structural::Mapping)
     {
-      viewParentUid = ent->getParent ()->getParentUniqueId ();
+      viewParentUid = ent->parent ()->parentUid ();
 
       viewProps.insert (ST_ATTR_EDGE_ORIG,
-                        _core2view.value (ent->getParentUniqueId ()));
+                        _core2view.value (ent->parentUid ()));
 
       if (viewProps.contains (ST_ATTR_REF_INTERFACE_UID))
       {
@@ -474,16 +474,16 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
       }
     }
   }
-  else if (ent->getType () == "linkParam" || ent->getType () == "bindParam")
+  else if (ent->type () == "linkParam" || ent->type () == "bindParam")
   {
     StructuralEntity *parent = _struct_scene->getEntity (
-        _core2view.value (ent->getParentUniqueId ()));
+        _core2view.value (ent->parentUid ()));
 
     QString uid;
     QStrMap next = parent->getProperties ();
 
     QString name, value;
-    if (ent->getType () == "linkParam")
+    if (ent->type () == "linkParam")
     {
       name = QString (ST_ATTR_LINKPARAM_NAME);
       value = QString (ST_ATTR_LINKPARAM_VALUE);
@@ -496,22 +496,22 @@ StructuralViewPlugin::getViewPropsFromCoreEntity (const Entity *ent)
 
     if (ent->hasAttr ("name") && !ent->hasAttr ("value"))
     {
-      if (_core2view.contains (ent->getUniqueId ()))
-        uid = _core2view.value (ent->getUniqueId ());
+      if (_core2view.contains (ent->uid ()))
+        uid = _core2view.value (ent->uid ());
       else
-        uid = ent->getUniqueId ();
+        uid = ent->uid ();
 
-      next[name + ":" + uid] = ent->getAttr ("name");
-      next[value + ":" + uid] = ent->getAttr ("value");
+      next[name + ":" + uid] = ent->attr ("name");
+      next[value + ":" + uid] = ent->attr ("value");
 
       _core2view_insert (uid, uid);
     }
-    else if (_core2view.contains (ent->getUniqueId ()))
+    else if (_core2view.contains (ent->uid ()))
     {
-      uid = _core2view.value (ent->getUniqueId ());
+      uid = _core2view.value (ent->uid ());
 
-      next[name + ":" + uid] = ent->getAttr ("name");
-      next[value + ":" + uid] = ent->getAttr ("value");
+      next[name + ":" + uid] = ent->attr ("name");
+      next[value + ":" + uid] = ent->attr ("value");
     }
   }
 
@@ -522,12 +522,12 @@ void
 StructuralViewPlugin::insertInView (Entity *ent, bool undo)
 {
   CPR_ASSERT_NON_NULL (ent);
-  CPR_ASSERT (!_core2view.contains (ent->getUniqueId ()));
+  CPR_ASSERT (!_core2view.contains (ent->uid ()));
 
   QStrMap stgs = util::createSettings (undo, false);
-  Structural::Type type = util::strToType (ent->getType ());
-  QString uid = ent->getUniqueId ();
-  QString coreParentUid = ent->getParentUniqueId ();
+  Structural::Type type = util::strToType (ent->type ());
+  QString uid = ent->uid ();
+  QString coreParentUid = ent->parentUid ();
   QStrMap props = getViewPropsFromCoreEntity (ent);
 
   if (type != Structural::NoType)
@@ -537,7 +537,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
     if (type == Structural::Bind)
     {
       CPR_ASSERT (_core2view.contains (coreParentUid));
-      coreParentUid = ent->getParent ()->getParentUniqueId ();
+      coreParentUid = ent->parent ()->parentUid ();
     }
 
     QString viewParentUid = _core2view.value (coreParentUid, "");
@@ -552,7 +552,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
   // LinkParam and BindParam are not represented as independent entities in
   // StructuralView, thus instead of creating a new entity, we need to update
   // the associated link.
-  else if (ent->getType () == "linkParam" || ent->getType () == "bindParam")
+  else if (ent->type () == "linkParam" || ent->type () == "bindParam")
   {
     if (ent->hasAttr ("name") && ent->hasAttr ("value"))
     {
@@ -567,7 +567,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
   }
   else
   {
-    qWarning () << "Trying to insert a entity of type " << ent->getType ()
+    qWarning () << "Trying to insert a entity of type " << ent->type ()
                 << " which is not handled by structural.";
     //    CPR_ASSERT_NOT_REACHED ();
   }
@@ -576,13 +576,13 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
 void
 StructuralViewPlugin::removeInView (Entity *ent, bool undo)
 {
-  CPR_ASSERT (_core2view.contains (ent->getUniqueId ()));
+  CPR_ASSERT (_core2view.contains (ent->uid ()));
 
   QStrMap stgs = util::createSettings (undo, false);
-  if (ent->getType () == "linkParam" || ent->getType () == "bindParam")
+  if (ent->type () == "linkParam" || ent->type () == "bindParam")
   {
     QString name, value;
-    if (ent->getType () == "linkParam")
+    if (ent->type () == "linkParam")
     {
       name = QString (ST_ATTR_LINKPARAM_NAME);
       value = QString (ST_ATTR_LINKPARAM_VALUE);
@@ -594,10 +594,10 @@ StructuralViewPlugin::removeInView (Entity *ent, bool undo)
     }
 
     StructuralEntity *e = _struct_scene->getEntity (
-        _core2view.value (ent->getParentUniqueId ()));
+        _core2view.value (ent->parentUid ()));
     CPR_ASSERT_NON_NULL (e);
 
-    QString uid = _core2view.value (ent->getUniqueId ());
+    QString uid = _core2view.value (ent->uid ());
     QStrMap next = e->getProperties ();
 
     if (next.contains (name + ":" + uid) || next.contains (value + ":" + uid))
@@ -611,24 +611,24 @@ StructuralViewPlugin::removeInView (Entity *ent, bool undo)
   }
   else
   {
-    _struct_view->remove (_core2view.value (ent->getUniqueId ()), stgs);
+    _struct_view->remove (_core2view.value (ent->uid ()), stgs);
   }
 
-  _core2view_remove (ent->getUniqueId ());
+  _core2view_remove (ent->uid ());
 }
 
 void
 StructuralViewPlugin::changeInView (Entity *ent)
 {
-  Structural::Type type = util::strToType (ent->getType ());
+  Structural::Type type = util::strToType (ent->type ());
 
   QStrMap stgs = util::createSettings (true, false);
 
   if (type != Structural::NoType)
   {
-    CPR_ASSERT (_core2view.contains (ent->getUniqueId ()));
+    CPR_ASSERT (_core2view.contains (ent->uid ()));
 
-    QString uid = _core2view[ent->getUniqueId ()];
+    QString uid = _core2view[ent->uid ()];
     CPR_ASSERT (_struct_scene->hasEntity (uid));
 
     QStrMap props = getViewPropsFromCoreEntity (ent);
@@ -636,12 +636,12 @@ StructuralViewPlugin::changeInView (Entity *ent)
 
     _struct_view->change (uid, props, stgs);
   }
-  else if (ent->getType () == "linkParam" || ent->getType () == "bindParam")
+  else if (ent->type () == "linkParam" || ent->type () == "bindParam")
   {
     StructuralEntity *parent = _struct_scene->getEntity (
-        _core2view.value (ent->getParentUniqueId ()));
+        _core2view.value (ent->parentUid ()));
 
-    QString uid = ent->getUniqueId ();
+    QString uid = ent->uid ();
     QStrMap next = getViewPropsFromCoreEntity (ent);
 
     _core2view_insert (uid, uid);
@@ -653,7 +653,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
 void
 StructuralViewPlugin::selectInView (Entity *entity)
 {
-  QString coreUid = entity->getUniqueId ();
+  QString coreUid = entity->uid ();
   QString viewUid = _core2view.value (coreUid, "");
 
   if (_struct_scene->hasEntity (viewUid))
@@ -711,9 +711,9 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
     {
       Entity *body = list.first ();
 
-      _view2core.remove (_core2view[body->getUniqueId ()]);
-      _core2view[body->getUniqueId ()] = uid;
-      _view2core[uid] = body->getUniqueId ();
+      _view2core.remove (_core2view[body->uid ()]);
+      _core2view[body->uid ()] = uid;
+      _view2core[uid] = body->uid ();
 
       return;
     }
@@ -727,7 +727,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
       CPR_ASSERT_NON_NULL (proj);
       QStrMap attrs;
 
-      emit addEntity ("ncl", proj->getUniqueId (), attrs);
+      emit addEntity ("ncl", proj->uid (), attrs);
     }
 
     list = getProject ()->getEntitiesbyType ("ncl");
@@ -752,7 +752,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
     _waiting = true;
     _notified = uid;
 
-    emit addEntity (util::typeToStr (type), entParent->getUniqueId (), attrs);
+    emit addEntity (util::typeToStr (type), entParent->uid (), attrs);
 
     if (type == Structural::Link || type == Structural::Bind)
     {
@@ -844,12 +844,12 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
       }
 
       QVector<QString> paramUids, paramNames;
-      for (Entity *c : ent->getEntityChildren ())
+      for (Entity *c : ent->entityChildren ())
       {
-        if (c->getType () == tag)
+        if (c->type () == tag)
         {
-          paramUids.append (c->getUniqueId ());
-          paramNames.append (c->getAttr ("name"));
+          paramUids.append (c->uid ());
+          paramNames.append (c->attr ("name"));
         }
       }
 
@@ -869,8 +869,8 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
           // Change a param entity in core that has been added by the view.
           if (param)
           {
-            if (paramUids.contains (param->getUniqueId ()))
-              paramUids.remove (paramUids.indexOf (param->getUniqueId ()));
+            if (paramUids.contains (param->uid ()))
+              paramUids.remove (paramUids.indexOf (param->uid ()));
 
             _waiting = true;
 
@@ -886,7 +886,7 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
             param = getProject ()->getEntityById (paramUids.at (index));
             paramUids.remove (index);
 
-            _core2view_insert (param->getUniqueId (), pUid);
+            _core2view_insert (param->uid (), pUid);
 
             _waiting = true;
 
@@ -897,7 +897,7 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
             _waiting = true;
             _notified = pUid;
 
-            emit addEntity (tag, ent->getUniqueId (), pAttr);
+            emit addEntity (tag, ent->uid (), pAttr);
           }
         }
       }
@@ -961,18 +961,18 @@ StructuralViewPlugin::getUidById (const QString &id, Entity *ent)
 {
   QString uid = "";
 
-  if (ent->getType () == "property")
+  if (ent->type () == "property")
   {
-    if (ent->getAttr ("name") == id)
-      return ent->getUniqueId ();
+    if (ent->attr ("name") == id)
+      return ent->uid ();
   }
   else
   {
-    if (ent->getAttr ("id") == id)
-      return ent->getUniqueId ();
+    if (ent->attr ("id") == id)
+      return ent->uid ();
   }
 
-  for (Entity *child : ent->getEntityChildren ())
+  for (Entity *child : ent->entityChildren ())
   {
     QString result = getUidById (id, child);
     if (result != "")
@@ -990,10 +990,10 @@ StructuralViewPlugin::getUidByName (const QString &name, Entity *entity)
 {
   QString uid = "";
 
-  if (entity->getAttr ("name") == name)
-    return entity->getUniqueId ();
+  if (entity->attr ("name") == name)
+    return entity->uid ();
 
-  for (Entity *child : entity->getEntityChildren ())
+  for (Entity *child : entity->entityChildren ())
   {
     QString result = getUidByName (name, child);
 
@@ -1019,43 +1019,43 @@ StructuralViewPlugin::adjustConnectors ()
     Entity *connBase = connectorBases.first ();
     QMap<QString, QVector<QString> > conditions, actions, params;
 
-    for (Entity *e : connBase->getEntityChildren ())
+    for (Entity *e : connBase->entityChildren ())
     {
       // loading data from local causalConnector
-      if (e->getType () == "causalConnector")
+      if (e->type () == "causalConnector")
       {
         QVector<QString> connConditions, connActions, connParams;
-        QString connId = e->getAttr ("id");
+        QString connId = e->attr ("id");
 
         QStack<Entity *> next;
-        for (Entity *ec : e->getEntityChildren ())
+        for (Entity *ec : e->entityChildren ())
           next.push (ec);
 
         while (!next.isEmpty ())
         {
           Entity *current = next.pop ();
 
-          if (current->getType () == "simpleCondition"
+          if (current->type () == "simpleCondition"
               && current->hasAttr ("role"))
-            connConditions.append (current->getAttr ("role"));
+            connConditions.append (current->attr ("role"));
 
-          if (current->getType () == "attributeAssessment"
+          if (current->type () == "attributeAssessment"
               && current->hasAttr ("role"))
-            connConditions.append (current->getAttr ("role"));
+            connConditions.append (current->attr ("role"));
 
-          if (current->getType () == "simpleAction"
+          if (current->type () == "simpleAction"
               && current->hasAttr ("role"))
-            connActions.append (current->getAttr ("role"));
+            connActions.append (current->attr ("role"));
 
-          if (current->getType () == "connectorParam"
+          if (current->type () == "connectorParam"
               && current->hasAttr ("name"))
-            connParams.append (current->getAttr ("name"));
+            connParams.append (current->attr ("name"));
 
-          if (current->getType () == "compoundCondition"
-              || current->getType () == "compoundAction"
-              || current->getType () == "assessmentStatement")
+          if (current->type () == "compoundCondition"
+              || current->type () == "compoundAction"
+              || current->type () == "assessmentStatement")
           {
-            for (Entity *ec : current->getEntityChildren ())
+            for (Entity *ec : current->entityChildren ())
               next.push (ec);
           }
         }
@@ -1066,12 +1066,12 @@ StructuralViewPlugin::adjustConnectors ()
 
         // loading data from importBases
       }
-      else if (e->getType () == "importBase")
+      else if (e->type () == "importBase")
       {
         QString importAlias, importURI, projectURI;
 
-        importAlias = e->getAttr ("alias");
-        importURI = e->getAttr ("documentURI");
+        importAlias = e->attr ("alias");
+        importURI = e->attr ("documentURI");
 
         // projectURI use '/' as separator
         projectURI = getProject ()->getLocation ();

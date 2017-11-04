@@ -57,23 +57,23 @@ class COMPOSERCORESHARED_EXPORT Node : public QObject
 
 public:
   /*!
-   * \brief getUniqueId
+   * \brief uniqueId
    * \return the unique id of the node.
    */
-  QString getUniqueId () const;
+  QString uid () const;
 
   /*!
    * \brief getParent
    * \return the node parent of the node.  Returns nullptr if the node has no
    *  parent.
    */
-  Node *getParent () const;
+  Node *parent () const;
 
   /*!
    * \brief getParentUniqueId
    * \return the parent unique id.
    */
-  QString getParentUniqueId () const;
+  QString parentUid () const;
 
   /*!
    * \brief Tell if the children should be deleted when this entity is deleted
@@ -87,13 +87,13 @@ public:
    * \brief
    * \return
    */
-  QList<Node *> getChildren () const;
+  QList<Node *> children () const;
 
   /*!
    * \brief getEntityChildren
    * \return only the list of entity children (ignoring the comments).
    */
-  QList<Entity *> getEntityChildren () const;
+  QList<Entity *> entityChildren () const;
 
   /*!
    * \brief Converts the current Entity to an XML String.
@@ -129,7 +129,7 @@ protected:
    * \param atts attributes to be set to this Entity.
    * \param parent the QObject parent.
    */
-  explicit Node (const QString &uniqueId, QDomDocument &doc, Node *parent = 0);
+  explicit Node (const QString &uid, QDomDocument &doc, Node *parent = 0);
 
   /*!
    * \brief Destructor.
@@ -142,7 +142,7 @@ protected:
    *
    * \param _id The new uniqueId of the entity.
    */
-  void setUniqueID (const QString &uniqueId);
+  void setUid (const QString &uid);
 
   /*!
    * \brief Set the parent of the Entity.

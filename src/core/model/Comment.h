@@ -58,7 +58,7 @@ public:
     if (writeuid)
     {
       out += " uniqueEntityId=\"";
-      out += getUniqueId ();
+      out += uid ();
       out += "\"";
     }
 

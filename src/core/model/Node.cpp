@@ -22,14 +22,14 @@ CPR_CORE_BEGIN_NAMESPACE
 
 Node::Node (QDomDocument &doc, Node *parent) : QObject ()
 {
-  setUniqueID (QUuid::createUuid ().toString ());
+  setUid (QUuid::createUuid ().toString ());
   this->_doc = doc;
   this->_parent = parent;
 }
 
 Node::Node (const QString &uniqueId, QDomDocument &doc, Node *parent)
 {
-  setUniqueID (uniqueId);
+  setUid (uniqueId);
   this->_doc = doc;
   this->_parent = parent;
 }
@@ -48,13 +48,13 @@ Node::~Node ()
 }
 
 void
-Node::setUniqueID (const QString &uniqueId)
+Node::setUid (const QString &uniqueId)
 {
   this->_uid = uniqueId;
 }
 
 QString
-Node::getUniqueId () const
+Node::uid () const
 {
   return this->_uid;
 }
@@ -69,13 +69,13 @@ bool
 Node::addChild (Node *entity, int pos)
 {
   assert (entity != nullptr);
-  QString _id = entity->getUniqueId ();
+  QString _id = entity->uid ();
 
   // Check if the entity is already children of this entity
   // TODO: THIS CAN BE IMPROVED!! Maybe checking if the parentUniqueID.
   for (int i = 0; i < _children.size (); i++)
   {
-    if (_children.at (i)->getUniqueId () == _id)
+    if (_children.at (i)->uid () == _id)
       return false;
   }
 
@@ -105,15 +105,15 @@ Node::deleteChild (Node *node)
 }
 
 Node *
-Node::getParent () const
+Node::parent () const
 {
   return _parent;
 }
 
 QString
-Node::getParentUniqueId () const
+Node::parentUid () const
 {
-  return _parent->getUniqueId ();
+  return _parent->uid ();
 }
 
 void
@@ -123,13 +123,13 @@ Node::setDeleteChildren (bool _del)
 }
 
 QList<Node *>
-Node::getChildren () const
+Node::children () const
 {
   return this->_children;
 }
 
 QList<Entity *>
-Node::getEntityChildren () const
+Node::entityChildren () const
 {
   QList<Entity *> children;
   for (auto i = _children.begin (); i != _children.end (); ++i)

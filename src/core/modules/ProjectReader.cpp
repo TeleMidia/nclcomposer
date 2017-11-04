@@ -142,14 +142,14 @@ ProjectReader::startElement (const QString &namespaceURI,
     {
       Comment *comment = new Comment (uniqueId, atts["content"],
                                       _project->getDomDocument (), _project);
-      _project->addComment (comment, parentNode->getUniqueId ());
+      _project->addComment (comment, parentNode->uid ());
       node = comment;
     }
     else
     {
       Entity *entity = new Entity (uniqueId, qName, atts,
                                    _project->getDomDocument (), _project);
-      _project->addEntity (entity, parentNode->getUniqueId ());
+      _project->addEntity (entity, parentNode->uid ());
       node = entity;
     }
   }

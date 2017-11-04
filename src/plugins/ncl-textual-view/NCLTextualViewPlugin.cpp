@@ -139,7 +139,7 @@ NCLTextualViewPlugin::incrementalUpdateFromModel ()
   _startEntityOffset.clear ();
   _endEntityOffset.clear ();
 
-  if (project->getEntityChildren ().size ())
+  if (project->entityChildren ().size ())
   {
     QList<Node *> nodes;
     nodes.push_back (project);
@@ -170,7 +170,7 @@ NCLTextualViewPlugin::incrementalUpdateFromModel ()
 
       if (ent)
       {
-        foreach (Node *child, ent->getChildren ())
+        foreach (Node *child, ent->children ())
         {
           nodes.push_back (child);
         }
@@ -185,7 +185,7 @@ NCLTextualViewPlugin::nonIncrementalUpdateFromModel ()
   _nclTextEditor->clear ();
   _nclTextEditor->setText (PROLOG);
   QDomDocument doc ("document");
-  if (project->getChildren ().size ())
+  if (project->children ().size ())
   {
     Entity *entity = project;
     QList<Entity *> entities;
@@ -213,10 +213,10 @@ NCLTextualViewPlugin::nonIncrementalUpdateFromModel ()
         elements.push_back (doc);
       }
 
-      foreach (Entity *ent, entity->getEntityChildren ())
+      foreach (Entity *ent, entity->entityChildren ())
       {
         entities.push_back (ent);
-        QDomElement el = doc.createElement (ent->getType ());
+        QDomElement el = doc.createElement (ent->type ());
         el.setAttribute ("oi", "oi2");
         el.setAttribute ("oi2", "oi3");
         el.setAttribute ("oi3", "oi4");
@@ -243,25 +243,25 @@ NCLTextualViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
     return;
   }
 
-  QString line = "<" + entity->getType () + "";
+  QString line = "<" + entity->type () + "";
   int insertAtOffset = PROLOG.size ();
   bool hasOpennedTag = false;
 
   // get the line number where the new element must be inserted
-  if (entity->getParentUniqueId () != nullptr
-      && ((Entity *)entity->getParent ())->getType () != "project")
+  if (entity->parentUid () != nullptr
+      && ((Entity *)entity->parent ())->type () != "project")
   {
     // Test if exists before access from operator[] because if doesn't exist
     // this operator will create a new (and we don't want this!).
-    if (_endEntityOffset.count (entity->getParentUniqueId ()))
+    if (_endEntityOffset.count (entity->parentUid ()))
     {
-      if (isStartEndTag ((Entity *)entity->getParent ()))
+      if (isStartEndTag ((Entity *)entity->parent ()))
       {
-        openStartEndTag ((Entity *)entity->getParent ());
+        openStartEndTag ((Entity *)entity->parent ());
         hasOpennedTag = true;
       }
 
-      insertAtOffset = _endEntityOffset[entity->getParentUniqueId ()];
+      insertAtOffset = _endEntityOffset[entity->parentUid ()];
     }
   }
 
@@ -278,8 +278,8 @@ NCLTextualViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
     // update all previous offset numbers (when necessary)
     updateEntitiesOffset (insertAtOffset, line.size ());
 
-    _startEntityOffset[entity->getUniqueId ()] = insertAtOffset;
-    _endEntityOffset[entity->getUniqueId ()]
+    _startEntityOffset[entity->uid ()] = insertAtOffset;
+    _endEntityOffset[entity->uid ()]
         = insertAtOffset + startEntitySize - 2;
 
     _window->getTextEditor ()->SendScintilla (QsciScintilla::SCI_SETFOCUS,
@@ -313,20 +313,20 @@ NCLTextualViewPlugin::onCommentAdded (const QString &pluginID,
   bool hasOpennedTag = false;
 
   // get the line number where the new element must be inserted
-  if (comment->getParentUniqueId () != nullptr
-      && ((Entity *)comment->getParent ())->getType () != "project")
+  if (comment->parentUid () != nullptr
+      && ((Entity *)comment->parent ())->type () != "project")
   {
     // Test if exists before access from operator[] because if doesn't exist
     // this operator will create a new (and we don't want this!).
-    if (_endEntityOffset.count (comment->getParentUniqueId ()))
+    if (_endEntityOffset.count (comment->parentUid ()))
     {
-      if (isStartEndTag ((Entity *)comment->getParent ()))
+      if (isStartEndTag ((Entity *)comment->parent ()))
       {
-        openStartEndTag ((Entity *)comment->getParent ());
+        openStartEndTag ((Entity *)comment->parent ());
         hasOpennedTag = true;
       }
 
-      insertAtOffset = _endEntityOffset[comment->getParentUniqueId ()];
+      insertAtOffset = _endEntityOffset[comment->parentUid ()];
     }
   }
 
@@ -339,8 +339,8 @@ NCLTextualViewPlugin::onCommentAdded (const QString &pluginID,
     // update all previous offset numbers (when necessary)
     updateEntitiesOffset (insertAtOffset, line.size ());
 
-    _startEntityOffset[comment->getUniqueId ()] = insertAtOffset;
-    _endEntityOffset[comment->getUniqueId ()]
+    _startEntityOffset[comment->uid ()] = insertAtOffset;
+    _endEntityOffset[comment->uid ()]
         = insertAtOffset + startEntitySize - 2;
 
     _window->getTextEditor ()->SendScintilla (QsciScintilla::SCI_SETFOCUS,
@@ -373,15 +373,15 @@ NCLTextualViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
   if (pluginID == getPluginInstanceID () && !_isSyncing)
     return;
 
-  QString line = "<" + entity->getType () + "";
+  QString line = "<" + entity->type () + "";
 
   line += getEntityAttributesAsString (entity);
 
   int insertAtOffset = 0;
-  if (_startEntityOffset.contains (entity->getUniqueId ()))
+  if (_startEntityOffset.contains (entity->uid ()))
   {
-    insertAtOffset = _startEntityOffset.value (entity->getUniqueId ());
-    // endEntityOffset = _endEntityOffset.value(entity->getUniqueId());
+    insertAtOffset = _startEntityOffset.value (entity->uid ());
+    // endEntityOffset = _endEntityOffset.value(entity->uniqueId());
 
     if (insertAtOffset >= 0
         && insertAtOffset <= _nclTextEditor->text ().size ())
@@ -654,9 +654,9 @@ void
 NCLTextualViewPlugin::nonIncrementalUpdateCoreModel ()
 {
   // delete the content of the current project
-  while (project->getEntityChildren ().size ())
+  while (project->entityChildren ().size ())
   {
-    emit removeEntity (project->getEntityChildren ().first ());
+    emit removeEntity (project->entityChildren ().first ());
   }
 
   // clear the entities offset
@@ -666,7 +666,7 @@ NCLTextualViewPlugin::nonIncrementalUpdateCoreModel ()
   _endEntityOffset.clear ();
 
   QList<QString> parentUids;
-  QString parentUId = project->getUniqueId ();
+  QString parentUId = project->uid ();
   parentUids.push_back (parentUId);
 
   QList<QDomNode> nodes;
@@ -709,7 +709,7 @@ NCLTextualViewPlugin::nonIncrementalUpdateCoreModel ()
 
       // Send the addEntity to the core plugin
       emit addEntity (current_el.tagName (), parentUId, atts);
-      parentUId = _currentEntity->getUniqueId ();
+      parentUId = _currentEntity->uid ();
 
       QDomNode child = current_el.firstChild ();
       while (!child.isNull ())
@@ -781,7 +781,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
       child = child.nextSiblingElement ();
     }
 
-    QList<Entity *> entityChildren = curEntity->getEntityChildren ();
+    QList<Entity *> entityChildren = curEntity->entityChildren ();
 
     int i, j;
     for (i = 0, j = 0; i < children.size () && j < entityChildren.size ();
@@ -793,14 +793,14 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
           && entityChildren.at (j)->hasAttr ("id"))
       {
         if (children[i].attribute ("id")
-            == entityChildren.at (j)->getAttr ("id"))
+            == entityChildren.at (j)->attr ("id"))
           sameNCLID = true;
       }
       else if (children[i].hasAttribute ("name")
                && entityChildren.at (j)->hasAttr ("name"))
       {
         if (children[i].attribute ("name")
-            == entityChildren.at (j)->getAttr ("name"))
+            == entityChildren.at (j)->attr ("name"))
           sameNCLID = true;
       }
       // testing for alias - remove after
@@ -808,13 +808,13 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
                && entityChildren.at (j)->hasAttr ("alias"))
       {
         if (children[i].attribute ("alias")
-            == entityChildren.at (j)->getAttr ("alias"))
+            == entityChildren.at (j)->attr ("alias"))
           sameNCLID = true;
       }
       else
         sameNCLID = true;
 
-      if (children[i].tagName () == entityChildren[j]->getType () && sameNCLID)
+      if (children[i].tagName () == entityChildren[j]->type () && sameNCLID)
       {
         // if the same type, just update the attributes
         // TODO: Compare attributes
@@ -826,7 +826,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
           atts.insert (item.nodeName (), item.nodeValue ());
         }
 
-        QMap<QString, QString> elementAttrs = entityChildren[j]->getAttrs ();
+        QMap<QString, QString> elementAttrs = entityChildren[j]->attrs ();
         bool changed = false;
         int entityChildrenAttrSize = 0;
         foreach (const QString &key, elementAttrs.keys ())
@@ -857,7 +857,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
           QDomNode item = attributes.item (k);
           atts[item.nodeName ()] = item.nodeValue ();
         }
-        emit addEntity (children[i].tagName (), curEntity->getUniqueId (),
+        emit addEntity (children[i].tagName (), curEntity->uid (),
                         atts);
       }
     }
@@ -881,7 +881,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
           QDomNode item = attributes.item (k);
           atts[item.nodeName ()] = item.nodeValue ();
         }
-        emit addEntity (children[i].tagName (), curEntity->getUniqueId (),
+        emit addEntity (children[i].tagName (), curEntity->uid (),
                         atts);
       }
     }
@@ -893,7 +893,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
       child = child.nextSiblingElement ();
     }
 
-    foreach (Entity *child, curEntity->getEntityChildren ())
+    foreach (Entity *child, curEntity->entityChildren ())
       entities.push_back (child);
   }
 
@@ -917,7 +917,7 @@ NCLTextualViewPlugin::syncFinished ()
 bool
 NCLTextualViewPlugin::isStartEndTag (Entity *entity)
 {
-  int endOffset = _endEntityOffset[entity->getUniqueId ()];
+  int endOffset = _endEntityOffset[entity->uid ()];
 
   // Check if I am at a START_END_TAG />
   char curChar = _nclTextEditor->SendScintilla (QsciScintilla::SCI_GETCHARAT,
@@ -937,7 +937,7 @@ NCLTextualViewPlugin::openStartEndTag (Entity *entity)
 {
   if (isStartEndTag (entity))
   {
-    int endOffset = _endEntityOffset[entity->getUniqueId ()];
+    int endOffset = _endEntityOffset[entity->uid ()];
 
     //    printEntitiesOffset(); qCDebug (CPR_PLUGIN_TEXTUAL) << endl;
     // If the parent is a START_END, then we should separate the START from
@@ -950,7 +950,7 @@ NCLTextualViewPlugin::openStartEndTag (Entity *entity)
 
     _nclTextEditor->removeSelectedText ();
 
-    QString endTag = ">\n</" + entity->getType () + ">";
+    QString endTag = ">\n</" + entity->type () + ">";
     // Openning the START_END_TAG
     _nclTextEditor->insertAtPos (endTag, endOffset - 1);
     // before we have "/>\n" and now we have to remove update with the
@@ -962,7 +962,7 @@ NCLTextualViewPlugin::openStartEndTag (Entity *entity)
     //    printEntitiesOffset(); qCDebug (CPR_PLUGIN_TEXTUAL) << endl;
 
     fixIdentation (endOffset + 2, false);
-    _endEntityOffset[entity->getUniqueId ()] = endOffset + 1;
+    _endEntityOffset[entity->uid ()] = endOffset + 1;
   }
 }
 
@@ -1022,7 +1022,7 @@ NCLTextualViewPlugin::printEntitiesOffset ()
                                                   endOffSet);
 
     qCDebug (CPR_PLUGIN_TEXTUAL)
-        << "key=" << key << "(" << project->getEntityById (key)->getType ()
+        << "key=" << key << "(" << project->getEntityById (key)->type ()
         << "; start=" << startOffSet << "; start_char=" << startChar
         << "; end=" << endOffSet << "; end_char=" << endChar << endl;
   }
@@ -1125,7 +1125,7 @@ NCLTextualViewPlugin::getEntityAttributesAsString (/*const */ Entity *entity)
   QString line;
   // fill the attributes (ordered)
   deque<QString> *attributes_ordered
-      = NCLStructure::instance ()->getAttributesOrdered (entity->getType ());
+      = NCLStructure::instance ()->getAttributesOrdered (entity->type ());
 
   if (attributes_ordered != nullptr)
   {
@@ -1134,16 +1134,16 @@ NCLTextualViewPlugin::getEntityAttributesAsString (/*const */ Entity *entity)
       if (entity->hasAttr ((*attributes_ordered)[i]))
       {
         line += " " + (*attributes_ordered)[i] + "=\""
-                + entity->getAttr ((*attributes_ordered)[i]) + "\"";
+                + entity->attr ((*attributes_ordered)[i]) + "\"";
       }
     }
   }
 
   map<QString, bool> *attributes
-      = NCLStructure::instance ()->getAttributes (entity->getType ());
+      = NCLStructure::instance ()->getAttributes (entity->type ());
   // Search if there is any other attribute that is not part of NCL Language
   // but the user fills it.
-  QMap<QString, QString> attrs = entity->getAttrs ();
+  QMap<QString, QString> attrs = entity->attrs ();
   foreach (const QString &key, attrs.keys ())
   {
     if (attributes == nullptr || !attributes->count (key))

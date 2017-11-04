@@ -48,7 +48,7 @@ ValidatorPlugin::init ()
   if (!project)
     return;
 
-  foreach (Entity *entity, project->getEntityChildren ())
+  foreach (Entity *entity, project->entityChildren ())
     updateModel (entity);
 
   std::vector<pair<void *, string> > msgs = adapter.validate ();
@@ -62,7 +62,7 @@ ValidatorPlugin::updateModel (Entity *entity)
 {
   adapter.addElement (entity);
 
-  foreach (Entity *child, entity->getEntityChildren ())
+  foreach (Entity *child, entity->entityChildren ())
   {
     updateModel (child);
   }
@@ -90,7 +90,7 @@ ValidatorPlugin::updateMessages (std::vector<pair<void *, string> > msgs)
        it != messages.end (); it++)
   {
     pair<Entity *, QString> p = *it;
-    pairsMessages.push_back (make_pair (p.first->getUniqueId (), p.second));
+    pairsMessages.push_back (make_pair (p.first->uid (), p.second));
 
     ValidatorTreeWidgetItem *item
         = new ValidatorTreeWidgetItem (table, p.first, p.second);
@@ -201,7 +201,7 @@ ValidatorPlugin::itemSelected (QTreeWidgetItem *item)
       {
         pair<QString, QString> p = pairsMessages[i];
 
-        if (p.first == validatorTreeItem->entity ()->getUniqueId ()
+        if (p.first == validatorTreeItem->entity ()->uid ()
             && p.second == validatorTreeItem->message ())
         {
 
@@ -226,7 +226,7 @@ ValidatorPlugin::itemDoubleClickedSelected (QTreeWidgetItem *item)
       {
         pair<QString, QString> p = pairsMessages[i];
 
-        if (p.first == validatorTreeItem->entity ()->getUniqueId ())
+        if (p.first == validatorTreeItem->entity ()->uid ())
         {
           emit sendBroadcastMessage ("changeSelectedEntity", &p.first);
         }

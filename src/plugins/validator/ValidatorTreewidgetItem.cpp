@@ -28,10 +28,10 @@ ValidatorTreeWidgetItem::ValidatorTreeWidgetItem (QTreeWidget *view,
     _entity = entity;
     _message = message;
 
-    setText (1, entity->getType ());
+    setText (1, entity->type ());
     setText (2, message);
 
-    setToolTip (1, entity->getType ());
+    setToolTip (1, entity->type ());
     setToolTip (2, message);
   }
 }

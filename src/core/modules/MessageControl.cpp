@@ -240,7 +240,7 @@ MessageControl::addContent (const QString &entity_content,
 
         ent = new Entity (atts, _project->getDomDocument ());
         ent->setType (node.tagName ());
-        node.setAttribute ("uuid", ent->getUniqueId ());
+        node.setAttribute ("uuid", ent->uid ());
 
         QString nodeParentUuid;
         if (first)
@@ -377,7 +377,7 @@ MessageControl::removeEntity (Entity *entity)
 
           stack.pop ();
 
-          QList<Node *> children = node->getChildren ();
+          QList<Node *> children = node->children ();
           for (auto i = children.begin (); i != children.end (); ++i)
           {
             stack.push (*i);
@@ -466,7 +466,7 @@ MessageControl::sendMessageToPlugins (Message message, const QString &senderId,
           inst->onEntityAdded (senderId, entity);
           break;
         case Message::ENTITY_REMOVED:
-          inst->onEntityRemoved (senderId, entity->getUniqueId ());
+          inst->onEntityRemoved (senderId, entity->uid ());
           break;
         case Message::ENTITY_CHANGED:
           inst->onEntityChanged (senderId, entity);
@@ -487,7 +487,7 @@ MessageControl::sendMessageToPlugins (Message message, const QString &senderId,
         pluginMsgSrc->onEntityAdded (senderId, entity);
         break;
       case Message::ENTITY_REMOVED:
-        pluginMsgSrc->onEntityRemoved (senderId, entity->getUniqueId ());
+        pluginMsgSrc->onEntityRemoved (senderId, entity->uid ());
         break;
       case Message::ENTITY_CHANGED:
         pluginMsgSrc->onEntityChanged (senderId, entity);
@@ -557,7 +557,7 @@ MessageControl::pluginIsInterestedIn (const IPlugin *plugin, Entity *entity)
   }
 
   if (_listenEntities.value (plugin->getPluginInstanceID ())
-          .contains (entity->getType ()))
+          .contains (entity->type ()))
     return true;
 
   return false;

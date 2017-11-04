@@ -72,35 +72,35 @@ OutlineViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
   QMap<QString, QString> attrs;
   QMap<QString, QString>::iterator begin, end, it;
 
-  attrs = entity->getAttrs ();
+  attrs = entity->attrs ();
 
-  if (_idToItem.contains (entity->getParentUniqueId ()))
+  if (_idToItem.contains (entity->parentUid ()))
   {
-    item = _window->addElement (_idToItem[entity->getParentUniqueId ()], -1,
-                                entity->getType (), entity->getUniqueId (),
+    item = _window->addElement (_idToItem[entity->parentUid ()], -1,
+                                entity->type (), entity->uid (),
                                 attrs, 0, 0);
   }
   else
   {
-    item = _window->addElement (0, -1, entity->getType (),
-                                entity->getUniqueId (), attrs, 0, 0);
+    item = _window->addElement (0, -1, entity->type (),
+                                entity->uid (), attrs, 0, 0);
   }
 
-  _idToItem[entity->getUniqueId ()] = item;
+  _idToItem[entity->uid ()] = item;
 
-  if (entity->getType () == "ncl" || entity->getType () == "body"
-      || entity->getType () == "link" || entity->getType () == "media"
-      || entity->getType () == "context" || entity->getType () == "switch"
-      || entity->getType () == "port" || entity->getType () == "switchPort"
-      || entity->getType () == "regionBase"
-      || entity->getType () == "descriptorBase"
-      || entity->getType () == "connectorBase"
-      || entity->getType () == "ruleBase"
-      || entity->getType () == "transitionBase")
+  if (entity->type () == "ncl" || entity->type () == "body"
+      || entity->type () == "link" || entity->type () == "media"
+      || entity->type () == "context" || entity->type () == "switch"
+      || entity->type () == "port" || entity->type () == "switchPort"
+      || entity->type () == "regionBase"
+      || entity->type () == "descriptorBase"
+      || entity->type () == "connectorBase"
+      || entity->type () == "ruleBase"
+      || entity->type () == "transitionBase")
   {
     if (!attrs.keys ().contains ("id"))
     {
-      attrs.insert ("id", project->generateUniqueAttrId (entity->getType ()));
+      attrs.insert ("id", project->generateUniqueAttrId (entity->type ()));
       emit setAttributes (entity, attrs);
     }
   }
@@ -127,18 +127,18 @@ OutlineViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
   QMap<QString, QString> attrs;
   QMap<QString, QString>::iterator begin, end, it;
 
-  attrs = entity->getAttrs ();
+  attrs = entity->attrs ();
 
   // \fixme This "if" should not be here. It is here because after adding an
   // entity, layout view change their content (before outline add the region)
   // so it will receive an change before the added. CORE should handle that to
   // the operations be received in order.
-  if (_idToItem.contains (entity->getUniqueId ()))
+  if (_idToItem.contains (entity->uid ()))
   {
-    _idToItem[entity->getUniqueId ()]->setTextColor (0, Qt::black);
-    _idToItem[entity->getUniqueId ()]->setToolTip (0, "");
+    _idToItem[entity->uid ()]->setTextColor (0, Qt::black);
+    _idToItem[entity->uid ()]->setToolTip (0, "");
 
-    _window->updateItem (_idToItem[entity->getUniqueId ()], entity->getType (),
+    _window->updateItem (_idToItem[entity->uid ()], entity->type (),
                          attrs);
   }
 
@@ -183,7 +183,7 @@ OutlineViewPlugin::elementAddedByUser (QString type, QString parentId,
 {
   /* If there is no parent, put as child of root */
   if (parentId == "")
-    parentId = project->getUniqueId ();
+    parentId = project->uid ();
 
   emit addEntity (type, parentId, atts);
 }
@@ -205,7 +205,7 @@ OutlineViewPlugin::updateFromModel ()
   _window->clear ();
   _idToItem.clear ();
 
-  if (project->getChildren ().size ())
+  if (project->children ().size ())
   {
     Entity *entity = project;
     QList<Entity *> entities;
@@ -222,7 +222,7 @@ OutlineViewPlugin::updateFromModel ()
       else
         first = false;
 
-      QList<Entity *> children = entity->getEntityChildren ();
+      QList<Entity *> children = entity->entityChildren ();
       foreach (Entity *ent, children)
       {
         entities.push_back (ent);
@@ -246,22 +246,22 @@ OutlineViewPlugin::init ()
   _idToItem.clear ();
 
   // Draw new tree
-  if (!project->getChildren ().size ())
+  if (!project->children ().size ())
     return;
 
   QTreeWidgetItem *item;
   QStack<Entity *> stack;
-  Entity *entity = project->getEntityChildren ().first ();
+  Entity *entity = project->entityChildren ().first ();
 
   QMap<QString, QString> attrs;
   QMap<QString, QString>::iterator begin, end, it;
 
-  attrs = entity->getAttrs ();
+  attrs = entity->attrs ();
 
-  item = _window->addElement (0, -1, entity->getType (),
-                              entity->getUniqueId (), attrs, 0, 0);
+  item = _window->addElement (0, -1, entity->type (),
+                              entity->uid (), attrs, 0, 0);
 
-  _idToItem[entity->getUniqueId ()] = item;
+  _idToItem[entity->uid ()] = item;
   stack.push (entity);
 
   while (stack.size () > 0)
@@ -269,20 +269,20 @@ OutlineViewPlugin::init ()
     entity = stack.top ();
     stack.pop ();
 
-    QList<Entity *> children = entity->getEntityChildren ();
+    QList<Entity *> children = entity->entityChildren ();
     foreach (Entity *child, children)
     {
-      if (_idToItem.contains (child->getUniqueId ()))
+      if (_idToItem.contains (child->uid ()))
         continue;
 
       attrs.clear ();
-      attrs = child->getAttrs ();
+      attrs = child->attrs ();
 
-      item = _window->addElement (_idToItem[entity->getUniqueId ()], -1,
-                                  child->getType (), child->getUniqueId (),
+      item = _window->addElement (_idToItem[entity->uid ()], -1,
+                                  child->type (), child->uid (),
                                   attrs, 0, 0);
 
-      _idToItem[child->getUniqueId ()] = item;
+      _idToItem[child->uid ()] = item;
       stack.push_front (child);
     }
   }
@@ -400,13 +400,13 @@ OutlineViewPlugin::openWithDefaultSystemEditor (QString entityId)
   Entity *entity = project->getEntityById (entityId);
   QFileInfo projectInfo (project->getLocation ());
 
-  if (entity->getType () == "media")
+  if (entity->type () == "media")
   {
-    url = entity->getAttr ("src");
+    url = entity->attr ("src");
   }
-  else if (entity->getType () == "importBase")
+  else if (entity->type () == "importBase")
   {
-    url = entity->getAttr ("documentURI");
+    url = entity->attr ("documentURI");
   }
 
   if (!QFile::exists (url))

@@ -47,14 +47,14 @@ public:
    * \param name - The name of the attribute been requested
    * \return A string with the requested attribute.
    */
-  QString getAttr (const QString &name) const;
+  QString attr (const QString &name) const;
 
   /*!
    * \brief Gets the attributes of the entity.
    *
    * \return a QMap with the attributes of the entity
    */
-  QMap<QString, QString> getAttrs () const;
+  QMap<QString, QString> attrs () const;
 
   /*!
    * \brief This method is used to verify if this element has certain
@@ -65,7 +65,7 @@ public:
   */
   bool hasAttr (const QString &name) const;
 
-  QString getType () const;
+  QString type () const;
 
   /*!
    * \brief Converts the current Entity to an XML String.
@@ -106,7 +106,7 @@ protected:
    * \param atts attributes to be set to this Entity.
    * \param parent the QObject parent.
    */
-  explicit Entity (const QString &uniqueId, const QString &_type,
+  explicit Entity (const QString &uid, const QString &_type,
                    const QMap<QString, QString> &atts, QDomDocument &doc,
                    Entity *parent = 0);
 

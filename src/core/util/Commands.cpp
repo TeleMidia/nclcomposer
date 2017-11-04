@@ -27,8 +27,8 @@ EditEntityCmd::EditEntityCmd (Project *project, Entity *entity,
 {
   this->_project = project;
 
-  this->_uniqueId = entity->getUniqueId ();
-  _attrs = entity->getAttrs ();
+  this->_uniqueId = entity->uid ();
+  _attrs = entity->attrs ();
   this->_newAttrs = newAttrs;
 
   _msgControl = PluginControl::instance ()->getMessageControl (project);
@@ -51,7 +51,7 @@ RemoveEntityCmd::RemoveEntityCmd (Project *project, Entity *entity,
 {
   Q_UNUSED (parent)
 
-  this->_parentUniqueId = entity->getParentUniqueId ();
+  this->_parentUniqueId = entity->parentUid ();
   this->_entity = entity;
   this->_project = project;
 
@@ -81,7 +81,7 @@ RemoveEntityCmd::redo ()
   if (_first)
     _project->removeEntity (this->_entity, false);
   else
-    _msgControl->anonymousRemoveEntity (this->_entity->getUniqueId ());
+    _msgControl->anonymousRemoveEntity (this->_entity->uid ());
 
   this->_entity = entityTmp;
 }
@@ -105,7 +105,7 @@ AddEntityCmd::undo ()
 {
   this->_entity = this->_entity->clone ();
 
-  _msgControl->anonymousRemoveEntity (this->_entity->getUniqueId ());
+  _msgControl->anonymousRemoveEntity (this->_entity->uid ());
 
   _first = false;
 }
@@ -142,7 +142,7 @@ void
 AddCommentCmd::undo ()
 {
   this->_comment = this->_comment->cloneComment ();
-  //  _msgControl->anonymousRemoveComment (this->_entity->getUniqueId ());
+  //  _msgControl->anonymousRemoveComment (this->_entity->uniqueId ());
   _first = false;
 }
 

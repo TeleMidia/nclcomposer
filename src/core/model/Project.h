@@ -141,7 +141,7 @@ protected:
    * \param atts
    * \param parent
    */
-  Project (const QString &uniqueId, const QMap<QString, QString> &atts,
+  Project (const QString &uid, const QMap<QString, QString> &atts,
            QDomDocument &doc);
 
   /*!

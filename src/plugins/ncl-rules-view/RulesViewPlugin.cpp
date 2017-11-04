@@ -50,21 +50,21 @@ RulesViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
   disconnect (_rulesTable, SIGNAL (itemChanged (QTreeWidgetItem *, int)), this,
               SLOT (updateValue (QTreeWidgetItem *)));
 
-  QString entityType = entity->getType ();
+  QString entityType = entity->type ();
 
   if (entityType == RULEBASE_LABEL || entityType == RULE_LABEL
       || entityType == COMPOSITERULE_LABEL)
   {
     addRule (entity);
     // Set default attributes
-    if (entity->getAttr ("id") == "")
+    if (entity->attr ("id") == "")
     {
-      QString id = project->generateUniqueAttrId (entity->getType ());
+      QString id = project->generateUniqueAttrId (entity->type ());
       QMap<QString, QString> attrs;
       attrs["id"] = id;
-      if (entity->getType () == "compositeRule")
+      if (entity->type () == "compositeRule")
       {
-        QString _operator = entity->getAttr ("operator");
+        QString _operator = entity->attr ("operator");
         if (_operator == "")
           _operator = "and";
         attrs["operator"] = _operator;
@@ -82,21 +82,21 @@ RulesViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
   if (pluginID == IPlugin::pluginInstanceID || !entity)
     return;
 
-  QTreeWidgetItem *item = _items.key (entity->getUniqueId (), 0);
+  QTreeWidgetItem *item = _items.key (entity->uid (), 0);
 
   if (item)
   {
     if (item->type () == RULEBASE_TYPE)
-      item->setText (ID_COLUMN, entity->getAttr (ID_ATTR));
+      item->setText (ID_COLUMN, entity->attr (ID_ATTR));
     else if (item->type () == RULE_TYPE)
     {
       RuleItem *ruleItem = dynamic_cast<RuleItem *> (item);
       if (ruleItem)
       {
-        ruleItem->setId (entity->getAttr (ID_ATTR));
-        ruleItem->setVar (entity->getAttr (VAR_ATTR));
-        ruleItem->setComparator (entity->getAttr (COMPARATOR_ATTR));
-        ruleItem->setValue (entity->getAttr (VALUE_ATTR));
+        ruleItem->setId (entity->attr (ID_ATTR));
+        ruleItem->setVar (entity->attr (VAR_ATTR));
+        ruleItem->setComparator (entity->attr (COMPARATOR_ATTR));
+        ruleItem->setValue (entity->attr (VALUE_ATTR));
       }
     }
     else if (item->type () == COMPOSITERULE_TYPE)
@@ -105,8 +105,8 @@ RulesViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
           = dynamic_cast<CompositeRuleItem *> (item);
       if (compositeRuleItem)
       {
-        compositeRuleItem->setId (entity->getAttr (ID_ATTR));
-        compositeRuleItem->setOperator (entity->getAttr (OPERATOR_ATTR));
+        compositeRuleItem->setId (entity->attr (ID_ATTR));
+        compositeRuleItem->setOperator (entity->attr (OPERATOR_ATTR));
       }
     }
   }
@@ -172,9 +172,9 @@ RulesViewPlugin::findAllRules (Entity *root)
   if (!root)
     return;
 
-  foreach (Entity *entity, root->getEntityChildren ())
+  foreach (Entity *entity, root->entityChildren ())
   {
-    QString type = entity->getType ();
+    QString type = entity->type ();
     if (type != RULE_LABEL && type != COMPOSITERULE_LABEL)
       continue;
 
@@ -192,7 +192,7 @@ RulesViewPlugin::addRule (Entity *entity)
     return;
 
   QStringList itemLabels;
-  QString entityType = entity->getType ();
+  QString entityType = entity->type ();
 
   QTreeWidgetItem *item = 0;
   QTreeWidgetItem *parent = 0;
@@ -200,7 +200,7 @@ RulesViewPlugin::addRule (Entity *entity)
   if (entityType == RULEBASE_LABEL)
   {
     QString label = entityType;
-    QString id = entity->getAttr (ID_ATTR);
+    QString id = entity->attr (ID_ATTR);
 
     itemLabels << label << id;
     item = new QTreeWidgetItem (_rulesTable, itemLabels, RULEBASE_TYPE);
@@ -215,7 +215,7 @@ RulesViewPlugin::addRule (Entity *entity)
   QList<QTreeWidgetItem *> treeItems = _items.keys ();
   foreach (QTreeWidgetItem *treeItem, treeItems)
   {
-    if (_items.value (treeItem) == entity->getParent ()->getUniqueId ())
+    if (_items.value (treeItem) == entity->parent ()->uid ())
     {
       parent = treeItem;
       break;
@@ -227,8 +227,8 @@ RulesViewPlugin::addRule (Entity *entity)
     if (entityType == RULE_LABEL)
     {
       item = new RuleItem (
-          parent, entity->getAttr (ID_ATTR), entity->getAttr (VAR_ATTR),
-          entity->getAttr (COMPARATOR_ATTR), entity->getAttr (VALUE_ATTR),
+          parent, entity->attr (ID_ATTR), entity->attr (VAR_ATTR),
+          entity->attr (COMPARATOR_ATTR), entity->attr (VALUE_ATTR),
           RULE_TYPE, _rulesTable);
 
       item->setIcon (0, QIcon (":/icon/rule"));
@@ -236,8 +236,8 @@ RulesViewPlugin::addRule (Entity *entity)
 
     else if (entityType == COMPOSITERULE_LABEL)
     {
-      item = new CompositeRuleItem (parent, entity->getAttr (ID_ATTR),
-                                    entity->getAttr (OPERATOR_ATTR),
+      item = new CompositeRuleItem (parent, entity->attr (ID_ATTR),
+                                    entity->attr (OPERATOR_ATTR),
                                     COMPOSITERULE_TYPE, _rulesTable);
 
       item->setIcon (0, QIcon (":/icon/rule"));
@@ -247,7 +247,7 @@ RulesViewPlugin::addRule (Entity *entity)
   if (item)
   {
     item->setExpanded (true);
-    _items.insert (item, entity->getUniqueId ());
+    _items.insert (item, entity->uid ());
   }
 }
 
@@ -261,7 +261,7 @@ RulesViewPlugin::updateValue (QTreeWidgetItem *item)
   if (!entity)
     return;
 
-  QString oldId = entity->getAttr (ID_ATTR);
+  QString oldId = entity->attr (ID_ATTR);
 
   QMap<QString, QString> attr;
 
@@ -281,9 +281,9 @@ RulesViewPlugin::updateValue (QTreeWidgetItem *item)
       if (!ruleItem)
         return;
 
-      QString oldVar = entity->getAttr (VALUE_ATTR);
-      QString oldComparator = entity->getAttr (COMPARATOR_ATTR);
-      QString oldValue = entity->getAttr (VALUE_ATTR);
+      QString oldVar = entity->attr (VALUE_ATTR);
+      QString oldComparator = entity->attr (COMPARATOR_ATTR);
+      QString oldValue = entity->attr (VALUE_ATTR);
 
       QString newId = ruleItem->getId ();
       QString newVar = ruleItem->getVar ();
@@ -309,7 +309,7 @@ RulesViewPlugin::updateValue (QTreeWidgetItem *item)
       if (!compositeRuleItem)
         return;
 
-      QString oldOperator = entity->getAttr (OPERATOR_ATTR);
+      QString oldOperator = entity->attr (OPERATOR_ATTR);
 
       QString newId = compositeRuleItem->getId ();
       QString newOperator = compositeRuleItem->getOperator ();
@@ -368,7 +368,7 @@ RulesViewPlugin::sendAddEntitySignal (QTreeWidgetItem *parent, int type)
       QList<Entity *> entities = _currentProject->getEntitiesbyType ("head");
       if (entities.count () > 0)
       {
-        parentUId = entities.first ()->getUniqueId ();
+        parentUId = entities.first ()->uid ();
         emit addEntity (RULEBASE_LABEL, parentUId, attr);
       }
       else

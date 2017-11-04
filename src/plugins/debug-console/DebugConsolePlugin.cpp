@@ -57,7 +57,7 @@ void
 DebugConsolePlugin::onEntityAdded (const QString &pluginID, Entity *entity)
 {
   QString line = "PLUGIN (" + pluginID + ") added the Entity ("
-                 + entity->getType () + " - " + entity->getUniqueId () + ")";
+                 + entity->type () + " - " + entity->uid () + ")";
   list->insertItem (0, new QListWidgetItem (line));
 }
 
@@ -75,7 +75,7 @@ void
 DebugConsolePlugin::onEntityChanged (const QString &pluginID, Entity *entity)
 {
   QString line = "PLUGIN (" + pluginID + ") changed the Entity ("
-                 + entity->getType () + " - " + entity->getUniqueId () + ")";
+                 + entity->type () + " - " + entity->uid () + ")";
   list->insertItem (0, new QListWidgetItem (line));
   /*  if(list->count())
     list->item(0)->setText(line);

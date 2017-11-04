@@ -43,7 +43,7 @@ Project::init ()
   dirty = false;
 
   this->dirty = false;
-  this->_nodes[this->getUniqueId ()] = this;
+  this->_nodes[this->uid ()] = this;
 
   _lockEntities = new QMutex ();
 }
@@ -86,7 +86,7 @@ Project::getEntitiesbyType (const QString &type)
   {
     it.next ();
     Entity *ent = dynamic_cast<Entity *> (it.value ());
-    if (ent && ent->getType () == type)
+    if (ent && ent->type () == type)
       listRet.append (ent);
   }
   return listRet;
@@ -114,19 +114,19 @@ Project::addEntity (Entity *entity,
   QMutexLocker locker (_lockEntities);
   if (!_nodes.contains (parentId))
   {
-    throw ParentNotFound (entity->getType (), entity->getType (), parentId);
+    throw ParentNotFound (entity->type (), entity->type (), parentId);
     return false;
   }
 
-  if (_nodes.contains (entity->getUniqueId ()))
+  if (_nodes.contains (entity->uid ()))
   {
-    throw EntityNotFound (entity->getType (), entity->getUniqueId ());
+    throw EntityNotFound (entity->type (), entity->uid ());
     return false;
   }
 
   Node *parent = _nodes[parentId];
   parent->addChild (entity);
-  _nodes[entity->getUniqueId ()] = entity;
+  _nodes[entity->uid ()] = entity;
 
   setDirty (true);
   return true;
@@ -146,15 +146,15 @@ Project::addComment (Comment *comment,
     return false;
   }
 
-  if (_nodes.contains (comment->getUniqueId ()))
+  if (_nodes.contains (comment->uid ()))
   {
-    throw EntityNotFound ("comment", comment->getUniqueId ());
+    throw EntityNotFound ("comment", comment->uid ());
     return false;
   }
 
   Node *parent = _nodes[parentId];
   parent->addChild (comment);
-  _nodes[comment->getUniqueId ()] = comment;
+  _nodes[comment->uid ()] = comment;
 
   setDirty (true);
   return true;
@@ -168,9 +168,9 @@ Project::removeEntity (Entity *entity, bool appendChild) throw (EntityNotFound)
   assert (entity != nullptr);
 
   QMutexLocker locker (_lockEntities);
-  if (_nodes.contains (entity->getUniqueId ()))
+  if (_nodes.contains (entity->uid ()))
   {
-    Node *parent = entity->getParent ();
+    Node *parent = entity->parent ();
     if (parent)
     {
       QStack<Node *> stack;
@@ -180,9 +180,9 @@ Project::removeEntity (Entity *entity, bool appendChild) throw (EntityNotFound)
       {
         Node *currentEntity = stack.top ();
         stack.pop ();
-        _nodes.remove (currentEntity->getUniqueId ());
+        _nodes.remove (currentEntity->uid ());
 
-        QList<Node *> children = currentEntity->getChildren ();
+        QList<Node *> children = currentEntity->children ();
         for (auto i = children.begin (); i != children.end (); ++i)
           stack.push (*i);
       }
@@ -199,7 +199,7 @@ Project::removeEntity (Entity *entity, bool appendChild) throw (EntityNotFound)
   }
   else
   {
-    throw EntityNotFound (entity->getType (), entity->getUniqueId ());
+    throw EntityNotFound (entity->type (), entity->uid ());
     return false; // entity does not exist in the model
   }
 
@@ -272,7 +272,7 @@ Project::generateUniqueAttrId (const QString &tagname)
   for (int i = 0; i < elements.size (); i++)
   {
     if (elements.at (i)->hasAttr ("id"))
-      currentElementsNCLID.push_back (elements.at (i)->getAttr ("id"));
+      currentElementsNCLID.push_back (elements.at (i)->attr ("id"));
   }
 
   for (int i = 1;; i++)
@@ -294,7 +294,7 @@ Project::getEntityByAttrId (const QString &id)
   {
     it.next ();
     Entity *ent = dynamic_cast<Entity *> (it.value ());
-    if (ent && ent->hasAttr ("id") && ent->getAttr ("id") == id)
+    if (ent && ent->hasAttr ("id") && ent->attr ("id") == id)
       listRet.append (ent);
   }
   return listRet;

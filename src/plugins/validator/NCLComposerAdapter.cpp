@@ -32,23 +32,23 @@ ComposerNCLAdapter::addElement (Entity *entity)
   Q_ASSERT (entity != nullptr);
 
   std::vector<Attribute> attributes = createVectorAttribute (entity);
-  Entity *parent = static_cast<Entity *> (entity->getParent ());
+  Entity *parent = static_cast<Entity *> (entity->parent ());
 
-  if (parent && !idToVirtualId.count (parent->getUniqueId ())
-      && parent->getType () != "document")
+  if (parent && !idToVirtualId.count (parent->uid ())
+      && parent->type () != "document")
   {
     addElement (parent);
   }
 
   virtualId virtualId
-      = nclModel.addElement (entity->getType ().toStdString (), attributes);
+      = nclModel.addElement (entity->type ().toStdString (), attributes);
 
   if (virtualId != "")
-    idToVirtualId.insert (entity->getUniqueId (), virtualId);
+    idToVirtualId.insert (entity->uid (), virtualId);
 
-  if (parent && parent->getType () != "document")
+  if (parent && parent->type () != "document")
   {
-    nclModel.addChild (idToVirtualId[entity->getParentUniqueId ()], virtualId);
+    nclModel.addChild (idToVirtualId[entity->parentUid ()], virtualId);
   }
 
   ModelElement *el = nclModel.element (virtualId);
@@ -61,7 +61,7 @@ ComposerNCLAdapter::addElement (Entity *entity)
 void
 ComposerNCLAdapter::changeElement (Entity *entity)
 {
-  virtualId virtualId = idToVirtualId[entity->getUniqueId ()];
+  virtualId virtualId = idToVirtualId[entity->uid ()];
 
   if (virtualId == "")
     return;
@@ -96,7 +96,7 @@ ComposerNCLAdapter::validate ()
 std::vector<Attribute>
 ComposerNCLAdapter::createVectorAttribute (Entity *entity)
 {
-  QMap<QString, QString> attrs = entity->getAttrs ();
+  QMap<QString, QString> attrs = entity->attrs ();
 
   std::vector<Attribute> attributes;
 
