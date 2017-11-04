@@ -8,7 +8,7 @@
 class StructuralEdge : public StructuralEntity
 {
 public:
-  StructuralEdge (StructuralEntity *parent = 0);
+  StructuralEdge (StructuralEntity *structuralParent = 0);
   virtual ~StructuralEdge () {}
 
   qreal getAngle () const;

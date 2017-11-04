@@ -305,7 +305,7 @@ static const std::map<Structural::Type, QString> _entitiesIcon
         { Structural::NoType, "" } };
 
 QString
-getIcon (StructuralType type)
+icon (StructuralType type)
 {
   if (_entitiesIcon.count (type))
     return _entitiesIcon.at (type);
@@ -329,7 +329,7 @@ const std::map<Structural::Type, QString> _entitiesColor
         { Structural::NoType, "" } };
 
 QString
-getColor (StructuralType type)
+color (StructuralType type)
 {
   if (_entitiesColor.count (type))
     return _entitiesColor.at (type);
@@ -347,7 +347,7 @@ static const std::map<Structural::Type, QString> _entitiesPrefix
         { Structural::NoType, "e" } };
 
 QString
-getPrefix (StructuralType type)
+prefix (StructuralType type)
 {
   if (_entitiesPrefix.count (type))
     return _entitiesPrefix.at (type);
@@ -356,8 +356,8 @@ getPrefix (StructuralType type)
 }
 
 QString
-getTooltip (StructuralType type, const QString &title, const QString &info,
-            const QString &warning, const QString &error, const QString &extra)
+tooltip (StructuralType type, const QString &title, const QString &info,
+         const QString &warning, const QString &error, const QString &extra)
 {
   QString tooltip;
 
@@ -411,7 +411,7 @@ static const std::map<Structural::MimeType, QString> _mimeIcon
         { Structural::NoMimeType, ":/icon/media" } };
 
 QString
-getMimeTypeIcon (StructuralMimeType type)
+mimeTypeIcon (StructuralMimeType type)
 {
   if (_mimeIcon.count (type))
     return _mimeIcon.at (type);
@@ -420,9 +420,9 @@ getMimeTypeIcon (StructuralMimeType type)
 }
 
 QString
-getMimeTooltip (StructuralMimeType mime, const QString &title,
-                const QString &info, const QString &warning,
-                const QString &error, const QString &extra)
+mimeTooltip (StructuralMimeType mime, const QString &title,
+             const QString &info, const QString &warning, const QString &error,
+             const QString &extra)
 {
   Q_UNUSED (extra);
 
@@ -459,7 +459,7 @@ static const std::map<QString, Structural::MimeType> _mimeExtension
         { "ncl", Structural::NCL },     { "lua", Structural::NCLua } };
 
 Structural::MimeType
-getMimeByExtension (const QString &ext)
+mimeByExtension (const QString &ext)
 {
   if (_mimeExtension.count (ext))
     return _mimeExtension.at (ext);
@@ -485,7 +485,7 @@ static const std::map<Structural::Role, QString> _rolesIcon
         { Structural::NoRole, "" } };
 
 QString
-getIcon (StructuralRole role)
+icon (StructuralRole role)
 {
   if (_rolesIcon.count (role))
     return _rolesIcon.at (role);
@@ -494,14 +494,14 @@ getIcon (StructuralRole role)
 }
 
 QVector<StructuralEntity *>
-getNeighbors (StructuralEntity *ent)
+neighbors (StructuralEntity *ent)
 {
   QVector<StructuralEntity *> neighbors;
-  StructuralEntity *parent = ent->getParent ();
+  StructuralEntity *parent = ent->structuralParent ();
 
   if (parent)
   {
-    neighbors = parent->getChildren ();
+    neighbors = parent->children ();
   }
   else if (!ST_OPT_WITH_BODY)
   {
@@ -510,9 +510,9 @@ getNeighbors (StructuralEntity *ent)
 
     if (scn)
     {
-      for (StructuralEntity *cur : scn->getEntities ().values ())
+      for (StructuralEntity *cur : scn->entities ().values ())
       {
-        if (cur->getParent () == nullptr && cur != ent)
+        if (cur->structuralParent () == nullptr && cur != ent)
           neighbors += cur;
       }
     }
@@ -522,16 +522,16 @@ getNeighbors (StructuralEntity *ent)
 }
 
 QVector<StructuralEntity *>
-getUpNeighbors (StructuralEntity *ent)
+upNeighbors (StructuralEntity *ent)
 {
   QVector<StructuralEntity *> neighbors;
 
-  StructuralEntity *parent = ent->getParent ();
+  StructuralEntity *parent = ent->structuralParent ();
   if (parent)
   {
-    if (parent->getParent ())
+    if (parent->structuralParent ())
     {
-      neighbors += parent->getParent ()->getChildren ();
+      neighbors += parent->structuralParent ()->children ();
     }
     else if (!ST_OPT_WITH_BODY)
     {
@@ -541,9 +541,9 @@ getUpNeighbors (StructuralEntity *ent)
       qWarning () << scn;
       if (scn)
       {
-        for (StructuralEntity *cur : scn->getEntities ().values ())
+        for (StructuralEntity *cur : scn->entities ().values ())
         {
-          if (cur->getParent () == nullptr && cur != ent)
+          if (cur->structuralParent () == nullptr && cur != ent)
             neighbors += cur;
         }
       }
@@ -587,8 +587,8 @@ isAction (const QString &role)
 void
 adjustEdges (StructuralEntity *ent)
 {
-  QVector<StructuralEntity *> relatives = getNeighbors (ent);
-  relatives += getUpNeighbors (ent);
+  QVector<StructuralEntity *> relatives = neighbors (ent);
+  relatives += upNeighbors (ent);
 
   for (StructuralEntity *rel : relatives)
   {

@@ -43,10 +43,10 @@ public:
   StructuralView (QWidget *parent = 0);
   virtual ~StructuralView () {}
 
-  StructuralScene *getScene ();
-  StructuralLinkDialog *getDialog ();
+  StructuralScene *scene ();
+  StructuralLinkDialog *dialog ();
 
-  StructuralInteractionMode getMode () const;
+  StructuralInteractionMode mode () const;
   void setMode (StructuralInteractionMode mode, bool notify = false);
   void toogleMode (bool notify = false);
 
@@ -55,7 +55,7 @@ public:
   void clearErrors ();
 
   StructuralMenu *
-  getMenu ()
+  menu ()
   {
     return _menu;
   }
@@ -155,8 +155,7 @@ private:
                    const QString &role = "", const QString &code = "");
   void createReference (StructuralEntity *tail, StructuralEntity *head);
 
-  QString getNewId (StructuralEntity *entity);
-  qreal getNewAngle (StructuralBind *edge);
+  qreal calcNewAngle (StructuralBind *edge);
 
   void adjustProperties (StructuralEntity *entity);
 
@@ -168,7 +167,7 @@ private:
   bool isChild (StructuralEntity *entity, StructuralEntity *parent);
 
   void pasteEntity (StructuralEntity *entity, StructuralEntity *parent,
-              const QString &code, bool adjust);
+                    const QString &code, bool adjust);
 
   StructuralInteractionMode _mode;
 

@@ -6,7 +6,7 @@ StructuralEdge::StructuralEdge (StructuralEntity *parent)
     : StructuralEntity (parent)
 {
   setCategory (Structural::Edge);
-  setType (Structural::NoType);
+  setStructuralType (Structural::NoType);
 
   setResizable (false);
   setMoveable (false);
@@ -133,9 +133,9 @@ StructuralEdge::adjust (bool collision, bool recursion)
 {
   StructuralEntity::adjust (collision, recursion);
 
-  setAngle (getProperty (ST_ATTR_EDGE_ANGLE).toDouble ());
+  setAngle (property (ST_ATTR_EDGE_ANGLE).toDouble ());
 
-  StructuralEntity *parent = getParent ();
+  StructuralEntity *parent = structuralParent ();
   if (parent || !ST_OPT_WITH_BODY)
   {
     qreal angle = getAngle ();
@@ -146,25 +146,25 @@ StructuralEdge::adjust (bool collision, bool recursion)
     if (orig && dest)
     {
       QLineF line
-          = QLineF (QPointF (orig->getLeft () + orig->getWidth () / 2,
-                             orig->getTop () + orig->getHeight () / 2),
-                    QPointF (dest->getLeft () + dest->getWidth () / 2,
-                             dest->getTop () + dest->getHeight () / 2));
+          = QLineF (QPointF (orig->left () + orig->width () / 2,
+                             orig->top () + orig->height () / 2),
+                    QPointF (dest->left () + dest->width () / 2,
+                             dest->top () + dest->height () / 2));
 
-      if (orig->getCategory () == Structural::Interface)
+      if (orig->category () == Structural::Interface)
       {
         if (parent)
-          line.setP1 (parent->mapFromItem (orig->getParent (), line.p1 ()));
-        else if (orig->getParent ())
-          line.setP1 (orig->getParent ()->mapToScene (line.p1 ()));
+          line.setP1 (parent->mapFromItem (orig->structuralParent (), line.p1 ()));
+        else if (orig->structuralParent ())
+          line.setP1 (orig->structuralParent ()->mapToScene (line.p1 ()));
       }
 
-      if (dest->getCategory () == Structural::Interface)
+      if (dest->category () == Structural::Interface)
       {
         if (parent)
-          line.setP2 (parent->mapFromItem (dest->getParent (), line.p2 ()));
-        else if (dest->getParent ())
-          line.setP2 (dest->getParent ()->mapToScene (line.p2 ()));
+          line.setP2 (parent->mapFromItem (dest->structuralParent (), line.p2 ()));
+        else if (dest->structuralParent ())
+          line.setP2 (dest->structuralParent ()->mapToScene (line.p2 ()));
       }
 
       adjustBox (line);
@@ -305,27 +305,27 @@ StructuralEdge::getDrawLine (qreal padding) const
   {
     x = ST_DEFAULT_ENTITY_PADDING;
     y = ST_DEFAULT_ENTITY_PADDING;
-    z = getWidth () + ST_DEFAULT_ENTITY_PADDING;
-    w = getHeight () + ST_DEFAULT_ENTITY_PADDING;
+    z = width () + ST_DEFAULT_ENTITY_PADDING;
+    w = height () + ST_DEFAULT_ENTITY_PADDING;
   }
   else if (pOrig.x () > pDest.x () && pOrig.y () <= pDest.y ())
   {
-    x = getWidth () + ST_DEFAULT_ENTITY_PADDING;
+    x = width () + ST_DEFAULT_ENTITY_PADDING;
     y = ST_DEFAULT_ENTITY_PADDING;
     z = ST_DEFAULT_ENTITY_PADDING;
-    w = getHeight () + ST_DEFAULT_ENTITY_PADDING;
+    w = height () + ST_DEFAULT_ENTITY_PADDING;
   }
   else if (pOrig.x () <= pDest.x () && pOrig.y () > pDest.y ())
   {
     x = ST_DEFAULT_ENTITY_PADDING;
-    y = getHeight () + ST_DEFAULT_ENTITY_PADDING;
-    z = getWidth () + ST_DEFAULT_ENTITY_PADDING;
+    y = height () + ST_DEFAULT_ENTITY_PADDING;
+    z = width () + ST_DEFAULT_ENTITY_PADDING;
     w = ST_DEFAULT_ENTITY_PADDING;
   }
   else if (pOrig.x () > pDest.x () && pOrig.y () > pDest.y ())
   {
-    x = getWidth () + ST_DEFAULT_ENTITY_PADDING;
-    y = getHeight () + ST_DEFAULT_ENTITY_PADDING;
+    x = width () + ST_DEFAULT_ENTITY_PADDING;
+    y = height () + ST_DEFAULT_ENTITY_PADDING;
     z = ST_DEFAULT_ENTITY_PADDING;
     w = ST_DEFAULT_ENTITY_PADDING;
   }
@@ -346,16 +346,15 @@ StructuralEdge::draw (QPainter *painter)
   QLineF drawLine = getDrawLine (ST_DEFAULT_EDGE_PADDING);
 
   // Drawing line...
-  painter->setPen (
-      QPen (QBrush (QColor (StructuralUtil::getColor (getType ()))), 1,
-            Qt::DashLine));
+  painter->setPen (QPen (QBrush (QColor (StructuralUtil::color (structuralType ()))),
+                         1, Qt::DashLine));
   painter->drawLine (drawLine);
 
   // Drawing tail...
   // nothing...
 
   // Drawing head...
-  painter->setBrush (QBrush (QColor (StructuralUtil::getColor (getType ()))));
+  painter->setBrush (QBrush (QColor (StructuralUtil::color (structuralType ()))));
   painter->setPen (Qt::NoPen);
 
   qreal angle;
@@ -410,5 +409,5 @@ StructuralEdge::delineate (QPainterPath *painter) const
   QPointF c = a - QPointF (sin (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_W,
                            cos (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_H);
 
-  painter->addPolygon (QPolygonF ({a, b, c}));
+  painter->addPolygon (QPolygonF ({ a, b, c }));
 }

@@ -22,7 +22,7 @@ StructuralMinimap::init (StructuralView *mEditorView)
   setHorizontalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
 
-  StructuralScene *editorViewScene = mEditorView->getScene ();
+  StructuralScene *editorViewScene = mEditorView->scene ();
   if (editorViewScene != nullptr)
   {
     setScene (editorViewScene);

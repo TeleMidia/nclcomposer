@@ -71,14 +71,14 @@ public slots:
 private:
   void createConnections ();
 
-  QString getUidById (const QString &id);
-  QString getUidById (const QString &id, Entity *ent);
-  QString getUidByName (const QString &name, Entity *ent);
+  QString uidById (const QString &id);
+  QString uidById (const QString &id, Entity *ent);
+  QString uidByName (const QString &name, Entity *ent);
 
   void setReferences (QStrMap &props);
 
-  QStrMap getViewPropsFromCoreEntity (const Entity *ent);
-  QStrMap getCoreAttrsFromStructuralEntity (const QStrMap &props);
+  QStrMap viewPropsFromCoreEntity (const Entity *ent);
+  QStrMap coreAttrsFromStructuralEntity (const QStrMap &props);
 
   void clean ();
 

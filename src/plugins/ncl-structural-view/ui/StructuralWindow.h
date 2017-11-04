@@ -17,7 +17,7 @@ public:
   StructuralWindow (QWidget *parent = 0);
   virtual ~StructuralWindow () {}
 
-  StructuralView *getView () const;
+  StructuralView *view () const;
   void setView (StructuralView *view);
 
 protected slots:

@@ -6,7 +6,7 @@ StructuralNode::StructuralNode (StructuralEntity *parent)
     : StructuralEntity (parent)
 {
   setCategory (Structural::Node);
-  setType (Structural::NoType);
+  setStructuralType (Structural::NoType);
 }
 
 StructuralNode::~StructuralNode () {}
@@ -14,13 +14,13 @@ StructuralNode::~StructuralNode () {}
 void
 StructuralNode::inside ()
 {
-  StructuralEntity *parent = getParent ();
+  StructuralEntity *parent = structuralParent();
 
   if (parent)
   {
     QLineF line
-        = QLineF (getLeft () + getWidth () / 2, getTop () + getHeight () / 2,
-                  parent->getWidth () / 2, parent->getHeight () / 2);
+        = QLineF (left () + width () / 2, top () + height () / 2,
+                  parent->width () / 2, parent->height () / 2);
 
     int max = 1000;
     int n = 0;
@@ -33,8 +33,8 @@ StructuralNode::inside ()
     {
       current += 0.01;
 
-      setTop (getTop () + line.pointAt (current).y () - line.p1 ().y ());
-      setLeft (getLeft () + line.pointAt (current).x () - line.p1 ().x ());
+      setTop (top () + line.pointAt (current).y () - line.p1 ().y ());
+      setLeft (left () + line.pointAt (current).x () - line.p1 ().x ());
 
       if (++n > max)
       {
@@ -45,8 +45,8 @@ StructuralNode::inside ()
 
     if (n < 0)
     {
-      setTop (line.p2 ().y () - getHeight () / 2);
-      setLeft (line.p2 ().x () - getWidth () / 2);
+      setTop (line.p2 ().y () - height () / 2);
+      setLeft (line.p2 ().x () - width () / 2);
     }
 
     setSelectable (true);
@@ -62,12 +62,12 @@ StructuralNode::adjust (bool collision, bool recursion)
 
   if (recursion)
   {
-    for (StructuralEntity *ent : getChildren ())
-      if (ent->getCategory () != Structural::Edge)
+    for (StructuralEntity *ent : children ())
+      if (ent->category () != Structural::Edge)
         ent->adjust (true, false);
   }
 
-  StructuralEntity *parent = getParent ();
+  StructuralEntity *parent = structuralParent ();
   if (parent || !ST_OPT_WITH_BODY)
   {
     if (!collision)
@@ -78,7 +78,7 @@ StructuralNode::adjust (bool collision, bool recursion)
       {
         bool colliding = false;
 
-        for (StructuralEntity *ent : StructuralUtil::getNeighbors (this))
+        for (StructuralEntity *ent : StructuralUtil::neighbors (this))
         {
           if (ent != this)
           {
@@ -93,16 +93,16 @@ StructuralNode::adjust (bool collision, bool recursion)
             while (collidesWithItem (ent, Qt::IntersectsItemBoundingRect))
             {
               QLineF line = QLineF (
-                  getLeft () + getWidth () / 2, getTop () + getHeight () / 2,
-                  ent->getWidth () / 2, ent->getHeight () / 2);
+                  left () + width () / 2, top () + height () / 2,
+                  ent->width () / 2, ent->height () / 2);
 
               line.setAngle (qrand () % 360);
 
               current += (double)(qrand () % 100) / 1000.0;
 
-              setTop (getTop () + line.pointAt (current / 2).y ()
+              setTop (top () + line.pointAt (current / 2).y ()
                       - line.p1 ().y ());
-              setLeft (getLeft () + line.pointAt (current / 2).x ()
+              setLeft (left () + line.pointAt (current / 2).x ()
                        - line.p1 ().x ());
 
               if (++n > max)
@@ -115,7 +115,7 @@ StructuralNode::adjust (bool collision, bool recursion)
           }
         }
 
-        for (StructuralEntity *ent : StructuralUtil::getNeighbors (this))
+        for (StructuralEntity *ent : StructuralUtil::neighbors (this))
           if (collidesWithItem (ent, Qt::IntersectsItemBoundingRect))
             colliding = true;
 

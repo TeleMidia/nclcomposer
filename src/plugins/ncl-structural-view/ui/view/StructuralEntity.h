@@ -22,41 +22,41 @@ class StructuralEntity : public QObject, public QGraphicsItem
   Q_OBJECT
 
 public:
-  StructuralEntity (StructuralEntity *parent = 0);
+  StructuralEntity (StructuralEntity *structuralParent = 0);
   virtual ~StructuralEntity () {}
 
-  QString getId () const;
+  QString id () const;
   void setId (const QString &id);
 
-  QString getUid () const;
+  QString uid () const;
   void setUid (const QString &uid);
 
-  StructuralCategory getCategory () const;
+  StructuralCategory category () const;
   void setCategory (StructuralCategory category);
 
-  StructuralType getType () const;
-  void setType (StructuralType type);
+  StructuralType structuralType () const;
+  void setStructuralType (StructuralType type);
 
-  StructuralResize getStructuralResize () const;
+  StructuralResize structuralResize () const;
   void setStructuralResize (StructuralResize resize);
 
-  QMap<QString, QString> getProperties () const;
+  QMap<QString, QString> properties () const;
   void setProperties (const QMap<QString, QString> &properties);
 
-  QString getProperty (const QString &name) const;
+  QString property (const QString &name) const;
   void setProperty (const QString &name, const QString &value);
 
   bool hasProperty (const QString &name) const;
 
-  StructuralEntity *getParent () const;
-  void setParent (StructuralEntity *parent);
+  StructuralEntity *structuralParent () const;
+  void setStructuralParent (StructuralEntity *structuralParent);
 
-  QVector<StructuralEntity *> getChildren () const;
+  QVector<StructuralEntity *> children () const;
   void addChild (StructuralEntity *entity);
   void removeChild (StructuralEntity *entity);
   bool isChild (StructuralEntity *child) const;
 
-  QVector<QString> getRestrictions () const;
+  QVector<QString> restrictions () const;
   void addRestriction (const QString &restriction);
   void removeRestriction (const QString &restriction);
 
@@ -99,80 +99,80 @@ public:
   bool isReference () const;
   void setReference (bool reference);
 
-  qreal getTop () const;
+  qreal top () const;
   void setTop (qreal top);
 
-  qreal getLeft () const;
+  qreal left () const;
   void setLeft (qreal left);
 
-  qreal getWidth () const;
+  qreal width () const;
   void setWidth (qreal width);
 
-  qreal getHeight () const;
+  qreal height () const;
   void setHeight (qreal height);
 
-  qreal getMoveTop () const;
+  qreal moveTop () const;
   void setMoveTop (qreal moveTop);
 
-  qreal getMoveLeft () const;
+  qreal moveLeft () const;
   void setMoveLeft (qreal moveLeft);
 
-  qreal getPressTop () const;
+  qreal pressTop () const;
   void setPressTop (qreal pressTop);
 
-  qreal getPressLeft () const;
+  qreal pressLeft () const;
   void setPressLeft (qreal pressLeft);
 
-  qreal getPressWidth () const;
+  qreal pressWidth () const;
   void setPressWidth (qreal pressWidth);
 
-  qreal getPressHeight () const;
+  qreal pressHeight () const;
   void setPressHeight (qreal pressHeight);
 
-  qreal getResizeTop () const;
+  qreal resizeTop () const;
   void setResizeTop (qreal resizeTop);
 
-  qreal getResizeLeft () const;
+  qreal resizeLeft () const;
   void setResizeLeft (qreal resizeLeft);
 
-  qreal getResizeWidth () const;
+  qreal resizeWidth () const;
   void setResizeWidth (qreal resizeWidth);
 
-  qreal getResizeHeight () const;
+  qreal resizeHeight () const;
   void setResizeHeight (qreal resizeHeight);
 
-  qreal getUncollapsedTop () const;
+  qreal uncollapsedTop () const;
   void setUncollapsedTop (qreal uncollapedTop);
 
-  qreal getUncollapsedLeft () const;
+  qreal uncollapsedLeft () const;
   void setUncollapsedLeft (qreal uncollapedLeft);
 
-  qreal getUncollapsedWidth () const;
+  qreal uncollapsedWidth () const;
   void setUncollapsedWidth (qreal uncollapedWidth);
 
-  qreal getUncollapsedHeight () const;
+  qreal uncollapsedHeight () const;
   void setUncollapsedHeight (qreal uncollapedHeight);
 
-  QRect getUncollapsedRect ();
+  QRect uncollapsedRect ();
 
-  qreal getzIndex () const;
+  qreal zIndex () const;
   void setzIndex (qreal zIndex);
 
   void setMenu (StructuralMenu *menu);
 
-  QString getError () const;
+  QString error () const;
   void setError (const QString &error);
 
-  QString getWarning () const;
+  QString warning () const;
   void setWarning (const QString &warning);
 
-  QString getInfo () const;
+  QString info () const;
   void setInfo (const QString &info);
 
   virtual void adjust (bool collision = false, bool recursion = true);
 
 signals:
-  void insertAsked (QString uid, QString parent,
+  void insertAsked (QString uid, QString structuralParent,
                     QMap<QString, QString> properties,
                     QMap<QString, QString> settings);
 
@@ -183,7 +183,7 @@ signals:
                     QMap<QString, QString> settings);
 
   void selectAsked (QString uid, QMap<QString, QString> stgs);
-  void moveAsked (QString uid, QString parent, QMap<QString, QString> props,
+  void moveAsked (QString uid, QString structuralParent, QMap<QString, QString> props,
                   QMap<QString, QString> stgs);
 
 protected:

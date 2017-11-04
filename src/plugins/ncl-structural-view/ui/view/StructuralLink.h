@@ -8,7 +8,7 @@ class StructuralLink : public StructuralNode
   Q_OBJECT
 
 public:
-  StructuralLink (StructuralEntity *parent = 0);
+  StructuralLink (StructuralEntity *structuralParent = 0);
   virtual ~StructuralLink ();
 
 signals:

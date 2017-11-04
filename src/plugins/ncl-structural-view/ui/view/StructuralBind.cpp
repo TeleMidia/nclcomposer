@@ -6,7 +6,7 @@ StructuralBind::StructuralBind (StructuralEntity *parent)
     : StructuralEdge (parent)
 {
   setCategory (Structural::Edge);
-  setType (Structural::Bind);
+  setStructuralType (Structural::Bind);
 
   setRole (Structural::NoRole);
 }
@@ -31,7 +31,7 @@ StructuralBind::adjust (bool collision, bool recursion)
   StructuralEdge::adjust (collision, recursion);
 
   // Adjusting properties...
-  setRole (StructuralUtil::strToRole (getProperty (ST_ATTR_BIND_ROLE)));
+  setRole (StructuralUtil::strToRole (property (ST_ATTR_BIND_ROLE)));
 }
 
 void
@@ -48,7 +48,7 @@ StructuralBind::draw (QPainter *painter)
     QLineF drawLine = getDrawLine (ST_DEFAULT_BIND_PADDING);
 
     painter->setPen (
-        QPen (QBrush (QColor (StructuralUtil::getColor (getType ()))), 1));
+        QPen (QBrush (QColor (StructuralUtil::color (structuralType ()))), 1));
 
     qreal x, y, z, w;
     qreal a, b;
@@ -65,7 +65,7 @@ StructuralBind::draw (QPainter *painter)
     z = drawLine.p2 ().x ();
     w = drawLine.p2 ().y ();
 
-    if (orig->getType () == Structural::Link)
+    if (orig->structuralType () == Structural::Link)
     {
       a = drawLine.p2 ().x ();
       b = drawLine.p2 ().y ();
@@ -83,7 +83,7 @@ StructuralBind::draw (QPainter *painter)
     if (drawLine.p1 ().x () <= drawLine.p2 ().x ()
         && drawLine.p1 ().y () <= drawLine.p2 ().y ())
     {
-      if (orig->getType () == Structural::Link)
+      if (orig->structuralType () == Structural::Link)
       {
         z -= ST_DEFAULT_BIND_ROLE_W / 2;
         w -= ST_DEFAULT_BIND_ROLE_H / 2;
@@ -100,7 +100,7 @@ StructuralBind::draw (QPainter *painter)
     else if (drawLine.p1 ().x () > drawLine.p2 ().x ()
              && drawLine.p1 ().y () <= drawLine.p2 ().y ())
     {
-      if (orig->getType () == Structural::Link)
+      if (orig->structuralType () == Structural::Link)
       {
         z += ST_DEFAULT_BIND_ROLE_W / 2;
         w -= ST_DEFAULT_BIND_ROLE_H / 2;
@@ -118,7 +118,7 @@ StructuralBind::draw (QPainter *painter)
     else if (drawLine.p1 ().x () <= drawLine.p2 ().x ()
              && drawLine.p1 ().y () > drawLine.p2 ().y ())
     {
-      if (orig->getType () == Structural::Link)
+      if (orig->structuralType () == Structural::Link)
       {
         z -= ST_DEFAULT_BIND_ROLE_W / 2;
         w += ST_DEFAULT_BIND_ROLE_H / 2;
@@ -136,7 +136,7 @@ StructuralBind::draw (QPainter *painter)
     else if (drawLine.p1 ().x () > drawLine.p2 ().x ()
              && drawLine.p1 ().y () > drawLine.p2 ().y ())
     {
-      if (orig->getType () == Structural::Link)
+      if (orig->structuralType () == Structural::Link)
       {
         z += ST_DEFAULT_BIND_ROLE_W / 2;
         w += ST_DEFAULT_BIND_ROLE_H / 2;
@@ -151,11 +151,11 @@ StructuralBind::draw (QPainter *painter)
       }
     }
 
-    QString icon = StructuralUtil::getIcon (getRole ());
+    QString icon = StructuralUtil::icon (getRole ());
 
     if (icon.isEmpty ())
     {
-      if (orig->getType () == Structural::Link)
+      if (orig->structuralType () == Structural::Link)
         icon = ":/icon/bind-unknow-action";
       else
         icon = ":/icon/bind-unknow-condition";
@@ -205,12 +205,12 @@ StructuralBind::draw (QPainter *painter)
     painter->drawPixmap (a, b, ST_DEFAULT_BIND_ROLE_W, ST_DEFAULT_BIND_ROLE_H,
                          QPixmap (icon));
 
-    if (!getError ().isEmpty () || !getWarning ().isEmpty ())
+    if (!error ().isEmpty () || !warning ().isEmpty ())
     {
 
       QColor color;
 
-      if (!getError ().isEmpty ())
+      if (!error ().isEmpty ())
       {
         color = QColor (QString (ST_DEFAULT_ALERT_ERROR_COLOR));
       }
@@ -246,7 +246,7 @@ StructuralBind::delineate (QPainterPath *painter) const
     if (drawLine.p1 ().x () <= drawLine.p2 ().x ()
         && drawLine.p1 ().y () <= drawLine.p2 ().y ())
     {
-      if (orig->getType () == Structural::Link)
+      if (orig->structuralType () == Structural::Link)
       {
         x = drawLine.p2 ().x () - ST_DEFAULT_BIND_ROLE_W;
         y = drawLine.p2 ().y () - ST_DEFAULT_BIND_ROLE_H;
@@ -260,7 +260,7 @@ StructuralBind::delineate (QPainterPath *painter) const
     else if (drawLine.p1 ().x () > drawLine.p2 ().x ()
              && drawLine.p1 ().y () <= drawLine.p2 ().y ())
     {
-      if (orig->getType () == Structural::Link)
+      if (orig->structuralType () == Structural::Link)
       {
         x = drawLine.p2 ().x ();
         y = drawLine.p2 ().y () - ST_DEFAULT_BIND_ROLE_H;
@@ -274,7 +274,7 @@ StructuralBind::delineate (QPainterPath *painter) const
     else if (drawLine.p1 ().x () <= drawLine.p2 ().x ()
              && drawLine.p1 ().y () > drawLine.p2 ().y ())
     {
-      if (orig->getType () == Structural::Link)
+      if (orig->structuralType () == Structural::Link)
       {
         x = drawLine.p2 ().x () - ST_DEFAULT_BIND_ROLE_W;
         y = drawLine.p2 ().y ();
@@ -288,7 +288,7 @@ StructuralBind::delineate (QPainterPath *painter) const
     else if (drawLine.p1 ().x () > drawLine.p2 ().x ()
              && drawLine.p1 ().y () > drawLine.p2 ().y ())
     {
-      if (orig->getType () == Structural::Link)
+      if (orig->structuralType () == Structural::Link)
       {
         x = drawLine.p2 ().x ();
         y = drawLine.p2 ().y ();

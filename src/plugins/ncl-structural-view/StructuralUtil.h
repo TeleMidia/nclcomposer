@@ -33,23 +33,23 @@ StructuralRole strToRole (const QString &role);
 QString mimeToStr (StructuralMimeType mimetype);
 StructuralMimeType strToMime (const QString &mimetype);
 
-QString getIcon (StructuralType type);
-QString getColor (StructuralType type);
-QString getPrefix (StructuralType type);
-QString getTooltip (StructuralType type, const QString &title = "",
-                    const QString &info = "", const QString &warning = "",
-                    const QString &error = "", const QString &extra = "");
+QString icon (StructuralType type);
+QString color (StructuralType type);
+QString prefix (StructuralType type);
+QString tooltip (StructuralType type, const QString &title = "",
+                 const QString &info = "", const QString &warning = "",
+                 const QString &error = "", const QString &extra = "");
 
-QString getMimeTypeIcon (StructuralMimeType mimetype);
-QString getMimeTooltip (StructuralMimeType mimetype, const QString &title = "",
-                        const QString &info = "", const QString &warning = "",
-                        const QString &error = "", const QString &extra = "");
-StructuralMimeType getMimeByExtension (const QString &ext);
+QString mimeTypeIcon (StructuralMimeType mimetype);
+QString mimeTooltip (StructuralMimeType mimetype, const QString &title = "",
+                     const QString &info = "", const QString &warning = "",
+                     const QString &error = "", const QString &extra = "");
+StructuralMimeType mimeByExtension (const QString &ext);
 
-QString getIcon (StructuralRole role);
+QString icon (StructuralRole role);
 
-QVector<StructuralEntity *> getNeighbors (StructuralEntity *entity);
-QVector<StructuralEntity *> getUpNeighbors (StructuralEntity *entity);
+QVector<StructuralEntity *> neighbors (StructuralEntity *entity);
+QVector<StructuralEntity *> upNeighbors (StructuralEntity *entity);
 
 bool isCondition (StructuralRole role);
 bool isCondition (const QString &role);

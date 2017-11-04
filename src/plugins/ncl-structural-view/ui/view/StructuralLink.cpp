@@ -4,7 +4,7 @@ StructuralLink::StructuralLink (StructuralEntity *parent)
     : StructuralNode (parent)
 {
   setCategory (Structural::Node);
-  setType (Structural::Link);
+  setStructuralType (Structural::Link);
 
   setWidth (ST_DEFAULT_LINK_W);
   setHeight (ST_DEFAULT_LINK_H);
@@ -19,11 +19,11 @@ StructuralLink::draw (QPainter *painter)
 {
   painter->setRenderHint (QPainter::Antialiasing, true);
 
-  QColor drawColor = QColor (StructuralUtil::getColor (getType ()));
+  QColor drawColor = QColor (StructuralUtil::color (structuralType ()));
 
-  if (!getError ().isEmpty () || !getWarning ().isEmpty ())
+  if (!error ().isEmpty () || !warning ().isEmpty ())
   {
-    if (!getError ().isEmpty ())
+    if (!error ().isEmpty ())
     {
       drawColor = QString (ST_DEFAULT_ALERT_ERROR_COLOR);
     }
@@ -40,8 +40,8 @@ StructuralLink::draw (QPainter *painter)
 
   painter->drawEllipse (ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_LINK_PADDING,
                         ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_LINK_PADDING,
-                        getWidth () - 2 * ST_DEFAULT_LINK_PADDING,
-                        getHeight () - 2 * ST_DEFAULT_LINK_PADDING);
+                        width () - 2 * ST_DEFAULT_LINK_PADDING,
+                        height () - 2 * ST_DEFAULT_LINK_PADDING);
 
   if (isMoving ())
   {
@@ -50,9 +50,9 @@ StructuralLink::draw (QPainter *painter)
 
     painter->setRenderHint (QPainter::Antialiasing, false);
 
-    painter->drawRect (getMoveLeft () + ST_DEFAULT_ENTITY_PADDING - getLeft (),
-                       getMoveTop () + ST_DEFAULT_ENTITY_PADDING - getTop (),
-                       getWidth (), getHeight ());
+    painter->drawRect (moveLeft () + ST_DEFAULT_ENTITY_PADDING - left (),
+                       moveTop () + ST_DEFAULT_ENTITY_PADDING - top (),
+                       width (), height ());
   }
 }
 

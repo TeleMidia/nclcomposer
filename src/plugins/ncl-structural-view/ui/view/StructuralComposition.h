@@ -6,7 +6,7 @@
 class StructuralComposition : public StructuralNode
 {
 public:
-  StructuralComposition (StructuralEntity *parent = 0);
+  StructuralComposition (StructuralEntity *structuralParent = 0);
   virtual ~StructuralComposition () {}
 
   void collapse ();

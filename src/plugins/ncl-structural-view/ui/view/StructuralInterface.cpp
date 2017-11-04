@@ -4,7 +4,7 @@ StructuralInterface::StructuralInterface (StructuralEntity *parent)
     : StructuralEntity (parent)
 {
   setCategory (Structural::Interface);
-  setType (Structural::NoType);
+  setStructuralType (Structural::NoType);
 
   setResizable (false);
 
@@ -23,7 +23,7 @@ StructuralInterface::adjust (bool collision, bool recursion)
   StructuralEntity::adjust (collision, recursion);
 
   // Adjusting position...
-  StructuralEntity *parent = getParent ();
+  StructuralEntity *parent = structuralParent ();
 
   if (parent || !ST_OPT_WITH_BODY)
   {
@@ -34,7 +34,7 @@ StructuralInterface::adjust (bool collision, bool recursion)
       for (int i = 0; i < 10; i++)
       {
         bool colliding = false;
-        for (StructuralEntity *ent : StructuralUtil::getNeighbors (this))
+        for (StructuralEntity *ent : StructuralUtil::neighbors (this))
         {
           if (ent != this)
           {
@@ -48,16 +48,16 @@ StructuralInterface::adjust (bool collision, bool recursion)
             while (collidesWithItem (ent, Qt::IntersectsItemBoundingRect))
             {
               QLineF line = QLineF (
-                  getLeft () + getWidth () / 2, getTop () + getHeight () / 2,
-                  ent->getWidth () / 2, ent->getHeight () / 2);
+                  left () + width () / 2, top () + height () / 2,
+                  ent->width () / 2, ent->height () / 2);
 
               line.setAngle (qrand () % 360);
 
               current += (double)(qrand () % 100) / 1000.0;
 
-              setTop (getTop () + line.pointAt (current / 2).y ()
+              setTop (top () + line.pointAt (current / 2).y ()
                       - line.p1 ().y ());
-              setLeft (getLeft () + line.pointAt (current / 2).x ()
+              setLeft (left () + line.pointAt (current / 2).x ()
                        - line.p1 ().x ());
 
               if (++n > max)
@@ -70,7 +70,7 @@ StructuralInterface::adjust (bool collision, bool recursion)
           }
         }
 
-        for (StructuralEntity *ent : StructuralUtil::getNeighbors (this))
+        for (StructuralEntity *ent : StructuralUtil::neighbors (this))
           if (collidesWithItem (ent, Qt::IntersectsItemBoundingRect))
             colliding = true;
 
@@ -88,12 +88,12 @@ StructuralInterface::adjust (bool collision, bool recursion)
 void
 StructuralInterface::constrain ()
 {
-  StructuralEntity *parent = getParent ();
+  StructuralEntity *parent = structuralParent ();
 
   if (parent != nullptr)
   {
-    QPointF tail (parent->getWidth () / 2, parent->getHeight () / 2);
-    QPointF head (getLeft () + getWidth () / 2, getTop () + getHeight () / 2);
+    QPointF tail (parent->width () / 2, parent->height () / 2);
+    QPointF head (left () + width () / 2, top () + height () / 2);
 
     if (tail == head)
     {
@@ -122,8 +122,8 @@ StructuralInterface::constrain ()
 
     if (QLineF (p, head).length () > 7)
     {
-      setTop (p.y () - getHeight () / 2);
-      setLeft (p.x () - getWidth () / 2);
+      setTop (p.y () - height () / 2);
+      setLeft (p.x () - width () / 2);
     }
   }
 }
@@ -133,27 +133,27 @@ StructuralInterface::draw (QPainter *painter)
 {
   int x = ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_INTERFACE_PADDING;
   int y = ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_INTERFACE_PADDING;
-  int w = getWidth () - 2 * ST_DEFAULT_INTERFACE_PADDING;
-  int h = getHeight () - 2 * ST_DEFAULT_INTERFACE_PADDING;
+  int w = width () - 2 * ST_DEFAULT_INTERFACE_PADDING;
+  int h = height () - 2 * ST_DEFAULT_INTERFACE_PADDING;
 
   painter->drawPixmap (x, y, w, h,
-                       QPixmap (StructuralUtil::getIcon (getType ())));
+                       QPixmap (StructuralUtil::icon (structuralType ())));
 
   if (!ST_OPT_WITH_BODY && !ST_OPT_USE_FLOATING_INTERFACES)
   {
-    if (getProperty (ST_ATTR_ENT_AUTOSTART) == ST_VALUE_TRUE)
+    if (property (ST_ATTR_ENT_AUTOSTART) == ST_VALUE_TRUE)
     {
       painter->setPen (QPen (QBrush (QColor (76, 76, 76)), 2));
       painter->drawRect (x, y, w, h);
     }
   }
 
-  if (!getError ().isEmpty () || !getWarning ().isEmpty ())
+  if (!error ().isEmpty () || !warning ().isEmpty ())
   {
 
     QString icon;
 
-    if (!getError ().isEmpty ())
+    if (!error ().isEmpty ())
       icon = QString (ST_DEFAULT_ALERT_ERROR_ICON);
     else
       icon = QString (ST_DEFAULT_ALERT_WARNING_ICON);
@@ -169,8 +169,8 @@ StructuralInterface::draw (QPainter *painter)
     painter->setBrush (QBrush (Qt::NoBrush));
     painter->setPen (QPen (QBrush (Qt::black), 0));
 
-    int moveX = x + getMoveLeft () - getLeft ();
-    int moveY = y + getMoveTop () - getTop ();
+    int moveX = x + moveLeft () - left ();
+    int moveY = y + moveTop () - top ();
     int moveW = w;
     int moveH = h;
 

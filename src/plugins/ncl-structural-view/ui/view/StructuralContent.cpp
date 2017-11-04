@@ -7,7 +7,7 @@
 StructuralContent::StructuralContent (StructuralEntity *parent)
     : StructuralNode (parent)
 {
-  setType (Structural::Media);
+  setStructuralType (Structural::Media);
 
   setMimeType (Structural::NoMimeType);
 
@@ -38,9 +38,9 @@ StructuralContent::adjust (bool collision, bool recursion)
   StructuralNode::adjust (collision, recursion);
 
   // Adjusting properties
-  if (!getProperty (ST_ATTR_NODE_TYPE).isEmpty ())
+  if (!property (ST_ATTR_NODE_TYPE).isEmpty ())
   {
-    QString type = getProperty (ST_ATTR_NODE_TYPE);
+    QString type = property (ST_ATTR_NODE_TYPE);
 
     if (type.startsWith ("image"))
     {
@@ -82,13 +82,13 @@ StructuralContent::adjust (bool collision, bool recursion)
       setMimeType (Structural::NoMimeType);
     }
   }
-  else if (!getProperty (ST_ATTR_NODE_SRC).isEmpty ())
+  else if (!property (ST_ATTR_NODE_SRC).isEmpty ())
   {
-    QString location = getProperty (ST_ATTR_NODE_SRC);
+    QString location = property (ST_ATTR_NODE_SRC);
     QString suffix
         = location.right (location.length () - location.lastIndexOf ('.') - 1);
 
-    setMimeType (StructuralUtil::getMimeByExtension (suffix));
+    setMimeType (StructuralUtil::mimeByExtension (suffix));
   }
   else
   {
@@ -96,8 +96,8 @@ StructuralContent::adjust (bool collision, bool recursion)
   }
 
   if (_mimetype != Structural::NoMimeType)
-    setToolTip (StructuralUtil::getMimeTooltip (
-        _mimetype, getId (), getInfo (), getWarning (), getError ()));
+    setToolTip (StructuralUtil::mimeTooltip (_mimetype, id (), info (),
+                                             warning (), error ()));
 }
 
 void
@@ -108,30 +108,30 @@ StructuralContent::draw (QPainter *painter)
   painter->drawPixmap (
       ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
       ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
-      getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING,
-      getHeight () - 2 * ST_DEFAULT_CONTENT_PADDING
+      width () - 2 * ST_DEFAULT_CONTENT_PADDING,
+      height () - 2 * ST_DEFAULT_CONTENT_PADDING
           - 4 * ST_DEFAULT_CONTENT_PADDING,
-      QPixmap (StructuralUtil::getMimeTypeIcon (getMimeType ())));
+      QPixmap (StructuralUtil::mimeTypeIcon (getMimeType ())));
 
   if (!ST_OPT_WITH_BODY && !ST_OPT_USE_FLOATING_INTERFACES)
   {
-    if (getProperty (ST_ATTR_ENT_AUTOSTART) == ST_VALUE_TRUE)
+    if (property (ST_ATTR_ENT_AUTOSTART) == ST_VALUE_TRUE)
     {
-      painter->drawPixmap ((getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
+      painter->drawPixmap ((width () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
                                + ST_DEFAULT_ALERT_ICON_W,
-                           (getHeight () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
+                           (height () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
                                + ST_DEFAULT_CONTENT_PADDING,
                            ST_DEFAULT_ALERT_ICON_W, ST_DEFAULT_ALERT_ICON_H,
                            QPixmap (":/icon/autostart"));
     }
   }
 
-  if (!getError ().isEmpty () || !getWarning ().isEmpty ())
+  if (!error ().isEmpty () || !warning ().isEmpty ())
   {
     QString icon;
     QString color;
 
-    if (!getError ().isEmpty ())
+    if (!error ().isEmpty ())
     {
       icon = QString (ST_DEFAULT_ALERT_ERROR_ICON);
       color = QString (ST_DEFAULT_ALERT_ERROR_COLOR);
@@ -142,16 +142,16 @@ StructuralContent::draw (QPainter *painter)
       color = QString (ST_DEFAULT_ALERT_WARNING_COLOR);
     }
 
-    painter->drawPixmap ((getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
+    painter->drawPixmap ((width () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
                              + ST_DEFAULT_ALERT_ICON_W,
-                         (getHeight () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
+                         (height () - 2 * ST_DEFAULT_CONTENT_PADDING) / 2
                              + ST_DEFAULT_CONTENT_PADDING,
                          ST_DEFAULT_ALERT_ICON_W, ST_DEFAULT_ALERT_ICON_H,
                          QPixmap (icon));
 
     int max = 20;
     int start = 8;
-    int end = getWidth ();
+    int end = width ();
 
     double current = start;
     double step = (double)(end - start) / max;
@@ -165,9 +165,9 @@ StructuralContent::draw (QPainter *painter)
       current = start + (double)i * step;
 
       if (i % 2)
-        polygon << QPointF (current, getHeight () - 3);
+        polygon << QPointF (current, height () - 3);
       else
-        polygon << QPointF (current, getHeight ());
+        polygon << QPointF (current, height ());
     }
 
     painter->drawPolyline (polygon);
@@ -176,7 +176,7 @@ StructuralContent::draw (QPainter *painter)
   painter->setBrush (Qt::NoBrush);
   painter->setPen (QPen (QBrush (Qt::black), 0));
 
-  QString text = getId ();
+  QString text = id ();
 
   if (text.isEmpty ())
     text = "(?)";
@@ -186,13 +186,13 @@ StructuralContent::draw (QPainter *painter)
 
   painter->drawText (ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
                      ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING
-                         + getHeight () - ST_DEFAULT_CONTENT_TEXT_H
+                         + height () - ST_DEFAULT_CONTENT_TEXT_H
                          - 2 * ST_DEFAULT_CONTENT_PADDING,
-                     getWidth () - 2 * ST_DEFAULT_CONTENT_PADDING,
+                     width () - 2 * ST_DEFAULT_CONTENT_PADDING,
                      ST_DEFAULT_CONTENT_TEXT_H, Qt::AlignCenter, text);
 
   if (isMoving ())
-    painter->drawRect (getMoveLeft () + ST_DEFAULT_ENTITY_PADDING - getLeft (),
-                       getMoveTop () + ST_DEFAULT_ENTITY_PADDING - getTop (),
-                       getWidth (), getHeight ());
+    painter->drawRect (moveLeft () + ST_DEFAULT_ENTITY_PADDING - left (),
+                       moveTop () + ST_DEFAULT_ENTITY_PADDING - top (),
+                       width (), height ());
 }

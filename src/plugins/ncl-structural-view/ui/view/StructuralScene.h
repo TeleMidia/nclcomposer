@@ -16,12 +16,12 @@ public:
                    QObject *parent = 0);
   virtual ~StructuralScene () {}
 
-  StructuralEntity *getBody ();
+  StructuralEntity *body ();
   bool hasEntity (const QString &uid);
-  StructuralEntity *getEntity (const QString &uid);
-  QList<StructuralEntity *> getEntitiesByAttrId (const QString &id);
-  QMap<QString, StructuralEntity *> &getEntities ();
-  QMap<QString, QString> &getRefs ();
+  StructuralEntity *entity (const QString &uid);
+  QList<StructuralEntity *> entitiesByAttrId (const QString &id);
+  QMap<QString, StructuralEntity *> &entities ();
+  QMap<QString, QString> &refs ();
 
   QString createNewId (StructuralType type, const QString &customPrefix = "");
 

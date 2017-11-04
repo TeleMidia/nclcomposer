@@ -11,7 +11,7 @@ StructuralWindow::StructuralWindow (QWidget *parent)
 }
 
 StructuralView *
-StructuralWindow::getView () const
+StructuralWindow::view () const
 {
   return _view;
 }
@@ -31,7 +31,7 @@ StructuralWindow::createActions ()
   _undoAction->setText (tr ("Undo"));
   _undoAction->setIcon (QIcon (":/icon/undo"));
   _undoAction->setShortcut (QKeySequence ("Ctrl+Z"));
-  _view->getMenu ()->addAction (_undoAction);
+  _view->menu ()->addAction (_undoAction);
 
   // redo action
   _redoAction = new QAction (this);
@@ -39,8 +39,8 @@ StructuralWindow::createActions ()
   _redoAction->setText (tr ("Redo"));
   _redoAction->setIcon (QIcon (":/icon/redo"));
   _redoAction->setShortcut (QKeySequence ("Ctrl+Shift+Z"));
-  _view->getMenu ()->addAction (_redoAction);
-  _view->getMenu ()->addSeparator ();
+  _view->menu ()->addAction (_redoAction);
+  _view->menu ()->addSeparator ();
 
   // cut action
   _cutAction = new QAction (this);
@@ -48,7 +48,7 @@ StructuralWindow::createActions ()
   _cutAction->setText (tr ("Cut"));
   _cutAction->setIcon (QIcon (":/icon/cut"));
   _cutAction->setShortcut (QKeySequence ("Ctrl+X"));
-  _view->getMenu ()->addAction (_cutAction);
+  _view->menu ()->addAction (_cutAction);
 
   // copy action
   _copyAction = new QAction (this);
@@ -56,7 +56,7 @@ StructuralWindow::createActions ()
   _copyAction->setText (tr ("Copy"));
   _copyAction->setIcon (QIcon (":/icon/copy"));
   _copyAction->setShortcut (QKeySequence ("Ctrl+C"));
-  _view->getMenu ()->addAction (_copyAction);
+  _view->menu ()->addAction (_copyAction);
 
   // paste action
   _pasteAction = new QAction (this);
@@ -64,8 +64,8 @@ StructuralWindow::createActions ()
   _pasteAction->setText (tr ("Paste"));
   _pasteAction->setIcon (QIcon (":/icon/paste"));
   _pasteAction->setShortcut (QKeySequence ("Ctrl+V"));
-  _view->getMenu ()->addAction (_pasteAction);
-  _view->getMenu ()->addSeparator ();
+  _view->menu ()->addAction (_pasteAction);
+  _view->menu ()->addSeparator ();
 
   // delete action
   _deleteAction = new QAction (this);
@@ -73,8 +73,8 @@ StructuralWindow::createActions ()
   _deleteAction->setText (tr ("Delete"));
   _deleteAction->setToolTip (tr ("Delete"));
   _deleteAction->setIcon (QIcon (":/icon/delete"));
-  _view->getMenu ()->addAction (_deleteAction);
-  _view->getMenu ()->addSeparator ();
+  _view->menu ()->addAction (_deleteAction);
+  _view->menu ()->addSeparator ();
 
   // snapshot action
   _snapshotAction = new QAction (this);
@@ -132,9 +132,9 @@ StructuralWindow::createActions ()
   _autostartAction->setChecked (false);
   _autostartAction->setText (tr ("Set as starting node"));
   _autostartAction->setIcon (QIcon (""));
-  _view->getMenu ()->addAction (_autostartAction);
+  _view->menu ()->addAction (_autostartAction);
 
-  QMenu *insertMenu = new QMenu (_view->getMenu ());
+  QMenu *insertMenu = new QMenu (_view->menu ());
   insertMenu->setTitle (tr ("&Insert"));
 
   // media action
@@ -209,7 +209,7 @@ StructuralWindow::createActions ()
   _switchportAction->setShortcut (QKeySequence ("0"));
   insertMenu->addAction (_switchportAction);
 
-  _view->getMenu ()->addMenu (insertMenu);
+  _view->menu ()->addMenu (insertMenu);
 
   // minimap action
   _minimapAction = new QAction (this);
@@ -233,7 +233,7 @@ StructuralWindow::createActions ()
   _propertiesAction->setEnabled (false);
   _propertiesAction->setText (tr ("Properties"));
   _propertiesAction->setIcon (QIcon (":/icon/properties"));
-  _view->getMenu ()->addAction (_propertiesAction);
+  _view->menu ()->addAction (_propertiesAction);
 
   // insert group
   _insertActionGroup = new QActionGroup (this);
@@ -341,12 +341,9 @@ StructuralWindow::createConnections ()
 
   connect (_undoAction, &QAction::triggered, _view, &StructuralView::undo);
   connect (_redoAction, &QAction::triggered, _view, &StructuralView::redo);
-  connect (_cutAction, &QAction::triggered, _view,
-           &StructuralView::cut);
-  connect (_copyAction, &QAction::triggered, _view,
-           &StructuralView::copy);
-  connect (_pasteAction, &QAction::triggered, _view,
-           &StructuralView::paste);
+  connect (_cutAction, &QAction::triggered, _view, &StructuralView::cut);
+  connect (_copyAction, &QAction::triggered, _view, &StructuralView::copy);
+  connect (_pasteAction, &QAction::triggered, _view, &StructuralView::paste);
 
   connect (_deleteAction, &QAction::triggered, _view,
            &StructuralView::deleteSelected);
@@ -450,12 +447,12 @@ StructuralWindow::select (QString uid, QStrMap stgs)
   Q_UNUSED (stgs);
 
   StructuralEntity *ent = nullptr;
-  if (_view->getScene ()->hasEntity (uid))
-    ent = _view->getScene ()->getEntity (uid);
+  if (_view->scene ()->hasEntity (uid))
+    ent = _view->scene ()->entity (uid);
 
   if (ent)
   {
-    StructuralType type = _view->getScene ()->getEntity (uid)->getType ();
+    StructuralType type = _view->scene ()->entity (uid)->structuralType ();
 
     switch (type)
     {
@@ -541,7 +538,7 @@ StructuralWindow::select (QString uid, QStrMap stgs)
       _mediaAction->setEnabled (false);
       _contextAction->setEnabled (false);
       _switchAction->setEnabled (false);
-      _bodyAction->setEnabled ((_view->getScene ()->getBody () == NULL));
+      _bodyAction->setEnabled ((_view->scene ()->body () == NULL));
       _areaAction->setEnabled (false);
       _propertyAction->setEnabled (false);
       _portAction->setEnabled (false);

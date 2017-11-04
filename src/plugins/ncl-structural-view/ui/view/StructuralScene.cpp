@@ -29,31 +29,31 @@ StructuralScene::hasEntity (const QString &uid)
 }
 
 StructuralEntity *
-StructuralScene::getEntity (const QString &uid)
+StructuralScene::entity (const QString &uid)
 {
   CPR_ASSERT (hasEntity (uid));
   return _entities.value (uid, nullptr);
 }
 
 QMap<QString, StructuralEntity *> &
-StructuralScene::getEntities ()
+StructuralScene::entities ()
 {
   return _entities;
 }
 
 QMap<QString, QString> &
-StructuralScene::getRefs ()
+StructuralScene::refs ()
 {
   return _refs;
 }
 
 QList<StructuralEntity *>
-StructuralScene::getEntitiesByAttrId (const QString &id)
+StructuralScene::entitiesByAttrId (const QString &id)
 {
   QList<StructuralEntity *> list;
   for (StructuralEntity *e : _entities.values ())
   {
-    if (e->getId () == id)
+    if (e->id () == id)
       list.append (e);
   }
 
@@ -64,8 +64,8 @@ QString
 StructuralScene::createNewId (StructuralType type, const QString &customPrefix)
 {
   QString prefix = customPrefix;
-  if (prefix.isEmpty())
-    prefix = StructuralUtil::getPrefix (type); // get a default prefix
+  if (prefix.isEmpty ())
+    prefix = StructuralUtil::prefix (type); // get a default prefix
 
   CPR_ASSERT (!prefix.isEmpty ());
 
@@ -73,7 +73,7 @@ StructuralScene::createNewId (StructuralType type, const QString &customPrefix)
   for (int n = 0;; n++)
   {
     id = prefix + QString::number (n);
-    if (getEntitiesByAttrId (id).size () == 0)
+    if (entitiesByAttrId (id).size () == 0)
       break;
   }
 
@@ -91,12 +91,12 @@ StructuralScene::clear ()
 }
 
 StructuralEntity *
-StructuralScene::getBody ()
+StructuralScene::body ()
 {
   StructuralEntity *body = nullptr;
   for (StructuralEntity *ent : _entities.values ())
   {
-    if (ent->getType () == Structural::Body)
+    if (ent->structuralType () == Structural::Body)
     {
       body = ent;
       break;
@@ -189,7 +189,7 @@ StructuralScene::save ()
   {
     for (StructuralEntity *e : _entities.values ())
     {
-      if (e->getType () == Structural::Body)
+      if (e->structuralType () == Structural::Body)
         createXmlElement (e, doc, root);
     }
   }
@@ -197,7 +197,7 @@ StructuralScene::save ()
   {
     for (StructuralEntity *e : _entities.values ())
     {
-      if (e->getParent () == nullptr)
+      if (e->structuralParent () == nullptr)
         createXmlElement (e, doc, root);
     }
   }
@@ -211,16 +211,16 @@ void
 StructuralScene::createXmlElement (StructuralEntity *ent, QDomDocument *doc,
                                    QDomElement parent)
 {
-  if (ent->getType () != Structural::Reference)
+  if (ent->structuralType () != Structural::Reference)
   {
     QDomElement elt = doc->createElement ("entity");
-    elt.setAttribute ("uid", ent->getUid ());
-    elt.setAttribute ("type", ent->getType ());
+    elt.setAttribute ("uid", ent->uid ());
+    elt.setAttribute ("type", ent->structuralType ());
 
-    for (const QString &key : ent->getProperties ().keys ())
-      elt.setAttribute (key, ent->getProperty (key));
+    for (const QString &key : ent->properties ().keys ())
+      elt.setAttribute (key, ent->property (key));
 
-    for (StructuralEntity *e : ent->getChildren ())
+    for (StructuralEntity *e : ent->children ())
       createXmlElement (e, doc, elt);
 
     parent.appendChild (elt);
@@ -238,9 +238,9 @@ StructuralScene::createEntity (StructuralType type)
       break;
 
     case Structural::Body:
-      CPR_ASSERT (getBody () == nullptr);
+      CPR_ASSERT (body () == nullptr);
       e = new StructuralComposition ();
-      e->setType (type);
+      e->setStructuralType (type);
 
       e->setWidth (ST_DEFAULT_BODY_W);
       e->setHeight (ST_DEFAULT_BODY_H);
@@ -249,12 +249,12 @@ StructuralScene::createEntity (StructuralType type)
     case Structural::Context:
     case Structural::Switch:
       e = new StructuralComposition ();
-      e->setType (type);
+      e->setStructuralType (type);
       break;
 
     case Structural::Link:
       e = new StructuralLink ();
-      e->setType (type);
+      e->setStructuralType (type);
       //    connect ((StructuralLink *)e, &StructuralLink::performedEdit, this,
       //             &StructuralView::performLinkDialog);
       break;
@@ -264,18 +264,18 @@ StructuralScene::createEntity (StructuralType type)
     case Structural::Port:
     case Structural::SwitchPort:
       e = new StructuralInterface ();
-      e->setType (type);
+      e->setStructuralType (type);
       break;
 
     case Structural::Reference:
     case Structural::Mapping:
       e = new StructuralEdge ();
-      e->setType (type);
+      e->setStructuralType (type);
       break;
 
     case Structural::Bind:
       e = new StructuralBind ();
-      e->setType (type);
+      e->setStructuralType (type);
       //    connect ((StructuralBind *)e, &StructuralBind::performedEdit, this,
       //             &StructuralView::performBindDialog);
       break;
@@ -292,11 +292,11 @@ StructuralEntity *
 StructuralScene::clone (const StructuralEntity *ent,
                         StructuralEntity *newparent)
 {
-  StructuralEntity *newent = createEntity (ent->getType ());
-  newent->setParent (newparent);
-  newent->setProperties (ent->getProperties ());
+  StructuralEntity *newent = createEntity (ent->structuralType ());
+  newent->setStructuralParent (newparent);
+  newent->setProperties (ent->properties ());
 
-  for (StructuralEntity *child : ent->getChildren ())
+  for (StructuralEntity *child : ent->children ())
     newent->addChild (this->clone (child, newent));
 
   return newent;
@@ -305,26 +305,26 @@ StructuralScene::clone (const StructuralEntity *ent,
 void
 StructuralScene::updateWithDefaultProperties (StructuralEntity *e)
 {
-  StructuralEntity *p = e->getParent ();
+  StructuralEntity *p = e->structuralParent ();
 
-  if (e->getId ().isEmpty ())
-    e->setId (createNewId (e->getType ()));
+  if (e->id ().isEmpty ())
+    e->setId (createNewId (e->structuralType ()));
 
   if (p)
-    e->setTop (p->getHeight () / 2 - e->getHeight () / 2);
+    e->setTop (p->height () / 2 - e->height () / 2);
   else
   {
     auto rect
         = views ().at (1)->mapToScene (views ().at (1)->rect ().center ());
-    e->setTop (rect.y () - e->getHeight () / 2);
+    e->setTop (rect.y () - e->height () / 2);
   }
 
   if (p)
-    e->setLeft (p->getWidth () / 2 - e->getWidth () / 2);
+    e->setLeft (p->width () / 2 - e->width () / 2);
   else
   {
     auto rect
         = views ().at (1)->mapToScene (views ().at (1)->rect ().center ());
-    e->setLeft (rect.x () - e->getWidth () / 2);
+    e->setLeft (rect.x () - e->width () / 2);
   }
 }

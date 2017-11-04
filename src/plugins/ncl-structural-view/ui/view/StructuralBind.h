@@ -8,7 +8,7 @@ class StructuralBind : public StructuralEdge
   Q_OBJECT
 
 public:
-  StructuralBind (StructuralEntity *parent = 0);
+  StructuralBind (StructuralEntity *structuralParent = 0);
   virtual ~StructuralBind () {}
 
   StructuralRole getRole () const;
