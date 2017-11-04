@@ -17,8 +17,6 @@ StructuralContent::StructuralContent (StructuralEntity *parent)
   setResizable (false);
 }
 
-StructuralContent::~StructuralContent () {}
-
 StructuralMimeType
 StructuralContent::getMimeType () const
 {

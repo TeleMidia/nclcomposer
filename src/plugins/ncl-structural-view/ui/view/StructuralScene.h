@@ -23,7 +23,7 @@ public:
   QMap<QString, StructuralEntity *> &getEntities ();
   QMap<QString, QString> &getRefs ();
 
-  QString createNewId (StructuralType type);
+  QString createNewId (StructuralType type, const QString &customPrefix = "");
 
   void load (const QString &data);
   QString save ();
@@ -42,8 +42,9 @@ protected:
 private:
   StructuralView *_view;
   StructuralMenu *_menu;
+
   QMap<QString, StructuralEntity *> _entities;
-  QMap<QString, QString> _refs;
+  QStrMap _refs;
 
   void load (QDomElement ent, QDomElement parent);
   void createXmlElement (StructuralEntity *ent, QDomDocument *doc,

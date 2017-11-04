@@ -9,7 +9,7 @@ class StructuralEdge : public StructuralEntity
 {
 public:
   StructuralEdge (StructuralEntity *parent = 0);
-  virtual ~StructuralEdge ();
+  virtual ~StructuralEdge () {}
 
   qreal getAngle () const;
   void setAngle (qreal angle);
@@ -50,8 +50,7 @@ protected:
   virtual void delineate (QPainterPath *painter) const;
 
 private:
-  qreal _alfa;
-  qreal _angle;
+  qreal _alfa, _angle;
 
   StructuralEntity *_orig;
   qreal _origTop, _origLeft;

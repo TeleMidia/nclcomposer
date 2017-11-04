@@ -16,7 +16,7 @@ StructuralNode::inside ()
 {
   StructuralEntity *parent = getParent ();
 
-  if (parent != NULL)
+  if (parent)
   {
     QLineF line
         = QLineF (getLeft () + getWidth () / 2, getTop () + getHeight () / 2,
@@ -68,8 +68,7 @@ StructuralNode::adjust (bool collision, bool recursion)
   }
 
   StructuralEntity *parent = getParent ();
-
-  if (parent != NULL || !ST_OPT_WITH_BODY)
+  if (parent || !ST_OPT_WITH_BODY)
   {
     if (!collision)
     {
@@ -132,6 +131,6 @@ StructuralNode::adjust (bool collision, bool recursion)
 
   setSelectable (true);
 
-  if (scene () != NULL)
+  if (scene ())
     scene ()->update ();
 }

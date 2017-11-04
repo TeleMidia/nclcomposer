@@ -87,15 +87,16 @@ public slots:
   void toggleMinimapVisibility ();
 
   // FIXME: These methods should not be part of StructuralView
+  void deleteSelected ();
+
+  void cut ();
+  void copy ();
+  void paste ();
+
   void undo ();
   void redo ();
 
   void performAutostart ();
-  void performDelete ();
-
-  void performCut ();
-  void performCopy ();
-  void performPaste ();
 
 #ifdef WITH_GRAPHVIZ
   void performAutoAdjust ();
@@ -166,8 +167,7 @@ private:
 
   bool isChild (StructuralEntity *entity, StructuralEntity *parent);
 
-  void paste (StructuralEntity *entity, StructuralEntity *parent);
-  void paste (StructuralEntity *entity, StructuralEntity *parent,
+  void pasteEntity (StructuralEntity *entity, StructuralEntity *parent,
               const QString &code, bool adjust);
 
   StructuralInteractionMode _mode;

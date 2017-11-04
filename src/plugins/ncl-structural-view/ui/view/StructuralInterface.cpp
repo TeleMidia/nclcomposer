@@ -14,12 +14,8 @@ StructuralInterface::StructuralInterface (StructuralEntity *parent)
   setHeight (ST_DEFAULT_INTERFACE_H);
 
   if (!ST_OPT_SHOW_INTERFACES)
-  {
     setHidden (true);
-  }
 }
-
-StructuralInterface::~StructuralInterface () {}
 
 void
 StructuralInterface::adjust (bool collision, bool recursion)
@@ -29,7 +25,7 @@ StructuralInterface::adjust (bool collision, bool recursion)
   // Adjusting position...
   StructuralEntity *parent = getParent ();
 
-  if (parent != NULL || !ST_OPT_WITH_BODY)
+  if (parent || !ST_OPT_WITH_BODY)
   {
     if (!collision)
     {
@@ -38,7 +34,6 @@ StructuralInterface::adjust (bool collision, bool recursion)
       for (int i = 0; i < 10; i++)
       {
         bool colliding = false;
-
         for (StructuralEntity *ent : StructuralUtil::getNeighbors (this))
         {
           if (ent != this)
@@ -159,13 +154,9 @@ StructuralInterface::draw (QPainter *painter)
     QString icon;
 
     if (!getError ().isEmpty ())
-    {
       icon = QString (ST_DEFAULT_ALERT_ERROR_ICON);
-    }
     else
-    {
       icon = QString (ST_DEFAULT_ALERT_WARNING_ICON);
-    }
 
     painter->drawPixmap (x + w / 2 - (ST_DEFAULT_ALERT_ICON_W - 3) / 2,
                          y + h / 2 - (ST_DEFAULT_ALERT_ICON_H - 3) / 2,

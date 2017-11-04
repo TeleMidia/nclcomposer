@@ -61,9 +61,12 @@ StructuralScene::getEntitiesByAttrId (const QString &id)
 }
 
 QString
-StructuralScene::createNewId (StructuralType type)
+StructuralScene::createNewId (StructuralType type, const QString &customPrefix)
 {
-  QString prefix = StructuralUtil::getPrefix (type);
+  QString prefix = customPrefix;
+  if (prefix.isEmpty())
+    prefix = StructuralUtil::getPrefix (type); // get a default prefix
+
   CPR_ASSERT (!prefix.isEmpty ());
 
   QString id = "";

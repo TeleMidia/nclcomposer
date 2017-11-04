@@ -342,13 +342,14 @@ StructuralWindow::createConnections ()
   connect (_undoAction, &QAction::triggered, _view, &StructuralView::undo);
   connect (_redoAction, &QAction::triggered, _view, &StructuralView::redo);
   connect (_cutAction, &QAction::triggered, _view,
-           &StructuralView::performCut);
+           &StructuralView::cut);
   connect (_copyAction, &QAction::triggered, _view,
-           &StructuralView::performCopy);
+           &StructuralView::copy);
   connect (_pasteAction, &QAction::triggered, _view,
-           &StructuralView::performPaste);
+           &StructuralView::paste);
+
   connect (_deleteAction, &QAction::triggered, _view,
-           &StructuralView::performDelete);
+           &StructuralView::deleteSelected);
 
   connect (_pointerAction, &QAction::triggered, _view,
            [&]() { _view->setMode (StructuralInteractionMode::Pointing); });

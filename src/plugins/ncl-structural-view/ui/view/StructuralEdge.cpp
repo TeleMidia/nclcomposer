@@ -18,8 +18,6 @@ StructuralEdge::StructuralEdge (StructuralEntity *parent)
   setDestination (nullptr);
 }
 
-StructuralEdge::~StructuralEdge () {}
-
 qreal
 StructuralEdge::getAlfa () const
 {
@@ -109,7 +107,7 @@ StructuralEdge::setOrigin (StructuralEntity *orig)
 bool
 StructuralEdge::hasOrigin () const
 {
-  return (_orig != nullptr);
+  return _orig != nullptr;
 }
 
 StructuralEntity *
@@ -127,7 +125,7 @@ StructuralEdge::setDestination (StructuralEntity *head)
 bool
 StructuralEdge::hasDestination () const
 {
-  return (_dest != nullptr);
+  return _dest != nullptr;
 }
 
 void
@@ -412,10 +410,5 @@ StructuralEdge::delineate (QPainterPath *painter) const
   QPointF c = a - QPointF (sin (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_W,
                            cos (angle + PI - PI / 3) * ST_DEFAULT_EDGE_HEAD_H);
 
-  QVector<QPointF> polygon;
-  polygon.append (a);
-  polygon.append (b);
-  polygon.append (c);
-
-  painter->addPolygon (QPolygonF (polygon));
+  painter->addPolygon (QPolygonF ({a, b, c}));
 }

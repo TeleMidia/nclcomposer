@@ -8,7 +8,7 @@ class StructuralInterface : public StructuralEntity
 {
 public:
   StructuralInterface (StructuralEntity *parent = 0);
-  virtual ~StructuralInterface ();
+  virtual ~StructuralInterface () {}
 
   virtual void adjust (bool collision = false, bool recursion = true);
 

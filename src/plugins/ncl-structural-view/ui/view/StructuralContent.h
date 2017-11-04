@@ -7,7 +7,7 @@ class StructuralContent : public StructuralNode
 {
 public:
   StructuralContent (StructuralEntity *parent = 0);
-  virtual ~StructuralContent ();
+  virtual ~StructuralContent () {}
 
   StructuralMimeType getMimeType () const;
   void setMimeType (StructuralMimeType mimetype);
