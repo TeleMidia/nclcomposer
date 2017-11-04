@@ -595,7 +595,7 @@ adjustEdges (StructuralEntity *ent)
     StructuralEdge *edge = cast (StructuralEdge *, rel);
     if (edge)
     {
-      if (edge->getOrigin () == ent || edge->getDestination () == ent)
+      if (edge->origin () == ent || edge->destination () == ent)
         edge->adjust (true);
     }
   }

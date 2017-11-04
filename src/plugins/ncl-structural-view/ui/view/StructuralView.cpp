@@ -286,14 +286,14 @@ StructuralView::calcNewAngle (StructuralBind *bind)
         CPR_ASSERT_NON_NULL (b);
         if (b->hasOrigin () && b->hasDestination ())
         {
-          if ((bind->getOrigin () == b->getOrigin ()
-               || bind->getOrigin () == b->getDestination ())
-              && (bind->getDestination () == b->getDestination ()
-                  || bind->getDestination () == b->getOrigin ()))
+          if ((bind->origin () == b->origin ()
+               || bind->origin () == b->destination ())
+              && (bind->destination () == b->destination ()
+                  || bind->destination () == b->origin ()))
           {
-            int current = b->getAngle ();
+            int current = b->angle ();
 
-            if (b->getDestination ()->structuralType () != Structural::Link)
+            if (b->destination ()->structuralType () != Structural::Link)
               current = -current;
 
             if (max < current)
@@ -314,7 +314,7 @@ StructuralView::calcNewAngle (StructuralBind *bind)
         angle = min - 60;
     }
 
-    if (bind->getDestination ()->structuralType () != Structural::Link)
+    if (bind->destination ()->structuralType () != Structural::Link)
       return -angle;
   }
 
@@ -374,7 +374,7 @@ StructuralView::remove (QString uid, QStrMap stgs)
       if (rel->category () == Structural::Edge)
       {
         StructuralEdge *edge = cast (StructuralEdge *, rel);
-        if (edge->getOrigin () == e || edge->getDestination () == e)
+        if (edge->origin () == e || edge->destination () == e)
         {
           if (edge->structuralType () != Structural::Reference)
           {
@@ -393,14 +393,14 @@ StructuralView::remove (QString uid, QStrMap stgs)
               // Note:
               // The 'tail' of a 'Structural::Reference' edge
               // is always a 'Structural::Port' entity.
-              auto props = edge->getOrigin ()->properties ();
+              auto props = edge->origin ()->properties ();
 
               props.remove (ST_ATTR_REF_COMPONENT_ID);
               props.remove (ST_ATTR_REF_COMPONENT_UID);
               props.remove (ST_ATTR_REF_INTERFACE_ID);
               props.remove (ST_ATTR_REF_INTERFACE_UID);
 
-              change (edge->getOrigin ()->uid (), props,
+              change (edge->origin ()->uid (), props,
                       util::createSettings (ST_VALUE_TRUE,
                                             stgs.value (ST_SETTINGS_NOTIFY),
                                             stgs.value (ST_SETTINGS_CODE)));
@@ -744,7 +744,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
           CPR_ASSERT_NON_NULL (edge);
 
           // Adjusting edge if it already has an tail and head defined.
-          if (edge->getOrigin () == ent || edge->getDestination () == ent)
+          if (edge->origin () == ent || edge->destination () == ent)
           {
             adjustReferences (edge);
           }
@@ -761,7 +761,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
               if (ent->id () == compId)
               {
                 if (bind->hasDestination ()
-                    && bind->getDestination ()->structuralType ()
+                    && bind->destination ()->structuralType ()
                            == Structural::Link)
                 {
                   bind->setOrigin (ent);
@@ -769,7 +769,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                   bind->setProperty (ST_ATTR_REF_COMPONENT_UID, ent->uid ());
                 }
                 else if (bind->hasOrigin ()
-                         && bind->getOrigin ()->structuralType ()
+                         && bind->origin ()->structuralType ()
                                 == Structural::Link)
                 {
                   bind->setDestination (ent);
@@ -860,7 +860,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
           StructuralEdge *edge = cast (StructuralEdge *, rel);
           CPR_ASSERT_NON_NULL (edge);
 
-          if (edge->getOrigin () == ent || edge->getDestination () == ent)
+          if (edge->origin () == ent || edge->destination () == ent)
           {
             adjustReferences (edge);
           }
@@ -875,14 +875,14 @@ StructuralView::adjustReferences (StructuralEntity *ent)
               if (ent->id () == interId)
               {
                 if (bind->hasDestination ()
-                    && bind->getDestination ()->structuralType ()
+                    && bind->destination ()->structuralType ()
                            == Structural::Link)
                 {
                   bind->setOrigin (ent);
                   bind->setProperty (ST_ATTR_EDGE_ORIG, ent->uid ());
                 }
                 else if (bind->hasOrigin ()
-                         && bind->getOrigin ()->structuralType ()
+                         && bind->origin ()->structuralType ()
                                 == Structural::Link)
                 {
                   bind->setDestination (ent);
@@ -2464,16 +2464,16 @@ StructuralView::performBindDialog (StructuralBind *ent)
   if (util::isCondition (ent->getRole ()))
   {
     _dialog->setMode (
-        ent->getDestination ()->property (ST_ATTR_REF_XCONNECTOR_ID), "", "",
+        ent->destination ()->property (ST_ATTR_REF_XCONNECTOR_ID), "", "",
         StructuralLinkDialog::EditCondition);
 
     _dialog->setCondition (ent->id ());
     _dialog->setConditionParams (pBind);
 
-    if (ent->getOrigin ()->category () == Structural::Interface)
+    if (ent->origin ()->category () == Structural::Interface)
     {
       for (StructuralEntity *e :
-           ent->getOrigin ()->structuralParent ()->children ())
+           ent->origin ()->structuralParent ()->children ())
       {
         _dialog->addConditionInterface (e->uid (), e->id (),
                                         util::icon (e->structuralType ()));
@@ -2484,7 +2484,7 @@ StructuralView::performBindDialog (StructuralBind *ent)
     }
     else
     {
-      for (StructuralEntity *e : ent->getOrigin ()->children ())
+      for (StructuralEntity *e : ent->origin ()->children ())
       {
         _dialog->addConditionInterface (e->uid (), e->id (),
                                         util::icon (e->structuralType ()));
@@ -2505,16 +2505,16 @@ StructuralView::performBindDialog (StructuralBind *ent)
   }
   else if (util::isAction (ent->getRole ()))
   {
-    _dialog->setMode (ent->getOrigin ()->property (ST_ATTR_REF_XCONNECTOR_ID),
-                      "", "", StructuralLinkDialog::EditAction);
+    _dialog->setMode (ent->origin ()->property (ST_ATTR_REF_XCONNECTOR_ID), "",
+                      "", StructuralLinkDialog::EditAction);
 
     _dialog->setAction (ent->id ());
     _dialog->setActionParams (pBind);
 
-    if (ent->getDestination ()->category () == Structural::Interface)
+    if (ent->destination ()->category () == Structural::Interface)
     {
       for (StructuralEntity *e :
-           ent->getDestination ()->structuralParent ()->children ())
+           ent->destination ()->structuralParent ()->children ())
       {
         _dialog->addActionInterface (e->uid (), e->id (),
                                      util::icon (e->structuralType ()));
@@ -2524,7 +2524,7 @@ StructuralView::performBindDialog (StructuralBind *ent)
     }
     else
     {
-      for (StructuralEntity *e : ent->getDestination ()->children ())
+      for (StructuralEntity *e : ent->destination ()->children ())
       {
         _dialog->addActionInterface (e->uid (), e->id (),
                                      util::icon (e->structuralType ()));

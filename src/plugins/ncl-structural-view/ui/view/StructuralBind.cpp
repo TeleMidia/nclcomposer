@@ -37,8 +37,8 @@ StructuralBind::adjust (bool collision, bool recursion)
 void
 StructuralBind::draw (QPainter *painter)
 {
-  StructuralEntity *orig = getOrigin ();
-  StructuralEntity *dest = getDestination ();
+  StructuralEntity *orig = origin ();
+  StructuralEntity *dest = destination ();
 
   if (orig && dest)
   {
@@ -56,7 +56,7 @@ StructuralBind::draw (QPainter *painter)
     qreal r;
 
     qreal alfa, beta, delta;
-    qreal angle;
+    qreal ang;
 
     QPointF center;
 
@@ -76,9 +76,8 @@ StructuralBind::draw (QPainter *painter)
       b = drawLine.p1 ().y ();
     }
 
-    alfa = getAngle ();
-
-    angle = getAngle ();
+    alfa = angle ();
+    ang = angle ();
 
     if (drawLine.p1 ().x () <= drawLine.p2 ().x ()
         && drawLine.p1 ().y () <= drawLine.p2 ().y ())
@@ -161,7 +160,7 @@ StructuralBind::draw (QPainter *painter)
         icon = ":/icon/bind-unknow-condition";
     }
 
-    if (angle != 0)
+    if (ang != 0)
     {
       QLineF line = QLineF (x, y, z, w);
 
@@ -233,8 +232,8 @@ StructuralBind::draw (QPainter *painter)
 void
 StructuralBind::delineate (QPainterPath *painter) const
 {
-  StructuralEntity *orig = getOrigin ();
-  StructuralEntity *dest = getDestination ();
+  StructuralEntity *orig = origin ();
+  StructuralEntity *dest = destination ();
 
   if (orig && dest)
   {

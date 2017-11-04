@@ -19,7 +19,7 @@ StructuralEdge::StructuralEdge (StructuralEntity *parent)
 }
 
 qreal
-StructuralEdge::getAlfa () const
+StructuralEdge::alfa () const
 {
   return _alfa;
 }
@@ -31,7 +31,7 @@ StructuralEdge::setAlfa (qreal alfa)
 }
 
 qreal
-StructuralEdge::getAngle () const
+StructuralEdge::angle () const
 {
   return _angle;
 }
@@ -45,7 +45,7 @@ StructuralEdge::setAngle (qreal angle)
 }
 
 qreal
-StructuralEdge::getOrigTop () const
+StructuralEdge::origTop () const
 {
   return _origTop;
 }
@@ -57,7 +57,7 @@ StructuralEdge::setOrigTop (qreal origTop)
 }
 
 qreal
-StructuralEdge::getOrigLeft () const
+StructuralEdge::origLeft () const
 {
   return _origLeft;
 }
@@ -69,7 +69,7 @@ StructuralEdge::setOrigLeft (qreal origLeft)
 }
 
 qreal
-StructuralEdge::getDestTop () const
+StructuralEdge::destTop () const
 {
   return _destTop;
 }
@@ -81,7 +81,7 @@ StructuralEdge::setDestTop (qreal destTop)
 }
 
 qreal
-StructuralEdge::getDestLeft () const
+StructuralEdge::destLeft () const
 {
   return _destLeft;
 }
@@ -93,7 +93,7 @@ StructuralEdge::setDestLeft (qreal destLeft)
 }
 
 StructuralEntity *
-StructuralEdge::getOrigin () const
+StructuralEdge::origin () const
 {
   return _orig;
 }
@@ -111,7 +111,7 @@ StructuralEdge::hasOrigin () const
 }
 
 StructuralEntity *
-StructuralEdge::getDestination () const
+StructuralEdge::destination () const
 {
   return _dest;
 }
@@ -138,10 +138,10 @@ StructuralEdge::adjust (bool collision, bool recursion)
   StructuralEntity *parent = structuralParent ();
   if (parent || !ST_OPT_WITH_BODY)
   {
-    qreal angle = getAngle ();
+    qreal ang = angle ();
 
-    StructuralEntity *orig = getOrigin ();
-    StructuralEntity *dest = getDestination ();
+    StructuralEntity *orig = origin ();
+    StructuralEntity *dest = destination ();
 
     if (orig && dest)
     {
@@ -175,11 +175,11 @@ StructuralEdge::adjust (bool collision, bool recursion)
         orig->setSelectable (false);
         dest->setSelectable (false);
 
-        adjustExtreme (orig, line, 0.0, 0.01, angle);
-        line.setP1 (QPointF (getOrigLeft (), getOrigTop ()));
+        adjustExtreme (orig, line, 0.0, 0.01, ang);
+        line.setP1 (QPointF (origLeft (), origTop ()));
 
-        adjustExtreme (dest, line, 1.0, -0.01, angle);
-        line.setP2 (QPointF (getDestLeft (), getDestTop ()));
+        adjustExtreme (dest, line, 1.0, -0.01, ang);
+        line.setP2 (QPointF (destLeft (), destTop ()));
 
         orig->setSelectable (true);
         dest->setSelectable (true);
@@ -273,7 +273,7 @@ StructuralEdge::adjustExtreme (StructuralEntity *extreme, QLineF line,
       p.setX (center.x () + ::cos ((gama)*PI / 180.0) * r);
       p.setY (center.y () - ::sin ((gama)*PI / 180.0) * r);
 
-      if (extreme == getOrigin ())
+      if (extreme == origin ())
         setAlfa (alfa * (1 / index - 1));
       else
         setAlfa (alfa);
@@ -283,7 +283,7 @@ StructuralEdge::adjustExtreme (StructuralEntity *extreme, QLineF line,
       p = line.pointAt (index);
     }
 
-    if (extreme == getOrigin ())
+    if (extreme == origin ())
       adjustBox (QLineF (p, line.p2 ()));
     else
       adjustBox (QLineF (line.p1 (), p));
@@ -296,8 +296,8 @@ StructuralEdge::adjustExtreme (StructuralEntity *extreme, QLineF line,
 QLineF
 StructuralEdge::getDrawLine (qreal padding) const
 {
-  QPointF pOrig = QPointF (getOrigLeft (), getOrigTop ());
-  QPointF pDest = QPointF (getDestLeft (), getDestTop ());
+  QPointF pOrig = QPointF (origLeft (), origTop ());
+  QPointF pDest = QPointF (destLeft (), destTop ());
 
   QLineF drawLine;
   int x = 0, y = 0, z = 0, w = 0;

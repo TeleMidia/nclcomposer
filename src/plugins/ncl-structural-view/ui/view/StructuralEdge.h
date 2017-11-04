@@ -11,33 +11,33 @@ public:
   StructuralEdge (StructuralEntity *structuralParent = 0);
   virtual ~StructuralEdge () {}
 
-  qreal getAngle () const;
+  qreal angle () const;
   void setAngle (qreal angle);
 
-  StructuralEntity *getOrigin () const;
+  StructuralEntity *origin () const;
   void setOrigin (StructuralEntity *orig);
   bool hasOrigin () const;
 
-  StructuralEntity *getDestination () const;
+  StructuralEntity *destination () const;
   void setDestination (StructuralEntity *dest);
   bool hasDestination () const;
 
   virtual void adjust (bool collision = false, bool recursion = true);
 
 protected:
-  qreal getAlfa () const;
+  qreal alfa () const;
   void setAlfa (qreal alfa);
 
-  qreal getOrigTop () const;
+  qreal origTop () const;
   void setOrigTop (qreal tailTop);
 
-  qreal getOrigLeft () const;
+  qreal origLeft () const;
   void setOrigLeft (qreal tailLeft);
 
-  qreal getDestTop () const;
+  qreal destTop () const;
   void setDestTop (qreal destTop);
 
-  qreal getDestLeft () const;
+  qreal destLeft () const;
   void setDestLeft (qreal headLeft);
 
   void adjustBox (QLineF line);
