@@ -521,7 +521,7 @@ StructuralView::change (QString uid, QStrMap props, QStrMap stgs)
 void
 StructuralView::adjustAllReferences ()
 {
-  for (const QString &uid : _scene->getEntities().keys ())
+  for (const QString &uid : _scene->getEntities ().keys ())
   {
     // warn: getEntities can be changed by the adjustReferences and adjust
     // bellow
@@ -1037,73 +1037,63 @@ StructuralView::adjustReferences (StructuralEntity *ent)
 }
 
 void
-StructuralView::select (QString uid, QStrMap settings)
+StructuralView::select (QString uid, QStrMap stgs)
 {
   CPR_ASSERT (_scene->hasEntity (uid) || uid == "");
 
-  if (_scene->hasEntity (uid))
+  if (uid != _selected)
   {
-    if (uid != _selected)
-    {
-      if (_scene->hasEntity (_selected))
-        _scene->getEntity (_selected)->setSelected (false);
+    unselect ();
 
+    if (uid != "")
+    {
       StructuralEntity *ent = _scene->getEntity (uid);
       ent->setSelected (true);
       _selected = ent->getUid ();
       CPR_ASSERT (ent->getUid () == uid);
 
       bool canPaste = false;
-
-      if (_clipboard != nullptr)
+      if (_clipboard && !_clipboard->isChild (ent)
+          && ent->getUid () != _clipboard->getUid ())
       {
-        if (ent->getUid () != _clipboard->getUid ())
-        {
-          if (util::validateKinship (_clipboard->getType (), ent->getType ()))
-          {
-            if (!_clipboard->isChild (ent))
-              canPaste = true;
-          }
-        }
+        if (util::validateKinship (_clipboard->getType (), ent->getType ()))
+          canPaste = true;
       }
 
       emit canCutChanged (true);
       emit canCopyChanged (true);
       emit canPasteChanged (canPaste);
-
-      if (settings[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
-        emit selected (uid, settings);
     }
   }
-  else
+
+  if (stgs[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
+    emit selected (uid, stgs);
+
+  _scene->update ();
+}
+
+void
+StructuralView::unselect ()
+{
+  CPR_ASSERT (_scene->hasEntity (_selected) || _selected == "");
+
+  bool mustUnselect = _selected != "";
+  if (mustUnselect)
   {
-    _selected = ""; // unselect
+    _scene->getEntity (_selected)->setSelected (false);
+    _selected = "";
+
+    bool canPaste = false;
+    if (_clipboard && !ST_OPT_WITH_BODY)
+    {
+      if (util::validateKinship (_clipboard->getType (), Structural::Body))
+        canPaste = true;
+    }
 
     emit canCutChanged (false);
     emit canCopyChanged (false);
-
-    bool enablePaste = false;
-
-    if (!ST_OPT_WITH_BODY)
-    {
-      if (_clipboard)
-      {
-        if (util::validateKinship (_clipboard->getType (), Structural::Body))
-        {
-          enablePaste = true;
-        }
-      }
-    }
-
-    emit canPasteChanged (enablePaste);
-
-    if (settings[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
-    {
-      emit selected (uid, settings);
-    }
+    emit canPasteChanged (canPaste);
   }
-
-  _scene->update ();
 }
 
 void

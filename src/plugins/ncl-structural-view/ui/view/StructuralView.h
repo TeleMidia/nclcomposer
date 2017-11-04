@@ -77,6 +77,7 @@ public slots:
   void remove (QString uid, QStrMap stgs);
   void change (QString uid, QStrMap props, QStrMap stgs);
   void select (QString uid, QStrMap stgs);
+  void unselect ();
   void move (QString uid, QString parent, QStrMap props, QStrMap stgs);
 
   void zoomIn ();

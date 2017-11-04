@@ -111,7 +111,7 @@ StructuralViewPlugin::init ()
   if (!c.isEmpty ())
     _struct_scene->load (c);
 
-  _struct_view->adjustAllReferences();
+  _struct_view->adjustAllReferences ();
 }
 
 QWidget *
@@ -246,7 +246,7 @@ StructuralViewPlugin::updateFromModel ()
     }
   }
 
-  _struct_view->adjustAllReferences();
+  _struct_view->adjustAllReferences ();
 }
 
 void
