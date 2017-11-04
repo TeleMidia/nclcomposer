@@ -1,4 +1,4 @@
-![Some screenshots](https://raw.githubusercontent.com/TeleMidia/nclcomposer/master/doc/sphinx/img/nclcomposer.png)
+![Some screenshots](https://raw.githubusercontent.com/TeleMidia/nclcomposer/master/doc/img/nclcomposer.png)
 
 <p align="center">
   <a href="https://semaphoreci.com/robertogerson/nclcomposer"><img src="https://semaphoreci.com/api/v1/robertogerson/nclcomposer/branches/master/shields_badge.svg" alt="Build Status (Linux)" title="Build Status (Linux)"></a>
