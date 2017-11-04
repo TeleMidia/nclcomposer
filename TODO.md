@@ -1,22 +1,19 @@
 TODO file for NCL Composer
 ==========================
-Copyright (C) 2011-2015 PUC-Rio/Laboratorio Telemidia
+Copyright (C) 2011-2017 PUC-Rio/Laboratorio Telemidia
 
-TODO file for nclcomposer
-(A complete and updated list of planned features can be found at:
- http://redmine.telemidia.puc-rio.br:8080/redmine/projects/composer3/roadmap)
+TODO file for nclcomposer.  This is a long-term view on features that can be
+implemented in nclcomposer.  For a bug tracking and short-term features, please
+see the [github issues](https://github.com/TeleMidia/nclcomposer/issues).
 
 NCL Composer Core
 -----------------
   * New features:
-    - Search the plug-ins on a relative path (mainly for Windows and MAC OS)
-    - Export to NCL.
     - Generalize NCLStructure for all kinds of languages.
-    - ToolGUI integration API
-    - Transaction support (plug-in should emit N messages ass a single
-      transaction)
+    - ToolGUI integration API.
+    - Transaction support (plug-in could emit N messages as a single
+      transaction).
     - Separate each plug-in as a different process.
-    - Import documents.
 
   * Optimizations and clean up
 
@@ -28,7 +25,7 @@ NCL Composer Core
         . Integration with other plug-ins?
 
   * Documentation:
-    - A manual to develop plug-ins.
+    - Add a section in the manual on how to develop plug-ins.
     - Points to be mentioned:
       . Key handling (pass to the father).
 
@@ -38,16 +35,12 @@ NCL Composer GUI
     - Some defaults:
       . Structural, Textual and Layout default perspectives.
     - Message to add new buttons to title bar of composer dock.
-    - Message saying that a perspective already exist when trying to save a new
-      one with the same name.
     - Keybinding to save new perspective.
     - Keybinding to open "choose perpective menu".
     - Allow to choose MDI or Dock enviroment.
       - Include save the current plugins session inside the project.
-    - Internationalisation.
-    - Check for updates.
+    - Check for updates (on going).
     - Plugin repository.
-    - Marking plugins to be loaded.
     - Install new Plugins.
     - Run features:
       . Local Run
@@ -58,17 +51,16 @@ NCL Composer GUI
 NCL Composer Plug-ins
 ---------------------
 ### General
-
-  - Script to automatically create the Plugin and Factory classes.
-  - Copy and paste among plugins.
-  - Undo/Redo: How it will work?
-    . A new plugin??!
-
   * New features:
-	  - Try to keep attribute order.
+    - Try to keep the element/attribute order in the core.
+    - Refactory the API to have Plugin/View instead of Plugin/Factory.
+    - Script to automatically create the Plugin and Factory classes.
+    - Copy and paste among plugins.
+    - Undo/Redo
+       * Should it be a new plugin?
 
   * Optimizations and cleanup:
-    - All Composer view should inherent from a common class (Composer View?!)
+    - All views should inherent from a common class (Composer View?!)
 
   * Known bugs:
 
@@ -91,7 +83,7 @@ NCL Composer Plug-ins
     - Code format(Ctrl+Shift+F). (This is done when the text is synchronized
       with core).
     - Split the Textual View Window; thus, allowing to see different parts of
-      the text in the same moment (this is simple).
+      the text in the same moment (this should be simple).
     - Suggestion of code corrections.
     - Hyperlinks navigation.
     - Preview of media objects, connectors, etc.
@@ -118,8 +110,6 @@ NCL Composer Plug-ins
     - Update from model.
 
   * Optimizations and cleanup:
-    - Remove duplicate icons (structural and outline have the same icons
-      resources).
 
   * Known bugs:
 
@@ -137,46 +127,29 @@ NCL Composer Plug-ins
 
   * New features:
     - Plugin preferences.
-    - Rotate regions :D.
-    - Draw regions specified in pixels.
+    - Support regions specified in pixels.
     - Add color to regions (based on media type).
     - Draw region base id.
-    - Add keybindings to delete, copy, paste, etc.
-    - it must ask the user confirmation when the user delete an entity.
 
   * Optimization and cleanup:
-    - Review code organization and naming.
 
   * Known bugs:
-    - When receive a change signal from core, the item doesn't adjust 'width'
-      property correctly, overlapping the boundary of their parent item.
 
 ### Structural View
 
   * New features:
-    - Draw complex link (with aggregation item).
-    - Process signals receive from core.
     - Add hide/show system (as in layout plugin).
-    - Review items looklike (based on user experience?).
     - Display link option based on core document.
     - Add full preview for easy navigation.
     - Prevent addition of more than one body item.
-    - Link selection.
-    - User actions to change anchors of a link.
-    - Add keybindings to delete, copy, paste, etc.
-    - It must ask the user confirmation when the user delete an entity.
-    - zIndex of the selected entity must be the greater one.
 
   * Optimization and cleanup:
-    - Review code organization and naming.
 
   * Known bugs:
 
 ### Validation Plug-in
 
   * New features:
-    - Send message when an error is detected (ok).
-    - Double click over a error message. (ok).
     - Message to ask for Validator re-send all the error messages.
 
   * Optimization and cleanup:
@@ -188,6 +161,8 @@ NCL Composer Plug-ins
   * Global Actions.
   * Lua Scripting plugin.
   * Storeboard plugin.
+  * Temporal view plugin.
+  * Add support for authoring multi-device apps.
   * A plugin to handle CPR project:
     . Two subview:
       . Project
