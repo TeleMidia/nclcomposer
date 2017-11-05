@@ -147,8 +147,7 @@ PropertiesViewPlugin::updateCurrentEntityAttr (QString attr, QString value)
 {
   if (_currentEntity)
   {
-    if (_currentEntity->hasAttr (attr)
-        && _currentEntity->attr (attr) == value)
+    if (_currentEntity->hasAttr (attr) && _currentEntity->attr (attr) == value)
     {
       // do nothing
       return;
@@ -267,8 +266,7 @@ PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
       else if (scope == AttributeReferences::SAME_SCOPE)
       {
         // Get the scope of the current entity
-        entityTargetScope
-            = dynamic_cast<Entity *> (_currentEntity->parent ());
+        entityTargetScope = dynamic_cast<Entity *> (_currentEntity->parent ());
         while (entityTargetScope->parent ()
                && !structure->defineScope (entityTargetScope->type ()))
         {
@@ -296,9 +294,9 @@ PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
         else if (userDefinedScope.startsWith ("$GRANDPARENT"))
         {
           attr_scope = userDefinedScope.mid (13);
-          idEntityScope = static_cast<Entity *> (
-                              _currentEntity->parent ()->parent ())
-                              ->attr (attr_scope);
+          idEntityScope
+              = static_cast<Entity *> (_currentEntity->parent ()->parent ())
+                    ->attr (attr_scope);
         }
 
         QList<Entity *> ents = project ()->getEntityByAttrId (idEntityScope);

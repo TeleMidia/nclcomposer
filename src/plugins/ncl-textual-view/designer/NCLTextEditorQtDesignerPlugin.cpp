@@ -1,65 +1,70 @@
 /*
  * Copyright 2011 TeleMidia/PUC-Rio.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
+ *
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
+ * <http://www.gnu.org/licenses/>.
  */
 #include "NCLTextEditorQtDesignerPlugin.h"
 
-NCLTextEditorPlugin::NCLTextEditorPlugin()
+NCLTextEditorPlugin::NCLTextEditorPlugin () {}
+
+QString
+NCLTextEditorPlugin::name () const
 {
+  return "NCLTextEditor";
 }
 
-QString NCLTextEditorPlugin::name() const
+QString
+NCLTextEditorPlugin::group () const
 {
-    return "NCLTextEditor";
+  return "Input";
 }
 
-QString NCLTextEditorPlugin::group() const
+QString
+NCLTextEditorPlugin::toolTip () const
 {
-    return "Input";
+  return "NCL Text Editor Widget";
 }
 
-QString NCLTextEditorPlugin::toolTip() const
+QWidget *
+NCLTextEditorPlugin::createWidget (QWidget *parent)
 {
-    return "NCL Text Editor Widget";
+  return new NCLTextEditor (parent);
 }
 
-QWidget* NCLTextEditorPlugin::createWidget (QWidget* parent)
+QString
+NCLTextEditorPlugin::includeFile () const
 {
-    return new NCLTextEditor(parent);
+  return "NCLTextEditor.h";
 }
 
-QString NCLTextEditorPlugin::includeFile() const
+QIcon
+NCLTextEditorPlugin::icon () const
 {
-        return "NCLTextEditor.h";
+  return QIcon ();
 }
 
-QIcon NCLTextEditorPlugin::icon() const
+QString
+NCLTextEditorPlugin::whatsThis () const
 {
-    return QIcon();
+  return "A widget to create and edit a NCL file";
 }
 
-QString NCLTextEditorPlugin::whatsThis() const
+bool
+NCLTextEditorPlugin::isContainer () const
 {
-    return "A widget to create and edit a NCL file";
+  return false;
 }
 
-bool NCLTextEditorPlugin::isContainer() const
-{
-    return false;
-}
-
-
-Q_EXPORT_PLUGIN2(ncltexteditorplugin, NCLTextEditorPlugin)
+Q_EXPORT_PLUGIN2 (ncltexteditorplugin, NCLTextEditorPlugin)

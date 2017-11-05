@@ -101,7 +101,8 @@ public slots:
    * \param pluginID
    * \param entityID
    */
-  void onEntityRemoved (const QString &pluginID, const QString &entityID) override;
+  void onEntityRemoved (const QString &pluginID,
+                        const QString &entityID) override;
 
   /*!
    * \brief This function is part of the IPlugin API.

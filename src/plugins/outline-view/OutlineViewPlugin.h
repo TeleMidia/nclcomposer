@@ -78,7 +78,7 @@ public slots:
    * \param ID The plugin identifier that called to add the Entity.
    * \param Entity* the Entity that was added.
    */
-  void onEntityAdded (const QString &pluginID, Entity *)  override;
+  void onEntityAdded (const QString &pluginID, Entity *) override;
 
   /*!
    * \brief
@@ -98,7 +98,8 @@ public slots:
    * \param ID
    * \param entityID
    */
-  void onEntityRemoved (const QString &pluginID, const QString &entityID) override;
+  void onEntityRemoved (const QString &pluginID,
+                        const QString &entityID) override;
 
   /*!
    * \brief This slot calls the outline plugin to update its own model.

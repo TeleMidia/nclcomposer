@@ -277,8 +277,7 @@ NCLTextualViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
     updateEntitiesOffset (insertAtOffset, line.size ());
 
     _startEntityOffset[entity->uid ()] = insertAtOffset;
-    _endEntityOffset[entity->uid ()]
-        = insertAtOffset + startEntitySize - 2;
+    _endEntityOffset[entity->uid ()] = insertAtOffset + startEntitySize - 2;
 
     _window->getTextEditor ()->SendScintilla (QsciScintilla::SCI_SETFOCUS,
                                               true);
@@ -338,8 +337,7 @@ NCLTextualViewPlugin::onCommentAdded (const QString &pluginID,
     updateEntitiesOffset (insertAtOffset, line.size ());
 
     _startEntityOffset[comment->uid ()] = insertAtOffset;
-    _endEntityOffset[comment->uid ()]
-        = insertAtOffset + startEntitySize - 2;
+    _endEntityOffset[comment->uid ()] = insertAtOffset + startEntitySize - 2;
 
     _window->getTextEditor ()->SendScintilla (QsciScintilla::SCI_SETFOCUS,
                                               true);
@@ -790,8 +788,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
       if (children[i].hasAttribute ("id")
           && entityChildren.at (j)->hasAttr ("id"))
       {
-        if (children[i].attribute ("id")
-            == entityChildren.at (j)->attr ("id"))
+        if (children[i].attribute ("id") == entityChildren.at (j)->attr ("id"))
           sameNCLID = true;
       }
       else if (children[i].hasAttribute ("name")
@@ -855,8 +852,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
           QDomNode item = attributes.item (k);
           atts[item.nodeName ()] = item.nodeValue ();
         }
-        emit addEntity (children[i].tagName (), curEntity->uid (),
-                        atts);
+        emit addEntity (children[i].tagName (), curEntity->uid (), atts);
       }
     }
 
@@ -879,8 +875,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
           QDomNode item = attributes.item (k);
           atts[item.nodeName ()] = item.nodeValue ();
         }
-        emit addEntity (children[i].tagName (), curEntity->uid (),
-                        atts);
+        emit addEntity (children[i].tagName (), curEntity->uid (), atts);
       }
     }
 

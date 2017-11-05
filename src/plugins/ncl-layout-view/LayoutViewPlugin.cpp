@@ -254,7 +254,7 @@ NCLLayoutViewPlugin::init ()
       // resolutions foreach regionBase
       if (_view->getSelectedRegion ())
         _view->getSelectedRegionBase ()->changeResolution (resolutionWidth,
-                                                          resolutionHeight);
+                                                           resolutionHeight);
     }
     else if (current->type () == "region")
     {
@@ -816,11 +816,11 @@ NCLLayoutViewPlugin::addDescriptorToView (Entity *entity)
 {
   if (entity != NULL)
   {
-    if (entity->type () == "descriptor"
-        && !entity->attr ("id").isEmpty ()
+    if (entity->type () == "descriptor" && !entity->attr ("id").isEmpty ()
         && !entity->attr ("region").isEmpty ())
     {
-      // QList<Entity*> model_regions = project ()->getEntitiesbyType("region");
+      // QList<Entity*> model_regions = project
+      // ()->getEntitiesbyType("region");
       QMap<QString, QString> descriptorsIDs;
       descriptorsIDs[entity->attr ("region")] = entity->attr ("id");
       _descriptors[entity->uid ()] = descriptorsIDs;
@@ -865,14 +865,14 @@ NCLLayoutViewPlugin::updateDescriptors ()
       if (descriptorsID.contains (rg->attr ("id")))
       {
         _view->addDescriptor (rg->uid (),
-                             descriptorsID.value (rg->attr ("id")));
+                              descriptorsID.value (rg->attr ("id")));
         visited = true;
       }
     }
     if (!visited)
     {
       _view->addDescriptor (rg->uid (),
-                           ""); // remove descriptor id from view, passing ""
+                            ""); // remove descriptor id from view, passing ""
     }
   }
 }
@@ -1131,8 +1131,7 @@ NCLLayoutViewPlugin::headUid ()
       emit addEntity ("ncl", project ()->uid (), atts);
     }
 
-    QString nclUID
-        = project ()->getEntitiesbyType ("ncl").at (0)->uid ();
+    QString nclUID = project ()->getEntitiesbyType ("ncl").at (0)->uid ();
 
     QMap<QString, QString> atts;
 
@@ -1231,8 +1230,7 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
 
   for (int i = 0; i < medias.size (); i++)
   {
-    if (medias.at (i)->hasAttr ("id")
-        && medias.at (i)->attr ("id") == mediaId)
+    if (medias.at (i)->hasAttr ("id") && medias.at (i)->attr ("id") == mediaId)
     {
       media = medias.at (i);
       break;
@@ -1289,7 +1287,8 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
             = project ()->getEntitiesbyType ("descriptorBase");
 
         // create the descriptor
-        QString newDescriptorID = project ()->generateUniqueAttrId ("descriptor");
+        QString newDescriptorID
+            = project ()->generateUniqueAttrId ("descriptor");
         QStringList alredyExistentsDescriptorsIds, descriptorsIds;
         descriptorsIds << newDescriptorID;
 
@@ -1327,8 +1326,7 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
             attrs.insert ("id", newDescriptorID);
             attrs.insert ("region", region->attr ("id"));
 
-            emit addEntity ("descriptor", descriptorBase->uid (),
-                            attrs);
+            emit addEntity ("descriptor", descriptorBase->uid (), attrs);
           }
 
           // update the media to refer to this descriptor
@@ -1379,7 +1377,8 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
           = project ()->getEntitiesbyType ("descriptorBase");
 
       // create the descriptor
-      QString newDescriptorID = project ()->generateUniqueAttrId ("descriptor");
+      QString newDescriptorID
+          = project ()->generateUniqueAttrId ("descriptor");
 
       if (!descritorBases.size ()) // if does not exists any descriptorBase
         // create one

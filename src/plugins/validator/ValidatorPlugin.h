@@ -68,7 +68,8 @@ public:
 public slots:
   void onEntityAdded (const QString &pluginID, Entity *) override;
   void onEntityChanged (const QString &pluginID, Entity *) override;
-  void onEntityRemoved (const QString &pluginID, const QString &entityID) override;
+  void onEntityRemoved (const QString &pluginID,
+                        const QString &entityID) override;
 
   void errorMessage (const QString &error) override;
 

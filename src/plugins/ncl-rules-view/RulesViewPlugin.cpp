@@ -226,10 +226,10 @@ RulesViewPlugin::addRule (Entity *entity)
   {
     if (entityType == RULE_LABEL)
     {
-      item = new RuleItem (
-          parent, entity->attr (ID_ATTR), entity->attr (VAR_ATTR),
-          entity->attr (COMPARATOR_ATTR), entity->attr (VALUE_ATTR),
-          RULE_TYPE, _rulesTable);
+      item = new RuleItem (parent, entity->attr (ID_ATTR),
+                           entity->attr (VAR_ATTR),
+                           entity->attr (COMPARATOR_ATTR),
+                           entity->attr (VALUE_ATTR), RULE_TYPE, _rulesTable);
 
       item->setIcon (0, QIcon (":/icon/rule"));
     }

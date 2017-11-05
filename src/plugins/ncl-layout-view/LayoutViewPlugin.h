@@ -40,9 +40,11 @@ public:
   virtual bool saveSubsession () override;
 
 public slots:
-  virtual void onEntityAdded (const QString &pluginID, Entity *entity) override;
+  virtual void onEntityAdded (const QString &pluginID,
+                              Entity *entity) override;
   virtual void errorMessage (const QString &error) override;
-  virtual void onEntityChanged (const QString &pluginID, Entity *entity) override;
+  virtual void onEntityChanged (const QString &pluginID,
+                                Entity *entity) override;
   virtual void onEntityRemoved (const QString &pluginID,
                                 const QString &entityID) override;
   virtual void updateFromModel () override;

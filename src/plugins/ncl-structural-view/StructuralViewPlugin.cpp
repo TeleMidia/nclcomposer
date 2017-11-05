@@ -814,8 +814,7 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
 
           QStrMap pAttr = { { "name", pName }, { "value", pValue } };
 
-          Entity *param
-              = project ()->getEntityById (_view2core.value (pUid));
+          Entity *param = project ()->getEntityById (_view2core.value (pUid));
 
           // Change a param entity in core that has been added by the view.
           if (param)

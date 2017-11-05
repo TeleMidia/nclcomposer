@@ -80,7 +80,8 @@ specificScopeReferenceValidation (const ModelElement &el,
   const ModelElement *scopeElement = NULL;
 
   //////////////////////////////////////////////////////////////////////
-  //						RETRIEVE THE ELEMENT THAT DEFINE THE SCOPE
+  //						RETRIEVE THE ELEMENT THAT DEFINE THE
+  //SCOPE
   ////
   //////////////////////////////////////////////////////////////////////
 
@@ -128,7 +129,8 @@ specificScopeReferenceValidation (const ModelElement &el,
   }
 
   //////////////////////////////////////////////////////////////////
-  //						VALIDATE THE REFERENCE WITH THE SCOPE
+  //						VALIDATE THE REFERENCE WITH THE
+  //SCOPE
   ////
   //////////////////////////////////////////////////////////////////
 

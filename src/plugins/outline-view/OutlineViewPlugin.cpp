@@ -75,13 +75,12 @@ OutlineViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
   if (_idToItem.contains (entity->parentUid ()))
   {
     item = _window->addElement (_idToItem[entity->parentUid ()], -1,
-                                entity->type (), entity->uid (),
-                                attrs, 0, 0);
+                                entity->type (), entity->uid (), attrs, 0, 0);
   }
   else
   {
-    item = _window->addElement (0, -1, entity->type (),
-                                entity->uid (), attrs, 0, 0);
+    item = _window->addElement (0, -1, entity->type (), entity->uid (), attrs,
+                                0, 0);
   }
 
   _idToItem[entity->uid ()] = item;
@@ -90,10 +89,8 @@ OutlineViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
       || entity->type () == "link" || entity->type () == "media"
       || entity->type () == "context" || entity->type () == "switch"
       || entity->type () == "port" || entity->type () == "switchPort"
-      || entity->type () == "regionBase"
-      || entity->type () == "descriptorBase"
-      || entity->type () == "connectorBase"
-      || entity->type () == "ruleBase"
+      || entity->type () == "regionBase" || entity->type () == "descriptorBase"
+      || entity->type () == "connectorBase" || entity->type () == "ruleBase"
       || entity->type () == "transitionBase")
   {
     if (!attrs.keys ().contains ("id"))
@@ -136,8 +133,7 @@ OutlineViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
     _idToItem[entity->uid ()]->setTextColor (0, Qt::black);
     _idToItem[entity->uid ()]->setToolTip (0, "");
 
-    _window->updateItem (_idToItem[entity->uid ()], entity->type (),
-                         attrs);
+    _window->updateItem (_idToItem[entity->uid ()], entity->type (), attrs);
   }
 
   // \todo This must be incremental
@@ -256,8 +252,8 @@ OutlineViewPlugin::init ()
 
   attrs = entity->attrs ();
 
-  item = _window->addElement (0, -1, entity->type (),
-                              entity->uid (), attrs, 0, 0);
+  item = _window->addElement (0, -1, entity->type (), entity->uid (), attrs, 0,
+                              0);
 
   _idToItem[entity->uid ()] = item;
   stack.push (entity);
@@ -277,8 +273,7 @@ OutlineViewPlugin::init ()
       attrs = child->attrs ();
 
       item = _window->addElement (_idToItem[entity->uid ()], -1,
-                                  child->type (), child->uid (),
-                                  attrs, 0, 0);
+                                  child->type (), child->uid (), attrs, 0, 0);
 
       _idToItem[child->uid ()] = item;
       stack.push_front (child);
