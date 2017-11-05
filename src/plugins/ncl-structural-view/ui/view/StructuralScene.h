@@ -19,9 +19,9 @@ public:
   StructuralEntity *body ();
   bool hasEntity (const QString &uid);
   StructuralEntity *entity (const QString &uid);
-  QList<StructuralEntity *> entitiesByAttrId (const QString &id);
   QMap<QString, StructuralEntity *> &entities ();
-  QMap<QString, QString> &refs ();
+  QList<StructuralEntity *> entitiesByAttrId (const QString &id);
+  QStrMap &refs ();
 
   QString createNewId (StructuralType type, const QString &customPrefix = "");
 

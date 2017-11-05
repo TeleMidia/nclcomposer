@@ -60,6 +60,7 @@ public:
     return _menu;
   }
 
+  QString selectedUid () { return _selected; }
   void adjustEntity (StructuralEntity *e, const QStrMap &props,
                      const QStrMap &stgs);
 
@@ -116,7 +117,7 @@ signals:
   void removed (QString uid, QStrMap settings);
   void changed (QString uid, QStrMap properties, QStrMap previous,
                 QStrMap settings);
-  void selected (QString uid, QStrMap settings);
+  void entitySelected (QString uid);
 
   void canUndoChanged (bool state);
   void canRedoChanged (bool state);

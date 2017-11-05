@@ -23,8 +23,7 @@ public:
 protected slots:
   void handleZoomChange (int zoom);
   void handleInteractionModeChange (StructuralInteractionMode state);
-
-  void select (QString uid, QStrMap stgs);
+  void updateEnabledActions ();
 
 private:
   void createActions ();

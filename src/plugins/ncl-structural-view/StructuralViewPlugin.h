@@ -61,7 +61,7 @@ public slots:
   void removeInCore (QString uid, QStrMap stgs);
   void changeInCore (QString uid, QStrMap props, QStrMap previous,
                      QStrMap settings);
-  void selectInCore (QString uid, QStrMap stgs);
+  void selectInCore (QString uid);
 
   void adjustConnectors ();
 

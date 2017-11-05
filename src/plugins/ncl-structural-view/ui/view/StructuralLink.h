@@ -9,14 +9,13 @@ class StructuralLink : public StructuralNode
 
 public:
   StructuralLink (StructuralEntity *structuralParent = 0);
-  virtual ~StructuralLink ();
+  virtual ~StructuralLink () {}
 
 signals:
   void performedEdit (StructuralLink *entity);
 
 protected:
   virtual void draw (QPainter *painter);
-
   virtual void mouseDoubleClickEvent (QGraphicsSceneMouseEvent *event);
 };
 

@@ -62,7 +62,7 @@ StructuralViewPlugin::createConnections ()
   connect (_struct_view, &StructuralView::changed, this,
            &StructuralViewPlugin::changeInCore, Qt::DirectConnection);
 
-  connect (_struct_view, &StructuralView::selected, this,
+  connect (_struct_view, &StructuralView::entitySelected, this,
            &StructuralViewPlugin::selectInCore, Qt::DirectConnection);
 
   connect (_struct_view, &StructuralView::updateRequested, this,
@@ -756,10 +756,8 @@ StructuralViewPlugin::removeInCore (QString uid, QStrMap stgs)
 }
 
 void
-StructuralViewPlugin::selectInCore (QString uid, QStrMap settings)
+StructuralViewPlugin::selectInCore (QString uid)
 {
-  Q_UNUSED (settings);
-
   QString coreUid = _view2core.value (uid, "");
   if (!coreUid.isEmpty ())
     emit sendBroadcastMessage ("changeSelectedEntity", new QString (coreUid));

@@ -30,7 +30,6 @@ StructuralBind::adjust (bool collision, bool recursion)
 {
   StructuralEdge::adjust (collision, recursion);
 
-  // Adjusting properties...
   setRole (StructuralUtil::strToRole (property (ST_ATTR_BIND_ROLE)));
 }
 

@@ -1,9 +1,10 @@
 ﻿#include "StructuralView.h"
 
+#include <assert.h>
+#include <set>
+
 #include <QDebug>
 #include <QMessageBox>
-#include <assert.h>
-
 #include <QClipboard>
 #include <QFileDialog>
 #include <QMimeData>
@@ -249,12 +250,14 @@ StructuralView::adjustEntity (StructuralEntity *e, const QStrMap &props,
   //  Adjust 'references' (again?)
   if (stgs[ST_SETTINGS_ADJUST_REFERS] != ST_VALUE_FALSE)
   {
-    if (e->category () == Structural::Interface && p != nullptr
+    if (p != nullptr
+        && e->category () == Structural::Interface
         && p->structuralType () == Structural::Media)
     {
       if (p->isReference ())
         adjustReferences (p);
       else
+      {
         for (const QString &key : _scene->refs ().keys ())
         {
           if (_scene->refs ().contains (key)
@@ -264,6 +267,7 @@ StructuralView::adjustEntity (StructuralEntity *e, const QStrMap &props,
             adjustReferences (_scene->entity (key));
           }
         }
+      }
     }
   }
 }
@@ -280,16 +284,15 @@ StructuralView::calcNewAngle (StructuralBind *bind)
   {
     for (StructuralEntity *e : _scene->entities ().values ())
     {
-      if (e->structuralType () == Structural::Bind && e != bind)
+      StructuralBind *b = cast (StructuralBind *, e);
+      if (b && b != bind)
       {
-        StructuralBind *b = cast (StructuralBind *, e);
-        CPR_ASSERT_NON_NULL (b);
         if (b->hasOrigin () && b->hasDestination ())
         {
-          if ((bind->origin () == b->origin ()
-               || bind->origin () == b->destination ())
-              && (bind->destination () == b->destination ()
-                  || bind->destination () == b->origin ()))
+          std::set<StructuralEntity *> bindNodes = { bind->origin(),
+                                                     bind->destination() };
+          if (bindNodes.count (b->origin ()) &&
+              bindNodes.count (b->destination()))
           {
             int current = b->angle ();
 
@@ -1047,7 +1050,7 @@ StructuralView::select (QString uid, QStrMap stgs)
   }
 
   if (stgs[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
-    emit selected (uid, stgs);
+    emit entitySelected (uid);
 
   _scene->update ();
 }

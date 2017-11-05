@@ -322,7 +322,7 @@ StructuralWindow::createToolbar ()
   _editToolbar->addSeparator ();
 #endif
 
-  select ("", StructuralUtil::createSettings ());
+  updateEnabledActions ();
 }
 
 void
@@ -408,7 +408,8 @@ StructuralWindow::createConnections ()
   connect (_view, &StructuralView::canAddBody, _bodyAction,
            &QAction::setEnabled);
 
-  connect (_view, &StructuralView::selected, this, &StructuralWindow::select);
+  connect (_view, &StructuralView::entitySelected, this,
+           &StructuralWindow::updateEnabledActions);
 }
 
 void
@@ -442,18 +443,12 @@ StructuralWindow::handleInteractionModeChange (StructuralInteractionMode mode)
 }
 
 void
-StructuralWindow::select (QString uid, QStrMap stgs)
+StructuralWindow::updateEnabledActions ()
 {
-  Q_UNUSED (stgs);
-
-  StructuralEntity *ent = nullptr;
+  QString uid = _view->selectedUid ();
   if (_view->scene ()->hasEntity (uid))
-    ent = _view->scene ()->entity (uid);
-
-  if (ent)
   {
     StructuralType type = _view->scene ()->entity (uid)->structuralType ();
-
     switch (type)
     {
       case Structural::Media:

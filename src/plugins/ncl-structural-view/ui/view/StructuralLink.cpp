@@ -12,8 +12,6 @@ StructuralLink::StructuralLink (StructuralEntity *parent)
   setResizable (false);
 }
 
-StructuralLink::~StructuralLink () {}
-
 void
 StructuralLink::draw (QPainter *painter)
 {
@@ -24,13 +22,9 @@ StructuralLink::draw (QPainter *painter)
   if (!error ().isEmpty () || !warning ().isEmpty ())
   {
     if (!error ().isEmpty ())
-    {
       drawColor = QString (ST_DEFAULT_ALERT_ERROR_COLOR);
-    }
     else
-    {
       drawColor = QString (ST_DEFAULT_ALERT_WARNING_COLOR);
-    }
 
     drawColor = drawColor.light ();
   }

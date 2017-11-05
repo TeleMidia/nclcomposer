@@ -747,7 +747,7 @@ StructuralEntity::setStructuralParent (StructuralEntity *parent)
   QObject::setParent (parent);
   QGraphicsItem::setParentItem (parent);
 
-  if (parent != nullptr)
+  if (parent)
     parent->addChild (this);
 }
 
