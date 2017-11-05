@@ -71,9 +71,7 @@ public slots:
 private:
   void createConnections ();
 
-  QString uidById (const QString &id);
-  QString uidById (const QString &id, Entity *ent);
-  QString uidByName (const QString &name, Entity *ent);
+  QString uidById (const QString &id, Entity *ent = nullptr);
 
   void setReferences (QStrMap &props);
 

@@ -702,11 +702,8 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
     if (!list.isEmpty ())
     {
       Entity *body = list.first ();
-
-      _view2core.remove (_core2view[body->uid ()]);
-      _core2view[body->uid ()] = uid;
-      _view2core[uid] = body->uid ();
-
+      _core2view_remove (body->uid ());
+      _core2view_insert (body->uid (), uid);
       return;
     }
 
@@ -789,9 +786,13 @@ StructuralViewPlugin::removeInCore (QString uid, QStrMap stgs)
 {
   Q_UNUSED (stgs);
 
-  if (!_view2core.value (uid, "").isEmpty ())
+  QString coreUid = _view2core.value (uid, "");
+  if (!coreUid.isEmpty ())
   {
-    emit removeEntity (getProject ()->getEntityById (_view2core.value (uid)));
+    Entity *ent = getProject ()->getEntityById (coreUid);
+    CPR_ASSERT_NON_NULL (ent);
+
+    emit removeEntity (ent);
     _core2view_remove (uid);
   }
 }
@@ -943,15 +944,11 @@ StructuralViewPlugin::validationError (QString pluginID, void *param)
 }
 
 QString
-StructuralViewPlugin::uidById (const QString &id)
-{
-  return uidById (id, getProject ());
-}
-
-QString
 StructuralViewPlugin::uidById (const QString &id, Entity *ent)
 {
   QString uid = "";
+  if (ent == nullptr)
+    ent = getProject ();
 
   if (ent->type () == "property")
   {
@@ -967,28 +964,6 @@ StructuralViewPlugin::uidById (const QString &id, Entity *ent)
   for (Entity *child : ent->entityChildren ())
   {
     QString result = uidById (id, child);
-    if (result != "")
-    {
-      uid = result;
-      break;
-    }
-  }
-
-  return uid;
-}
-
-QString
-StructuralViewPlugin::uidByName (const QString &name, Entity *entity)
-{
-  QString uid = "";
-
-  if (entity->attr ("name") == name)
-    return entity->uid ();
-
-  for (Entity *child : entity->entityChildren ())
-  {
-    QString result = uidByName (name, child);
-
     if (result != "")
     {
       uid = result;
