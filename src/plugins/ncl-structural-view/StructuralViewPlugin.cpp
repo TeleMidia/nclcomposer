@@ -75,43 +75,10 @@ StructuralViewPlugin::init ()
   QString data
       = project->getPluginData ("br.puc-rio.telemidia.composer.structural");
 
-  QString sc = "-- EXTRA DATA";
-  QString ec = "-- END OF PLUGIN DATA";
-  QString c;
+  if (!data.isEmpty ())
+    _struct_scene->load (data);
 
-  int si = data.indexOf (sc);
-  int ei = data.indexOf (ec);
-  int ci = si + sc.length ();
-
-  c = data.mid (ci, ei - ci);
-
-  int li = 0;
-  int ni = c.indexOf (":");
-
-  while (ni > 0)
-  {
-    QStringList list = (c.mid (li, ni - li)).split ("=");
-
-    _core2view_insert (list.at (0), list.at (1))
-
-        li
-        = ni + 1;
-    ni = c.indexOf (":", ni + 1);
-  }
-
-  sc = "-- VIEW DATA";
-  ec = "-- EXTRA DATA";
-
-  si = data.indexOf (sc);
-  ei = data.indexOf (ec);
-  ci = si + sc.length ();
-
-  c = data.mid (ci, ei - ci);
-
-  if (!c.isEmpty ())
-    _struct_scene->load (c);
-
-  _struct_view->adjustAllReferences ();
+  updateFromModel ();
 }
 
 QWidget *
@@ -124,16 +91,7 @@ bool
 StructuralViewPlugin::saveSubsession ()
 {
   QByteArray data;
-
-  data.append ("-- BEGIN OF PLUGIN DATA");
-  data.append ("-- VIEW DATA");
   data.append (_struct_scene->save ());
-
-  data.append ("-- EXTRA DATA");
-  for (const QString &key : _core2view.keys ())
-    data.append (key + "=" + _core2view[key] + ":");
-
-  data.append ("-- END OF PLUGIN DATA");
 
   emit setPluginData (data);
 
