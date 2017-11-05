@@ -27,7 +27,11 @@ class tst_ModuleLanguage : public QObject
   Q_OBJECT
 
 public:
-  void setBenchmark(bool isBench) { isBenchmark = isBench; }
+  void
+  setBenchmark (bool isBench)
+  {
+    isBenchmark = isBench;
+  }
 
 private:
   LanguageControl *lgControl;
@@ -37,12 +41,12 @@ private:
 public slots:
 
 private slots:
-  void initTestCase();
-  void languageProfile_data();
-  void languageProfile();
-  void languageLoadBenchmark_data();
-  void languageLoadBenchmark();
-  void cleanupTestCase();
+  void initTestCase ();
+  void languageProfile_data ();
+  void languageProfile ();
+  void languageLoadBenchmark_data ();
+  void languageLoadBenchmark ();
+  void cleanupTestCase ();
 };
 
 #endif // TST_MODULELANGUAGE_H

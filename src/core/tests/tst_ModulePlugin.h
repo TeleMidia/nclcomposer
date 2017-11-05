@@ -19,8 +19,8 @@
 #include <QObject>
 #include <QTest>
 
-#include "modules/PluginControl.h"
 #include "modules/LanguageControl.h"
+#include "modules/PluginControl.h"
 using namespace composer::core;
 
 class tst_ModulePlugin : public QObject
@@ -28,7 +28,11 @@ class tst_ModulePlugin : public QObject
   Q_OBJECT
 
 public:
-  void setBenchmark(bool isBench) { isBenchmark = isBench; }
+  void
+  setBenchmark (bool isBench)
+  {
+    isBenchmark = isBench;
+  }
 
 private:
   PluginControl *pgControl;
@@ -36,14 +40,13 @@ private:
   bool isBenchmark;
 
 private slots:
-  void initTestCase();
-  void loadPluginDir();
-  void pluginName_data();
-  void pluginName();
-  void pluginLoadBenchmark_data();
-  void pluginLoadBenchmark();
-  void cleanupTestCase();
-
+  void initTestCase ();
+  void loadPluginDir ();
+  void pluginName_data ();
+  void pluginName ();
+  void pluginLoadBenchmark_data ();
+  void pluginLoadBenchmark ();
+  void cleanupTestCase ();
 };
 
 #endif // TST_MODULEPLUGIN_H

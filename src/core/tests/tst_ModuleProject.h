@@ -20,15 +20,15 @@
 #include <sys/time.h>
 using namespace std;
 
-#include <QObject>
-#include <QTest>
-#include <QStringList>
 #include <QMainWindow>
+#include <QObject>
+#include <QStringList>
+#include <QTest>
 
+#include <modules/LanguageControl.h>
+#include <modules/MessageControl.h>
 #include <modules/PluginControl.h>
 #include <modules/ProjectControl.h>
-#include <modules/MessageControl.h>
-#include <modules/LanguageControl.h>
 
 using namespace composer::core;
 
@@ -37,34 +37,38 @@ class ShowWidgets : public QObject
   Q_OBJECT
 
 public:
-  ShowWidgets(){}
+  ShowWidgets () {}
 
 public slots:
-  void showPluginWidget(IPluginFactory* factory,
-                        IPlugin* plugin, Project *project, int i)
+  void
+  showPluginWidget (IPluginFactory *factory, IPlugin *plugin, Project *project,
+                    int i)
   {
-    (void *) factory;
-    (void *) project;
-    (void *) i;
+    (void *)factory;
+    (void *)project;
+    (void *)i;
 
-    plugin->getWidget()->show();
-    widgets.push_back(plugin->getWidget());
-    QTest::qWaitForWindowShown(plugin->getWidget());
+    plugin->getWidget ()->show ();
+    widgets.push_back (plugin->getWidget ());
+    QTest::qWaitForWindowShown (plugin->getWidget ());
   }
 
-  void redraw() {
-    for(int i = 0; i < widgets.size(); i++)
-      widgets.at(i)->repaint();
+  void
+  redraw ()
+  {
+    for (int i = 0; i < widgets.size (); i++)
+      widgets.at (i)->repaint ();
   }
 
-  void closeAllWidgets()
+  void
+  closeAllWidgets ()
   {
-    widgets.clear();
-    QApplication::closeAllWindows();
+    widgets.clear ();
+    QApplication::closeAllWindows ();
   }
 
 private:
-  QList <QWidget *> widgets;
+  QList<QWidget *> widgets;
 };
 
 class tst_ModuleProject : public QObject
@@ -72,7 +76,11 @@ class tst_ModuleProject : public QObject
   Q_OBJECT
 
 public:
-  void setBenchmark(bool isBench) { isBenchmark = isBench; }
+  void
+  setBenchmark (bool isBench)
+  {
+    isBenchmark = isBench;
+  }
 
 private:
   ProjectControl *pjControl;
@@ -86,17 +94,17 @@ private:
 
   ShowWidgets showWidgets;
 
-  void importNCLForEachPlugin();
-  void importNCLForEachPlugin_data();
+  void importNCLForEachPlugin ();
+  void importNCLForEachPlugin_data ();
 
 private slots:
-  void initTestCase();
-  void init();
-  void cleanup();
-  void cleanupTestCase();
+  void initTestCase ();
+  void init ();
+  void cleanup ();
+  void cleanupTestCase ();
 
-  void importFromExistingNCL_data();
-  void importFromExistingNCL();
+  void importFromExistingNCL_data ();
+  void importFromExistingNCL ();
 };
 
 #endif // TST_MODULEDOCUMENT_H

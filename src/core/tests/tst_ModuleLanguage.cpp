@@ -15,92 +15,95 @@
 
 #include "tst_ModuleLanguage.h"
 
-
-void tst_ModuleLanguage::initTestCase()
+void
+tst_ModuleLanguage::initTestCase ()
 {
   QString baseDir = "C:";
-  baseDir += QDir::separator()+QString("Composer");
-  profileDir  = baseDir+QDir::separator()+"lib"+QDir::separator()+"composer"+QDir::separator();
-  lgControl = LanguageControl::getInstance();
+  baseDir += QDir::separator () + QString ("Composer");
+  profileDir = baseDir + QDir::separator () + "lib" + QDir::separator ()
+               + "composer" + QDir::separator ();
+  lgControl = LanguageControl::getInstance ();
 }
 
-void tst_ModuleLanguage::cleanupTestCase()
+void
+tst_ModuleLanguage::cleanupTestCase ()
 {
-  LanguageControl::releaseInstance();
+  LanguageControl::releaseInstance ();
   lgControl = nullptr;
 }
 
-void tst_ModuleLanguage::languageLoadBenchmark_data()
+void
+tst_ModuleLanguage::languageLoadBenchmark_data ()
 {
-  QTest::addColumn<QString>("fileName");
+  QTest::addColumn<QString> ("fileName");
 
 #ifdef Q_WS_MAC
-  QTest::newRow("NCL") << profileDir+"libNCLLanguageProfile.dylib";
+  QTest::newRow ("NCL") << profileDir + "libNCLLanguageProfile.dylib";
 #elif WIN32
-  QTest::newRow("NCL") << profileDir+"NCLLanguageProfile.dll";
+  QTest::newRow ("NCL") << profileDir + "NCLLanguageProfile.dll";
 #else
-  QTest::newRow("NCL") << profileDir+"libNCLLanguageProfile.so";
+  QTest::newRow ("NCL") << profileDir + "libNCLLanguageProfile.so";
 #endif
 }
 
-void tst_ModuleLanguage::languageLoadBenchmark()
+void
+tst_ModuleLanguage::languageLoadBenchmark ()
 {
   if (!isBenchmark)
-    QSKIP("This test is not a benchmark test", SkipSingle);
+    QSKIP ("This test is not a benchmark test", SkipSingle);
 
-  QFETCH(QString,fileName);
+  QFETCH (QString, fileName);
 
   QBENCHMARK
   {
-    lgControl->loadProfile(fileName);
-    lgControl->removeProfile(NCL);
+    lgControl->loadProfile (fileName);
+    lgControl->removeProfile (NCL);
   }
 }
 
-void tst_ModuleLanguage::languageProfile_data()
+void
+tst_ModuleLanguage::languageProfile_data ()
 {
-  QTest::addColumn<QString>("fileName");
+  QTest::addColumn<QString> ("fileName");
 
 #ifdef Q_WS_MAC
-  QTest::newRow("NCL") << profileDir+"libNCLLanguageProfile.dylib";
+  QTest::newRow ("NCL") << profileDir + "libNCLLanguageProfile.dylib";
 #elif WIN32
-  QTest::newRow("NCL") << profileDir+"NCLLanguageProfile.dll";
+  QTest::newRow ("NCL") << profileDir + "NCLLanguageProfile.dll";
 #else
-  QTest::newRow("NCL") << profileDir+"libNCLLanguageProfile.so";
+  QTest::newRow ("NCL") << profileDir + "libNCLLanguageProfile.so";
 #endif
 }
 
-void tst_ModuleLanguage::languageProfile()
+void
+tst_ModuleLanguage::languageProfile ()
 {
-  QFETCH(QString, fileName);
+  QFETCH (QString, fileName);
 
-  QList<ILanguageProfile*> list;
+  QList<ILanguageProfile *> list;
 
   /* Try to load the same profile */
-  QVERIFY(lgControl->loadProfile
-          (fileName));
-  list = lgControl->getLoadedProfiles();
-  QCOMPARE(list.size(),1);
+  QVERIFY (lgControl->loadProfile (fileName));
+  list = lgControl->getLoadedProfiles ();
+  QCOMPARE (list.size (), 1);
 
   /* remove the loaded profile */
-  QVERIFY(lgControl->removeProfile(NCL));
-  list = lgControl->getLoadedProfiles();
-  QCOMPARE(list.isEmpty(),true);
+  QVERIFY (lgControl->removeProfile (NCL));
+  list = lgControl->getLoadedProfiles ();
+  QCOMPARE (list.isEmpty (), true);
 
   /* reload the profile from fileName */
-  QVERIFY(lgControl->loadProfile
-          (fileName));
-  list = lgControl->getLoadedProfiles();
-  QCOMPARE(list.size(),1);
+  QVERIFY (lgControl->loadProfile (fileName));
+  list = lgControl->getLoadedProfiles ();
+  QCOMPARE (list.size (), 1);
 
   /* Try to load a non existing profile */
-  QVERIFY(!lgControl->loadProfile("blah"));
-  list = lgControl->getLoadedProfiles();
-  QCOMPARE(list.size(),1);
+  QVERIFY (!lgControl->loadProfile ("blah"));
+  list = lgControl->getLoadedProfiles ();
+  QCOMPARE (list.size (), 1);
 
   /* remove the loaded profile */
-  QVERIFY(lgControl->removeProfile(NCL));
-  list = lgControl->getLoadedProfiles();
-  QCOMPARE(list.isEmpty(),true);
+  QVERIFY (lgControl->removeProfile (NCL));
+  list = lgControl->getLoadedProfiles ();
+  QCOMPARE (list.isEmpty (), true);
 }
-

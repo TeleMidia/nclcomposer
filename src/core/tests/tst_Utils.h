@@ -22,30 +22,36 @@ class TestUtil
 {
 public:
   /* This function doesn't seem correct, using timeval_subtract insteads */
-  static timeval diff(timeval start, timeval end)
+  static timeval
+  diff (timeval start, timeval end)
   {
     timeval temp;
 
-    if ((end.tv_usec-start.tv_usec)<0) {
-      temp.tv_sec = end.tv_sec-start.tv_sec-1;
-      temp.tv_usec = 1000000+end.tv_usec-start.tv_usec;
-    } else {
-      temp.tv_sec = end.tv_sec-start.tv_sec;
-      temp.tv_usec = end.tv_usec-start.tv_usec;
+    if ((end.tv_usec - start.tv_usec) < 0)
+    {
+      temp.tv_sec = end.tv_sec - start.tv_sec - 1;
+      temp.tv_usec = 1000000 + end.tv_usec - start.tv_usec;
+    }
+    else
+    {
+      temp.tv_sec = end.tv_sec - start.tv_sec;
+      temp.tv_usec = end.tv_usec - start.tv_usec;
     }
     return temp;
   }
 
-  static long long int timeval_subtract_micro (struct timeval start,
-                                               struct timeval stop)
+  static long long int
+  timeval_subtract_micro (struct timeval start, struct timeval stop)
   {
-    long long int result = ((long long int)(stop.tv_sec - start.tv_sec))*1000000;
+    long long int result
+        = ((long long int)(stop.tv_sec - start.tv_sec)) * 1000000;
     result += stop.tv_usec - start.tv_usec;
 
     return result;
   }
 
-  static QStringList getPluginList()
+  static QStringList
+  getPluginList ()
   {
     QString pluginDir;
     QStringList pluginList;
@@ -59,13 +65,13 @@ public:
     pluginList << (pluginDir + "libQnly.dylib");
     pluginList << (pluginDir + "libQnst.dylib");
 #elif WIN32
-    //TODO:
+// TODO:
 #else
     pluginDir = "/usr/local/lib/composer/extensions/";
-//    pluginList << ("");
-//    pluginList << (pluginDir + "libdebug_console.so");
-//    pluginList << (pluginDir + "libproperties_view.so");
-//    pluginList << (pluginDir + "libQnly.so");
+    //    pluginList << ("");
+    //    pluginList << (pluginDir + "libdebug_console.so");
+    //    pluginList << (pluginDir + "libproperties_view.so");
+    //    pluginList << (pluginDir + "libQnly.so");
     pluginList << (pluginDir + "libQnst.so");
 //    pluginList << (pluginDir + "libncl_textual_plugin.so");
 //    pluginList << (pluginDir + "liboutline_view.so");
