@@ -73,7 +73,7 @@ void
 StructuralViewPlugin::init ()
 {
   QString data
-      = project->getPluginData ("br.puc-rio.telemidia.composer.structural");
+      = _project->getPluginData ("br.puc-rio.telemidia.composer.structural");
 
   if (!data.isEmpty ())
     _struct_scene->load (data);
@@ -82,7 +82,7 @@ StructuralViewPlugin::init ()
 }
 
 QWidget *
-StructuralViewPlugin::getWidget ()
+StructuralViewPlugin::widget ()
 {
   return _window;
 }
@@ -139,7 +139,7 @@ StructuralViewPlugin::updateFromModel ()
   // (nodes->interfaces->edges).
   QVector<Entity *> nodes, interfaces, edges;
   QStack<Entity *> stack;
-  stack.push (project);
+  stack.push (_project);
   while (stack.size ())
   {
     Entity *current = stack.top ();
@@ -260,7 +260,7 @@ StructuralViewPlugin::onEntityAdded (const QString &pluginID, Entity *ent)
   if (_syncing)
     return;
 
-  if (pluginID != getPluginInstanceID ())
+  if (pluginID != pluginInstanceID ())
   {
     insertInView (ent);
   }
@@ -284,7 +284,7 @@ StructuralViewPlugin::onEntityChanged (const QString &pluginID, Entity *ent)
   if (_syncing)
     return;
 
-  if (pluginID != getPluginInstanceID () && !_waiting)
+  if (pluginID != pluginInstanceID () && !_waiting)
   {
     changeInView (ent);
   }
@@ -299,9 +299,9 @@ StructuralViewPlugin::onEntityRemoved (const QString &pluginID,
   if (_syncing)
     return;
 
-  if (pluginID != getPluginInstanceID ())
+  if (pluginID != pluginInstanceID ())
   {
-    removeInView (getProject ()->getEntityById (entID));
+    removeInView (project ()->getEntityById (entID));
     _core2view_remove (entID);
   }
 }
@@ -313,13 +313,13 @@ StructuralViewPlugin::changeSelectedEntity (const QString &pluginID,
   if (_syncing)
     return;
 
-  if (pluginID != getPluginInstanceID ())
+  if (pluginID != pluginInstanceID ())
   {
     QString *entUid = (QString *)param;
 
     if (entUid)
     {
-      Entity *ent = getProject ()->getEntityById (*entUid);
+      Entity *ent = project ()->getEntityById (*entUid);
       if (ent)
         selectInView (ent);
     }
@@ -646,17 +646,17 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
   if (type == Structural::Bind)
   {
     QString coreUid = _view2core.value (props.value (ST_ATTR_REF_LINK_UID));
-    entParent = getProject ()->getEntityById (coreUid);
+    entParent = project ()->getEntityById (coreUid);
   }
   else if (type == Structural::Mapping)
   {
     QString coreUid = _view2core.value (props.value (ST_ATTR_EDGE_ORIG));
-    entParent = getProject ()->getEntityById (coreUid);
+    entParent = project ()->getEntityById (coreUid);
   }
   else if (type == Structural::Body)
   {
     // Check if core already has a 'body' entity. If so, update the references.
-    QList<Entity *> list = getProject ()->getEntitiesbyType ("body");
+    QList<Entity *> list = project ()->getEntitiesbyType ("body");
     if (!list.isEmpty ())
     {
       Entity *body = list.first ();
@@ -667,29 +667,29 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
 
     // Check if core already has an 'ncl' entity.
     // If it doesn't, adds and sets entity as parent.
-    list = getProject ()->getEntitiesbyType ("ncl");
+    list = project ()->getEntitiesbyType ("ncl");
     if (list.isEmpty ())
     {
-      Entity *proj = getProject ();
+      Entity *proj = project ();
       CPR_ASSERT_NON_NULL (proj);
       QStrMap attrs;
 
       emit addEntity ("ncl", proj->uid (), attrs);
     }
 
-    list = getProject ()->getEntitiesbyType ("ncl");
+    list = project ()->getEntitiesbyType ("ncl");
     CPR_ASSERT (!list.isEmpty ());
     entParent = list.first ();
   }
   else if (parent.isEmpty () && !ST_OPT_WITH_BODY)
   {
-    QList<Entity *> list = getProject ()->getEntitiesbyType ("body");
+    QList<Entity *> list = project ()->getEntitiesbyType ("body");
     if (!list.isEmpty ())
       entParent = list.first ();
   }
   else
   {
-    entParent = getProject ()->getEntityById (_view2core.value (parent));
+    entParent = project ()->getEntityById (_view2core.value (parent));
   }
 
   if (entParent)
@@ -747,7 +747,7 @@ StructuralViewPlugin::removeInCore (QString uid, QStrMap stgs)
   QString coreUid = _view2core.value (uid, "");
   if (!coreUid.isEmpty ())
   {
-    Entity *ent = getProject ()->getEntityById (coreUid);
+    Entity *ent = project ()->getEntityById (coreUid);
     CPR_ASSERT_NON_NULL (ent);
 
     emit removeEntity (ent);
@@ -772,7 +772,7 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
   Q_UNUSED (previous);
   Q_UNUSED (settings);
 
-  Entity *ent = getProject ()->getEntityById (_view2core.value (uid));
+  Entity *ent = project ()->getEntityById (_view2core.value (uid));
   if (ent)
   {
     StructuralType type = util::strToType (props[ST_ATTR_ENT_TYPE]);
@@ -815,7 +815,7 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
           QStrMap pAttr = { { "name", pName }, { "value", pValue } };
 
           Entity *param
-              = getProject ()->getEntityById (_view2core.value (pUid));
+              = project ()->getEntityById (_view2core.value (pUid));
 
           // Change a param entity in core that has been added by the view.
           if (param)
@@ -834,7 +834,7 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
           {
             int index = paramNames.indexOf (pName);
 
-            param = getProject ()->getEntityById (paramUids.at (index));
+            param = project ()->getEntityById (paramUids.at (index));
             paramUids.remove (index);
 
             _core2view_insert (param->uid (), pUid);
@@ -854,7 +854,7 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
       }
 
       for (const QString &pUid : paramUids)
-        emit removeEntity (getProject ()->getEntityById (pUid));
+        emit removeEntity (project ()->getEntityById (pUid));
     }
 
     _waiting = true;
@@ -906,7 +906,7 @@ StructuralViewPlugin::uidById (const QString &id, Entity *ent)
 {
   QString uid = "";
   if (ent == nullptr)
-    ent = getProject ();
+    ent = project ();
 
   if (ent->type () == "property")
   {
@@ -938,7 +938,7 @@ StructuralViewPlugin::adjustConnectors ()
   // TODO: this function should be called only when a change occurs in
   // <connectorBase>.  Currently, this function is called every time the
   // link's dialog is displayed.
-  auto connectorBases = getProject ()->getEntitiesbyType ("connectorBase");
+  auto connectorBases = project ()->getEntitiesbyType ("connectorBase");
   if (!connectorBases.isEmpty ())
   {
     Entity *connBase = connectorBases.first ();
@@ -998,7 +998,7 @@ StructuralViewPlugin::adjustConnectors ()
         importURI = e->attr ("documentURI");
 
         // projectURI use '/' as separator
-        projectURI = getProject ()->getLocation ();
+        projectURI = project ()->getLocation ();
 
         QFile importFile (projectURI.left (projectURI.lastIndexOf ("/")) + "/"
                           + importURI);

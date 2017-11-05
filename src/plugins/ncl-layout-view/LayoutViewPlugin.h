@@ -35,18 +35,19 @@ public:
   explicit NCLLayoutViewPlugin (QObject *parent = 0);
   virtual ~NCLLayoutViewPlugin ();
 
-  virtual void init ();
-  virtual QWidget *getWidget ();
-  virtual bool saveSubsession ();
+  virtual void init () override;
+  virtual QWidget *widget () override;
+  virtual bool saveSubsession () override;
 
 public slots:
-  virtual void onEntityAdded (const QString &pluginID, Entity *entity);
-  virtual void errorMessage (const QString &error);
-  virtual void onEntityChanged (const QString &pluginID, Entity *entity);
+  virtual void onEntityAdded (const QString &pluginID, Entity *entity) override;
+  virtual void errorMessage (const QString &error) override;
+  virtual void onEntityChanged (const QString &pluginID, Entity *entity) override;
   virtual void onEntityRemoved (const QString &pluginID,
-                                const QString &entityID);
-  virtual void changeSelectedEntity (const QString &pluginID, void *entityUID);
-  virtual void updateFromModel ();
+                                const QString &entityID) override;
+  virtual void updateFromModel () override;
+
+  void changeSelectedEntity (const QString &pluginID, void *entityUID);
 
 protected slots:
   void addRegionToView (Entity *entity);
@@ -93,18 +94,18 @@ private:
    * \brief Get the head id of the document. If this head does not exists
    *  this function will create it.
    */
-  QString getHeadUid ();
-  QMap<QString, QString> getRegionAttributes (Entity *region);
+  QString headUid ();
+  QMap<QString, QString> regionAttributes (Entity *region);
 
-  QString *selectedId;
+  QString *_selectedId;
 
-  LayoutWindow *mainWindow;
-  LayoutView *view;
+  LayoutWindow *_mainWindow;
+  LayoutView *_view;
 
-  QMap<QString, Entity *> regions;
-  QMap<QString, Entity *> regionbases;
-  QMap<QString, QString> relations;
-  QMap<QString, QMap<QString, QString> > descriptors;
+  QMap<QString, Entity *> _regions;
+  QMap<QString, Entity *> _regionbases;
+  QMap<QString, QString> _relations;
+  QMap<QString, QMap<QString, QString> > _descriptors;
 };
 
 #endif // QNLYCOMPOSERPLUGIN_H

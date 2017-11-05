@@ -37,10 +37,8 @@ NCLTextualViewPlugin::NCLTextualViewPlugin ()
 {
   _window = new NCLTextEditorMainWindow ();
   _nclTextEditor = _window->getTextEditor ();
-
   _tmpNclTextEditor = nullptr;
 
-  project = nullptr;
   connect (_window, SIGNAL (elementAdded (const QString &, const QString &,
                                           const QMap<QString, QString> &)),
            this, SIGNAL (addEntity (const QString &, const QString &,
@@ -65,7 +63,7 @@ void
 NCLTextualViewPlugin::init ()
 {
   QString data
-      = project->getPluginData ("br.puc-rio.telemidia.NCLTextualView");
+      = project ()->getPluginData ("br.puc-rio.telemidia.NCLTextualView");
 
   QString startEntitiesSep = "$START_ENTITIES_LINES$";
   QString endEntitiesSep = "$END_ENTITIES_LINES$";
@@ -113,13 +111,13 @@ NCLTextualViewPlugin::init ()
     updateFromModel ();
   }
 
-  _nclTextEditor->setDocumentUrl (project->getLocation ());
+  _nclTextEditor->setDocumentUrl (project ()->getLocation ());
 
   updateErrorMessages ();
 }
 
 QWidget *
-NCLTextualViewPlugin::getWidget ()
+NCLTextualViewPlugin::widget ()
 {
   return _window;
 }
@@ -139,10 +137,10 @@ NCLTextualViewPlugin::incrementalUpdateFromModel ()
   _startEntityOffset.clear ();
   _endEntityOffset.clear ();
 
-  if (project->entityChildren ().size ())
+  if (project ()->entityChildren ().size ())
   {
     QList<Node *> nodes;
-    nodes.push_back (project);
+    nodes.push_back (project ());
 
     bool first = true;
     while (nodes.size ())
@@ -185,9 +183,9 @@ NCLTextualViewPlugin::nonIncrementalUpdateFromModel ()
   _nclTextEditor->clear ();
   _nclTextEditor->setText (PROLOG);
   QDomDocument doc ("document");
-  if (project->children ().size ())
+  if (project ()->children ().size ())
   {
-    Entity *entity = project;
+    Entity *entity = project ();
     QList<Entity *> entities;
     QList<QDomNode> elements;
     QDomNode current;
@@ -237,7 +235,7 @@ void
 NCLTextualViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
 {
   // Return if this is my call to onEntityAdded
-  if (pluginID == getPluginInstanceID ())
+  if (pluginID == pluginInstanceID ())
   {
     _currentEntity = entity;
     return;
@@ -370,7 +368,7 @@ void
 NCLTextualViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
 {
   // Return if this is my call to onEntityAdded
-  if (pluginID == getPluginInstanceID () && !_isSyncing)
+  if (pluginID == pluginInstanceID () && !_isSyncing)
     return;
 
   QString line = "<" + entity->type () + "";
@@ -452,7 +450,7 @@ NCLTextualViewPlugin::onEntityRemoved (const QString &pluginID,
                                        const QString &entityID)
 {
   // skip if this is my own call to onEntityRemoved
-  if (pluginID == getPluginInstanceID () && !_isSyncing)
+  if (pluginID == pluginInstanceID () && !_isSyncing)
     return;
 
   int startOffset = _startEntityOffset[entityID];
@@ -632,7 +630,7 @@ NCLTextualViewPlugin::updateCoreModel ()
   // double-buffering
   _tmpNclTextEditor = _nclTextEditor;
   _nclTextEditor = new NCLTextEditor (0);
-  _nclTextEditor->setDocumentUrl (project->getLocation ());
+  _nclTextEditor->setDocumentUrl (project ()->getLocation ());
   _nclTextEditor->setText (_tmpNclTextEditor->textWithoutUserInteraction ());
   updateFromModel (); // this is just a precaution
 
@@ -654,9 +652,9 @@ void
 NCLTextualViewPlugin::nonIncrementalUpdateCoreModel ()
 {
   // delete the content of the current project
-  while (project->entityChildren ().size ())
+  while (project ()->entityChildren ().size ())
   {
-    emit removeEntity (project->entityChildren ().first ());
+    emit removeEntity (project ()->entityChildren ().first ());
   }
 
   // clear the entities offset
@@ -666,7 +664,7 @@ NCLTextualViewPlugin::nonIncrementalUpdateCoreModel ()
   _endEntityOffset.clear ();
 
   QList<QString> parentUids;
-  QString parentUId = project->uid ();
+  QString parentUId = project ()->uid ();
   parentUids.push_back (parentUId);
 
   QList<QDomNode> nodes;
@@ -738,7 +736,7 @@ NCLTextualViewPlugin::incrementalUpdateCoreModel ()
   QList<QDomNode> nodes;
   QDomNode current = _xmlDoc;
   nodes.push_back (current);
-  Entity *curEntity = project;
+  Entity *curEntity = project ();
   QList<Entity *> entities;
   entities.push_back (curEntity);
 
@@ -1022,7 +1020,7 @@ NCLTextualViewPlugin::printEntitiesOffset ()
                                                   endOffSet);
 
     qCDebug (CPR_PLUGIN_TEXTUAL)
-        << "key=" << key << "(" << project->getEntityById (key)->type ()
+        << "key=" << key << "(" << project ()->getEntityById (key)->type ()
         << "; start=" << startOffSet << "; start_char=" << startChar
         << "; end=" << endOffSet << "; end_char=" << endChar << endl;
   }
@@ -1086,7 +1084,7 @@ NCLTextualViewPlugin::updateErrorMessages ()
   if (_isSyncing)
     return;
 
-  clearValidationMessages (this->pluginInstanceID, nullptr);
+  clearValidationMessages (pluginInstanceID (), nullptr);
 
   emit sendBroadcastMessage ("askAllValidationMessages", nullptr);
 }

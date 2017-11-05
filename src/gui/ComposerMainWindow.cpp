@@ -425,7 +425,7 @@ ComposerMainWindow::addPluginWidget (IPluginFactory *fac, IPlugin *plugin,
     _projectsWidgets[location] = w;
   }
 
-  QWidget *pW = plugin->getWidget ();
+  QWidget *pW = plugin->widget ();
 
   if (pW != nullptr)
   {

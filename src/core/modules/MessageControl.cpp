@@ -158,7 +158,7 @@ MessageControl::addEntity (const QString &type, const QString &parentEntityId,
 
   QString senderId;
   if (plugin)
-    senderId = plugin->getPluginInstanceID ();
+    senderId = plugin->pluginInstanceID ();
   else if (parser)
     senderId = parser->parserName ();
 
@@ -198,7 +198,7 @@ MessageControl::addContent (const QString &entity_content,
 
   QString senderId;
   if (plugin)
-    senderId = plugin->getPluginInstanceID ();
+    senderId = plugin->pluginInstanceID ();
   else if (parser)
     senderId = parser->parserName ();
 
@@ -284,7 +284,7 @@ MessageControl::addComment (const QString &content, const QString &parentId)
   QString senderId;
 
   if (plugin)
-    senderId = plugin->getPluginInstanceID ();
+    senderId = plugin->pluginInstanceID ();
   else if (parser)
     senderId = parser->parserName ();
 
@@ -317,7 +317,7 @@ MessageControl::editEntity (Entity *entity, const QMap<QString, QString> &atts)
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender ());
   if (plugin)
   {
-    QString senderId = plugin->getPluginInstanceID ();
+    QString senderId = plugin->pluginInstanceID ();
 
     try
     {
@@ -347,7 +347,7 @@ MessageControl::removeEntity (Entity *entity)
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender ());
   if (plugin)
   {
-    QString pluginID = plugin->getPluginInstanceID ();
+    QString pluginID = plugin->pluginInstanceID ();
     try
     {
       if (entity)
@@ -428,7 +428,7 @@ MessageControl::setListenFilter (const QStringList &entityList)
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender ());
   if (plugin)
   {
-    _listenEntities[plugin->getPluginInstanceID ()] = entityList;
+    _listenEntities[plugin->pluginInstanceID ()] = entityList;
   }
 }
 
@@ -452,7 +452,7 @@ MessageControl::sendMessageToPlugins (Message message, const QString &senderId,
 
     // \fixme: This is an workaround. I am delaying the calling for the plugin
     // that triggered the message
-    if (inst->getPluginInstanceID () == senderId)
+    if (inst->pluginInstanceID () == senderId)
     {
       pluginMsgSrc = inst;
       continue;
@@ -515,7 +515,7 @@ MessageControl::sendCommentMessageToPlugins (Message message,
 
     // \fixme: This is an workaround. I am delaying the calling for the plugin
     // that triggered the message
-    if (inst->getPluginInstanceID () == senderId)
+    if (inst->pluginInstanceID () == senderId)
     {
       pluginMsgSrc = inst;
       continue;
@@ -549,14 +549,14 @@ MessageControl::sendCommentMessageToPlugins (Message message,
 bool
 MessageControl::pluginIsInterestedIn (const IPlugin *plugin, Entity *entity)
 {
-  if (!_listenEntities.contains (plugin->getPluginInstanceID ()))
+  if (!_listenEntities.contains (plugin->pluginInstanceID ()))
   {
     // \todo An empty Entity should means ALL entities too?
     // Default: Plugin is interested in ALL entities
     return true;
   }
 
-  if (_listenEntities.value (plugin->getPluginInstanceID ())
+  if (_listenEntities.value (plugin->pluginInstanceID ())
           .contains (entity->type ()))
     return true;
 
@@ -570,8 +570,8 @@ MessageControl::setPluginData (const QByteArray &data)
 
   // The plugin instance ID is composed of: pluginID#UniqueID
   // So, we have to take just the pluginID of that String:
-  QString pluginId = plugin->getPluginInstanceID ().left (
-      plugin->getPluginInstanceID ().indexOf ("#"));
+  QString pluginId = plugin->pluginInstanceID ().left (
+      plugin->pluginInstanceID ().indexOf ("#"));
 
   _project->setPluginData (pluginId, data);
 }

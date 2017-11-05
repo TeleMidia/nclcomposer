@@ -54,7 +54,7 @@ public:
   /*!
    * \brief Init the plugin. This function is part of the IPlugin API.
    */
-  void init ();
+  void init () override;
 
   /*!
    * \brief Save the NCL Text Editor specific data.
@@ -62,7 +62,7 @@ public:
    * This function is part of the IPlugin API.
    * \return bool
    */
-  bool saveSubsession ();
+  bool saveSubsession () override;
 
   /*!
    * \brief Returns the main widget of the NCLTextEdfitor.
@@ -70,7 +70,7 @@ public:
    *
    * \return QWidget *
    */
-  QWidget *getWidget ();
+  QWidget *widget () override;
 
 public slots:
   /*!
@@ -79,14 +79,14 @@ public slots:
    * \param pluginID
    * \param
    */
-  void onEntityAdded (const QString &pluginID, Entity *);
+  void onEntityAdded (const QString &pluginID, Entity *) override;
   /*!
    * \brief This function is part of the IPlugin API.
    *
    * \param pluginID
    * \param
    */
-  void onCommentAdded (const QString &pluginID, Comment *);
+  void onCommentAdded (const QString &pluginID, Comment *) override;
 
   /*!
    * \brief This function is part of the IPlugin API.
@@ -94,26 +94,24 @@ public slots:
    * \param pluginID
    * \param
    */
-  void onEntityChanged (const QString &pluginID, Entity *);
+  void onEntityChanged (const QString &pluginID, Entity *) override;
 
   /*!
    * \brief This function is part of the IPlugin API.
    * \param pluginID
    * \param entityID
    */
-  void onEntityRemoved (const QString &pluginID, const QString &entityID);
+  void onEntityRemoved (const QString &pluginID, const QString &entityID) override;
 
   /*!
    * \brief This function is part of the IPlugin API.
    *
    * \param error
    */
-  void errorMessage (const QString &error);
+  void errorMessage (const QString &error) override;
 
   /*!
    * \brief
-   *
-   * This function is part of the IPlugin API.
    *
    * \param param
    */
@@ -123,7 +121,7 @@ public slots:
    * \brief This slot calls the textual plugin to update its own model.
    *
    */
-  void updateFromModel ();
+  void updateFromModel () override;
 
   /*!
    * \brief Incremental update from core model.

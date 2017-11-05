@@ -58,27 +58,27 @@ class COMPOSERCORESHARED_EXPORT IPlugin : public QObject
 
 public:
   inline QString
-  getPluginInstanceID () const
+  pluginInstanceID () const
   {
-    return this->pluginInstanceID;
+    return _pluginInstanceID;
   }
 
   inline void
   setPluginInstanceID (const QString &pluginInstID)
   {
-    this->pluginInstanceID = pluginInstID;
+    _pluginInstanceID = pluginInstID;
   }
 
   inline void
   setLanguageProfile (ILanguageProfile *languageProfile)
   {
-    this->languageProfile = languageProfile;
+    _languageProfile = languageProfile;
   }
 
   inline ILanguageProfile *
-  getLanguageProfile ()
+  languageProfile ()
   {
-    return this->languageProfile;
+    return _languageProfile;
   }
 
   /*!
@@ -89,8 +89,8 @@ public:
   inline void
   setProject (Project *project)
   {
-    QMutexLocker locker (&mutex);
-    this->project = project;
+    QMutexLocker locker (&_mutex);
+    this->_project = project;
   }
 
   /*!
@@ -100,10 +100,10 @@ public:
    * \return project aProject instance
    */
   inline Project *
-  getProject ()
+  project ()
   {
-    QMutexLocker locker (&mutex);
-    return this->project;
+    QMutexLocker locker (&_mutex);
+    return this->_project;
   }
 
   /*!
@@ -116,7 +116,7 @@ public:
    * \return QWidget - wrapping the plugin interface
    */
   virtual QWidget *
-  getWidget ()
+  widget ()
   {
     return nullptr;
   }
@@ -327,15 +327,15 @@ signals:
 
 protected:
   //! The Project binded with this particular plugin instance
-  Project *project;
+  Project *_project;
 
   /*!
    * \brief Each plugin instance also receives a unique instance ID (given by
    *  the core).
    */
-  QString pluginInstanceID;
-  QMutex mutex;
-  ILanguageProfile *languageProfile;
+  QString _pluginInstanceID;
+  QMutex _mutex;
+  ILanguageProfile *_languageProfile;
 };
 
 CPR_CORE_END_NAMESPACE

@@ -34,23 +34,23 @@ NCLLayoutViewPlugin::NCLLayoutViewPlugin (QObject *parent)
   createView ();
   createConnections ();
 
-  selectedId = NULL;
+  _selectedId = NULL;
 }
 
 NCLLayoutViewPlugin::~NCLLayoutViewPlugin ()
 {
-  if (selectedId != NULL)
-    delete selectedId;
-  delete (view);
+  if (_selectedId != nullptr)
+    delete _selectedId;
+  delete (_view);
 }
 
 void
 NCLLayoutViewPlugin::createView ()
 {
-  mainWindow = new LayoutWindow ();
+  _mainWindow = new LayoutWindow ();
 
-  view = new LayoutView (mainWindow);
-  mainWindow->setQnlyView (view);
+  _view = new LayoutView (_mainWindow);
+  _mainWindow->setQnlyView (_view);
 }
 
 void
@@ -58,44 +58,44 @@ NCLLayoutViewPlugin::createConnections ()
 {
   /* ADD */
   connect (
-      view,
+      _view,
       SIGNAL (regionAdded (QString, QString, QString, QMap<QString, QString>)),
       SLOT (addRegion (QString, QString, QString, QMap<QString, QString>)));
 
-  connect (view, SIGNAL (regionBaseAdded (QString, QMap<QString, QString>)),
+  connect (_view, SIGNAL (regionBaseAdded (QString, QMap<QString, QString>)),
            SLOT (addRegionBase (QString, QMap<QString, QString>)));
 
   /* REMOVE */
-  connect (view, SIGNAL (regionRemoved (QString, QString)),
+  connect (_view, SIGNAL (regionRemoved (QString, QString)),
            SLOT (removeRegion (QString, QString)));
 
-  connect (view, SIGNAL (regionBaseRemoved (QString)),
+  connect (_view, SIGNAL (regionBaseRemoved (QString)),
            SLOT (removeRegionBase (QString)));
 
   /* CHANGE */
-  connect (view,
+  connect (_view,
            SIGNAL (regionChanged (QString, QString, QMap<QString, QString>)),
            SLOT (changeRegion (QString, QString, QMap<QString, QString>)));
 
-  connect (view, SIGNAL (regionBaseChanged (QString, QMap<QString, QString>)),
+  connect (_view, SIGNAL (regionBaseChanged (QString, QMap<QString, QString>)),
            SLOT (changeRegionBase (QString, QMap<QString, QString>)));
 
   /* SELECTION */
-  connect (view, SIGNAL (regionSelected (QString, QString)),
+  connect (_view, SIGNAL (regionSelected (QString, QString)),
            SLOT (selectRegion (QString, QString)));
 
-  connect (view, SIGNAL (regionBaseSelected (QString)),
+  connect (_view, SIGNAL (regionBaseSelected (QString)),
            SLOT (selectRegionBase (QString)));
 
-  connect (mainWindow, SIGNAL (regionBaseSelectedFromComboBox (QString)),
+  connect (_mainWindow, SIGNAL (regionBaseSelectedFromComboBox (QString)),
            SLOT (selectRegionBase (QString)));
 
-  connect (mainWindow,
+  connect (_mainWindow,
            SIGNAL (createNewRegionBase (QString, QMap<QString, QString>)),
            SLOT (addRegionBase (QString, QMap<QString, QString>)));
 
   /* OTHERS */
-  connect (view, SIGNAL (mediaOverRegionAction (QString, QString)),
+  connect (_view, SIGNAL (mediaOverRegionAction (QString, QString)),
            SLOT (performMediaOverRegionAction (QString, QString)));
 }
 
@@ -105,7 +105,7 @@ NCLLayoutViewPlugin::updateFromModel ()
   QRectF previousRect;
   bool isGridVisible = false;
 
-  LayoutRegionBase *currentRegionBase = view->getSelectedRegionBase ();
+  LayoutRegionBase *currentRegionBase = _view->getSelectedRegionBase ();
   if (currentRegionBase != nullptr)
   {
     previousRect = currentRegionBase->sceneRect ();
@@ -116,7 +116,7 @@ NCLLayoutViewPlugin::updateFromModel ()
 
   loadRegionbase ();
 
-  currentRegionBase = view->getSelectedRegionBase ();
+  currentRegionBase = _view->getSelectedRegionBase ();
   if (currentRegionBase != nullptr)
   {
     currentRegionBase->changeResolution (previousRect.width (),
@@ -129,7 +129,7 @@ void
 NCLLayoutViewPlugin::loadRegionbase ()
 {
   QList<Entity *> regionbaseList
-      = getProject ()->getEntitiesbyType ("regionBase");
+      = project ()->getEntitiesbyType ("regionBase");
 
   if (!regionbaseList.isEmpty ())
   {
@@ -162,9 +162,9 @@ NCLLayoutViewPlugin::loadRegion (Entity *region)
 }
 
 QWidget *
-NCLLayoutViewPlugin::getWidget ()
+NCLLayoutViewPlugin::widget ()
 {
-  return mainWindow;
+  return _mainWindow;
 }
 
 bool
@@ -175,13 +175,13 @@ NCLLayoutViewPlugin::saveSubsession ()
   QVariant gridVisible (QVariant::Bool), resolutionWidth (QVariant::Int),
       resolutionHeight (QVariant::Int);
 
-  if (view->getSelectedRegionBase () != NULL)
+  if (_view->getSelectedRegionBase () != NULL)
   {
-    gridVisible.setValue (view->getSelectedRegionBase ()->isGridVisible ());
+    gridVisible.setValue (_view->getSelectedRegionBase ()->isGridVisible ());
     resolutionWidth.setValue (
-        view->getSelectedRegionBase ()->sceneRect ().width ());
+        _view->getSelectedRegionBase ()->sceneRect ().width ());
     resolutionHeight.setValue (
-        view->getSelectedRegionBase ()->sceneRect ().height ());
+        _view->getSelectedRegionBase ()->sceneRect ().height ());
   }
   else
   {
@@ -204,7 +204,7 @@ void
 NCLLayoutViewPlugin::init ()
 {
   // \todo Load specific contents.
-  QString data = project->getPluginData ("br.puc-rio.telemidia.qncllayout");
+  QString data = project ()->getPluginData ("br.puc-rio.telemidia.qncllayout");
   QStringList lines = data.split ("\n");
 
   bool gridVisible = false, ok = true;
@@ -239,7 +239,7 @@ NCLLayoutViewPlugin::init ()
 
   // Update layout model from core model.
   QStack<Entity *> stack;
-  stack.push (project);
+  stack.push (project ());
 
   while (stack.size ())
   {
@@ -252,8 +252,8 @@ NCLLayoutViewPlugin::init ()
 
       // \todo In the future we should support saving individual
       // resolutions foreach regionBase
-      if (view->getSelectedRegion ())
-        view->getSelectedRegionBase ()->changeResolution (resolutionWidth,
+      if (_view->getSelectedRegion ())
+        _view->getSelectedRegionBase ()->changeResolution (resolutionWidth,
                                                           resolutionHeight);
     }
     else if (current->type () == "region")
@@ -267,7 +267,7 @@ NCLLayoutViewPlugin::init ()
     }
   }
 
-  view->setGridVisible (gridVisible);
+  _view->setGridVisible (gridVisible);
 }
 
 void
@@ -309,15 +309,15 @@ NCLLayoutViewPlugin::onEntityRemoved (const QString &pluginID,
 
   if (!entityID.isEmpty ())
   {
-    if (regions.contains (entityID))
+    if (_regions.contains (entityID))
     {
       removeRegionFromView (entityID);
     }
-    else if (regionbases.contains (entityID))
+    else if (_regionbases.contains (entityID))
     {
       removeRegionBaseFromView (entityID);
     }
-    else if (descriptors.contains (entityID))
+    else if (_descriptors.contains (entityID))
     {
       removeDescriptorFromView (entityID);
       updateDescriptors ();
@@ -361,9 +361,9 @@ NCLLayoutViewPlugin::changeSelectedEntity (const QString &pluginID,
 
   if (entityUID != NULL)
   {
-    if (regions.contains (*entityUID))
+    if (_regions.contains (*entityUID))
       selectRegionInView (*entityUID);
-    else if (regionbases.contains (*entityUID))
+    else if (_regionbases.contains (*entityUID))
       selectRegionBaseInView (*entityUID);
   }
   // }
@@ -396,7 +396,7 @@ NCLLayoutViewPlugin::addRegionToView (Entity *entity)
 
       QString parentUID;
 
-      if (regions.contains (entity->parentUid ()))
+      if (_regions.contains (entity->parentUid ()))
       {
         parentUID = entity->parentUid ();
       }
@@ -407,11 +407,11 @@ NCLLayoutViewPlugin::addRegionToView (Entity *entity)
 
       QString regionbaseUID;
 
-      if (regions.contains (parentUID))
+      if (_regions.contains (parentUID))
       {
-        regionbaseUID = relations[parentUID];
+        regionbaseUID = _relations[parentUID];
       }
-      else if (regionbases.contains (entity->parentUid ()))
+      else if (_regionbases.contains (entity->parentUid ()))
       {
         regionbaseUID = entity->parentUid ();
       }
@@ -472,11 +472,11 @@ NCLLayoutViewPlugin::addRegionToView (Entity *entity)
       }
 
       // adding
-      regions[regionUID] = entity;
+      _regions[regionUID] = entity;
 
-      relations[regionUID] = regionbaseUID;
+      _relations[regionUID] = regionbaseUID;
 
-      view->addRegion (regionUID, parentUID, regionbaseUID, attributes);
+      _view->addRegion (regionUID, parentUID, regionbaseUID, attributes);
     }
   }
 }
@@ -486,7 +486,7 @@ NCLLayoutViewPlugin::removeRegionFromView (QString entityUID)
 {
   if (!entityUID.isEmpty ())
   {
-    if (regions.contains (entityUID))
+    if (_regions.contains (entityUID))
     {
       // setting
       QString regionUID;
@@ -495,9 +495,9 @@ NCLLayoutViewPlugin::removeRegionFromView (QString entityUID)
 
       QString regionbaseUID;
 
-      if (relations.contains (regionUID))
+      if (_relations.contains (regionUID))
       {
-        regionbaseUID = relations[regionUID];
+        regionbaseUID = _relations[regionUID];
       }
       else
       {
@@ -508,12 +508,12 @@ NCLLayoutViewPlugin::removeRegionFromView (QString entityUID)
         return; // abort remotion
       }
 
-      regions.remove (regionUID);
+      _regions.remove (regionUID);
 
-      relations.remove (entityUID);
+      _relations.remove (entityUID);
 
       // removing
-      view->removeRegion (regionUID, regionbaseUID);
+      _view->removeRegion (regionUID, regionbaseUID);
     }
   }
 }
@@ -547,7 +547,7 @@ NCLLayoutViewPlugin::changeRegionInView (Entity *entity)
 
       QString parentUID;
 
-      if (regions.contains (entity->parentUid ()))
+      if (_regions.contains (entity->parentUid ()))
       {
         parentUID = entity->parentUid ();
       }
@@ -558,11 +558,11 @@ NCLLayoutViewPlugin::changeRegionInView (Entity *entity)
 
       QString regionbaseUID;
 
-      if (regions.contains (parentUID))
+      if (_regions.contains (parentUID))
       {
-        regionbaseUID = relations[parentUID];
+        regionbaseUID = _relations[parentUID];
       }
-      else if (regionbases.contains (entity->parentUid ()))
+      else if (_regionbases.contains (entity->parentUid ()))
       {
         regionbaseUID = entity->parentUid ();
       }
@@ -623,7 +623,7 @@ NCLLayoutViewPlugin::changeRegionInView (Entity *entity)
       }
 
       // change
-      view->changeRegion (regionUID, regionbaseUID, attributes);
+      _view->changeRegion (regionUID, regionbaseUID, attributes);
     }
   }
 }
@@ -633,7 +633,7 @@ NCLLayoutViewPlugin::selectRegionInView (QString entityUID)
 {
   if (!entityUID.isEmpty ())
   {
-    if (regions.contains (entityUID))
+    if (_regions.contains (entityUID))
     {
       // setting
       QString regionUID;
@@ -642,9 +642,9 @@ NCLLayoutViewPlugin::selectRegionInView (QString entityUID)
 
       QString regionbaseUID;
 
-      if (relations.contains (regionUID))
+      if (_relations.contains (regionUID))
       {
-        regionbaseUID = relations[regionUID];
+        regionbaseUID = _relations[regionUID];
       }
       else
       {
@@ -656,7 +656,7 @@ NCLLayoutViewPlugin::selectRegionInView (QString entityUID)
       }
 
       // select
-      view->selectRegion (regionUID, regionbaseUID);
+      _view->selectRegion (regionUID, regionbaseUID);
     }
   }
 }
@@ -706,11 +706,11 @@ NCLLayoutViewPlugin::addRegionBaseToView (Entity *entity)
       }
 
       // adding
-      regionbases[regionbaseUID] = entity;
+      _regionbases[regionbaseUID] = entity;
 
-      view->addRegionBase (regionbaseUID, attributes);
-      mainWindow->addRegionBaseToCombobox (regionbaseUID, attributes);
-      mainWindow->selectRegionBaseInComboBox (regionbaseUID);
+      _view->addRegionBase (regionbaseUID, attributes);
+      _mainWindow->addRegionBaseToCombobox (regionbaseUID, attributes);
+      _mainWindow->selectRegionBaseInComboBox (regionbaseUID);
     }
   }
 }
@@ -720,7 +720,7 @@ NCLLayoutViewPlugin::removeRegionBaseFromView (QString entityUID)
 {
   if (!entityUID.isEmpty ())
   {
-    if (regionbases.contains (entityUID))
+    if (_regionbases.contains (entityUID))
     {
       // setting
       QString regionbaseUID;
@@ -728,13 +728,13 @@ NCLLayoutViewPlugin::removeRegionBaseFromView (QString entityUID)
       regionbaseUID = entityUID;
 
       // select
-      view->removeRegionBase (regionbaseUID);
+      _view->removeRegionBase (regionbaseUID);
 
-      regionbases.remove (regionbaseUID);
+      _regionbases.remove (regionbaseUID);
 
-      relations.remove (entityUID);
+      _relations.remove (entityUID);
 
-      mainWindow->removeRegionBaseFromCombobox (regionbaseUID);
+      _mainWindow->removeRegionBaseFromCombobox (regionbaseUID);
     }
   }
 }
@@ -782,11 +782,11 @@ NCLLayoutViewPlugin::changeRegionBaseInView (Entity *entity)
       }
 
       // adding
-      regionbases[regionbaseUID] = entity;
+      _regionbases[regionbaseUID] = entity;
 
-      view->changeRegionBase (regionbaseUID, attributes);
+      _view->changeRegionBase (regionbaseUID, attributes);
 
-      mainWindow->updateRegionBaseInComboBox (regionbaseUID, attributes);
+      _mainWindow->updateRegionBaseInComboBox (regionbaseUID, attributes);
     }
   }
 }
@@ -796,7 +796,7 @@ NCLLayoutViewPlugin::selectRegionBaseInView (QString entityUID)
 {
   if (!entityUID.isEmpty ())
   {
-    if (regionbases.contains (entityUID))
+    if (_regionbases.contains (entityUID))
     {
       // setting
       QString regionbaseUID;
@@ -804,9 +804,9 @@ NCLLayoutViewPlugin::selectRegionBaseInView (QString entityUID)
       regionbaseUID = entityUID;
 
       // select
-      view->selectRegionBase (regionbaseUID);
+      _view->selectRegionBase (regionbaseUID);
 
-      mainWindow->selectRegionBaseInComboBox (regionbaseUID);
+      _mainWindow->selectRegionBaseInComboBox (regionbaseUID);
     }
   }
 }
@@ -820,10 +820,10 @@ NCLLayoutViewPlugin::addDescriptorToView (Entity *entity)
         && !entity->attr ("id").isEmpty ()
         && !entity->attr ("region").isEmpty ())
     {
-      // QList<Entity*> model_regions = project->getEntitiesbyType("region");
+      // QList<Entity*> model_regions = project ()->getEntitiesbyType("region");
       QMap<QString, QString> descriptorsIDs;
       descriptorsIDs[entity->attr ("region")] = entity->attr ("id");
-      descriptors[entity->uid ()] = descriptorsIDs;
+      _descriptors[entity->uid ()] = descriptorsIDs;
       /*
       for(Entity *rg : regions.values())
       {
@@ -840,7 +840,7 @@ NCLLayoutViewPlugin::addDescriptorToView (Entity *entity)
 void
 NCLLayoutViewPlugin::removeDescriptorFromView (const QString &entityUID)
 {
-  if (descriptors.contains (entityUID))
+  if (_descriptors.contains (entityUID))
   {
     /*
     for(Entity *rg : regions.values())
@@ -850,28 +850,28 @@ NCLLayoutViewPlugin::removeDescriptorFromView (const QString &entityUID)
         view->addDescriptor(rg->uniqueId(),"");// remove descriptor id from view, passing ""
       }
     }*/ // done twice if used before updateDescriptors?
-    descriptors.remove (entityUID);
+    _descriptors.remove (entityUID);
   }
 }
 
 void
 NCLLayoutViewPlugin::updateDescriptors ()
 {
-  for (Entity *rg : regions.values ())
+  for (Entity *rg : _regions.values ())
   {
     bool visited = false;
-    for (QMap<QString, QString> descriptorsID : descriptors.values ())
+    for (QMap<QString, QString> descriptorsID : _descriptors.values ())
     {
       if (descriptorsID.contains (rg->attr ("id")))
       {
-        view->addDescriptor (rg->uid (),
+        _view->addDescriptor (rg->uid (),
                              descriptorsID.value (rg->attr ("id")));
         visited = true;
       }
     }
     if (!visited)
     {
-      view->addDescriptor (rg->uid (),
+      _view->addDescriptor (rg->uid (),
                            ""); // remove descriptor id from view, passing ""
     }
   }
@@ -891,7 +891,7 @@ NCLLayoutViewPlugin::addRegion (const QString &regionUID,
   if (attributes.contains ("id"))
     standard["id"] = attributes["id"];
   else
-    standard["id"] = project->generateUniqueAttrId ("region");
+    standard["id"] = project ()->generateUniqueAttrId ("region");
 
   if (attributes.contains ("title"))
     standard["title"] = attributes["title"];
@@ -930,9 +930,9 @@ NCLLayoutViewPlugin::removeRegion (const QString &regionUID,
 {
   Q_UNUSED (regionbaseUID)
 
-  if (regions.contains (regionUID))
+  if (_regions.contains (regionUID))
   {
-    emit removeEntity (regions[regionUID]);
+    emit removeEntity (_regions[regionUID]);
   }
 }
 
@@ -943,7 +943,7 @@ NCLLayoutViewPlugin::changeRegion (const QString &regionUID,
 {
   Q_UNUSED (regionbaseUID)
 
-  if (regions.contains (regionUID))
+  if (_regions.contains (regionUID))
   {
     // setting
     QMap<QString, QString> standard;
@@ -976,7 +976,7 @@ NCLLayoutViewPlugin::changeRegion (const QString &regionUID,
       standard["zIndex"] = attributes["zIndex"];
 
     // emitting
-    emit setAttributes (regions[regionUID], standard);
+    emit setAttributes (_regions[regionUID], standard);
   }
 }
 
@@ -986,16 +986,16 @@ NCLLayoutViewPlugin::selectRegion (const QString &regionUID,
 {
   Q_UNUSED (regionbaseUID)
 
-  if (selectedId != NULL)
+  if (_selectedId != NULL)
   {
-    delete selectedId;
-    selectedId = NULL;
+    delete _selectedId;
+    _selectedId = NULL;
   }
 
   if (!regionUID.isEmpty ())
   {
-    selectedId = new QString (regionUID);
-    emit sendBroadcastMessage ("changeSelectedEntity", selectedId);
+    _selectedId = new QString (regionUID);
+    emit sendBroadcastMessage ("changeSelectedEntity", _selectedId);
   }
 }
 
@@ -1017,7 +1017,7 @@ NCLLayoutViewPlugin::addRegionBase (const QString &regionbaseUID,
   if (attributes.contains ("device"))
     standard["device"] = attributes["device"];
 
-  QString headUID = getHeadUid ();
+  QString headUID = headUid ();
   // emitting
   emit addEntity ("regionBase", headUID, standard);
 }
@@ -1025,11 +1025,11 @@ NCLLayoutViewPlugin::addRegionBase (const QString &regionbaseUID,
 void
 NCLLayoutViewPlugin::removeRegionBase (const QString &regionbaseUID)
 {
-  if (regionbases.contains (regionbaseUID))
+  if (_regionbases.contains (regionbaseUID))
   {
-    mainWindow->removeRegionBaseFromCombobox (regionbaseUID);
+    _mainWindow->removeRegionBaseFromCombobox (regionbaseUID);
 
-    emit removeEntity (regionbases[regionbaseUID]);
+    emit removeEntity (_regionbases[regionbaseUID]);
   }
 }
 
@@ -1037,7 +1037,7 @@ void
 NCLLayoutViewPlugin::changeRegionBase (
     const QString &regionbaseUID, const QMap<QString, QString> &attributes)
 {
-  if (regionbases.contains (regionbaseUID))
+  if (_regionbases.contains (regionbaseUID))
   {
     // setting
     QMap<QString, QString> standard;
@@ -1070,80 +1070,80 @@ NCLLayoutViewPlugin::changeRegionBase (
       standard["zIndex"] = attributes["zIndex"];
 
     // emitting
-    emit setAttributes (regionbases[regionbaseUID], standard);
+    emit setAttributes (_regionbases[regionbaseUID], standard);
 
-    mainWindow->updateRegionBaseInComboBox (regionbaseUID, attributes);
+    _mainWindow->updateRegionBaseInComboBox (regionbaseUID, attributes);
   }
 }
 
 void
 NCLLayoutViewPlugin::clear ()
 {
-  while (!regions.empty ())
+  while (!_regions.empty ())
   {
-    Entity *regionEntity = regions.begin ().value ();
+    Entity *regionEntity = _regions.begin ().value ();
 
     removeRegionFromView (regionEntity->uid ());
   }
 
-  while (!regionbases.empty ())
+  while (!_regionbases.empty ())
   {
-    Entity *regionbaseEntity = regionbases.begin ().value ();
+    Entity *regionbaseEntity = _regionbases.begin ().value ();
 
     removeRegionBaseFromView (regionbaseEntity->uid ());
   }
 
-  regions.clear ();
-  regionbases.clear ();
-  relations.clear ();
+  _regions.clear ();
+  _regionbases.clear ();
+  _relations.clear ();
 }
 
 void
 NCLLayoutViewPlugin::selectRegionBase (const QString &regionbaseUID)
 {
-  if (selectedId != NULL)
+  if (_selectedId != NULL)
   {
-    if (*selectedId == regionbaseUID)
+    if (*_selectedId == regionbaseUID)
       return; // Do nothing! It is already selected
 
-    delete selectedId;
-    selectedId = NULL;
+    delete _selectedId;
+    _selectedId = NULL;
   }
 
   if (!regionbaseUID.isEmpty ())
   {
-    selectedId = new QString (regionbaseUID);
-    mainWindow->selectRegionBaseInComboBox (regionbaseUID);
+    _selectedId = new QString (regionbaseUID);
+    _mainWindow->selectRegionBaseInComboBox (regionbaseUID);
 
-    emit sendBroadcastMessage ("changeSelectedEntity", selectedId);
+    emit sendBroadcastMessage ("changeSelectedEntity", _selectedId);
   }
 }
 
 QString
-NCLLayoutViewPlugin::getHeadUid ()
+NCLLayoutViewPlugin::headUid ()
 {
-  if (getProject ()->getEntitiesbyType ("head").isEmpty ())
+  if (project ()->getEntitiesbyType ("head").isEmpty ())
   {
-    if (getProject ()->getEntitiesbyType ("ncl").isEmpty ())
+    if (project ()->getEntitiesbyType ("ncl").isEmpty ())
     {
       QMap<QString, QString> atts;
 
-      emit addEntity ("ncl", getProject ()->uid (), atts);
+      emit addEntity ("ncl", project ()->uid (), atts);
     }
 
     QString nclUID
-        = getProject ()->getEntitiesbyType ("ncl").at (0)->uid ();
+        = project ()->getEntitiesbyType ("ncl").at (0)->uid ();
 
     QMap<QString, QString> atts;
 
     emit addEntity ("head", nclUID, atts);
   }
 
-  return getProject ()->getEntitiesbyType ("head").at (0)->uid ();
+  return project ()->getEntitiesbyType ("head").at (0)->uid ();
 }
 
 QMap<QString, QString>
-NCLLayoutViewPlugin::getRegionAttributes (Entity *region)
+NCLLayoutViewPlugin::regionAttributes (Entity *region)
 {
   QVector<double> widths;
   QVector<double> heights;
@@ -1223,9 +1223,9 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
                                                    const QString &regionUID)
 {
   bool error = false;
-  Entity *region = project->getEntityById (regionUID);
+  Entity *region = project ()->getEntityById (regionUID);
   Entity *media = NULL;
-  QList<Entity *> medias = project->getEntitiesbyType ("media");
+  QList<Entity *> medias = project ()->getEntitiesbyType ("media");
 
   const bool askDescOrProperties = true; // \todo This must be a preference.
 
@@ -1249,7 +1249,7 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
 
   if (media == NULL)
   {
-    int ret = QMessageBox::warning (this->getWidget (), tr ("Error"),
+    int ret = QMessageBox::warning (this->widget (), tr ("Error"),
                                     tr ("Sorry. \"") + mediaId
                                         + tr ("\" is not a valid media."),
                                     QMessageBox::Ok, QMessageBox::Ok);
@@ -1286,15 +1286,15 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
       {
         QMap<QString, QString> attrs;
         QList<Entity *> descritorBases
-            = project->getEntitiesbyType ("descriptorBase");
+            = project ()->getEntitiesbyType ("descriptorBase");
 
         // create the descriptor
-        QString newDescriptorID = project->generateUniqueAttrId ("descriptor");
+        QString newDescriptorID = project ()->generateUniqueAttrId ("descriptor");
         QStringList alredyExistentsDescriptorsIds, descriptorsIds;
         descriptorsIds << newDescriptorID;
 
         QList<Entity *> descriptors
-            = project->getEntitiesbyType ("descriptor");
+            = project ()->getEntitiesbyType ("descriptor");
         foreach (Entity *desc, descriptors)
         {
           if (desc != NULL)
@@ -1317,13 +1317,13 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
         {
           if (!descritorBases.size ()) // if does not exists any descriptorBase
             // create one
-            emit addEntity ("descriptorBase", getHeadUid (), attrs);
+            emit addEntity ("descriptorBase", headUid (), attrs);
 
           // If we choose the new descriptor (create it)
           if (!alredyExistentsDescriptorsIds.contains (newDescriptorID))
           {
             Entity *descriptorBase
-                = project->getEntitiesbyType ("descriptorBase").at (0);
+                = project ()->getEntitiesbyType ("descriptorBase").at (0);
             attrs.insert ("id", newDescriptorID);
             attrs.insert ("region", region->attr ("id"));
 
@@ -1352,7 +1352,7 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
           }
         }
 
-        QMap<QString, QString> newAttrs = getRegionAttributes (region);
+        QMap<QString, QString> newAttrs = regionAttributes (region);
         QString key;
         foreach (key, newAttrs.keys ())
         {
@@ -1363,7 +1363,7 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
           if (propertyNameToUID.keys ().contains (key))
           {
             QString propUID = propertyNameToUID.value (key);
-            emit setAttributes (project->getEntityById (propUID), attrs);
+            emit setAttributes (project ()->getEntityById (propUID), attrs);
           }
           else
             emit addEntity ("property", media->uid (), attrs);
@@ -1376,17 +1376,17 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
 
       QMap<QString, QString> attrs;
       QList<Entity *> descritorBases
-          = project->getEntitiesbyType ("descriptorBase");
+          = project ()->getEntitiesbyType ("descriptorBase");
 
       // create the descriptor
-      QString newDescriptorID = project->generateUniqueAttrId ("descriptor");
+      QString newDescriptorID = project ()->generateUniqueAttrId ("descriptor");
 
       if (!descritorBases.size ()) // if does not exists any descriptorBase
         // create one
-        emit addEntity ("descriptorBase", getHeadUid (), attrs);
+        emit addEntity ("descriptorBase", headUid (), attrs);
 
       Entity *descriptorBase
-          = project->getEntitiesbyType ("descriptorBase").at (0);
+          = project ()->getEntitiesbyType ("descriptorBase").at (0);
       attrs.insert ("id", newDescriptorID);
       attrs.insert ("region", region->attr ("id"));
 
@@ -1403,7 +1403,7 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
         attrs.clear ();
         QMap<QString, QString>::iterator begin, end, it;
         QList<Entity *> descriptors
-            = project->getEntityByAttrId (newDescriptorID);
+            = project ()->getEntityByAttrId (newDescriptorID);
 
         if (descriptors.size ())
         {

@@ -38,16 +38,12 @@ class DebugConsolePlugin : public IPlugin
 {
   Q_OBJECT
 
-private:
-  QListWidget *list;
-  QWidget *window;
-
 public:
   explicit DebugConsolePlugin ();
   ~DebugConsolePlugin ();
 
   void init () override;
-  QWidget *getWidget () override;
+  QWidget *widget () override;
   bool saveSubsession () override;
 
 public slots:
@@ -58,6 +54,10 @@ public slots:
   void errorMessage (const QString &) override;
 
   void sendToAll ();
+
+private:
+  QListWidget *_list;
+  QWidget *_window;
 };
 
 /*!
@@ -71,12 +71,12 @@ class DebugConsoleFactory : public QObject,
 
 public:
   QString
-  id () const
+  id () const override
   {
     return "br.puc-rio.telemidia.DebugConsole";
   }
   QIcon
-  icon () const
+  icon () const override
   {
     return QIcon (":/images/icon.png");
   }

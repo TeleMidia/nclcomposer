@@ -37,18 +37,18 @@ ValidatorPlugin::ValidatorPlugin ()
 void
 ValidatorPlugin::init ()
 {
-  Project *project = getProject ();
+  Project *proj = project ();
 
-  QString location = project->getLocation ();
+  QString location = proj->getLocation ();
   int index = location.lastIndexOf ("/");
   location.remove (index + 1, location.size () - (index + 1));
 
   adapter.setRelativePath (location);
 
-  if (!project)
+  if (!proj)
     return;
 
-  foreach (Entity *entity, project->entityChildren ())
+  foreach (Entity *entity, proj->entityChildren ())
     updateModel (entity);
 
   std::vector<pair<void *, string> > msgs = adapter.validate ();

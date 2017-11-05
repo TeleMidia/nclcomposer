@@ -52,23 +52,25 @@ public:
   ValidatorPlugin ();
 
   QWidget *
-  getWidget ()
+  widget () override
   {
     return table;
   }
+
   bool
-  saveSubsession ()
+  saveSubsession () override
   {
     return true;
   }
-  void init ();
+
+  void init () override;
 
 public slots:
-  void onEntityAdded (const QString &pluginID, Entity *);
-  void onEntityChanged (const QString &pluginID, Entity *);
-  void onEntityRemoved (const QString &pluginID, const QString &entityID);
+  void onEntityAdded (const QString &pluginID, Entity *) override;
+  void onEntityChanged (const QString &pluginID, Entity *) override;
+  void onEntityRemoved (const QString &pluginID, const QString &entityID) override;
 
-  void errorMessage (const QString &error);
+  void errorMessage (const QString &error) override;
 
   void itemSelected (QTreeWidgetItem *);
   void itemDoubleClickedSelected (QTreeWidgetItem *);
@@ -101,12 +103,13 @@ class ValidatorFactory : public QObject,
 
 public:
   QString
-  id () const
+  id () const override
   {
     return "br.ufma.deinf.laws.validator";
   }
+
   QIcon
-  icon () const
+  icon () const override
   {
     return QIcon ();
   }

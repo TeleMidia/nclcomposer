@@ -59,7 +59,7 @@ RulesViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
     // Set default attributes
     if (entity->attr ("id") == "")
     {
-      QString id = project->generateUniqueAttrId (entity->type ());
+      QString id = project ()->generateUniqueAttrId (entity->type ());
       QMap<QString, QString> attrs;
       attrs["id"] = id;
       if (entity->type () == "compositeRule")
@@ -79,7 +79,7 @@ RulesViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
 void
 RulesViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
 {
-  if (pluginID == IPlugin::pluginInstanceID || !entity)
+  if (pluginID == pluginInstanceID () || !entity)
     return;
 
   QTreeWidgetItem *item = _items.key (entity->uid (), 0);
@@ -148,7 +148,7 @@ RulesViewPlugin::releaseItemChildren (QTreeWidgetItem *item)
 void
 RulesViewPlugin::init ()
 {
-  _currentProject = getProject ();
+  _currentProject = project ();
   if (!_currentProject)
     return;
 
@@ -395,7 +395,7 @@ RulesViewPlugin::sendAddEntitySignal (QTreeWidgetItem *parent, int type)
 void
 RulesViewPlugin::changeSelectedEntity (const QString &pluginID, void *param)
 {
-  if (pluginID == IPlugin::pluginInstanceID || pluginID == "")
+  if (pluginID == pluginInstanceID () || pluginID == "")
     return;
 
   disconnect (_rulesTable, SIGNAL (itemSelectionChanged ()), this,

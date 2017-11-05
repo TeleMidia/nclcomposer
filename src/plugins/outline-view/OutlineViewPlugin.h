@@ -49,7 +49,7 @@ public:
    *
    * This function is part of the IPlugin API.
    */
-  void init ();
+  void init () override;
   /*!
    * \brief Returns the widget of that plugin. This widget will be presentated
    *      to the user.
@@ -59,7 +59,7 @@ public:
    * \return QWidget* the widget that represents this plugin. If nullptr, the
    *      plugin has not a visual representation
    */
-  QWidget *getWidget ();
+  QWidget *widget () override;
   /*!
    * \brief Save the specific data of this plugin.
    *
@@ -67,7 +67,7 @@ public:
    *
    * \return bool
    */
-  bool saveSubsession ();
+  bool saveSubsession () override;
 
 public slots:
   /*!
@@ -78,7 +78,7 @@ public slots:
    * \param ID The plugin identifier that called to add the Entity.
    * \param Entity* the Entity that was added.
    */
-  void onEntityAdded (const QString &pluginID, Entity *);
+  void onEntityAdded (const QString &pluginID, Entity *)  override;
 
   /*!
    * \brief
@@ -88,7 +88,7 @@ public slots:
    * \param pluginID
    * \param
    */
-  void onEntityChanged (const QString &ID, Entity *);
+  void onEntityChanged (const QString &ID, Entity *) override;
 
   /*!
    * \brief
@@ -98,13 +98,13 @@ public slots:
    * \param ID
    * \param entityID
    */
-  void onEntityRemoved (const QString &pluginID, const QString &entityID);
+  void onEntityRemoved (const QString &pluginID, const QString &entityID) override;
 
   /*!
    * \brief This slot calls the outline plugin to update its own model.
    *
    */
-  void updateFromModel ();
+  void updateFromModel () override;
 
   /*!
    * \brief
@@ -113,7 +113,7 @@ public slots:
    *
    * \param error
    */
-  void errorMessage (const QString &error);
+  void errorMessage (const QString &error) override;
 
   /* Comunication from Debug to me */
   /*!
@@ -199,12 +199,12 @@ class OutlineViewFactory : public QObject,
 
 public:
   QString
-  id () const
+  id () const override
   {
     return "br.puc-rio.telemidia.OutlineView";
   }
   QIcon
-  icon () const
+  icon () const override
   {
     return QIcon (":/images/ncl.png");
   }

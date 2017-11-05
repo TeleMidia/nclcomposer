@@ -19,26 +19,25 @@
 
 DebugConsolePlugin::DebugConsolePlugin ()
 {
-  window = new QWidget ();
-  QGridLayout *layout = new QGridLayout (window);
-  QPushButton *bt = new QPushButton (window);
+  _window = new QWidget ();
+  QGridLayout *layout = new QGridLayout (_window);
+  QPushButton *bt = new QPushButton (_window);
   bt->setText (tr ("Clear"));
   layout->addWidget (bt);
-  list = new QListWidget (window);
-  list->setAlternatingRowColors (true);
-  layout->addWidget (list);
-  connect (bt, SIGNAL (clicked ()), list, SLOT (clear ()));
+  _list = new QListWidget (_window);
+  _list->setAlternatingRowColors (true);
+  layout->addWidget (_list);
+  connect (bt, SIGNAL (clicked ()), _list, SLOT (clear ()));
   connect (bt, SIGNAL (clicked ()), this, SLOT (sendToAll ()));
-  window->setLayout (layout);
-  window->setWindowIcon (QIcon (":/images/icon.png"));
-  project = nullptr;
+  _window->setLayout (layout);
+  _window->setWindowIcon (QIcon (":/images/icon.png"));
 }
 
 DebugConsolePlugin::~DebugConsolePlugin ()
 {
-  if (window != nullptr)
-    delete window;
-  window = nullptr;
+  if (_window != nullptr)
+    delete _window;
+  _window = nullptr;
 }
 
 void
@@ -48,9 +47,9 @@ DebugConsolePlugin::init ()
 }
 
 QWidget *
-DebugConsolePlugin::getWidget ()
+DebugConsolePlugin::widget ()
 {
-  return window;
+  return _window;
 }
 
 void
@@ -58,17 +57,17 @@ DebugConsolePlugin::onEntityAdded (const QString &pluginID, Entity *entity)
 {
   QString line = "PLUGIN (" + pluginID + ") added the Entity ("
                  + entity->type () + " - " + entity->uid () + ")";
-  list->insertItem (0, new QListWidgetItem (line));
+  _list->insertItem (0, new QListWidgetItem (line));
 }
 
 void
 DebugConsolePlugin::errorMessage (const QString &error)
 {
   //    list->insertItem(0, new QListWidgetItem(error));
-  if (list->count ())
-    list->item (0)->setText (error);
+  if (_list->count ())
+    _list->item (0)->setText (error);
   else
-    list->addItem (new QListWidgetItem (error));
+    _list->addItem (new QListWidgetItem (error));
 }
 
 void
@@ -76,7 +75,7 @@ DebugConsolePlugin::onEntityChanged (const QString &pluginID, Entity *entity)
 {
   QString line = "PLUGIN (" + pluginID + ") changed the Entity ("
                  + entity->type () + " - " + entity->uid () + ")";
-  list->insertItem (0, new QListWidgetItem (line));
+  _list->insertItem (0, new QListWidgetItem (line));
   /*  if(list->count())
     list->item(0)->setText(line);
   else
@@ -93,7 +92,7 @@ DebugConsolePlugin::onEntityRemoved (const QString &pluginID,
                                      const QString &entityID)
 {
   QString line = "PLUGIN (" + pluginID + ") removed Entity (" + entityID + ")";
-  list->insertItem (0, new QListWidgetItem (line));
+  _list->insertItem (0, new QListWidgetItem (line));
   /*if(list->count())
     list->item(0)->setText(line);
   else

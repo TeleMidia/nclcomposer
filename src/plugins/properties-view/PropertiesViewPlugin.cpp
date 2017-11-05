@@ -23,7 +23,6 @@
 PropertiesViewPlugin::PropertiesViewPlugin ()
 {
   _window = new PropertiesEditor (0);
-  project = nullptr;
   _currentEntity = nullptr;
 
   connect (_window, SIGNAL (propertyChanged (QString, QString)), this,
@@ -38,7 +37,7 @@ PropertiesViewPlugin::~PropertiesViewPlugin ()
 }
 
 QWidget *
-PropertiesViewPlugin::getWidget ()
+PropertiesViewPlugin::widget ()
 {
   return _window;
 }
@@ -61,7 +60,7 @@ PropertiesViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
 {
   Q_UNUSED (pluginID)
 
-  if (pluginID == this->getPluginInstanceID ())
+  if (pluginID == pluginInstanceID ())
     return;
 
   if (entity != nullptr && _currentEntity != nullptr)
@@ -106,7 +105,7 @@ PropertiesViewPlugin::changeSelectedEntity (QString pluginID, void *param)
   QString *id = (QString *)param;
   if (id != nullptr && *id != "")
   {
-    _currentEntity = project->getEntityById (*id);
+    _currentEntity = project ()->getEntityById (*id);
     _currentEntityId = *id;
   }
 
@@ -171,7 +170,7 @@ PropertiesViewPlugin::updateCurrentEntityAttr (QString attr, QString value)
                   _currentEntity->type (), attr)
               == "URI")
           {
-            attrs[attr] = Utilities::relativePath (project->getLocation (),
+            attrs[attr] = Utilities::relativePath (project ()->getLocation (),
                                                    value, true);
           }
         }
@@ -197,7 +196,7 @@ PropertiesViewPlugin::validationError (QString pluginID, void *param)
 
     QString uid = p->first;
 
-    if (_currentEntity == project->getEntityById (uid))
+    if (_currentEntity == project ()->getEntityById (uid))
       updateCurrentEntity (p->second);
   }
 }
@@ -302,14 +301,14 @@ PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
                               ->attr (attr_scope);
         }
 
-        QList<Entity *> ents = project->getEntityByAttrId (idEntityScope);
+        QList<Entity *> ents = project ()->getEntityByAttrId (idEntityScope);
         if (ents.size ())
           entityTargetScope = ents.at (0);
       }
 
       // Now, search for the entities in the required scope
       QList<Entity *> entities
-          = this->project->getEntitiesbyType (ref_tagname);
+          = this->project ()->getEntitiesbyType (ref_tagname);
       foreach (Entity *ent, entities)
       {
         if (ent != _currentEntity)

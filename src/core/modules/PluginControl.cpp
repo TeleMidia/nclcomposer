@@ -318,7 +318,7 @@ PluginControl::sendBroadcastMessage (const char *slot, void *obj)
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender ());
 
   QList<IPlugin *>::iterator it;
-  QList<IPlugin *> instances = _pluginInstances.values (plugin->getProject ());
+  QList<IPlugin *> instances = _pluginInstances.values (plugin->project ());
 
   QString slotName (slot);
   slotName.append ("(QString,void*)");
@@ -331,7 +331,7 @@ PluginControl::sendBroadcastMessage (const char *slot, void *obj)
     {
       QMetaMethod method = inst->metaObject ()->method (idxSlot);
       method.invoke (inst, Qt::DirectConnection,
-                     Q_ARG (QString, plugin->getPluginInstanceID ()),
+                     Q_ARG (QString, plugin->pluginInstanceID ()),
                      Q_ARG (void *, obj));
     }
   }

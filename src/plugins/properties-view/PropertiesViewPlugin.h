@@ -66,7 +66,7 @@ public:
      * \return QWidget* the widget that represents this plugin. If nullptr, the
      *      plugin has not a visual representation
      */
-  QWidget *getWidget () override;
+  QWidget *widget () override;
 
   /*!
      * \brief Save the specific data of this plugin.

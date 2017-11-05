@@ -21,7 +21,7 @@ public:
   ~RulesViewPlugin ();
 
   QWidget *
-  getWidget () override
+  widget () override
   {
     return _rulesTable;
   }

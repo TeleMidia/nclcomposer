@@ -37,7 +37,7 @@ public:
   virtual ~StructuralViewPlugin ();
 
   virtual void init ();
-  virtual QWidget *getWidget ();
+  virtual QWidget *widget ();
   virtual bool saveSubsession ();
 
 public slots:

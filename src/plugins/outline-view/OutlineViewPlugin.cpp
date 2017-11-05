@@ -24,8 +24,6 @@ Q_LOGGING_CATEGORY (CPR_PLUGIN_OUTLINE, "cpr.plugin.outline")
 OutlineViewPlugin::OutlineViewPlugin ()
     : _window (new NCLTreeWidget (0)), _windowBuffering (new NCLTreeWidget (0))
 {
-  project = nullptr;
-
   connect (
       _window,
       SIGNAL (elementAddedByUser (QString, QString, QMap<QString, QString> &)),
@@ -55,7 +53,7 @@ OutlineViewPlugin::~OutlineViewPlugin ()
 }
 
 QWidget *
-OutlineViewPlugin::getWidget ()
+OutlineViewPlugin::widget ()
 {
   return _window;
 }
@@ -100,7 +98,7 @@ OutlineViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
   {
     if (!attrs.keys ().contains ("id"))
     {
-      attrs.insert ("id", project->generateUniqueAttrId (entity->type ()));
+      attrs.insert ("id", project ()->generateUniqueAttrId (entity->type ()));
       emit setAttributes (entity, attrs);
     }
   }
@@ -173,7 +171,7 @@ OutlineViewPlugin::onEntityRemoved (const QString &pluginID,
 void
 OutlineViewPlugin::elementRemovedByUser (QString itemId)
 {
-  Entity *entity = project->getEntityById (itemId);
+  Entity *entity = project ()->getEntityById (itemId);
   emit removeEntity (entity);
 }
 
@@ -183,7 +181,7 @@ OutlineViewPlugin::elementAddedByUser (QString type, QString parentId,
 {
   /* If there is no parent, put as child of root */
   if (parentId == "")
-    parentId = project->uid ();
+    parentId = project ()->uid ();
 
   emit addEntity (type, parentId, atts);
 }
@@ -205,9 +203,9 @@ OutlineViewPlugin::updateFromModel ()
   _window->clear ();
   _idToItem.clear ();
 
-  if (project->children ().size ())
+  if (project ()->children ().size ())
   {
-    Entity *entity = project;
+    Entity *entity = project ();
     QList<Entity *> entities;
     entities.push_back (entity);
     bool first = true;
@@ -246,12 +244,12 @@ OutlineViewPlugin::init ()
   _idToItem.clear ();
 
   // Draw new tree
-  if (!project->children ().size ())
+  if (!project ()->children ().size ())
     return;
 
   QTreeWidgetItem *item;
   QStack<Entity *> stack;
-  Entity *entity = project->entityChildren ().first ();
+  Entity *entity = project ()->entityChildren ().first ();
 
   QMap<QString, QString> attrs;
   QMap<QString, QString>::iterator begin, end, it;
@@ -321,7 +319,7 @@ OutlineViewPlugin::changeSelectedEntity (QString pluginID, void *param)
   if (_isSyncingFromTextual)
     return;
 
-  if (pluginID != this->pluginInstanceID)
+  if (pluginID != pluginInstanceID ())
   {
     QString *id = (QString *)param;
     QTreeWidgetItem *item = _window->getItemById (*id);
@@ -397,8 +395,8 @@ void
 OutlineViewPlugin::openWithDefaultSystemEditor (QString entityId)
 {
   QString url;
-  Entity *entity = project->getEntityById (entityId);
-  QFileInfo projectInfo (project->getLocation ());
+  Entity *entity = project ()->getEntityById (entityId);
+  QFileInfo projectInfo (project ()->getLocation ());
 
   if (entity->type () == "media")
   {
