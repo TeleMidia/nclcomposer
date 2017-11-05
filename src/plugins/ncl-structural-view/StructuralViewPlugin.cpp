@@ -190,27 +190,21 @@ StructuralViewPlugin::updateFromModel ()
     for (Entity *child : current->entityChildren ())
     {
       StructuralType t = util::strToType (child->type ());
-      switch (t)
+      StructuralCategory cat = util::categoryFromType (t);
+      switch (cat)
       {
-        case Structural::Media:
-        case Structural::Body:
-        case StructuralType::Context:
-        case StructuralType::Switch:
-        case StructuralType::Link:
+        case StructuralCategory::Node:
           nodes.push_back (child);
           break;
 
-        case Structural::Port:
-        case Structural::SwitchPort:
-        case Structural::Area:
-        case Structural::Property:
+        case StructuralCategory::Interface:
           interfaces.push_back (child);
           break;
-        case Structural::Bind:
-        case Structural::Reference:
-        case Structural::Mapping:
+
+        case StructuralCategory::Edge:
           edges.push_back (child);
           break;
+
         default:
           // do nothing.
           break;

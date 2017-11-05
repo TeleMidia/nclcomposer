@@ -9,8 +9,6 @@ StructuralNode::StructuralNode (StructuralEntity *parent)
   setStructuralType (Structural::NoType);
 }
 
-StructuralNode::~StructuralNode () {}
-
 void
 StructuralNode::inside ()
 {

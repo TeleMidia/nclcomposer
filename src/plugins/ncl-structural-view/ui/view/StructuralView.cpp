@@ -570,27 +570,26 @@ StructuralView::adjustReferences (StructuralEntity *ent)
             {
               if (child->isReference ())
               {
-                if (_scene->hasEntity (
-                        child->property (ST_ATTR_REF_REFER_UID)))
-                  if (_scene->entity (child->property (ST_ATTR_REF_REFER_UID))
-                          ->structuralParent ()
-                      != refer)
+                QString referUid = child->property (ST_ATTR_REF_REFER_UID);
+                if (_scene->hasEntity (referUid))
+                {
+                  if (_scene->entity (referUid)->structuralParent () != refer)
                     remove (child->uid (),
                             util::createSettings (false, false));
+                }
               }
             }
 
             QVector<QString> entities;
-            QStrMap referToChild, childToRefer;
+            QStrMap refer2Child, child2Refer;
 
             for (StructuralEntity *child : ent->children ())
             {
               if (child->isReference ())
               {
-                childToRefer[child->uid ()]
-                    = child->property (ST_ATTR_REF_REFER_UID);
-                referToChild[child->property (ST_ATTR_REF_REFER_UID)]
-                    = child->uid ();
+                QString referUid = child->property (ST_ATTR_REF_REFER_UID);
+                child2Refer[child->uid ()] = referUid;
+                refer2Child[referUid] = child->uid ();
               }
 
               entities.append (child->uid ());
@@ -600,7 +599,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
             {
               if (child->category () == Structural::Interface)
               {
-                if (!referToChild.contains (child->uid ()))
+                if (!refer2Child.contains (child->uid ()))
                 {
                   if (!entities.contains (
                           _scene->refs ().value (child->uid ())))
@@ -617,8 +616,8 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                     props.remove (ST_ATTR_ENT_TOP);
                     props.remove (ST_ATTR_ENT_LEFT);
 
-                    childToRefer[uid] = child->uid ();
-                    childToRefer[child->uid ()] = uid;
+                    child2Refer[uid] = child->uid ();
+                    child2Refer[child->uid ()] = uid;
 
                     _scene->refs ()[uid] = child->uid ();
 
@@ -664,7 +663,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
               {
                 if (child->category () == Structural::Interface)
                 {
-                  if (!childToRefer.contains (child->uid ()))
+                  if (!child2Refer.contains (child->uid ()))
                   {
                     if (!_scene->refs ().values ().contains (child->uid ()))
                     {
@@ -848,7 +847,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
     case Structural::Area:
     case Structural::Property:
     case Structural::Port:
-    case Structural::Switch:
+    case Structural::SwitchPort:
     {
       QVector<StructuralEntity *> relatives = util::neighbors (ent);
       relatives += util::upNeighbors (ent);

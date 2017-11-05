@@ -145,7 +145,7 @@ StructuralScene::load (const QString &data)
     {
       CPR_ASSERT (!elt.attribute ("uid").isEmpty ());
       CPR_ASSERT (!elt.attribute ("refer").isEmpty ());
-      _refs[elt.attribute ("uid")] = elt.attribute ("refer");
+      _refs.insert (elt.attribute ("uid"), elt.attribute ("refer"));
     }
   }
 }

@@ -187,6 +187,34 @@ strToCategory (const QString &category)
     return Structural::NoCategory;
 }
 
+StructuralCategory
+categoryFromType (StructuralType type)
+{
+  switch (type)
+  {
+    case Structural::Media:
+    case Structural::Body:
+    case StructuralType::Context:
+    case StructuralType::Switch:
+    case StructuralType::Link:
+      return StructuralCategory::Node;
+
+    case Structural::Port:
+    case Structural::SwitchPort:
+    case Structural::Area:
+    case Structural::Property:
+      return StructuralCategory::Interface;
+
+    case Structural::Bind:
+    case Structural::Reference:
+    case Structural::Mapping:
+      return StructuralCategory::Edge;
+
+    default:
+      return StructuralCategory::NoCategory;
+  }
+}
+
 static const std::map<Structural::Type, QString> _typeToStr
     = { { Structural::Media, "media" },
         { Structural::Body, "body" },

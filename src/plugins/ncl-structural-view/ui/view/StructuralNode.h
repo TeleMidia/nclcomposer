@@ -7,7 +7,7 @@ class StructuralNode : public StructuralEntity
 {
 public:
   StructuralNode (StructuralEntity *structuralParent = 0);
-  virtual ~StructuralNode ();
+  virtual ~StructuralNode () {}
 
   virtual void adjust (bool collision = false, bool recursion = true);
 

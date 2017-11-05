@@ -24,6 +24,8 @@ QMap<QString, QString> createPluginTranslations (StructuralType type);
 QString categoryToStr (StructuralCategory category);
 StructuralCategory strToCategory (const QString &category);
 
+StructuralCategory categoryFromType (StructuralType type);
+
 QString typeToStr (StructuralType type);
 StructuralType strToType (const QString &type);
 
