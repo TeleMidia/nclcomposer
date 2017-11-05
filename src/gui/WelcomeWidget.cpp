@@ -65,7 +65,7 @@ WelcomeWidget::WelcomeWidget (QWidget *parent)
 
 #ifdef WITH_TEST_VERSION_MESSAGE
 #define LABEL_BUILD                                                           \
-  "This is an ALPHA version. Version: " NCLCOMPOSER_GUI_VERSION  " "          \
+  "This is an ALPHA version. Version: " NCLCOMPOSER_GUI_VERSION " "           \
   "Build Date and time:" BUILD_DATE
 
   ui->label_BuildMessage->setText (LABEL_BUILD);
@@ -514,7 +514,7 @@ WelcomeWidget::doExtractCurrentFile (QString extDirPath,
 
     qCDebug (CPR_GUI) () << fileNameToImport << projectName;
     ProjectControl::instance ()->importFromDocument (fileNameToImport,
-                                                        projectName);
+                                                     projectName);
     progressDialog->hide ();
 
     return true;
@@ -578,7 +578,7 @@ WelcomeWidget::doExtractCurrentFile (QString extDirPath,
 
   // out.setFileName("out/" + name);
   if (name.endsWith (".ncl")) //\fixme This is problematic. It can exists more
-                              //than one .ncl file.
+                              // than one .ncl file.
   {
     fileNameToImport = QFileInfo (out).absoluteFilePath ();
   }

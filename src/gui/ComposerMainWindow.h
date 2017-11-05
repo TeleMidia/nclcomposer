@@ -62,8 +62,8 @@ using namespace cpr::core;
 #include "AboutDialogs.h"
 #include "PerspectiveManager.h"
 #include "PreferencesDialog.h"
-#include "WelcomeWidget.h"
 #include "PreferencesEditor.h"
+#include "WelcomeWidget.h"
 using namespace cpr::gui;
 
 #include <qtoolwindowmanager.h>
@@ -268,8 +268,8 @@ public slots:
 
 private slots:
   void checkForUpdates ();
-  void on_action_Preferences_2_triggered();
-  void on_action_Help_triggered();
+  void on_action_Preferences_2_triggered ();
+  void on_action_Help_triggered ();
 };
 
 CPR_GUI_END_NAMESPACE

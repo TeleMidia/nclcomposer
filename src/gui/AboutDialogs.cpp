@@ -106,7 +106,7 @@ AboutPluginsDialog::AboutPluginsDialog (QWidget *parent) : QDialog (parent)
 void
 AboutPluginsDialog::loadPlugins ()
 {
-  _treeWidgetPlugins->clear();
+  _treeWidgetPlugins->clear ();
 
   QList<ILanguageProfile *> langList
       = LanguageControl::instance ()->getLoadedProfiles ();
@@ -118,10 +118,10 @@ AboutPluginsDialog::loadPlugins ()
   QMap<QString, QTreeWidgetItem *> categories;
 
   QString category = "Language profile";
-  treeWidgetItem = new QTreeWidgetItem(_treeWidgetPlugins);
-  categories.insert(category, treeWidgetItem);
-  treeWidgetItem->setText(0, category);
-  treeWidgetItem->setTextColor(0, QColor("#0000FF"));
+  treeWidgetItem = new QTreeWidgetItem (_treeWidgetPlugins);
+  categories.insert (category, treeWidgetItem);
+  treeWidgetItem->setText (0, category);
+  treeWidgetItem->setTextColor (0, QColor ("#0000FF"));
 
   for (IPluginFactory *pF : pList)
   {
@@ -137,10 +137,10 @@ AboutPluginsDialog::loadPlugins ()
   }
 
   category = "Language profile";
-  for (ILanguageProfile *langProfile: langList)
+  for (ILanguageProfile *langProfile : langList)
   {
-    treeWidgetItem = new QTreeWidgetItem ( categories.value(category) );
-    treeWidgetItem->setText(0, langProfile->profileName());
+    treeWidgetItem = new QTreeWidgetItem (categories.value (category));
+    treeWidgetItem->setText (0, langProfile->profileName ());
     treeWidgetItem->setCheckState (1, Qt::Checked);
     treeWidgetItem->setDisabled (true);
   }

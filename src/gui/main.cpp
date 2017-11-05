@@ -49,8 +49,8 @@ loadTranslations ()
   settings.endGroup ();
 
   // Add datadir for looking for translation files.
-  extensions_paths.push_front(
-    QApplication::applicationDirPath () + "/../share/nclcomposer/");
+  extensions_paths.push_front (QApplication::applicationDirPath ()
+                               + "/../share/nclcomposer/");
 
   qCDebug (CPR_MAIN) << "Looking for translations in " << extensions_paths;
   /* Go in each extension path and search for files from that language */
