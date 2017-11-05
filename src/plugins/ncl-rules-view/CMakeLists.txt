@@ -13,12 +13,10 @@ set(NCL_RULES_VIEW_SOURCES
   CompositeRuleItem.cpp
   RuleItem.cpp
   RulesTreeWidget.cpp
-  RulesView.cpp
   RulesViewPlugin.cpp
   
   Util.h
   RulesViewPlugin.h
-  RulesView.h
   RulesTreeWidget.h
   RuleItem.h
   CompositeRuleItem.h

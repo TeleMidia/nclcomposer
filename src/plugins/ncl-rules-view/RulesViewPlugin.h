@@ -7,7 +7,6 @@
 using namespace cpr::core;
 
 #include "RulesTreeWidget.h"
-#include "RulesView.h"
 
 /*!
  * \brief Rules View is a simple plugin allows users to graphically define
