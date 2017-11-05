@@ -56,7 +56,7 @@ public:
    *  This function must be implemented by concrete Document Parsers.
    * \return QString the name of the Document Parser.
    */
-  virtual QString getParserName () = 0;
+  virtual QString parserName () = 0;
 
 public slots:
   /*!

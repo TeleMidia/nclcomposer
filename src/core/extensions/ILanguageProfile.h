@@ -38,25 +38,25 @@ class COMPOSERCORESHARED_EXPORT ILanguageProfile
 public:
   virtual ~ILanguageProfile () {}
 
-  virtual LanguageType getLanguageType () = 0;
+  virtual LanguageType languageType () = 0;
 
-  virtual QString getProfileName () = 0;
+  virtual QString profileName () = 0;
 
-  virtual QList<QString> getOutputDocumentTypes () = 0;
+  virtual QList<QString> outputDocumentTypes () = 0;
 
   virtual IDocumentParser *createParser (Project *project) = 0;
 
   virtual void releaseDocumentParser (IDocumentParser *parser) = 0;
 
   // FUNCTIONS RELATED TO LANGUAGE STRUCTURE
-  virtual map<QString, map<QString, char> *> *getNesting () = 0;
+  virtual map<QString, map<QString, char> *> *nesting () = 0;
 
-  virtual map<QString, bool> *getAttributes (const QString &element) = 0;
+  virtual map<QString, bool> *attrs (const QString &element) = 0;
 
-  virtual map<QString, char> *getChildren (const QString &tagname) = 0;
+  virtual map<QString, char> *children (const QString &tagname) = 0;
 
-  virtual vector<AttributeReferences *> getReferences (const QString &element,
-                                                       const QString &attr)
+  virtual vector<AttributeReferences *> references (const QString &element,
+                                                    const QString &attr)
       = 0;
 };
 

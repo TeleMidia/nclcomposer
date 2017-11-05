@@ -28,19 +28,19 @@ public:
   NCLLanguageProfile ();
   virtual ~NCLLanguageProfile ();
 
-  LanguageType getLanguageType ();
-  QString getProfileName ();
-  QList<QString> getOutputDocumentTypes ();
+  LanguageType languageType ();
+  QString profileName ();
+  QList<QString> outputDocumentTypes ();
 
   IDocumentParser *createParser (Project *project);
   void releaseDocumentParser (IDocumentParser *parser);
 
-  map<QString, map<QString, char> *> *getNesting ();
-  map<QString, bool> *getAttributes (const QString &element);
-  map<QString, char> *getChildren (const QString &tagname);
+  map<QString, map<QString, char> *> *nesting ();
+  map<QString, bool> *attrs (const QString &element);
+  map<QString, char> *children (const QString &tagname);
 
-  vector<AttributeReferences *> getReferences (const QString &element,
-                                               const QString &attr);
+  vector<AttributeReferences *> references (const QString &element,
+                                            const QString &attr);
 };
 
 CPR_NCLPROFILE_END_NAMESPACE

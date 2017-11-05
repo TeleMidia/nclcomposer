@@ -67,7 +67,7 @@ LanguageControl::loadProfile (const QString &fileName)
     lProfile = qobject_cast<ILanguageProfile *> (profile);
     if (lProfile)
     {
-      LanguageType type = lProfile->getLanguageType ();
+      LanguageType type = lProfile->languageType ();
       if (_profiles.contains (type))
       {
         qCDebug (CPR_CORE)

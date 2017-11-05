@@ -160,7 +160,7 @@ MessageControl::addEntity (const QString &type, const QString &parentEntityId,
   if (plugin)
     senderId = plugin->getPluginInstanceID ();
   else if (parser)
-    senderId = parser->getParserName ();
+    senderId = parser->parserName ();
 
   Entity *ent = nullptr;
 
@@ -200,7 +200,7 @@ MessageControl::addContent (const QString &entity_content,
   if (plugin)
     senderId = plugin->getPluginInstanceID ();
   else if (parser)
-    senderId = parser->getParserName ();
+    senderId = parser->parserName ();
 
   Entity *ent = nullptr;
 
@@ -286,7 +286,7 @@ MessageControl::addComment (const QString &content, const QString &parentId)
   if (plugin)
     senderId = plugin->getPluginInstanceID ();
   else if (parser)
-    senderId = parser->getParserName ();
+    senderId = parser->parserName ();
 
   Comment *comment = nullptr;
   try

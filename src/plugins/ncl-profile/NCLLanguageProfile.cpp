@@ -18,19 +18,19 @@ NCLLanguageProfile::NCLLanguageProfile () {}
 NCLLanguageProfile::~NCLLanguageProfile () {}
 
 LanguageType
-NCLLanguageProfile::getLanguageType ()
+NCLLanguageProfile::languageType ()
 {
   return NCL;
 }
 
 QString
-NCLLanguageProfile::getProfileName ()
+NCLLanguageProfile::profileName ()
 {
   return "Nested Context Language Profile";
 }
 
 QList<QString>
-NCLLanguageProfile::getOutputDocumentTypes ()
+NCLLanguageProfile::outputDocumentTypes ()
 {
   QList<QString> list;
   list.append ("ncl");
@@ -54,25 +54,25 @@ NCLLanguageProfile::releaseDocumentParser (IDocumentParser *parser)
 }
 
 map<QString, map<QString, char> *> *
-NCLLanguageProfile::getNesting ()
+NCLLanguageProfile::nesting ()
 {
   return NCLStructure::instance ()->getNesting ();
 }
 
 map<QString, bool> *
-NCLLanguageProfile::getAttributes (const QString &element)
+NCLLanguageProfile::attrs (const QString &element)
 {
   return NCLStructure::instance ()->getAttributes (element);
 }
 
 map<QString, char> *
-NCLLanguageProfile::getChildren (const QString &tagname)
+NCLLanguageProfile::children (const QString &tagname)
 {
   return NCLStructure::instance ()->getChildren (tagname);
 }
 
 vector<AttributeReferences *>
-NCLLanguageProfile::getReferences (const QString &element, const QString &attr)
+NCLLanguageProfile::references (const QString &element, const QString &attr)
 {
   return NCLStructure::instance ()->getReferences (element, attr);
 }

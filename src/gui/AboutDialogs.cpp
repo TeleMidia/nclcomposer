@@ -140,7 +140,7 @@ AboutPluginsDialog::loadPlugins ()
   for (ILanguageProfile *langProfile: langList)
   {
     treeWidgetItem = new QTreeWidgetItem ( categories.value(category) );
-    treeWidgetItem->setText(0, langProfile->getProfileName());
+    treeWidgetItem->setText(0, langProfile->profileName());
     treeWidgetItem->setCheckState (1, Qt::Checked);
     treeWidgetItem->setDisabled (true);
   }

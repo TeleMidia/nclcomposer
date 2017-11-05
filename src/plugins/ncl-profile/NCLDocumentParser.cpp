@@ -19,7 +19,7 @@ NCLDocumentParser::NCLDocumentParser (Project *project)
 NCLDocumentParser::~NCLDocumentParser () {}
 
 QString
-NCLDocumentParser::getParserName ()
+NCLDocumentParser::parserName ()
 {
   return "NCLDocumentParser";
 }
