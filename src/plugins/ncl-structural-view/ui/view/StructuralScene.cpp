@@ -137,16 +137,8 @@ StructuralScene::load (const QString &data)
 
   for_each_qelem_child (elt, root)
   {
-    if (elt.nodeName () == "entity")
-    {
-      load (elt, root);
-    }
-    else if (elt.nodeName () == "reference")
-    {
-      CPR_ASSERT (!elt.attribute ("uid").isEmpty ());
-      CPR_ASSERT (!elt.attribute ("refer").isEmpty ());
-      _refs.insert (elt.attribute ("uid"), elt.attribute ("refer"));
-    }
+    CPR_ASSERT (elt.nodeName () == "entity");
+    load (elt, root);
   }
 }
 
