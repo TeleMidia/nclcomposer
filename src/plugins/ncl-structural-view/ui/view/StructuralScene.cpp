@@ -61,7 +61,7 @@ StructuralScene::entitiesByAttrId (const QString &id)
 }
 
 QString
-StructuralScene::createNewId (StructuralType type, const QString &customPrefix)
+StructuralScene::createId (StructuralType type, const QString &customPrefix)
 {
   QString prefix = customPrefix;
   if (prefix.isEmpty ())
@@ -165,18 +165,6 @@ StructuralScene::save ()
   QDomDocument *doc = new QDomDocument ();
   QDomElement root = doc->createElement ("structural");
 
-  for (const QString &key : _refs.keys ())
-  {
-    CPR_ASSERT (_entities.contains (key)
-                && _entities.contains (_refs.value (key)));
-
-    QDomElement ref = doc->createElement ("reference");
-    ref.setAttribute ("uid", key);
-    ref.setAttribute ("refer", _refs.value (key));
-
-    root.appendChild (ref);
-  }
-
   if (ST_OPT_WITH_BODY)
   {
     for (StructuralEntity *e : _entities.values ())
@@ -196,7 +184,7 @@ StructuralScene::save ()
 
   doc->appendChild (root);
 
-  return doc->toString (4);
+  return doc->toString (2);
 }
 
 void
@@ -206,8 +194,11 @@ StructuralScene::createXmlElement (StructuralEntity *ent, QDomDocument *doc,
   if (ent->structuralType () != Structural::Reference)
   {
     QDomElement elt = doc->createElement ("entity");
+    CPR_ASSERT (!ent->uid ().isEmpty ());
+    CPR_ASSERT (!util::typetostr(ent->structuralType ()).isEmpty ());
+
     elt.setAttribute ("uid", ent->uid ());
-    elt.setAttribute ("type", ent->structuralType ());
+    elt.setAttribute ("type", util::typetostr(ent->structuralType ()));
 
     for (const QString &key : ent->properties ().keys ())
       elt.setAttribute (key, ent->property (key));
@@ -300,7 +291,7 @@ StructuralScene::updateWithDefaultProperties (StructuralEntity *e)
   StructuralEntity *p = e->structuralParent ();
 
   if (e->id ().isEmpty ())
-    e->setId (createNewId (e->structuralType ()));
+    e->setId (createId (e->structuralType ()));
 
   if (p)
     e->setTop (p->height () / 2 - e->height () / 2);

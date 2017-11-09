@@ -306,15 +306,15 @@ StructuralComposition::dragMoveEvent (QGraphicsSceneDragDropEvent *event)
 }
 
 void
-StructuralComposition::dropEvent (QGraphicsSceneDragDropEvent *event)
+StructuralComposition::dropEvent (QGraphicsSceneDragDropEvent *evt)
 {
-  QList<QUrl> list = event->mimeData ()->urls ();
+  QList<QUrl> urls = evt->mimeData ()->urls ();
 
-  if (!list.isEmpty ())
+  if (!urls.isEmpty ())
   {
-    event->setAccepted (false);
+    evt->setAccepted (false);
 
-    for (const QUrl &url : list)
+    for (const QUrl &url : urls)
     {
       QString filename = url.toLocalFile ();
 
@@ -324,9 +324,9 @@ StructuralComposition::dropEvent (QGraphicsSceneDragDropEvent *event)
           StructuralUtil::formatId (QFileInfo (filename).baseName ()) },
         { ST_ATTR_NODE_SRC, filename },
         { ST_ATTR_ENT_TOP,
-          QString::number (event->pos ().y () - ST_DEFAULT_CONTENT_H / 2) },
+          QString::number (evt->pos ().y () - ST_DEFAULT_CONTENT_H / 2) },
         { ST_ATTR_ENT_LEFT,
-          QString::number (event->pos ().x () - ST_DEFAULT_CONTENT_W / 2) }
+          QString::number (evt->pos ().x () - ST_DEFAULT_CONTENT_W / 2) }
       };
 
       insertAsked (StructuralUtil::createUid (), uid (), props,
@@ -335,7 +335,7 @@ StructuralComposition::dropEvent (QGraphicsSceneDragDropEvent *event)
   }
   else
   {
-    StructuralNode::dropEvent (event);
+    StructuralNode::dropEvent (evt);
   }
 }
 

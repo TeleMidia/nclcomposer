@@ -23,7 +23,7 @@ public:
   QList<StructuralEntity *> entitiesByAttrId (const QString &id);
   QStrMap &refs ();
 
-  QString createNewId (StructuralType type, const QString &customPrefix = "");
+  QString createId (StructuralType type, const QString &customPrefix = "");
 
   void load (const QString &data);
   QString save ();

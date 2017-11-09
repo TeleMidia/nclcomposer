@@ -1384,7 +1384,7 @@ StructuralView::paste ()
       if (result == 1)
       {
         StructuralType type = _clipboard->structuralType ();
-        QString nextID = _scene->createNewId (
+        QString nextID = _scene->createId (
             type, QString ("c_") + _clipboard->id () + "_");
         _clipboard->setId (nextID);
 
