@@ -2053,12 +2053,12 @@ StructuralView::dropEvent (QDropEvent *evt)
   {
     if (evt->isAccepted ())
     {
-      QList<QUrl> list = evt->mimeData ()->urls ();
+      QList<QUrl> urls = evt->mimeData ()->urls ();
       StructuralType type = util::strtotype (evt->mimeData ()->objectName ());
 
-      if (!list.isEmpty ())
+      if (!urls.isEmpty ())
       {
-        for (const QUrl &url : list)
+        for (const QUrl &url : urls)
         {
           QString filename = url.toLocalFile ();
           QPointF p = mapToScene (evt->pos ());

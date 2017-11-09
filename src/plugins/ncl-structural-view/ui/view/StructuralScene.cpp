@@ -3,6 +3,8 @@
 #include "StructuralView.h"
 #include "util/Utilities.h"
 
+#include <vector>
+
 StructuralScene::StructuralScene (StructuralView *view, StructuralMenu *menu,
                                   QObject *parent)
     : QGraphicsScene (parent), _view (view), _menu (menu)
@@ -204,21 +206,10 @@ StructuralScene::save ()
   QDomDocument *doc = new QDomDocument ();
   QDomElement root = doc->createElement ("structural");
 
-  if (ST_OPT_WITH_BODY)
+  for (StructuralEntity *e : nodes ().values ())
   {
-    for (StructuralEntity *e : entities ().values ())
-    {
-      if (e->structuralType () == Structural::Body)
-        createXmlElement (e, doc, root);
-    }
-  }
-  else
-  {
-    for (StructuralEntity *e : entities ().values ())
-    {
-      if (e->structuralParent () == nullptr)
-        createXmlElement (e, doc, root);
-    }
+    if (e->structuralParent () == nullptr)
+      createXmlElement (e, doc, root);
   }
 
   doc->appendChild (root);
@@ -487,7 +478,6 @@ StructuralScene::remove (QString uid, QStrMap stgs)
   if (type == Structural::Link || type == Structural::Bind)
     removeParams (e, stgs);
 
-
   if (e->structuralType () == Structural::Port)
   {
     StructuralEntity *target = nullptr;
@@ -554,10 +544,8 @@ void
 StructuralScene::removeEdges (StructuralEntity *ent, const QStrMap &stgs)
 {
   CPR_ASSERT (hasEntity (ent->uid()));
-  qCWarning (CPR_PLUGIN_STRUCT) << edges (ent->uid()).size();
   for (StructuralEdge *edge : edges (ent->uid ()))
   {
-    qCWarning (CPR_PLUGIN_STRUCT) << edge->uid ();
     _view->removeEntity (edge->uid (), stgs);
   }
 }
@@ -566,7 +554,6 @@ void
 StructuralScene::removeChildren (StructuralEntity *ent, const QStrMap &stgs)
 {
   CPR_ASSERT (hasEntity (ent->uid()));
-
   while (!ent->children ().isEmpty ())
   {
     _view->removeEntity (ent->children ().first ()->uid (), stgs);
@@ -577,7 +564,6 @@ void
 StructuralScene::removeParams (StructuralEntity *ent, const QStrMap &stgs)
 {
   CPR_ASSERT (hasEntity (ent->uid ()));
-
   for (const QString &key : ent->properties ().keys ())
   {
     if (key.contains (ST_ATTR_LINKPARAM_NAME)
@@ -598,7 +584,7 @@ StructuralScene::change (QString uid, QStrMap props, QStrMap stgs)
   CPR_ASSERT (hasEntity (uid));
 
   StructuralEntity *ent = entity (uid);
-  auto *comp = dynamic_cast<StructuralComposition *> (ent);
+  auto *comp = cast (StructuralComposition *, ent);
 
   QStrMap prev = ent->properties ();
 
