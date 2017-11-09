@@ -73,9 +73,6 @@ public slots:
   void removeEntity (QString uid, QStrMap settings);
 
   // "Internal" methods
-  void insert (QString uid, QString parent, QStrMap props, QStrMap stgs);
-  void remove (QString uid, QStrMap stgs);
-  void change (QString uid, QStrMap props, QStrMap stgs);
   void select (QString uid, QStrMap stgs);
   void unselect ();
   void move (QString uid, QString parent, QStrMap props, QStrMap stgs);
@@ -111,11 +108,6 @@ public slots:
   void adjustReferences (StructuralEntity *entity);
 
 signals:
-  void inserted (QString uid, QString _parent, QStrMap properties,
-                 QStrMap settings);
-  void removed (QString uid, QStrMap settings);
-  void changed (QString uid, QStrMap properties, QStrMap previous,
-                QStrMap settings);
   void entitySelected (QString uid);
 
   void canUndoChanged (bool state);

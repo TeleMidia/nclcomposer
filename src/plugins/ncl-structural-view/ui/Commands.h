@@ -8,27 +8,27 @@
 
 #include "Structural.h"
 
-class StructuralView;
+class StructuralScene;
 
 class Command : public QObject, public QUndoCommand
 {
   Q_OBJECT
 
 public:
-  Command (StructuralView *view, Command *parent = 0);
+  Command (StructuralScene *scn, Command *parent = 0);
   virtual ~Command () {}
 
   virtual void undo () = 0;
   virtual void redo () = 0;
 
 protected:
-  StructuralView *_view;
+  StructuralScene *_scn;
 };
 
 class Insert : public Command
 {
 public:
-  Insert (StructuralView *view, const QString &uid, const QString &parent,
+  Insert (StructuralScene *scn, const QString &uid, const QString &parent,
           const QMap<QString, QString> &props,
           const QMap<QString, QString> &settings);
   virtual ~Insert () {}
@@ -45,7 +45,7 @@ private:
 class Remove : public Command
 {
 public:
-  Remove (StructuralView *view, const QString &uid, const QString &parent,
+  Remove (StructuralScene *scn, const QString &uid, const QString &parent,
           const QMap<QString, QString> &props,
           const QMap<QString, QString> &settings);
   virtual ~Remove () {}
@@ -62,7 +62,7 @@ private:
 class Change : public Command
 {
 public:
-  Change (StructuralView *view, const QString &uid,
+  Change (StructuralScene *scn, const QString &uid,
           const QMap<QString, QString> &props,
           const QMap<QString, QString> &previous,
           const QMap<QString, QString> &settings);
@@ -73,7 +73,6 @@ public:
 
 private:
   QString _uid;
-
   QStrMap _props, _previous, _stgs;
 };
 

@@ -4,13 +4,15 @@
 #include <QDomDocument>
 #include <QGraphicsScene>
 #include <QGraphicsSceneContextMenuEvent>
-
+#include <QObject>
 #include "StructuralMenu.h"
 
 class StructuralView;
 
 class StructuralScene : public QGraphicsScene
 {
+  Q_OBJECT
+
 public:
   StructuralScene (StructuralView *view, StructuralMenu *menu,
                    QObject *parent = 0);
@@ -37,8 +39,18 @@ public:
   void insertIntoMap (const QString &uid, StructuralEntity *ent);
   void removeFromMap (const QString &uid);
 
+  // Edit scene.
+  void insert (QString uid, QString parent, QStrMap props, QStrMap stgs);
+  void remove (QString uid, QStrMap stgs);
+  void change (QString uid, QStrMap props, QStrMap stgs);
+
 public slots:
   void clear (); // override?
+
+signals:
+  void inserted (QString uid, QString parent, QStrMap props, QStrMap stngs);
+  void removed (QString uid, QStrMap stngs);
+  void changed (QString uid, QStrMap props, QStrMap previous, QStrMap stngs);
 
 protected:
   virtual void contextMenuEvent (QGraphicsSceneContextMenuEvent *event);

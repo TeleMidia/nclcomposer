@@ -167,7 +167,7 @@ StructuralScene::load (QDomElement elt, QDomElement parent)
   auto stgs = StructuralUtil::createSettings (false, false);
   stgs[ST_SETTINGS_ADJUST_REFERS] = ST_VALUE_FALSE;
 
-  _view->insert (entUid, parentUid, props, stgs);
+  insert (entUid, parentUid, props, stgs);
 
   for_each_qelem_child_of_type (child, elt, "entity") { load (child, elt); }
 }
@@ -359,4 +359,274 @@ StructuralScene::updateWithDefaultProperties (StructuralEntity *e)
         = views ().at (1)->mapToScene (views ().at (1)->rect ().center ());
     e->setLeft (rect.x () - e->width () / 2);
   }
+}
+
+void
+StructuralScene::insert (QString uid, QString parent, QStrMap props,
+                         QStrMap stgs)
+{
+  CPR_ASSERT (!hasEntity (uid));
+
+  // 1. Create the new entity.
+  StructuralType type = util::strtotype (props[ST_ATTR_ENT_TYPE]);
+  StructuralEntity *e = createEntity (type);
+  CPR_ASSERT_NON_NULL (e);
+  e->setUid (uid);
+
+  // 2. Add to the scene and as child of p
+  insertIntoMap (uid, e);
+
+  StructuralEntity *p = nullptr;
+  if (hasEntity (parent))
+    p = entity (parent);
+
+  if (type != StructuralType::Body && p == nullptr)
+    CPR_ASSERT_NOT_REACHED ();
+
+  e->setStructuralParent (p);
+  if (p == nullptr)
+    addItem (e);
+
+  // 3. Update the properties of the new entity
+  updateWithDefaultProperties (e);
+  e->setProperties (props);
+  e->setMenu (_menu);
+
+  // 4. Adjust the parent
+  if (p && (p->structuralType () == Structural::Body
+            || p->structuralType () == Structural::Switch
+            || p->structuralType () == Structural::Context))
+  {
+    auto comp = cast (StructuralComposition *, p);
+    CPR_ASSERT_NON_NULL (comp);
+
+    if (comp->isCollapsed ())
+      comp->uncollapse ();
+  }
+
+  // 5. Adjust the entity
+  _view->adjustEntity (e, props, stgs);
+  if (stgs.value (ST_SETTINGS_ADJUST_REFERS, "") != ST_VALUE_FALSE)
+    _view->adjustReferences (e);
+
+  connect (e, &StructuralEntity::insertAsked, this, &StructuralScene::insert);
+  connect (e, &StructuralEntity::changeAsked, _view,
+           &StructuralView::changeEntity);
+  connect (e, &StructuralEntity::selectAsked, _view, &StructuralView::select);
+  connect (e, &StructuralEntity::moveAsked, _view, &StructuralView::move);
+
+  if (stgs[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
+    emit inserted (uid, parent, e->properties (), stgs);
+
+  if (!ST_OPT_SHOW_INTERFACES)
+  {
+    // Since interfaces are hidden, no update related with that entities
+    // are notified.  However, the structural view create a new id when this
+    // property is empty, then the change must be explicit notified for the
+    // hidden entities (interface in this case).
+    emit changed (uid, e->properties (),
+                  e->properties (), // this param is not used
+                  // in this case
+                  util::createSettings (false, false));
+  }
+
+//  if (type == StructuralType::Body)
+//    emit canAddBody (false);
+}
+
+void
+StructuralScene::remove (QString uid, QStrMap stgs)
+{
+  CPR_ASSERT (hasEntity (uid));
+
+  StructuralEntity *e = entity (uid);
+  StructuralEntity *p = e->structuralParent ();
+  StructuralType type = e->structuralType ();
+
+  // Removing 'references'...
+  if (e->category () == Structural::Interface)
+  {
+    QStrMap s = util::createSettings (ST_VALUE_FALSE, ST_VALUE_FALSE,
+                                      stgs.value (ST_SETTINGS_CODE));
+
+    for (const QString &key : refs ().keys (e->uid ()))
+      remove (key, s);
+
+    // Only remove interface -> interface references. Keeping
+    // Media -> Media references to enable undo.  All "trash" references
+    // are ignore when saving the project.
+    refs ().remove (e->uid ());
+  }
+  else if (e->structuralType () == Structural::Media)
+  {
+    for (const QString &key : refs ().keys (e->uid ()))
+    {
+      CPR_ASSERT (hasEntity (key));
+      entity (key)->setReference (false);
+      entity (key)->adjust (true);
+    }
+  }
+
+  // Removing 'children'...
+  if (stgs.value (ST_SETTINGS_UNDO_TRACE) != ST_VALUE_FALSE)
+    stgs[ST_SETTINGS_UNDO] = ST_VALUE_TRUE;
+
+  while (!e->children ().isEmpty ())
+  {
+    _view->removeEntity (e->children ().first ()->uid (), stgs);
+  }
+
+  // Removing 'edges'...
+  if (e->category () != Structural::Edge)
+  {
+    QVector<StructuralEntity *> relatives = util::neighbors (e);
+    relatives += util::upneighbors (e);
+
+    for (StructuralEntity *rel : relatives)
+    {
+      if (rel->category () == Structural::Edge)
+      {
+        StructuralEdge *edge = cast (StructuralEdge *, rel);
+        if (edge->origin () == e || edge->destination () == e)
+        {
+          if (edge->structuralType () != Structural::Reference)
+          {
+            _view->removeEntity (edge->uid (),
+                                 util::createSettings (
+                                   ST_VALUE_TRUE, stgs.value (ST_SETTINGS_NOTIFY),
+                                   stgs.value (ST_SETTINGS_CODE)));
+          }
+          else
+          {
+            if (ST_OPT_SHOW_INTERFACES)
+            {
+              // In case of 'Structural::Reference' edge, just change
+              // 'Structural::Port' properties.
+              //
+              // Note:
+              // The 'tail' of a 'Structural::Reference' edge
+              // is always a 'Structural::Port' entity.
+              auto props = edge->origin ()->properties ();
+
+              MAP_REMOVE_IF_CONTAINS (props, ST_ATTR_REF_COMPONENT_ID);
+              MAP_REMOVE_IF_CONTAINS (props, ST_ATTR_REF_COMPONENT_UID);
+              MAP_REMOVE_IF_CONTAINS (props, ST_ATTR_REF_INTERFACE_ID);
+              MAP_REMOVE_IF_CONTAINS (props, ST_ATTR_REF_INTERFACE_UID);
+
+              change (edge->origin ()->uid (), props,
+                      util::createSettings (ST_VALUE_TRUE,
+                                            stgs.value (ST_SETTINGS_NOTIFY),
+                                            stgs.value (ST_SETTINGS_CODE)));
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Removing 'params'...
+  if (type == Structural::Link || type == Structural::Bind)
+  {
+    for (const QString &key : e->properties ().keys ())
+    {
+      if (key.contains (ST_ATTR_LINKPARAM_NAME)
+          || key.contains (ST_ATTR_BINDPARAM_NAME))
+      {
+        if (stgs[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
+        {
+          emit removed (key.right (key.length () - key.lastIndexOf (':') - 1),
+                        stgs);
+        }
+      }
+    }
+  }
+
+  if (!ST_OPT_WITH_BODY && !ST_OPT_USE_FLOATING_INTERFACES)
+  {
+    if (e->structuralType () == Structural::Port)
+    {
+      StructuralEntity *target = nullptr;
+      QString compUid = e->property (ST_ATTR_REF_COMPONENT_UID);
+      QString interfUid = e->property (ST_ATTR_REF_INTERFACE_UID);
+
+      if (hasEntity (compUid))
+      {
+        target = entity (compUid);
+
+        if (hasEntity (interfUid))
+          target = entity (interfUid);
+      }
+
+      if (target)
+        target->setProperty (ST_ATTR_ENT_AUTOSTART, ST_VALUE_FALSE);
+    }
+  }
+
+  // Removing 'others'...
+  if (p)
+    p->removeChild (e);
+  else
+    removeItem (e);
+
+  removeFromMap (uid);
+  delete e;
+
+//  if (uid == _selected)
+//    emit select ("", stgs);
+
+//  if (type == Structural::Body)
+//    emit canAddBody (true);
+
+  if (stgs[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
+    emit removed (uid, stgs);
+}
+
+void
+StructuralScene::change (QString uid, QStrMap props, QStrMap stgs)
+{
+  CPR_ASSERT (hasEntity (uid));
+
+  StructuralEntity *ent = entity (uid);
+  auto *comp = dynamic_cast<StructuralComposition *> (ent);
+
+  QStrMap prev = ent->properties ();
+
+  if (ent->isCollapsed ()
+      && props.value (ST_ATTR_ENT_COLLAPSED) == ST_VALUE_FALSE)
+  {
+    comp->uncollapse ();
+  }
+
+  if (!ent->isCollapsed ()
+      && props.value (ST_ATTR_ENT_COLLAPSED) == ST_VALUE_TRUE)
+  {
+    comp->collapse ();
+  }
+
+  if (!ST_OPT_WITH_BODY && !ST_OPT_USE_FLOATING_INTERFACES)
+  {
+    if (ent->structuralType () == Structural::Port)
+    {
+      StructuralEntity *lasttarget = nullptr;
+      QString compUid = prev.value (ST_ATTR_REF_COMPONENT_UID);
+      QString interfUid = prev.value (ST_ATTR_REF_INTERFACE_UID);
+      if (hasEntity (compUid))
+      {
+        lasttarget = entity (compUid);
+
+        if (hasEntity (interfUid))
+          lasttarget = entity (interfUid);
+      }
+
+      if (lasttarget)
+        lasttarget->setProperty (ST_ATTR_ENT_AUTOSTART, ST_VALUE_FALSE);
+    }
+  }
+
+  ent->setProperties (props);
+  _view->adjustReferences (ent);
+  ent->adjust (true);
+
+  if (stgs[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
+    emit changed (uid, props, prev, stgs);
 }
