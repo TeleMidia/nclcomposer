@@ -5,7 +5,10 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QObject>
+
 #include "StructuralMenu.h"
+#include "StructuralEntity.h"
+#include "StructuralEdge.h"
 
 class StructuralView;
 
@@ -22,8 +25,11 @@ public:
   bool hasEntity (const QString &uid);
   StructuralEntity *entity (const QString &uid);
   QMap<QString, StructuralEntity *> entities ();
-  const QMap<QString, StructuralEntity *> &nodes ();
   QList<StructuralEntity *> entitiesByAttrId (const QString &id);
+
+  const QMap<QString, StructuralEntity *> &nodes ();
+  const QMap<QString, StructuralEdge *> &edges (void);
+  QList <StructuralEdge *> edges (const QString &nodeuid);
   QStrMap &refs ();
 
   QString createId (StructuralType type, const QString &customPrefix = "");
@@ -59,12 +65,18 @@ private:
   StructuralView *_view;
   StructuralMenu *_menu;
 
-  QMap<QString, StructuralEntity *> _nodes, _edges;
+  QMap<QString, StructuralEntity *> _nodes;
+  QMap<QString, StructuralEdge *> _edges;
   QStrMap _refs;
 
   void load (QDomElement ent, QDomElement parent);
   void createXmlElement (StructuralEntity *ent, QDomDocument *doc,
                          QDomElement parent);
+
+  void removeReferences (StructuralEntity *ent, const QStrMap &stgs);
+  void removeEdges (StructuralEntity *ent, const QStrMap &stgs);
+  void removeChildren (StructuralEntity *ent, const QStrMap &stgs);
+  void removeParams (StructuralEntity *ent, const QStrMap &stgs);
 };
 
 #endif // STRUCTURALSCENE_H
