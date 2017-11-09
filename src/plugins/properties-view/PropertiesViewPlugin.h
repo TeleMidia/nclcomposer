@@ -164,19 +164,8 @@ class PropertiesViewFactory : public QObject,
                               public IPluginFactoryTpl<PropertiesViewPlugin>
 {
   Q_OBJECT
-  CPR_PLUGIN_METADATA ("properties-view.json")
-
-public:
-  QString
-  id () const
-  {
-    return "br.puc-rio.telemidia.PropertiesView";
-  }
-  QIcon
-  icon () const
-  {
-    return QIcon (":/images/icon.png");
-  }
+  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.PropertiesView",
+                       "properties-view.json")
 };
 
 #endif // PROPERTIESVIEWPLUGIN_H

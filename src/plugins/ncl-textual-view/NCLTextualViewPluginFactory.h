@@ -39,21 +39,11 @@ class NCLTextualViewPluginFactory
       public IPluginFactoryTpl<NCLTextualViewPlugin>
 {
   Q_OBJECT
-  CPR_PLUGIN_METADATA ("ncl-textual-view.json")
+  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.NCLTextualView",
+                       "ncl-textual-view.json")
 
 public:
   NCLTextualViewPluginFactory ();
-
-  QString
-  id () const
-  {
-    return "br.puc-rio.telemidia.NCLTextualView";
-  }
-  QIcon
-  icon () const
-  {
-    return QIcon (":/images/ncl.png");
-  }
 
 private:
   QFrame *_prefPageWidget;

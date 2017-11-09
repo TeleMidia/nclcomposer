@@ -64,19 +64,7 @@ class RulesViewFactory : public QObject,
                          public IPluginFactoryTpl<RulesViewPlugin>
 {
   Q_OBJECT
-  CPR_PLUGIN_METADATA ("ncl-rules-view.json")
-
-public:
-  QString
-  id () const override
-  {
-    return "br.puc-rio.telemidia.RulesView";
-  }
-  QIcon
-  icon () const override
-  {
-    return QIcon ();
-  }
+  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.RulesView", "ncl-rules-view.json")
 };
 
 #endif // RULESVIEWPLUGIN_H

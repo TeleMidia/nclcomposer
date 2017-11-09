@@ -27,17 +27,11 @@ class NCLLayoutViewFactory : public QObject,
                              public IPluginFactoryTpl<NCLLayoutViewPlugin>
 {
   Q_OBJECT
-  CPR_PLUGIN_METADATA ("ncl-layout-view.json")
+  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.qncllayout", "ncl-layout-view.json")
 
 public:
   explicit NCLLayoutViewFactory (QObject *parent = 0);
   virtual ~NCLLayoutViewFactory () {}
-
-  QString
-  id () const
-  {
-    return "br.puc-rio.telemidia.qncllayout";
-  }
 };
 
 #endif // QNLYCOMPOSERPLUGINFACTORY_H

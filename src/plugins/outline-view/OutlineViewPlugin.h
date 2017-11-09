@@ -196,19 +196,7 @@ class OutlineViewFactory : public QObject,
                            public IPluginFactoryTpl<OutlineViewPlugin>
 {
   Q_OBJECT
-  CPR_PLUGIN_METADATA ("outline-view.json")
-
-public:
-  QString
-  id () const override
-  {
-    return "br.puc-rio.telemidia.OutlineView";
-  }
-  QIcon
-  icon () const override
-  {
-    return QIcon (":/images/ncl.png");
-  }
+  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.OutlineView", "outline-view.json")
 };
 
 #endif // OUTLINEVIEWPLUGIN_H

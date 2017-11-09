@@ -34,9 +34,11 @@ CPR_CORE_BEGIN_NAMESPACE
  * \brief Helper macro to avoid code duplication in an instance of
  * IPluginFactory.
  */
-#define CPR_PLUGIN_METADATA(FILENAME)                                         \
+#define CPR_PLUGIN_METADATA(PLUGIN_ID, METADATA_FILE)                         \
   Q_INTERFACES (IPluginFactory)                                               \
-  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE FILENAME)
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE METADATA_FILE)               \
+public:                                                                       \
+  QString id () const override { return PLUGIN_ID; }
 
 /*!
  * \ingroup core
@@ -96,6 +98,7 @@ public:
   {
     this->metadata_obj = obj;
   }
+
   QJsonObject
   metadata ()
   {

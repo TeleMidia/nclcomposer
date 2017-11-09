@@ -42,6 +42,12 @@ RulesViewPlugin::RulesViewPlugin () : IPlugin ()
   emit setListenFilter (listenFilter);
 }
 
+RulesViewPlugin::~RulesViewPlugin ()
+{
+  delete _rulesTable;
+  delete _selectedUId;
+}
+
 void
 RulesViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
 {
@@ -64,10 +70,10 @@ RulesViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
       attrs["id"] = id;
       if (entity->type () == "compositeRule")
       {
-        QString _operator = entity->attr ("operator");
-        if (_operator == "")
-          _operator = "and";
-        attrs["operator"] = _operator;
+        QString op = entity->attr ("operator");
+        if (op == "")
+          op = "and";
+        attrs["operator"] = op;
       }
       emit setAttributes (entity, attrs);
     }
@@ -414,10 +420,4 @@ RulesViewPlugin::changeSelectedEntity (const QString &pluginID, void *param)
 
   connect (_rulesTable, SIGNAL (itemSelectionChanged ()), this,
            SLOT (sendSelectionChangedSignal ()));
-}
-
-RulesViewPlugin::~RulesViewPlugin ()
-{
-  delete _rulesTable;
-  delete _selectedUId;
 }

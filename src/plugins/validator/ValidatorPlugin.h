@@ -100,20 +100,7 @@ class ValidatorFactory : public QObject,
                          public IPluginFactoryTpl<ValidatorPlugin>
 {
   Q_OBJECT
-  CPR_PLUGIN_METADATA ("validator-plugin.json")
-
-public:
-  QString
-  id () const override
-  {
-    return "br.ufma.deinf.laws.validator";
-  }
-
-  QIcon
-  icon () const override
-  {
-    return QIcon ();
-  }
+  CPR_PLUGIN_METADATA ("br.ufma.deinf.laws.validator", "validator-plugin.json")
 };
 
 #endif // VALIDATORPLUGIN_H

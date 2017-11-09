@@ -67,19 +67,7 @@ class DebugConsoleFactory : public QObject,
                             public IPluginFactoryTpl<DebugConsolePlugin>
 {
   Q_OBJECT
-  CPR_PLUGIN_METADATA ("debug-console.json")
-
-public:
-  QString
-  id () const override
-  {
-    return "br.puc-rio.telemidia.DebugConsole";
-  }
-  QIcon
-  icon () const override
-  {
-    return QIcon (":/images/icon.png");
-  }
+  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.debug", "debug-console.json")
 };
 
 #endif // DEBUGCONSOLEPLUGIN_H
