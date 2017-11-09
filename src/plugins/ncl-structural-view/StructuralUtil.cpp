@@ -17,7 +17,7 @@ createUid ()
   return QUuid::createUuid ().toString ();
 }
 
-QMap<QString, QString>
+QStrMap
 createSettings (bool undo, bool notify)
 {
   return createSettings ((undo ? ST_VALUE_TRUE : ST_VALUE_FALSE),
@@ -25,7 +25,7 @@ createSettings (bool undo, bool notify)
                          createUid ());
 }
 
-QMap<QString, QString>
+QStrMap
 createSettings (const QString &undo, const QString &notify,
                 const QString &code)
 {
@@ -49,10 +49,10 @@ createSettings (const QString &undo, const QString &notify,
   return sts;
 }
 
-QMap<QString, QString>
-createCoreTranslations (StructuralType type)
+QStrMap
+struct2coreTranslations (StructuralType type)
 {
-  QMap<QString, QString> transls;
+  QStrMap transls;
 
   switch (type)
   {
@@ -148,11 +148,11 @@ createCoreTranslations (StructuralType type)
   return transls;
 }
 
-QMap<QString, QString>
-createPluginTranslations (StructuralType type)
+QStrMap
+core2structTranslations (StructuralType type)
 {
-  QMap<QString, QString> transl;
-  QMap<QString, QString> inverted = createCoreTranslations (type);
+  QStrMap transl;
+  QStrMap inverted = struct2coreTranslations (type);
 
   for (const QString &key : inverted.keys ())
     transl[inverted.value (key)] = key;

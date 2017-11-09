@@ -23,7 +23,7 @@ StructuralView::StructuralView (QWidget *parent)
   _zoom = ZOOM_ORIGINAL;
 
   _linking = false;
-  _linkingHead = _linkingTail = nullptr;
+  _linkingDest = _linkingOrig = nullptr;
 
   _selected = "";
 
@@ -202,7 +202,6 @@ StructuralView::insert (QString uid, QString parent, QStrMap props,
   connect (e, &StructuralEntity::insertAsked, this, &StructuralView::insert);
   connect (e, &StructuralEntity::changeAsked, this,
            &StructuralView::changeEntity);
-  // connect (e, &StructuralEntity::removed, this, &StructuralView::remove);
   connect (e, &StructuralEntity::selectAsked, this, &StructuralView::select);
   connect (e, &StructuralEntity::moveAsked, this, &StructuralView::move);
 
@@ -255,7 +254,9 @@ StructuralView::adjustEntity (StructuralEntity *e, const QStrMap &props,
         && p->structuralType () == Structural::Media)
     {
       if (p->isReference ())
+      {
         adjustReferences (p);
+      }
       else
       {
         for (const QString &key : _scene->refs ().keys ())
@@ -2047,11 +2048,11 @@ StructuralView::mouseMoveEvent (QMouseEvent *evt)
 {
   if (_linking)
   {
-    if (_linkingTail)
-      _linkingTail->setHovering (false);
+    if (_linkingOrig)
+      _linkingOrig->setHovering (false);
 
-    if (_linkingHead)
-      _linkingHead->setHovering (false);
+    if (_linkingDest)
+      _linkingDest->setHovering (false);
 
     QList<QGraphicsItem *> origItems = _scene->items (_tool->getLine ().p1 ());
     if (origItems.count () && origItems.first () == _tool)
@@ -2063,16 +2064,16 @@ StructuralView::mouseMoveEvent (QMouseEvent *evt)
 
     if (origItems.count ())
     {
-      _linkingTail = cast (StructuralEntity *, origItems.first ());
-      if (_linkingTail)
-        _linkingTail->setHovering (true);
+      _linkingOrig = cast (StructuralEntity *, origItems.first ());
+      if (_linkingOrig)
+        _linkingOrig->setHovering (true);
     }
 
     if (destItems.count ())
     {
-      _linkingHead = cast (StructuralEntity *, destItems.first ());
-      if (_linkingHead)
-        _linkingHead->setHovering (true);
+      _linkingDest = cast (StructuralEntity *, destItems.first ());
+      if (_linkingDest)
+        _linkingDest->setHovering (true);
     }
 
     _tool->setLine (
@@ -2119,11 +2120,11 @@ StructuralView::mouseReleaseEvent (QMouseEvent *evt)
 {
   if (_linking)
   {
-    if (_linkingTail)
-      _linkingTail->setHovering (false);
+    if (_linkingOrig)
+      _linkingOrig->setHovering (false);
 
-    if (_linkingHead)
-      _linkingHead->setHovering (false);
+    if (_linkingDest)
+      _linkingDest->setHovering (false);
 
     QList<QGraphicsItem *> tailItems = _scene->items (_tool->getLine ().p1 ());
 

@@ -175,8 +175,8 @@ private:
   int _zoom; // an integer in %  (varing from ZOOM_MIN to ZOOM_MAX)
   bool _linking;
 
-  StructuralEntity *_linkingTail;
-  StructuralEntity *_linkingHead;
+  StructuralEntity *_linkingOrig;
+  StructuralEntity *_linkingDest;
 
   QString _selected;
 

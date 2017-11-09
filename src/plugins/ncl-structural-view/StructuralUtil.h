@@ -13,13 +13,12 @@ namespace StructuralUtil
 {
 QString createUid ();
 
-QMap<QString, QString> createSettings (bool undo = true, bool notify = true);
-QMap<QString, QString> createSettings (const QString &undo,
-                                       const QString &notify,
-                                       const QString &code);
+QStrMap createSettings (bool undo = true, bool notify = true);
+QStrMap createSettings (const QString &undo, const QString &notify,
+                        const QString &code);
 
-QMap<QString, QString> createCoreTranslations (StructuralType type);
-QMap<QString, QString> createPluginTranslations (StructuralType type);
+QStrMap struct2coreTranslations (StructuralType type);
+QStrMap core2structTranslations (StructuralType type);
 
 QString categoryToStr (StructuralCategory category);
 StructuralCategory strToCategory (const QString &category);

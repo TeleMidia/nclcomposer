@@ -335,7 +335,7 @@ StructuralViewPlugin::viewPropsFromCoreEntity (const Entity *ent)
   QString coreParentUid = ent->parentUid ();
   QString viewParentUid = _core2view.value (coreParentUid, "");
 
-  QStrMap transls = util::createCoreTranslations (type);
+  QStrMap transls = util::struct2coreTranslations (type);
   if (type != Structural::NoType)
   {
     viewProps = { { ST_ATTR_ENT_TYPE, ent->type () } };
@@ -624,7 +624,7 @@ StructuralViewPlugin::coreAttrsFromStructuralEntity (const QStrMap &props)
   StructuralType type = util::strToType (props[ST_ATTR_ENT_TYPE]);
 
   QStrMap attrs;
-  QStrMap transls = util::createPluginTranslations (type);
+  QStrMap transls = util::core2structTranslations (type);
   for (const QString &key : transls.keys ())
   {
     if (props.contains (key) && !props.value (key).isEmpty ())

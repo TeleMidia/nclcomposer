@@ -11,7 +11,7 @@
 // Properties
 //
 
-// Entity defines
+// Entity defines.
 #define ST_ATTR_ENT_ID "ent:id"
 #define ST_ATTR_ENT_UID "ent:uid"
 #define ST_ATTR_ENT_CATEGORY "ent:category"
@@ -85,7 +85,7 @@
 //
 // Defaults
 //
-// Minimap defines
+// Minimap defines.
 #define ST_DEFAULT_MINIMAP_W 240
 #define ST_DEFAULT_MINIMAP_H 160
 
