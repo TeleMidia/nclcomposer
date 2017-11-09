@@ -657,9 +657,12 @@ EXCLUDE_SYMLINKS       = YES
 EXCLUDE_PATTERNS       =  @top_srcdir@/src/core/tests/* \
                           @top_srcdir@/src/plugins/content-provider/* \
                           @top_srcdir@/src/gui/QSimpleUpdater/* \
+                          @top_srcdir@/src/gui/QToolWindowManager/* \
+                          @top_srcdir@/src/gui/old/* \
                           @top_srcdir@/src/plugins/content-provider/* \
                           @top_srcdir@/src/plugins/ncl-textual-view/deps/* \
                           @top_srcdir@/src/plugins/validator/deps/* \
+                          @top_srcdir@/src/plugins/media-preview/* \
                           */moc_*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
@@ -669,6 +672,7 @@ EXCLUDE_PATTERNS       =  @top_srcdir@/src/core/tests/* \
 # AClass::ANamespace, ANamespace::*Test
 
 EXCLUDE_SYMBOLS        = Q* \
+                         QToolWindowManager* \
                          Ui::*
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or
@@ -1663,7 +1667,7 @@ DOT_IMAGE_FORMAT       = svg
 # The tag DOT_PATH can be used to specify the path where the dot tool can be
 # found. If left blank, it is assumed the dot tool can be found in the path.
 
-DOT_PATH               =
+DOT_PATH               = @top_srcdir@/doc/
 
 # The DOTFILE_DIRS tag can be used to specify one or more directories that
 # contain dot files that are included in the documentation (see the
