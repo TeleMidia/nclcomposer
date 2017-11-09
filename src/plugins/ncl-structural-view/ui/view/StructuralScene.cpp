@@ -25,21 +25,33 @@ StructuralScene::contextMenuEvent (QGraphicsSceneContextMenuEvent *event)
 bool
 StructuralScene::hasEntity (const QString &uid)
 {
-  return _entities.contains (uid);
+  return entities ().contains (uid);
 }
 
 StructuralEntity *
 StructuralScene::entity (const QString &uid)
 {
   CPR_ASSERT (hasEntity (uid));
-  return _entities.value (uid, nullptr);
+  return entities ().value (uid, nullptr);
 }
 
-QMap<QString, StructuralEntity *> &
+QMap<QString, StructuralEntity *>
 StructuralScene::entities ()
 {
-  return _entities;
+  QMap<QString, StructuralEntity *> entities = _nodes;
+
+  for (const QString &k : _edges.keys ())
+    entities.insert (k, _edges.value (k));
+
+  return entities;
 }
+
+const QMap<QString, StructuralEntity*> &
+StructuralScene::nodes ()
+{
+  return _nodes;
+}
+
 
 QMap<QString, QString> &
 StructuralScene::refs ()
@@ -51,7 +63,7 @@ QList<StructuralEntity *>
 StructuralScene::entitiesByAttrId (const QString &id)
 {
   QList<StructuralEntity *> list;
-  for (StructuralEntity *e : _entities.values ())
+  for (StructuralEntity *e : entities ().values ())
   {
     if (e->id () == id)
       list.append (e);
@@ -85,7 +97,8 @@ StructuralScene::clear ()
 {
   // TODO: remove entities
   _refs.clear ();
-  _entities.clear ();
+  _nodes.clear ();
+  _edges.clear ();
 
   QGraphicsScene::clear ();
 }
@@ -94,7 +107,7 @@ StructuralEntity *
 StructuralScene::body ()
 {
   StructuralEntity *body = nullptr;
-  for (StructuralEntity *ent : _entities.values ())
+  for (StructuralEntity *ent : entities ().values ())
   {
     if (ent->structuralType () == Structural::Body)
     {
@@ -167,7 +180,7 @@ StructuralScene::save ()
 
   if (ST_OPT_WITH_BODY)
   {
-    for (StructuralEntity *e : _entities.values ())
+    for (StructuralEntity *e : entities ().values ())
     {
       if (e->structuralType () == Structural::Body)
         createXmlElement (e, doc, root);
@@ -175,7 +188,7 @@ StructuralScene::save ()
   }
   else
   {
-    for (StructuralEntity *e : _entities.values ())
+    for (StructuralEntity *e : entities ().values ())
     {
       if (e->structuralParent () == nullptr)
         createXmlElement (e, doc, root);
@@ -208,6 +221,42 @@ StructuralScene::createXmlElement (StructuralEntity *ent, QDomDocument *doc,
 
     parent.appendChild (elt);
   }
+}
+
+void
+StructuralScene::insertIntoMap (const QString &uid, StructuralEntity *ent)
+{
+  Structural::Category cat = ent->category ();
+  if (cat == Structural::Node || cat == Structural::Interface)
+  {
+    CPR_ASSERT (!_nodes.contains (uid));
+    _nodes.insert (uid, ent);
+  }
+  else if (cat == Structural::Edge)
+  {
+    CPR_ASSERT (!_edges.contains (uid));
+    _edges.insert (uid, ent);
+  }
+  else
+    CPR_ASSERT_NOT_REACHED();
+}
+
+void
+StructuralScene::removeFromMap (const QString &uid)
+{
+  bool contains = false;
+  if (_nodes.contains (uid))
+  {
+    _nodes.remove (uid);
+    contains = true;
+  }
+  else if (_edges.contains (uid))
+  {
+    _edges.remove (uid);
+    contains = true;
+  }
+
+  CPR_ASSERT (contains);
 }
 
 StructuralEntity *

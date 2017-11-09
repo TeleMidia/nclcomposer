@@ -19,7 +19,8 @@ public:
   StructuralEntity *body ();
   bool hasEntity (const QString &uid);
   StructuralEntity *entity (const QString &uid);
-  QMap<QString, StructuralEntity *> &entities ();
+  QMap<QString, StructuralEntity *> entities ();
+  const QMap<QString, StructuralEntity *> &nodes ();
   QList<StructuralEntity *> entitiesByAttrId (const QString &id);
   QStrMap &refs ();
 
@@ -33,6 +34,9 @@ public:
                            StructuralEntity *parent = nullptr);
   void updateWithDefaultProperties (StructuralEntity *e);
 
+  void insertIntoMap (const QString &uid, StructuralEntity *ent);
+  void removeFromMap (const QString &uid);
+
 public slots:
   void clear (); // override?
 
@@ -43,7 +47,7 @@ private:
   StructuralView *_view;
   StructuralMenu *_menu;
 
-  QMap<QString, StructuralEntity *> _entities;
+  QMap<QString, StructuralEntity *> _nodes, _edges;
   QStrMap _refs;
 
   void load (QDomElement ent, QDomElement parent);

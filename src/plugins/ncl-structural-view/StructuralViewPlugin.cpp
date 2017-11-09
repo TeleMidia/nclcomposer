@@ -103,7 +103,7 @@ StructuralViewPlugin::updateFromModel ()
 {
   // Cache the old entity positions.
   QMap<QString, QStrMap> cache;
-  for (const QString &key : _struct_scene->entities ().keys ())
+  for (const QString &key : _struct_scene->nodes ().keys ())
   {
     StructuralEntity *ent = _struct_scene->entity (key);
     CPR_ASSERT_NON_NULL (ent);
@@ -185,7 +185,7 @@ StructuralViewPlugin::updateFromModel ()
 
   // Restore the old position properties.
   QStrMap stgs = util::createSettings (false, false);
-  for (StructuralEntity *ent : _struct_scene->entities ())
+  for (StructuralEntity *ent : _struct_scene->nodes ())
   {
     QString id = ent->id ();
     if (cache.contains (id))
@@ -221,11 +221,11 @@ StructuralViewPlugin::setReferences (QStrMap &props)
   if (props.contains (ST_ATTR_REF_INTERFACE_ID))
   {
     bool hasReferInstead = false;
-    QMap<QString, StructuralEntity *> ents = _struct_scene->entities ();
-    if (ents.contains (props.value (ST_ATTR_REF_COMPONENT_UID)))
+    QMap<QString, StructuralEntity *> nodes = _struct_scene->nodes ();
+    if (nodes.contains (props.value (ST_ATTR_REF_COMPONENT_UID)))
     {
       StructuralEntity *ent
-          = ents.value (props.value (ST_ATTR_REF_COMPONENT_UID));
+          = nodes.value (props.value (ST_ATTR_REF_COMPONENT_UID));
       for (StructuralEntity *e : ent->children ())
       {
         if (e->isReference ()

@@ -164,7 +164,7 @@ StructuralView::insert (QString uid, QString parent, QStrMap props,
   e->setUid (uid);
 
   // 2. Add to the scene and as child of p
-  _scene->entities ()[uid] = e;
+  _scene->insertIntoMap (uid, e);
 
   StructuralEntity *p = nullptr;
   if (_scene->hasEntity (parent))
@@ -459,7 +459,7 @@ StructuralView::remove (QString uid, QStrMap stgs)
   else
     _scene->removeItem (e);
 
-  _scene->entities ().remove (uid);
+  _scene->removeFromMap (uid);
   delete e;
 
   if (uid == _selected)
