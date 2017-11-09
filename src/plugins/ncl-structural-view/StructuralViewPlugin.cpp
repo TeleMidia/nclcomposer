@@ -73,7 +73,7 @@ void
 StructuralViewPlugin::init ()
 {
   QString data
-      = _project->getPluginData ("br.puc-rio.telemidia.composer.structural");
+      = _project->getPluginData ("br.puc-rio.telemidia.structural");
 
   if (!data.isEmpty ())
     _struct_scene->load (data);

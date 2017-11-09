@@ -64,7 +64,7 @@ class RulesViewFactory : public QObject,
                          public IPluginFactoryTpl<RulesViewPlugin>
 {
   Q_OBJECT
-  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.RulesView", "ncl-rules-view.json")
+  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.rules", "ncl-rules-view.json")
 };
 
 #endif // RULESVIEWPLUGIN_H

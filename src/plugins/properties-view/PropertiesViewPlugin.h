@@ -164,7 +164,7 @@ class PropertiesViewFactory : public QObject,
                               public IPluginFactoryTpl<PropertiesViewPlugin>
 {
   Q_OBJECT
-  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.PropertiesView",
+  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.properties",
                        "properties-view.json")
 };
 

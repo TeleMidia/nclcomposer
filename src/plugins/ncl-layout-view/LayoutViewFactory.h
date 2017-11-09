@@ -27,7 +27,7 @@ class NCLLayoutViewFactory : public QObject,
                              public IPluginFactoryTpl<NCLLayoutViewPlugin>
 {
   Q_OBJECT
-  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.qncllayout", "ncl-layout-view.json")
+  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.layout", "ncl-layout-view.json")
 
 public:
   explicit NCLLayoutViewFactory (QObject *parent = 0);

@@ -196,7 +196,7 @@ class OutlineViewFactory : public QObject,
                            public IPluginFactoryTpl<OutlineViewPlugin>
 {
   Q_OBJECT
-  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.OutlineView", "outline-view.json")
+  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.outline", "outline-view.json")
 };
 
 #endif // OUTLINEVIEWPLUGIN_H

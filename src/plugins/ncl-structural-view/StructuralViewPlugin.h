@@ -98,7 +98,7 @@ class StructuralViewFactory : public QObject,
                               public IPluginFactoryTpl<StructuralViewPlugin>
 {
   Q_OBJECT
-  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.composer.structural",
+  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.structural",
                        "ncl-structural-view.json")
 };
 

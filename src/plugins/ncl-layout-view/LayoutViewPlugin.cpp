@@ -204,7 +204,7 @@ void
 NCLLayoutViewPlugin::init ()
 {
   // \todo Load specific contents.
-  QString data = project ()->getPluginData ("br.puc-rio.telemidia.qncllayout");
+  QString data = project ()->getPluginData ("br.puc-rio.telemidia.layout");
   QStringList lines = data.split ("\n");
 
   bool gridVisible = false, ok = true;

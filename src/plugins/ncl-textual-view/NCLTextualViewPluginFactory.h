@@ -39,8 +39,7 @@ class NCLTextualViewPluginFactory
       public IPluginFactoryTpl<NCLTextualViewPlugin>
 {
   Q_OBJECT
-  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.NCLTextualView",
-                       "ncl-textual-view.json")
+  CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.textual", "ncl-textual-view.json")
 
 public:
   NCLTextualViewPluginFactory ();

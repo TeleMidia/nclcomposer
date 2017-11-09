@@ -63,7 +63,7 @@ void
 NCLTextualViewPlugin::init ()
 {
   QString data
-      = project ()->getPluginData ("br.puc-rio.telemidia.NCLTextualView");
+      = project ()->getPluginData ("br.puc-rio.telemidia.textual");
 
   QString startEntitiesSep = "$START_ENTITIES_LINES$";
   QString endEntitiesSep = "$END_ENTITIES_LINES$";
