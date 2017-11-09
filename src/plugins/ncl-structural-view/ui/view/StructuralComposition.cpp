@@ -319,7 +319,7 @@ StructuralComposition::dropEvent (QGraphicsSceneDragDropEvent *event)
       QString filename = url.toLocalFile ();
 
       QMap<QString, QString> props = {
-        { ST_ATTR_ENT_TYPE, StructuralUtil::typeToStr (Structural::Media) },
+        { ST_ATTR_ENT_TYPE, StructuralUtil::typetostr (Structural::Media) },
         { ST_ATTR_ENT_ID,
           StructuralUtil::formatId (QFileInfo (filename).baseName ()) },
         { ST_ATTR_NODE_SRC, filename },

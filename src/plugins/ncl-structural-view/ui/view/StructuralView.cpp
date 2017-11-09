@@ -158,7 +158,7 @@ StructuralView::insert (QString uid, QString parent, QStrMap props,
   CPR_ASSERT (!_scene->hasEntity (uid));
 
   // 1. Create the new entity.
-  StructuralType type = util::strToType (props[ST_ATTR_ENT_TYPE]);
+  StructuralType type = util::strtotype (props[ST_ATTR_ENT_TYPE]);
   StructuralEntity *e = _scene->createEntity (type);
   CPR_ASSERT_NON_NULL (e);
   e->setUid (uid);
@@ -371,7 +371,7 @@ StructuralView::remove (QString uid, QStrMap stgs)
   if (e->category () != Structural::Edge)
   {
     QVector<StructuralEntity *> relatives = util::neighbors (e);
-    relatives += util::upNeighbors (e);
+    relatives += util::upneighbors (e);
 
     for (StructuralEntity *rel : relatives)
     {
@@ -399,10 +399,10 @@ StructuralView::remove (QString uid, QStrMap stgs)
               // is always a 'Structural::Port' entity.
               auto props = edge->origin ()->properties ();
 
-              props.remove (ST_ATTR_REF_COMPONENT_ID);
-              props.remove (ST_ATTR_REF_COMPONENT_UID);
-              props.remove (ST_ATTR_REF_INTERFACE_ID);
-              props.remove (ST_ATTR_REF_INTERFACE_UID);
+              MAP_REMOVE_IF_CONTAINS (props, ST_ATTR_REF_COMPONENT_ID);
+              MAP_REMOVE_IF_CONTAINS (props, ST_ATTR_REF_COMPONENT_UID);
+              MAP_REMOVE_IF_CONTAINS (props, ST_ATTR_REF_INTERFACE_ID);
+              MAP_REMOVE_IF_CONTAINS (props, ST_ATTR_REF_INTERFACE_UID);
 
               change (edge->origin ()->uid (), props,
                       util::createSettings (ST_VALUE_TRUE,
@@ -736,7 +736,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
 
       // Adjusting values of relatives entities
       QVector<StructuralEntity *> relatives = util::neighbors (ent);
-      relatives += util::upNeighbors (ent);
+      relatives += util::upneighbors (ent);
 
       for (StructuralEntity *rel : relatives)
       {
@@ -854,7 +854,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
     case Structural::SwitchPort:
     {
       QVector<StructuralEntity *> relatives = util::neighbors (ent);
-      relatives += util::upNeighbors (ent);
+      relatives += util::upneighbors (ent);
 
       for (StructuralEntity *rel : relatives)
       {
@@ -946,7 +946,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
           if (dest)
           {
             QStrMap props = {
-              { ST_ATTR_ENT_TYPE, util::typeToStr (Structural::Reference) },
+              { ST_ATTR_ENT_TYPE, util::typetostr (Structural::Reference) },
               { ST_ATTR_EDGE_ORIG, ent->uid () },
               { ST_ATTR_EDGE_DEST, dest->uid () },
               { ST_ATTR_REF_COMPONENT_ID, compId },
@@ -1120,7 +1120,7 @@ StructuralView::move (QString uid, QString parent, QStrMap props, QStrMap stgs)
 void
 StructuralView::createEntity (StructuralType type, QStrMap props, QStrMap stgs)
 {
-  props.insert (ST_ATTR_ENT_TYPE, util::typeToStr (type));
+  props.insert (ST_ATTR_ENT_TYPE, util::typetostr (type));
 
   if (stgs.empty ())
     stgs = util::createSettings ();
@@ -1132,7 +1132,7 @@ StructuralView::createEntity (StructuralType type, QStrMap props, QStrMap stgs)
     parent = _selected;
 
   if (!props.contains (ST_ATTR_ENT_TYPE))
-    props[ST_ATTR_ENT_TYPE] = util::typeToStr (type);
+    props[ST_ATTR_ENT_TYPE] = util::typetostr (type);
 
   if (!stgs.contains (ST_SETTINGS_UNDO))
     stgs[ST_SETTINGS_UNDO] = ST_VALUE_TRUE;
@@ -1202,7 +1202,7 @@ StructuralView::performAutostart ()
     if (ST_OPT_SHOW_INTERFACES)
     {
       if (e->category () == Structural::Interface)
-        neighbors += util::upNeighbors (e);
+        neighbors += util::upneighbors (e);
     }
 
     // If ST_DEFAULT_WITH_INTERFACES is disabled, interface entities are
@@ -1230,7 +1230,7 @@ StructuralView::performAutostart ()
   {
     QString pParent = "";
     QStrMap pProps
-        = { { ST_ATTR_ENT_TYPE, util::typeToStr (Structural::Port) } };
+        = { { ST_ATTR_ENT_TYPE, util::typetostr (Structural::Port) } };
 
     if (e->category () == Structural::Interface)
     {
@@ -1562,7 +1562,7 @@ StructuralView::createLink (StructuralEntity *orig, StructuralEntity *dest)
         QString uid = util::createUid ();
 
         QStrMap props;
-        props[ST_ATTR_ENT_TYPE] = util::typeToStr (Structural::Link);
+        props[ST_ATTR_ENT_TYPE] = util::typetostr (Structural::Link);
         props[ST_ATTR_REF_XCONNECTOR_ID] = _dialog->getConnector ();
 
         qreal x = 0.0, y = 0.0;
@@ -1702,7 +1702,7 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
       QString uid = util::createUid ();
 
       QStrMap props = {
-        { ST_ATTR_ENT_TYPE, util::typeToStr (Structural::Bind) },
+        { ST_ATTR_ENT_TYPE, util::typetostr (Structural::Bind) },
         { ST_ATTR_EDGE_ORIG, orig->uid () },
         { ST_ATTR_EDGE_DEST, dest->uid () },
         { ST_ATTR_BIND_ROLE, role },
@@ -1933,7 +1933,7 @@ StructuralView::createReference (StructuralEntity *orig,
       }
       else if (orig->structuralType () == Structural::SwitchPort)
       {
-        props[ST_ATTR_ENT_TYPE] = util::typeToStr (Structural::Mapping);
+        props[ST_ATTR_ENT_TYPE] = util::typetostr (Structural::Mapping);
         props[ST_ATTR_EDGE_ORIG] = orig->uid ();
         props[ST_ATTR_EDGE_DEST] = dest->uid ();
 
@@ -2284,7 +2284,7 @@ StructuralView::dragEnterEvent (QDragEnterEvent *evt)
     if (!evt->isAccepted ())
     {
       QList<QUrl> list = evt->mimeData ()->urls ();
-      StructuralType type = util::strToType (evt->mimeData ()->objectName ());
+      StructuralType type = util::strtotype (evt->mimeData ()->objectName ());
 
       if (!list.isEmpty () || util::validateKinship (type, Structural::Body))
         evt->setAccepted (true);
@@ -2304,7 +2304,7 @@ StructuralView::dragMoveEvent (QDragMoveEvent *evt)
     if (!evt->isAccepted ())
     {
       QList<QUrl> list = evt->mimeData ()->urls ();
-      StructuralType type = util::strToType (evt->mimeData ()->objectName ());
+      StructuralType type = util::strtotype (evt->mimeData ()->objectName ());
 
       if (!list.isEmpty () || util::validateKinship (type, Structural::Body))
         evt->setAccepted (true);
@@ -2324,7 +2324,7 @@ StructuralView::dropEvent (QDropEvent *evt)
     if (evt->isAccepted ())
     {
       QList<QUrl> list = evt->mimeData ()->urls ();
-      StructuralType type = util::strToType (evt->mimeData ()->objectName ());
+      StructuralType type = util::strtotype (evt->mimeData ()->objectName ());
 
       if (!list.isEmpty ())
       {
@@ -2334,7 +2334,7 @@ StructuralView::dropEvent (QDropEvent *evt)
           QPointF p = mapToScene (evt->pos ());
 
           QStrMap props
-              = { { ST_ATTR_ENT_TYPE, util::typeToStr (Structural::Media) },
+              = { { ST_ATTR_ENT_TYPE, util::typetostr (Structural::Media) },
                   { ST_ATTR_ENT_ID,
                     util::formatId (QFileInfo (filename).baseName ()) },
                   { ST_ATTR_NODE_SRC, filename },

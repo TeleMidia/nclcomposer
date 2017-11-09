@@ -29,7 +29,7 @@ StructuralContent::setMimeType (Structural::MimeType type)
   _mimetype = type;
 
   StructuralNode::setProperty (ST_ATTR_NODE_MIMETYPE,
-                               StructuralUtil::mimeToStr (type));
+                               StructuralUtil::mimetostr (type));
 }
 
 void
@@ -88,7 +88,7 @@ StructuralContent::adjust (bool collision, bool recursion)
     QString suffix
         = location.right (location.length () - location.lastIndexOf ('.') - 1);
 
-    setMimeType (StructuralUtil::mimeByExtension (suffix));
+    setMimeType (StructuralUtil::exttomime (suffix));
   }
   else
   {
@@ -96,7 +96,7 @@ StructuralContent::adjust (bool collision, bool recursion)
   }
 
   if (_mimetype != Structural::NoMimeType)
-    setToolTip (StructuralUtil::mimeTooltip (_mimetype, id (), info (),
+    setToolTip (StructuralUtil::mimetooltip (_mimetype, id (), info (),
                                              warning (), error ()));
 }
 
@@ -111,7 +111,7 @@ StructuralContent::draw (QPainter *painter)
       width () - 2 * ST_DEFAULT_CONTENT_PADDING,
       height () - 2 * ST_DEFAULT_CONTENT_PADDING
           - 4 * ST_DEFAULT_CONTENT_PADDING,
-      QPixmap (StructuralUtil::mimeTypeIcon (getMimeType ())));
+      QPixmap (StructuralUtil::mimeicon (getMimeType ())));
 
   if (!ST_OPT_WITH_BODY && !ST_OPT_USE_FLOATING_INTERFACES)
   {

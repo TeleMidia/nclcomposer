@@ -50,7 +50,7 @@ createSettings (const QString &undo, const QString &notify,
 }
 
 QStrMap
-struct2coreTranslations (StructuralType type)
+struct2nclTranslations (StructuralType type)
 {
   QStrMap transls;
 
@@ -149,10 +149,10 @@ struct2coreTranslations (StructuralType type)
 }
 
 QStrMap
-core2structTranslations (StructuralType type)
+ncl2structTranslations (StructuralType type)
 {
   QStrMap transl;
-  QStrMap inverted = struct2coreTranslations (type);
+  QStrMap inverted = struct2nclTranslations (type);
 
   for (const QString &key : inverted.keys ())
     transl[inverted.value (key)] = key;
@@ -170,7 +170,7 @@ const std::map<QString, Structural::Category> _strToCategory
     = invert<QString, Structural::Category> (_categoryToStr);
 
 QString
-categoryToStr (StructuralCategory category)
+categorytostr (StructuralCategory category)
 {
   if (_categoryToStr.count (category))
     return _categoryToStr.at (category);
@@ -179,7 +179,7 @@ categoryToStr (StructuralCategory category)
 }
 
 StructuralCategory
-strToCategory (const QString &category)
+strtocategory (const QString &category)
 {
   if (_strToCategory.count (category))
     return _strToCategory.at (category);
@@ -188,7 +188,7 @@ strToCategory (const QString &category)
 }
 
 StructuralCategory
-categoryFromType (StructuralType type)
+categoryfromtype (StructuralType type)
 {
   switch (type)
   {
@@ -234,7 +234,7 @@ static const std::map<QString, Structural::Type> _strToType
     = invert<QString, Structural::Type> (_typeToStr);
 
 QString
-typeToStr (StructuralType type)
+typetostr (StructuralType type)
 {
   if (_typeToStr.count (type))
     return _typeToStr.at (type);
@@ -243,7 +243,7 @@ typeToStr (StructuralType type)
 }
 
 StructuralType
-strToType (const QString &type)
+strtotype (const QString &type)
 {
   if (_strToType.count (type))
     return _strToType.at (type);
@@ -272,7 +272,7 @@ static const std::map<QString, Structural::Role> _strToRole
     = invert<QString, Structural::Role> (_roleToStr);
 
 QString
-roleToString (StructuralRole role)
+roletostr (StructuralRole role)
 {
   if (_roleToStr.count (role))
     return _roleToStr.at (role);
@@ -281,7 +281,7 @@ roleToString (StructuralRole role)
 }
 
 StructuralRole
-strToRole (const QString &role)
+strtorole (const QString &role)
 {
   if (_strToRole.count (role))
     return _strToRole.at (role);
@@ -300,7 +300,7 @@ static const std::map<QString, Structural::MimeType> _strToMime
     = invert<QString, Structural::MimeType> (_mimeToStr);
 
 QString
-mimeToStr (StructuralMimeType mime)
+mimetostr (StructuralMimeType mime)
 {
   if (_mimeToStr.count (mime))
     return _mimeToStr.at (mime);
@@ -309,7 +309,7 @@ mimeToStr (StructuralMimeType mime)
 }
 
 StructuralMimeType
-strToMime (const QString &mime)
+strtomime (const QString &mime)
 {
   if (_strToMime.count (mime))
     return _strToMime.at (mime);
@@ -390,7 +390,7 @@ tooltip (StructuralType type, const QString &title, const QString &info,
   QString tooltip;
 
   // Adding type
-  tooltip += typeToStr (type);
+  tooltip += typetostr (type);
   tooltip += " ";
 
   // Adding title
@@ -439,7 +439,7 @@ static const std::map<Structural::MimeType, QString> _mimeIcon
         { Structural::NoMimeType, ":/icon/media" } };
 
 QString
-mimeTypeIcon (StructuralMimeType type)
+mimeicon (StructuralMimeType type)
 {
   if (_mimeIcon.count (type))
     return _mimeIcon.at (type);
@@ -448,13 +448,13 @@ mimeTypeIcon (StructuralMimeType type)
 }
 
 QString
-mimeTooltip (StructuralMimeType mime, const QString &title,
+mimetooltip (StructuralMimeType mime, const QString &title,
              const QString &info, const QString &warning, const QString &error,
              const QString &extra)
 {
   Q_UNUSED (extra);
 
-  QString tooltip = mimeToStr (mime) + " ";
+  QString tooltip = mimetostr (mime) + " ";
 
   if (!title.isEmpty ())
     tooltip += "(" + title + ")";
@@ -487,7 +487,7 @@ static const std::map<QString, Structural::MimeType> _mimeExtension
         { "ncl", Structural::NCL },     { "lua", Structural::NCLua } };
 
 Structural::MimeType
-mimeByExtension (const QString &ext)
+exttomime (const QString &ext)
 {
   if (_mimeExtension.count (ext))
     return _mimeExtension.at (ext);
@@ -550,7 +550,7 @@ neighbors (StructuralEntity *ent)
 }
 
 QVector<StructuralEntity *>
-upNeighbors (StructuralEntity *ent)
+upneighbors (StructuralEntity *ent)
 {
   QVector<StructuralEntity *> neighbors;
 
@@ -616,7 +616,7 @@ void
 adjustEdges (StructuralEntity *ent)
 {
   QVector<StructuralEntity *> relatives = neighbors (ent);
-  relatives += upNeighbors (ent);
+  relatives += upneighbors (ent);
 
   for (StructuralEntity *rel : relatives)
   {

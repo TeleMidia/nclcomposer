@@ -99,7 +99,7 @@ void
 StructuralEntity::setCategory (StructuralCategory category)
 {
   _category = category;
-  _props[ST_ATTR_ENT_CATEGORY] = StructuralUtil::categoryToStr (_category);
+  _props[ST_ATTR_ENT_CATEGORY] = StructuralUtil::categorytostr (_category);
 }
 
 StructuralType
@@ -112,7 +112,7 @@ void
 StructuralEntity::setStructuralType (StructuralType type)
 {
   _type = type;
-  _props[ST_ATTR_ENT_TYPE] = StructuralUtil::typeToStr (_type);
+  _props[ST_ATTR_ENT_TYPE] = StructuralUtil::typetostr (_type);
 
   _restrictions.clear ();
 
@@ -251,8 +251,8 @@ StructuralEntity::adjust (bool collision, bool recursion)
   setId (_props[ST_ATTR_ENT_ID]);
   setUid (_props[ST_ATTR_ENT_UID]);
 
-  setCategory (StructuralUtil::strToCategory (_props[ST_ATTR_ENT_CATEGORY]));
-  setStructuralType (StructuralUtil::strToType (_props[ST_ATTR_ENT_TYPE]));
+  setCategory (StructuralUtil::strtocategory (_props[ST_ATTR_ENT_CATEGORY]));
+  setStructuralType (StructuralUtil::strtotype (_props[ST_ATTR_ENT_TYPE]));
 
   setTop (_props[ST_ATTR_ENT_TOP].toDouble ());
   setLeft (_props[ST_ATTR_ENT_LEFT].toDouble ());
@@ -1075,7 +1075,7 @@ StructuralEntity::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
     QDrag *drag = new QDrag (event->widget ());
     QMimeData *minedata = new QMimeData ();
 
-    minedata->setObjectName (StructuralUtil::typeToStr (_type));
+    minedata->setObjectName (StructuralUtil::typetostr (_type));
     minedata->setText (_uid);
 
     drag->setMimeData (minedata);
@@ -1374,7 +1374,7 @@ void
 StructuralEntity::dragEnterEvent (QGraphicsSceneDragDropEvent *event)
 {
   StructuralType type
-      = StructuralUtil::strToType (event->mimeData ()->objectName ());
+      = StructuralUtil::strtotype (event->mimeData ()->objectName ());
 
   if (StructuralUtil::validateKinship (type, _type)
       && event->mimeData ()->text () != _uid)
@@ -1387,7 +1387,7 @@ void
 StructuralEntity::dragMoveEvent (QGraphicsSceneDragDropEvent *event)
 {
   StructuralType type
-      = StructuralUtil::strToType (event->mimeData ()->objectName ());
+      = StructuralUtil::strtotype (event->mimeData ()->objectName ());
 
   if (StructuralUtil::validateKinship (type, _type)
       && event->mimeData ()->text () != _uid)
@@ -1400,7 +1400,7 @@ void
 StructuralEntity::dropEvent (QGraphicsSceneDragDropEvent *event)
 {
   StructuralType type
-      = StructuralUtil::strToType (event->mimeData ()->objectName ());
+      = StructuralUtil::strtotype (event->mimeData ()->objectName ());
 
   if (StructuralUtil::validateKinship (type, _type)
       && event->mimeData ()->text () != _uid)

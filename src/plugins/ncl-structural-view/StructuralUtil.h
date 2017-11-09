@@ -17,22 +17,21 @@ QStrMap createSettings (bool undo = true, bool notify = true);
 QStrMap createSettings (const QString &undo, const QString &notify,
                         const QString &code);
 
-QStrMap struct2coreTranslations (StructuralType type);
-QStrMap core2structTranslations (StructuralType type);
+QStrMap struct2nclTranslations (StructuralType type);
+QStrMap ncl2structTranslations (StructuralType type);
 
-QString categoryToStr (StructuralCategory category);
-StructuralCategory strToCategory (const QString &category);
+QString categorytostr (StructuralCategory category);
+StructuralCategory strtocategory (const QString &category);
+StructuralCategory categoryfromtype (StructuralType type);
 
-StructuralCategory categoryFromType (StructuralType type);
+QString typetostr (StructuralType type);
+StructuralType strtotype (const QString &type);
 
-QString typeToStr (StructuralType type);
-StructuralType strToType (const QString &type);
+QString roletostr (StructuralRole role);
+StructuralRole strtorole (const QString &role);
 
-QString roleToString (StructuralRole role);
-StructuralRole strToRole (const QString &role);
-
-QString mimeToStr (StructuralMimeType mimetype);
-StructuralMimeType strToMime (const QString &mimetype);
+QString mimetostr (StructuralMimeType mimetype);
+StructuralMimeType strtomime (const QString &mimetype);
 
 QString icon (StructuralType type);
 QString color (StructuralType type);
@@ -41,16 +40,16 @@ QString tooltip (StructuralType type, const QString &title = "",
                  const QString &info = "", const QString &warning = "",
                  const QString &error = "", const QString &extra = "");
 
-QString mimeTypeIcon (StructuralMimeType mimetype);
-QString mimeTooltip (StructuralMimeType mimetype, const QString &title = "",
+QString mimeicon (StructuralMimeType mimetype);
+QString mimetooltip (StructuralMimeType mimetype, const QString &title = "",
                      const QString &info = "", const QString &warning = "",
                      const QString &error = "", const QString &extra = "");
-StructuralMimeType mimeByExtension (const QString &ext);
+StructuralMimeType exttomime (const QString &ext);
 
 QString icon (StructuralRole role);
 
 QVector<StructuralEntity *> neighbors (StructuralEntity *entity);
-QVector<StructuralEntity *> upNeighbors (StructuralEntity *entity);
+QVector<StructuralEntity *> upneighbors (StructuralEntity *entity);
 
 bool isCondition (StructuralRole role);
 bool isCondition (const QString &role);

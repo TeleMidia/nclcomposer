@@ -51,7 +51,6 @@ public:
   void toogleMode (bool notify = false);
 
   void setError (const QString &uid, const QString &error);
-
   void clearErrors ();
 
   StructuralMenu *

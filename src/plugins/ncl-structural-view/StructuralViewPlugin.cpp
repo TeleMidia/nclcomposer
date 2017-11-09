@@ -147,8 +147,8 @@ StructuralViewPlugin::updateFromModel ()
 
     for (Entity *child : current->entityChildren ())
     {
-      StructuralType t = util::strToType (child->type ());
-      StructuralCategory cat = util::categoryFromType (t);
+      StructuralType t = util::strtotype (child->type ());
+      StructuralCategory cat = util::categoryfromtype (t);
       switch (cat)
       {
         case StructuralCategory::Node:
@@ -331,14 +331,15 @@ StructuralViewPlugin::viewPropsFromCoreEntity (const Entity *ent)
 {
   QStrMap viewProps;
 
-  StructuralType type = util::strToType (ent->type ());
+  StructuralType type = util::strtotype (ent->type ());
   QString coreParentUid = ent->parentUid ();
   QString viewParentUid = _core2view.value (coreParentUid, "");
 
-  QStrMap transls = util::struct2coreTranslations (type);
   if (type != Structural::NoType)
   {
     viewProps = { { ST_ATTR_ENT_TYPE, ent->type () } };
+
+    QStrMap transls = util::struct2nclTranslations (type);
     for (const QString &key : transls.keys ())
     {
       if (ent->hasAttr (key) && !ent->attr (key).isEmpty ())
@@ -365,9 +366,9 @@ StructuralViewPlugin::viewPropsFromCoreEntity (const Entity *ent)
       if (viewProps.contains (ST_ATTR_ENT_ID))
       {
         StructuralRole role
-            = util::strToRole (viewProps.value (ST_ATTR_ENT_ID));
+            = util::strtorole (viewProps.value (ST_ATTR_ENT_ID));
 
-        viewProps.insert (ST_ATTR_BIND_ROLE, util::roleToString (role));
+        viewProps.insert (ST_ATTR_BIND_ROLE, util::roletostr (role));
         viewProps.insert (ST_ATTR_REF_LINK_UID,
                           _core2view.value (ent->parentUid ()));
 
@@ -475,7 +476,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
   CPR_ASSERT (!_core2view.contains (ent->uid ()));
 
   QStrMap stgs = util::createSettings (undo, false);
-  Structural::Type type = util::strToType (ent->type ());
+  Structural::Type type = util::strtotype (ent->type ());
   QString uid = ent->uid ();
   QString coreParentUid = ent->parentUid ();
   QStrMap props = viewPropsFromCoreEntity (ent);
@@ -570,7 +571,7 @@ StructuralViewPlugin::removeInView (Entity *ent, bool undo)
 void
 StructuralViewPlugin::changeInView (Entity *ent)
 {
-  Structural::Type type = util::strToType (ent->type ());
+  Structural::Type type = util::strtotype (ent->type ());
 
   QStrMap stgs = util::createSettings (true, false);
 
@@ -621,10 +622,10 @@ StructuralViewPlugin::selectInView (Entity *entity)
 QStrMap
 StructuralViewPlugin::coreAttrsFromStructuralEntity (const QStrMap &props)
 {
-  StructuralType type = util::strToType (props[ST_ATTR_ENT_TYPE]);
+  StructuralType type = util::strtotype (props[ST_ATTR_ENT_TYPE]);
 
   QStrMap attrs;
-  QStrMap transls = util::core2structTranslations (type);
+  QStrMap transls = util::ncl2structTranslations (type);
   for (const QString &key : transls.keys ())
   {
     if (props.contains (key) && !props.value (key).isEmpty ())
@@ -636,11 +637,11 @@ StructuralViewPlugin::coreAttrsFromStructuralEntity (const QStrMap &props)
 
 void
 StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
-                                    QStrMap settings)
+                                    QStrMap stngs)
 {
-  Q_UNUSED (settings);
+  Q_UNUSED (stngs);
 
-  StructuralType type = util::strToType (props[ST_ATTR_ENT_TYPE]);
+  StructuralType type = util::strtotype (props[ST_ATTR_ENT_TYPE]);
   Entity *entParent = nullptr;
 
   if (type == Structural::Bind)
@@ -699,7 +700,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
     _waiting = true;
     _notified = uid;
 
-    emit addEntity (util::typeToStr (type), entParent->uid (), attrs);
+    emit addEntity (util::typetostr (type), entParent->uid (), attrs);
 
     if (type == Structural::Link || type == Structural::Bind)
     {
@@ -773,7 +774,7 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
   Entity *ent = project ()->getEntityById (_view2core.value (uid));
   if (ent)
   {
-    StructuralType type = util::strToType (props[ST_ATTR_ENT_TYPE]);
+    StructuralType type = util::strtotype (props[ST_ATTR_ENT_TYPE]);
     QStrMap attrs = coreAttrsFromStructuralEntity (props);
 
     if (type == Structural::Link || type == Structural::Bind)
