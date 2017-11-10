@@ -173,6 +173,11 @@ StructuralScene::body ()
   return body;
 }
 
+bool
+StructuralScene::hasBody ()
+{
+  return body () != nullptr;
+}
 #define for_each_qelem_child(E, P)                                            \
   for (QDomElement E = P.firstChildElement (); !E.isNull ();                  \
        E = E.nextSiblingElement ())

@@ -222,8 +222,6 @@ StructuralView::calcNewAngle (StructuralBind *bind)
     min = std::min (min, cur);
   }
 
-  qWarning () << min << max;
-
   qreal angle = 0;
   if (min != INT_MAX || max != INT_MIN)
   {

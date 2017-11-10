@@ -33,11 +33,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
     ${CMAKE_BINARY_DIR}/${NCLCOMPOSER_BINARY_DIR_LIB})
 
-# NCLCOMPOSER - CORE AND GUI
+# nclcomposer - core and gui
 add_subdirectory(src/core)
 add_subdirectory(src/gui)
 
-# NCLCOMPOSER - PLUGINS
+# nclcomposer - plugins
 if(WIN32)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
       ${CMAKE_BINARY_DIR}/${NCLCOMPOSER_BINARY_DIR_PLUGINS})
@@ -75,7 +75,6 @@ if(DOXYGEN_FOUND)
   )
 endif(DOXYGEN_FOUND)
 
-##
 # Add uninstall target
 # Requirements: Copy the uninstall.cmake file to the appropriate
 # CMAKE_MODULE_PATH.

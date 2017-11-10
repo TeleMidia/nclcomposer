@@ -779,16 +779,16 @@ StructuralEntity::addChild (StructuralEntity *entity)
 }
 
 void
-StructuralEntity::removeChild (StructuralEntity *entity)
+StructuralEntity::removeChild (StructuralEntity *ent)
 {
-  CPR_ASSERT (entity != nullptr);
+  CPR_ASSERT_NON_NULL (ent);
 
-  int index = _children.indexOf (entity);
+  int index = _children.indexOf (ent);
 
   if (index >= 0)
     _children.remove (index);
 
-  entity->setStructuralParent (nullptr);
+  ent->setStructuralParent (nullptr);
 }
 
 bool

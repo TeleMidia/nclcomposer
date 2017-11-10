@@ -21,7 +21,9 @@ public:
                    QObject *parent = 0);
   virtual ~StructuralScene () {}
 
+  bool hasBody ();
   StructuralEntity *body ();
+
   bool hasEntity (const QString &uid);
   StructuralEntity *entity (const QString &uid);
   QMap<QString, StructuralEntity *> entities ();
