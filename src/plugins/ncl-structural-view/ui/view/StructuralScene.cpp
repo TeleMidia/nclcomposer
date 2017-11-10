@@ -3,6 +3,7 @@
 #include "StructuralView.h"
 #include "util/Utilities.h"
 
+#include <set>
 #include <vector>
 
 StructuralScene::StructuralScene (StructuralView *view, StructuralMenu *menu,
@@ -80,6 +81,31 @@ StructuralScene::edges (const QString &nodeuid)
   return edges_of_k;
 }
 
+/*!
+ * \brief StructuralScene::parallelEdges
+ * \return the edges that have the same end nodes of edge
+ */
+QList<StructuralEdge *>
+StructuralScene::parallelEdges (StructuralEdge *edge)
+{
+  CPR_ASSERT (edge->hasOrigin() && edge->hasOrigin ());
+  QList<StructuralEdge *> parallel_edges;
+  std::set<StructuralEntity *> edge_nodes = {edge->origin(),
+                                             edge->destination()};
+
+  for (StructuralEdge *e : edges ().values ())
+  {
+    if (e != edge &&
+        e->hasOrigin() && e->hasDestination())
+    {
+      std::set<StructuralEntity *> e_nodes = {e->origin(), e->destination()};
+      if (e_nodes == edge_nodes)
+        parallel_edges.push_back (e);
+    }
+  }
+
+  return parallel_edges;
+}
 
 QMap<QString, QString> &
 StructuralScene::refs ()

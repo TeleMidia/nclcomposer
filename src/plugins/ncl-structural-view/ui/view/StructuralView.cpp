@@ -205,51 +205,36 @@ StructuralView::adjustEntity (StructuralEntity *e, const QStrMap &props,
 qreal
 StructuralView::calcNewAngle (StructuralBind *bind)
 {
-  int min = 100000;
-  int max = -100000;
+  CPR_ASSERT (bind->hasOrigin() && bind->hasDestination());
+  int min = INT_MAX;
+  int max = INT_MIN;
+
+  QList <StructuralEdge *> parallelEdges = _scene->parallelEdges (bind);
+
+  for (StructuralEdge *e : parallelEdges)
+  {
+    int cur = e->angle ();
+
+    if (e->destination ()->structuralType () != Structural::Link)
+      cur *= -1;
+
+    max = std::max (max, cur);
+    min = std::min (min, cur);
+  }
+
+  qWarning () << min << max;
 
   qreal angle = 0;
-
-  if (bind->hasOrigin () && bind->hasDestination ())
+  if (min != INT_MAX || max != INT_MIN)
   {
-    for (StructuralEntity *e : _scene->entities ().values ())
-    {
-      StructuralBind *b = cast (StructuralBind *, e);
-      if (b && b != bind)
-      {
-        if (b->hasOrigin () && b->hasDestination ())
-        {
-          std::set<StructuralEntity *> bindNodes = { bind->origin(),
-                                                     bind->destination() };
-          if (bindNodes.count (b->origin ()) &&
-              bindNodes.count (b->destination()))
-          {
-            int current = b->angle ();
-
-            if (b->destination ()->structuralType () != Structural::Link)
-              current = -current;
-
-            if (max < current)
-              max = current;
-
-            if (min > current)
-              min = current;
-          }
-        }
-      }
-    }
-
-    if (min != 100000 || max != -100000)
-    {
-      if (max <= abs (min))
-        angle = max + 60;
-      else if (max > abs (min))
-        angle = min - 60;
-    }
-
-    if (bind->destination ()->structuralType () != Structural::Link)
-      return -angle;
+    if (max <= abs (min))
+      angle = max + 60;
+    else if (max > abs (min))
+      angle = min - 60;
   }
+
+  if (bind->destination ()->structuralType () != Structural::Link)
+    return angle *= -1;
 
   return angle;
 }
