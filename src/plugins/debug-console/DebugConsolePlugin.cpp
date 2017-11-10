@@ -40,12 +40,6 @@ DebugConsolePlugin::~DebugConsolePlugin ()
   _window = nullptr;
 }
 
-void
-DebugConsolePlugin::init ()
-{
-  // TODO: All
-}
-
 QWidget *
 DebugConsolePlugin::widget ()
 {
@@ -63,7 +57,6 @@ DebugConsolePlugin::onEntityAdded (const QString &pluginID, Entity *entity)
 void
 DebugConsolePlugin::errorMessage (const QString &error)
 {
-  //    list->insertItem(0, new QListWidgetItem(error));
   if (_list->count ())
     _list->item (0)->setText (error);
   else
@@ -76,16 +69,7 @@ DebugConsolePlugin::onEntityChanged (const QString &pluginID, Entity *entity)
   QString line = "PLUGIN (" + pluginID + ") changed the Entity ("
                  + entity->type () + " - " + entity->uid () + ")";
   _list->insertItem (0, new QListWidgetItem (line));
-  /*  if(list->count())
-    list->item(0)->setText(line);
-  else
-    list->addItem(new QListWidgetItem(line)); */
 }
-
-/*void DebugConsolePlugin::onEntityAboutToRemove(Entity *)
-{
-
-}*/
 
 void
 DebugConsolePlugin::onEntityRemoved (const QString &pluginID,
@@ -93,28 +77,16 @@ DebugConsolePlugin::onEntityRemoved (const QString &pluginID,
 {
   QString line = "PLUGIN (" + pluginID + ") removed Entity (" + entityID + ")";
   _list->insertItem (0, new QListWidgetItem (line));
-  /*if(list->count())
-    list->item(0)->setText(line);
-  else
-    list->addItem(new QListWidgetItem(line));*/
 }
 
 bool
 DebugConsolePlugin::saveSubsession ()
 {
-  // TODO: All
   return true;
 }
 
 void
 DebugConsolePlugin::sendToAll ()
 {
-  /* Invoker <Result> in;
-    in.addArgument<int>(10);
-    in.addArgument<int>(20);
-    in.addArgument<int>(30);
-
-    in.sendBroadcastMessage("debugHasSendClearAll"); */
-
   emit sendBroadcastMessage ("debugHasSendClearAll", nullptr);
 }

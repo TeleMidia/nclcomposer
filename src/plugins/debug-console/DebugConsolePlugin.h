@@ -42,7 +42,7 @@ public:
   explicit DebugConsolePlugin ();
   ~DebugConsolePlugin ();
 
-  void init () override;
+  void init () override {};
   QWidget *widget () override;
   bool saveSubsession () override;
 
