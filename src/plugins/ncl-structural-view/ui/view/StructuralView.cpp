@@ -44,6 +44,8 @@ StructuralView::StructuralView (QWidget *parent)
   setScene (_scene);
   centerOn (0, 0);
 
+  setMode (StructuralInteractionMode::Pointing);
+
   connect (&_commands, &QUndoStack::canUndoChanged, this,
            &StructuralView::canUndoChanged);
   connect (&_commands, &QUndoStack::canRedoChanged, this,
@@ -1209,8 +1211,6 @@ StructuralView::createLink (StructuralEntity *orig, StructuralEntity *dest)
       parent = parentOrig->structuralParent ();
     }
 
-    setMode (Structural::Pointing, true);
-
     if (parent || !ST_OPT_WITH_BODY)
     {
       emit updateRequested ();
@@ -1253,6 +1253,7 @@ StructuralView::createLink (StructuralEntity *orig, StructuralEntity *dest)
         }
       }
 
+      setMode (Structural::Pointing, true);
       _dialog->setMode ();
 
       if (_dialog->exec ())
@@ -1453,8 +1454,6 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
         {
           emit updateRequested ();
 
-          setMode (Structural::Pointing, true);
-
           if (entityNonLink->category () == Structural::Interface)
           {
             for (StructuralEntity *ent : parentNonLink->children ())
@@ -1479,6 +1478,7 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
           _dialog->setMode (entityLink->property (ST_ATTR_REF_XCONNECTOR_ID),
                             "", "", StructuralLinkDialog::CreateAction);
 
+          setMode (Structural::Pointing, true);
           if (_dialog->exec ())
           {
             if (!_dialog->getActionInterface ().isEmpty ())
@@ -1526,8 +1526,6 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
         {
           emit updateRequested ();
 
-          setMode (Structural::Pointing, true);
-
           if (entityNonLink->category () == Structural::Interface)
           {
             for (StructuralEntity *ent : parentNonLink->children ())
@@ -1552,6 +1550,7 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
           _dialog->setMode (entityLink->property (ST_ATTR_REF_XCONNECTOR_ID),
                             "", "", StructuralLinkDialog::CreateCondition);
 
+          setMode (Structural::Pointing, true);
           if (_dialog->exec ())
           {
             if (!_dialog->getConditionInterface ().isEmpty ())
@@ -1654,8 +1653,6 @@ StructuralView::createReference (StructuralEntity *orig,
         //        props[ST_ATTR_REF_INTERFACE_ID] = "";
         //        props[ST_ATTR_REF_INTERFACE_UID] = "";
       }
-
-      setMode (Structural::Pointing, true);
 
       if (orig->structuralType () == Structural::Port)
       {
@@ -2131,6 +2128,7 @@ StructuralView::performLinkDialog (StructuralLink *ent)
 
   _dialog->setConnectorParams (pLink);
 
+  setMode (StructuralInteractionMode::Pointing);
   if (_dialog->exec ())
   {
     QStrMap prev = ent->properties ();
@@ -2277,6 +2275,7 @@ StructuralView::performBindDialog (StructuralBind *ent)
     }
   }
 
+  setMode (StructuralInteractionMode::Pointing);
   if (_dialog->exec ())
   {
     QStrMap prev = ent->properties ();

@@ -206,7 +206,7 @@ StructuralScene::save ()
   QDomDocument *doc = new QDomDocument ();
   QDomElement root = doc->createElement ("structural");
 
-  for (StructuralEntity *e : nodes ().values ())
+  for (StructuralEntity *e : entities ().values ())
   {
     if (e->structuralParent () == nullptr)
       createXmlElement (e, doc, root);
@@ -607,13 +607,11 @@ StructuralScene::change (QString uid, QStrMap props, QStrMap stgs)
       StructuralEntity *lasttarget = nullptr;
       QString compUid = prev.value (ST_ATTR_REF_COMPONENT_UID);
       QString interfUid = prev.value (ST_ATTR_REF_INTERFACE_UID);
-      if (hasEntity (compUid))
-      {
-        lasttarget = entity (compUid);
 
-        if (hasEntity (interfUid))
-          lasttarget = entity (interfUid);
-      }
+      if (hasEntity (interfUid))
+        lasttarget = entity (interfUid);
+      else if (hasEntity (compUid))
+        lasttarget = entity (compUid);
 
       if (lasttarget)
         lasttarget->setProperty (ST_ATTR_ENT_AUTOSTART, ST_VALUE_FALSE);
