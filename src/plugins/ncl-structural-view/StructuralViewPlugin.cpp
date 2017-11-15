@@ -36,7 +36,7 @@ StructuralViewPlugin::StructuralViewPlugin (QObject *parent)
 {
   Q_UNUSED (parent);
 
-  _struct_view = _window->view ();
+  _struct_view = _window.view ();
   _struct_scene = _struct_view->scene ();
 
   createConnections ();
@@ -47,8 +47,6 @@ StructuralViewPlugin::StructuralViewPlugin (QObject *parent)
   _notified = ""; // last entity uid notified by the view
   _selected = "";
 }
-
-StructuralViewPlugin::~StructuralViewPlugin () { delete _window; }
 
 void
 StructuralViewPlugin::createConnections ()
@@ -83,17 +81,13 @@ StructuralViewPlugin::init ()
 QWidget *
 StructuralViewPlugin::widget ()
 {
-  return _window;
+  return &_window;
 }
 
 bool
 StructuralViewPlugin::saveSubsession ()
 {
-  QByteArray data;
-  data.append (_struct_scene->save ());
-
-  emit setPluginData (data);
-
+  emit setPluginData ((_struct_scene->save ()).toUtf8 ());
   return true;
 }
 
@@ -141,10 +135,9 @@ StructuralViewPlugin::updateFromModel ()
   stack.push (_project);
   while (stack.size ())
   {
-    Entity *current = stack.top ();
-    stack.pop ();
+    Entity *curr = stack.pop ();
 
-    for (Entity *child : current->entityChildren ())
+    for (Entity *child : curr->entityChildren ())
     {
       StructuralType t = util::strtotype (child->type ());
       StructuralCategory cat = util::categoryfromtype (t);
@@ -171,14 +164,14 @@ StructuralViewPlugin::updateFromModel ()
     }
   }
 
-  // Insert the nodes and interfaces entities in the view again.
+  // Insert the nodes, interfaces, and edges entities in the view again (in
+  // that order).
   for (Entity *ent : nodes)
     insertInView (ent, false);
 
   for (Entity *ent : interfaces)
     insertInView (ent, false);
 
-  // Insert the edges again.
   for (Entity *ent : edges)
     insertInView (ent);
 
@@ -249,8 +242,7 @@ StructuralViewPlugin::setReferences (QStrMap &props)
 void
 StructuralViewPlugin::clean ()
 {
-  _core2view.clear ();
-  _view2core.clear ();
+  _core2view_clear ();
 }
 
 void
@@ -726,10 +718,8 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
         {
           QString pUid = key.right (key.length () - key.lastIndexOf (':') - 1);
 
-          QStrMap pAttr;
-          pAttr.insert ("name", props.value (key));
-          pAttr.insert ("value", props.value (value + ":" + pUid));
-
+          QStrMap pAttr = { {"name", props.value (key)},
+                            {"value", props.value (value + ":" + pUid)} };
           _waiting = true;
           _notified = pUid;
 
@@ -920,21 +910,18 @@ StructuralViewPlugin::uidById (const QString &id, Entity *ent)
 
   for (Entity *child : ent->entityChildren ())
   {
-    QString result = uidById (id, child);
-    if (result != "")
-    {
-      uid = result;
+    uid = uidById (id, child);
+    if (!uid.isEmpty ())
       break;
-    }
   }
 
   return uid;
 }
 
-// \fixme Merge the two connectorParts methods bellow in one.
+// \fixme Merge the two connector_parts methods bellow into one.
 static void
 connector_parts (Entity *ent, QVector<QString> &connConditions,
-                QVector<QString> &connActions, QVector<QString> &connParams)
+                 QVector<QString> &connActions, QVector<QString> &connParams)
 {
   CPR_ASSERT (ent->type () == "causalConnector");
 
@@ -972,7 +959,7 @@ connector_parts (Entity *ent, QVector<QString> &connConditions,
 
 static void
 connector_parts (QDomElement connElt, QVector<QString> &connConditions,
-                QVector<QString> &connActions, QVector<QString> &connParams)
+                 QVector<QString> &connActions, QVector<QString> &connParams)
 {
   QStack<QDomElement> next;
   for_each_qelem_child (role, connElt) next.push (role);

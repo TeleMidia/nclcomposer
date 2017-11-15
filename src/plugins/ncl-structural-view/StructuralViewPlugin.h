@@ -35,7 +35,7 @@ class StructuralViewPlugin : public IPlugin
 
 public:
   StructuralViewPlugin (QObject *parent = 0);
-  virtual ~StructuralViewPlugin ();
+  virtual ~StructuralViewPlugin () {}
 
   virtual void init ();
   virtual QWidget *widget ();
@@ -88,7 +88,7 @@ private:
   QString _notified;
   QString _selected;
 
-  StructuralWindow *_window;
+  StructuralWindow _window;
 
   QStrMap _core2view, _view2core;
   StructuralScene *_struct_scene;
