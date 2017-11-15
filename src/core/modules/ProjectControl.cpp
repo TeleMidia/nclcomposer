@@ -300,7 +300,7 @@ ProjectControl::projectIsDirty (bool isDirty)
   Project *project = qobject_cast<Project *> (QObject::sender ());
   if (project != nullptr)
   {
-    emit dirtyProject (project->getLocation (), isDirty);
+    emit dirtyProject (project->location (), isDirty);
   }
   else
     qCDebug (CPR_CORE)

@@ -159,7 +159,7 @@ RulesViewPlugin::init ()
     return;
 
   QList<Entity *> ruleBaseList
-      = _currentProject->getEntitiesbyType (RULEBASE_LABEL);
+      = _currentProject->entitiesByType (RULEBASE_LABEL);
 
   if (ruleBaseList.count () > 0)
   {
@@ -263,7 +263,7 @@ RulesViewPlugin::updateValue (QTreeWidgetItem *item)
   if (!item)
     return;
 
-  Entity *entity = _currentProject->getEntityById (_items.value (item));
+  Entity *entity = _currentProject->entityByUid (_items.value (item));
   if (!entity)
     return;
 
@@ -356,7 +356,7 @@ RulesViewPlugin::sendRemoveEntitySignal (QTreeWidgetItem *item)
 
   QString uId = _items.value (item);
 
-  Entity *entity = _currentProject->getEntityById (uId);
+  Entity *entity = _currentProject->entityByUid (uId);
   if (entity)
     emit removeEntity (entity);
 }
@@ -371,7 +371,7 @@ RulesViewPlugin::sendAddEntitySignal (QTreeWidgetItem *parent, int type)
   {
     if (type == RULEBASE_TYPE)
     {
-      QList<Entity *> entities = _currentProject->getEntitiesbyType ("head");
+      QList<Entity *> entities = _currentProject->entitiesByType ("head");
       if (entities.count () > 0)
       {
         parentUId = entities.first ()->uid ();

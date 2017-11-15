@@ -121,7 +121,7 @@ ComposerMainWindow::initModules ()
 {
   PluginControl *pgControl = PluginControl::instance ();
   LanguageControl *lgControl = LanguageControl::instance ();
-  ProjectControl *projectControl = ProjectControl::instance ();
+  ProjectControl *projControl = ProjectControl::instance ();
 
   connect (pgControl, SIGNAL (notifyError (QString)),
            SLOT (errorDialog (QString)));
@@ -133,30 +133,30 @@ ComposerMainWindow::initModules ()
   connect (lgControl, SIGNAL (notifyError (QString)),
            SLOT (errorDialog (QString)));
 
-  connect (projectControl, SIGNAL (notifyError (QString)),
+  connect (projControl, SIGNAL (notifyError (QString)),
            SLOT (errorDialog (QString)));
 
-  connect (projectControl, SIGNAL (projectAlreadyOpen (QString)),
+  connect (projControl, SIGNAL (projectAlreadyOpen (QString)),
            SLOT (onOpenProjectTab (QString)));
 
-  connect (projectControl, SIGNAL (startOpenProject (QString)), this,
+  connect (projControl, SIGNAL (startOpenProject (QString)), this,
            SLOT (startOpenProject (QString)));
 
-  connect (projectControl, SIGNAL (endOpenProject (QString)),
+  connect (projControl, SIGNAL (endOpenProject (QString)),
            SLOT (endOpenProject (QString)));
 
   /* Recent projects */
-  connect (projectControl, SIGNAL (endOpenProject (QString)),
+  connect (projControl, SIGNAL (endOpenProject (QString)),
            SLOT (addToRecentProjects (QString)));
 
   connect (_welcomeWidget, SIGNAL (userPressedRecentProject (QString)), this,
            SLOT (userPressedRecentProject (QString)));
   /* end recent projects */
 
-  connect (projectControl, SIGNAL (projectAlreadyOpen (QString)),
+  connect (projControl, SIGNAL (projectAlreadyOpen (QString)),
            SLOT (onOpenProjectTab (QString)));
 
-  connect (projectControl, SIGNAL (dirtyProject (QString, bool)), this,
+  connect (projControl, SIGNAL (dirtyProject (QString, bool)), this,
            SLOT (setProjectAsDirty (QString, bool)));
 
   readExtensions ();
@@ -200,18 +200,18 @@ ComposerMainWindow::promptChooseExtDirectory ()
 void
 ComposerMainWindow::readSettings ()
 {
-  GlobalSettings settings;
+  GlobalSettings stgs;
 
-  settings.beginGroup ("mainwindow");
-  restoreGeometry (settings.value ("geometry").toByteArray ());
-  restoreState (settings.value ("windowState").toByteArray ());
-  settings.endGroup ();
+  stgs.beginGroup ("mainwindow");
+  restoreGeometry (stgs.value ("geometry").toByteArray ());
+  restoreState (stgs.value ("windowState").toByteArray ());
+  stgs.endGroup ();
 
   QApplication::processEvents ();
 
-  settings.beginGroup ("openfiles");
-  QStringList openfiles = settings.value ("openfiles").toStringList ();
-  settings.endGroup ();
+  stgs.beginGroup ("openfiles");
+  QStringList openfiles = stgs.value ("openfiles").toStringList ();
+  stgs.endGroup ();
 
   openProjects (openfiles);
 
@@ -397,7 +397,7 @@ ComposerMainWindow::addPluginWidget (IPluginFactory *fac, IPlugin *plugin,
                                      Project *project)
 {
   QToolWindowManager *w;
-  QString location = project->getLocation ();
+  QString location = project->location ();
   QString projectId = project->attr ("id");
 
 #ifdef USE_MDI
@@ -1146,7 +1146,7 @@ ComposerMainWindow::addDefaultStructureToProject (
       = PluginControl::instance ()->getMessageControl (project);
   msgControl->anonymousAddEntity ("ncl", project->uid (), nclAttrs);
 
-  nclEntity = project->getEntitiesbyType ("ncl").first ();
+  nclEntity = project->entitiesByType ("ncl").first ();
 
   if (nclEntity != nullptr)
   {
@@ -1170,7 +1170,7 @@ ComposerMainWindow::addDefaultStructureToProject (
     QFileInfo defaultConnBaseInfo (defaultConnBase);
     if (defaultConnBaseInfo.exists ())
     {
-      QString filename = project->getLocation ();
+      QString filename = project->location ();
       QString newConnBase = filename.mid (0, filename.lastIndexOf ("/") + 1)
                             + defaultConnBaseInfo.fileName ();
 
@@ -1195,13 +1195,13 @@ ComposerMainWindow::addDefaultStructureToProject (
                                 defaultConnBaseInfo.fileName ());
 
         // add connectorBase element
-        Entity *head = project->getEntitiesbyType ("head").at (0);
+        Entity *head = project->entitiesByType ("head").at (0);
         msgControl->anonymousAddEntity ("connectorBase", head->uid (),
                                         connBaseAttrs);
 
         // add importBase element
         Entity *connectorBase
-            = project->getEntitiesbyType ("connectorBase").at (0);
+            = project->entitiesByType ("connectorBase").at (0);
         msgControl->anonymousAddEntity ("importBase", connectorBase->uid (),
                                         importBaseAttrs);
       }
@@ -1228,19 +1228,19 @@ ComposerMainWindow::addDefaultStructureToProject (
   if (shouldCreateADefaultRegion)
   {
     QMap<QString, QString> regionBaseAttrs, regionAttrs;
-    QList<Entity *> regionBases = project->getEntitiesbyType ("regionBase");
+    QList<Entity *> regionBases = project->entitiesByType ("regionBase");
 
     // There is no regionBase, so lets create one
     if (!regionBases.size ())
     {
       regionBaseAttrs.insert ("id", defaultRegionBaseID);
-      Entity *head = project->getEntitiesbyType ("head").at (0);
+      Entity *head = project->entitiesByType ("head").at (0);
       msgControl->anonymousAddEntity ("regionBase", head->uid (),
                                       regionBaseAttrs);
     }
 
     // Now, its time to add the region itself
-    Entity *regionBase = project->getEntitiesbyType ("regionBase").at (0);
+    Entity *regionBase = project->entitiesByType ("regionBase").at (0);
     regionAttrs.insert ("id", defaultRegionID);
     regionAttrs.insert ("top", "0");
     regionAttrs.insert ("left", "0");

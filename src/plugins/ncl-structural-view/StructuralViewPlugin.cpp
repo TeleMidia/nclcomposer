@@ -292,7 +292,7 @@ StructuralViewPlugin::onEntityRemoved (const QString &pluginID,
 
   if (pluginID != pluginInstanceID ())
   {
-    removeInView (project ()->getEntityById (entID));
+    removeInView (project ()->entityByUid (entID));
     _core2view_remove (entID);
   }
 }
@@ -310,7 +310,7 @@ StructuralViewPlugin::changeSelectedEntity (const QString &pluginID,
 
     if (entUid)
     {
-      Entity *ent = project ()->getEntityById (*entUid);
+      Entity *ent = project ()->entityByUid (*entUid);
       if (ent)
         selectInView (ent);
     }
@@ -639,17 +639,17 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
   if (type == Structural::Bind)
   {
     QString coreUid = _view2core.value (props.value (ST_ATTR_REF_LINK_UID));
-    entParent = project ()->getEntityById (coreUid);
+    entParent = project ()->entityByUid (coreUid);
   }
   else if (type == Structural::Mapping)
   {
     QString coreUid = _view2core.value (props.value (ST_ATTR_EDGE_ORIG));
-    entParent = project ()->getEntityById (coreUid);
+    entParent = project ()->entityByUid (coreUid);
   }
   else if (type == Structural::Body)
   {
     // Check if core already has a 'body' entity. If so, update the references.
-    QList<Entity *> list = project ()->getEntitiesbyType ("body");
+    QList<Entity *> list = project ()->entitiesByType ("body");
     if (!list.isEmpty ())
     {
       Entity *body = list.first ();
@@ -660,7 +660,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
 
     // Check if core already has an 'ncl' entity.
     // If it doesn't, adds and sets entity as parent.
-    list = project ()->getEntitiesbyType ("ncl");
+    list = project ()->entitiesByType ("ncl");
     if (list.isEmpty ())
     {
       Entity *proj = project ();
@@ -670,19 +670,19 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
       emit addEntity ("ncl", proj->uid (), attrs);
     }
 
-    list = project ()->getEntitiesbyType ("ncl");
+    list = project ()->entitiesByType ("ncl");
     CPR_ASSERT (!list.isEmpty ());
     entParent = list.first ();
   }
   else if (parent.isEmpty () && !ST_OPT_WITH_BODY)
   {
-    QList<Entity *> list = project ()->getEntitiesbyType ("body");
+    QList<Entity *> list = project ()->entitiesByType ("body");
     if (!list.isEmpty ())
       entParent = list.first ();
   }
   else
   {
-    entParent = project ()->getEntityById (_view2core.value (parent));
+    entParent = project ()->entityByUid (_view2core.value (parent));
   }
 
   if (entParent)
@@ -738,7 +738,7 @@ StructuralViewPlugin::removeInCore (QString uid, QStrMap stgs)
   QString coreUid = _view2core.value (uid, "");
   if (!coreUid.isEmpty ())
   {
-    Entity *ent = project ()->getEntityById (coreUid);
+    Entity *ent = project ()->entityByUid (coreUid);
     CPR_ASSERT_NON_NULL (ent);
 
     emit removeEntity (ent);
@@ -761,7 +761,7 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
   Q_UNUSED (previous);
   Q_UNUSED (settings);
 
-  Entity *ent = project ()->getEntityById (_view2core.value (uid));
+  Entity *ent = project ()->entityByUid (_view2core.value (uid));
   if (ent)
   {
     StructuralType type = util::strtotype (props[ST_ATTR_ENT_TYPE]);
@@ -803,7 +803,7 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
 
           QStrMap pAttr = { { "name", pName }, { "value", pValue } };
 
-          Entity *param = project ()->getEntityById (_view2core.value (pUid));
+          Entity *param = project ()->entityByUid (_view2core.value (pUid));
 
           // Change a param entity in core that has been added by the view.
           if (param)
@@ -822,7 +822,7 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
           {
             int index = paramNames.indexOf (pName);
 
-            param = project ()->getEntityById (paramUids.at (index));
+            param = project ()->entityByUid (paramUids.at (index));
             paramUids.remove (index);
 
             _core2view_insert (param->uid (), pUid);
@@ -842,7 +842,7 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
       }
 
       for (const QString &pUid : paramUids)
-        emit removeEntity (project ()->getEntityById (pUid));
+        emit removeEntity (project ()->entityByUid (pUid));
     }
 
     _waiting = true;
@@ -1013,7 +1013,7 @@ update_conn_parts (const QString &connId, const T conn,
 void
 StructuralViewPlugin::adjustConnectors ()
 {
-  auto connectorBases = project ()->getEntitiesbyType ("connectorBase");
+  auto connectorBases = project ()->entitiesByType ("connectorBase");
   if (!connectorBases.isEmpty ())
   {
     Entity *connBase = connectorBases.first ();
@@ -1033,7 +1033,7 @@ StructuralViewPlugin::adjustConnectors ()
       // load data from importBase
       else if (child->type () == "importBase")
       {
-        auto projURI = project ()->getLocation (); // '/' as separator
+        auto projURI = project ()->location (); // '/' as separator
         auto alias = child->attr ("alias");
         auto docUri = child->attr ("documentURI");
 

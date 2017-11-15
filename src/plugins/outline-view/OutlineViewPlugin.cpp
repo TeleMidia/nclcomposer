@@ -167,7 +167,7 @@ OutlineViewPlugin::onEntityRemoved (const QString &pluginID,
 void
 OutlineViewPlugin::elementRemovedByUser (QString itemId)
 {
-  Entity *entity = project ()->getEntityById (itemId);
+  Entity *entity = project ()->entityByUid (itemId);
   emit removeEntity (entity);
 }
 
@@ -390,8 +390,8 @@ void
 OutlineViewPlugin::openWithDefaultSystemEditor (QString entityId)
 {
   QString url;
-  Entity *entity = project ()->getEntityById (entityId);
-  QFileInfo projectInfo (project ()->getLocation ());
+  Entity *entity = project ()->entityByUid (entityId);
+  QFileInfo projectInfo (project ()->location ());
 
   if (entity->type () == "media")
   {

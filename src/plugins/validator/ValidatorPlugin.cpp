@@ -39,7 +39,7 @@ ValidatorPlugin::init ()
 {
   Project *proj = project ();
 
-  QString location = proj->getLocation ();
+  QString location = proj->location ();
   int index = location.lastIndexOf ("/");
   location.remove (index + 1, location.size () - (index + 1));
 

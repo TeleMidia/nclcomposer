@@ -27,7 +27,7 @@ NCLDocumentParser::parserName ()
 bool
 NCLDocumentParser::parseDocument ()
 {
-  QString uri = _project->getLocation ();
+  QString uri = _project->location ();
 
   QFile *file = new QFile (uri, this);
   if (!file->open (QIODevice::ReadWrite))

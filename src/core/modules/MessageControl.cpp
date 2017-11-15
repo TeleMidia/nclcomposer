@@ -102,7 +102,7 @@ MessageControl::anonymousRemoveEntity (const QString &entityUniqueId,
 {
   try
   {
-    Entity *entity = _project->getEntityById (entityUniqueId);
+    Entity *entity = _project->entityByUid (entityUniqueId);
     if (entity != nullptr)
     {
       // send message to All PLUGINS interested in this message.
@@ -125,7 +125,7 @@ MessageControl::anonymousChangeEntity (const QString &entityId,
                                        const QMap<QString, QString> &atts,
                                        bool notifyPlugins)
 {
-  Entity *ent = _project->getEntityById (entityId);
+  Entity *ent = _project->entityByUid (entityId);
   if (ent != nullptr)
   {
     ent->setAtrrs (atts);
@@ -292,7 +292,7 @@ MessageControl::addComment (const QString &content, const QString &parentId)
   try
   {
     comment = new Comment (content, _project->getDomDocument (),
-                           _project->getEntityById (parentId));
+                           _project->entityByUid (parentId));
     _qUndoStack->push (new AddCommentCmd (_project, comment, parentId));
 
     sendCommentMessageToPlugins (Message::COMMENT_ADDED, senderId, comment);

@@ -111,7 +111,7 @@ NCLTextualViewPlugin::init ()
     updateFromModel ();
   }
 
-  _nclTextEditor->setDocumentUrl (project ()->getLocation ());
+  _nclTextEditor->setDocumentUrl (project ()->location ());
 
   updateErrorMessages ();
 }
@@ -628,7 +628,7 @@ NCLTextualViewPlugin::updateCoreModel ()
   // double-buffering
   _tmpNclTextEditor = _nclTextEditor;
   _nclTextEditor = new NCLTextEditor (0);
-  _nclTextEditor->setDocumentUrl (project ()->getLocation ());
+  _nclTextEditor->setDocumentUrl (project ()->location ());
   _nclTextEditor->setText (_tmpNclTextEditor->textWithoutUserInteraction ());
   updateFromModel (); // this is just a precaution
 
@@ -1015,7 +1015,7 @@ NCLTextualViewPlugin::printEntitiesOffset ()
                                                   endOffSet);
 
     qCDebug (CPR_PLUGIN_TEXTUAL)
-        << "key=" << key << "(" << project ()->getEntityById (key)->type ()
+        << "key=" << key << "(" << project ()->entityByUid (key)->type ()
         << "; start=" << startOffSet << "; start_char=" << startChar
         << "; end=" << endOffSet << "; end_char=" << endChar << endl;
   }

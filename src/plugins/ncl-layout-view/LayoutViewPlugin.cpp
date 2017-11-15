@@ -129,7 +129,7 @@ void
 NCLLayoutViewPlugin::loadRegionbase ()
 {
   QList<Entity *> regionbaseList
-      = project ()->getEntitiesbyType ("regionBase");
+      = project ()->entitiesByType ("regionBase");
 
   if (!regionbaseList.isEmpty ())
   {
@@ -1122,23 +1122,23 @@ NCLLayoutViewPlugin::selectRegionBase (const QString &regionbaseUID)
 QString
 NCLLayoutViewPlugin::headUid ()
 {
-  if (project ()->getEntitiesbyType ("head").isEmpty ())
+  if (project ()->entitiesByType ("head").isEmpty ())
   {
-    if (project ()->getEntitiesbyType ("ncl").isEmpty ())
+    if (project ()->entitiesByType ("ncl").isEmpty ())
     {
       QMap<QString, QString> atts;
 
       emit addEntity ("ncl", project ()->uid (), atts);
     }
 
-    QString nclUID = project ()->getEntitiesbyType ("ncl").at (0)->uid ();
+    QString nclUID = project ()->entitiesByType ("ncl").at (0)->uid ();
 
     QMap<QString, QString> atts;
 
     emit addEntity ("head", nclUID, atts);
   }
 
-  return project ()->getEntitiesbyType ("head").at (0)->uid ();
+  return project ()->entitiesByType ("head").at (0)->uid ();
 }
 
 QMap<QString, QString>
@@ -1222,9 +1222,9 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
                                                    const QString &regionUID)
 {
   bool error = false;
-  Entity *region = project ()->getEntityById (regionUID);
+  Entity *region = project ()->entityByUid (regionUID);
   Entity *media = NULL;
-  QList<Entity *> medias = project ()->getEntitiesbyType ("media");
+  QList<Entity *> medias = project ()->entitiesByType ("media");
 
   const bool askDescOrProperties = true; // \todo This must be a preference.
 
@@ -1284,7 +1284,7 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
       {
         QMap<QString, QString> attrs;
         QList<Entity *> descritorBases
-            = project ()->getEntitiesbyType ("descriptorBase");
+            = project ()->entitiesByType ("descriptorBase");
 
         // create the descriptor
         QString newDescriptorID
@@ -1293,7 +1293,7 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
         descriptorsIds << newDescriptorID;
 
         QList<Entity *> descriptors
-            = project ()->getEntitiesbyType ("descriptor");
+            = project ()->entitiesByType ("descriptor");
         foreach (Entity *desc, descriptors)
         {
           if (desc != NULL)
@@ -1322,7 +1322,7 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
           if (!alredyExistentsDescriptorsIds.contains (newDescriptorID))
           {
             Entity *descriptorBase
-                = project ()->getEntitiesbyType ("descriptorBase").at (0);
+                = project ()->entitiesByType ("descriptorBase").at (0);
             attrs.insert ("id", newDescriptorID);
             attrs.insert ("region", region->attr ("id"));
 
@@ -1361,7 +1361,7 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
           if (propertyNameToUID.keys ().contains (key))
           {
             QString propUID = propertyNameToUID.value (key);
-            emit setAttributes (project ()->getEntityById (propUID), attrs);
+            emit setAttributes (project ()->entityByUid (propUID), attrs);
           }
           else
             emit addEntity ("property", media->uid (), attrs);
@@ -1374,7 +1374,7 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
 
       QMap<QString, QString> attrs;
       QList<Entity *> descritorBases
-          = project ()->getEntitiesbyType ("descriptorBase");
+          = project ()->entitiesByType ("descriptorBase");
 
       // create the descriptor
       QString newDescriptorID
@@ -1385,7 +1385,7 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
         emit addEntity ("descriptorBase", headUid (), attrs);
 
       Entity *descriptorBase
-          = project ()->getEntitiesbyType ("descriptorBase").at (0);
+          = project ()->entitiesByType ("descriptorBase").at (0);
       attrs.insert ("id", newDescriptorID);
       attrs.insert ("region", region->attr ("id"));
 
@@ -1402,7 +1402,7 @@ NCLLayoutViewPlugin::performMediaOverRegionAction (const QString &mediaId,
         attrs.clear ();
         QMap<QString, QString>::iterator begin, end, it;
         QList<Entity *> descriptors
-            = project ()->getEntityByAttrId (newDescriptorID);
+            = project ()->entityByAttrId (newDescriptorID);
 
         if (descriptors.size ())
         {

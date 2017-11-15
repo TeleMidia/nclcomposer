@@ -67,19 +67,19 @@ public:
    * \brief Returns the Entity with the uniqueid <id>.
    * \param _id The Unique Identifier of the required entity.
    */
-  Entity *getEntityById (const QString &id);
+  Entity *entityByUid (const QString &id);
 
   /*!
    * \brief Returns a list of the entities which are of the type <type>.
    * \param _type The entity type required.
    */
-  QList<Entity *> getEntitiesbyType (const QString &_type);
+  QList<Entity *> entitiesByType (const QString &_type);
 
   /*!
    * \brief Returns the location of the project.
    * \todo This should be a URL.
    */
-  QString getLocation ();
+  QString location ();
 
   /*!
    * \brief Returns the Identifier of the project.
@@ -89,7 +89,7 @@ public:
   /*!
    * \brief Returns the type of the project.
    */
-  LanguageType getProjectType ();
+  LanguageType projectType ();
 
   /*!
    * \brief Returns the specific data of a plugin.
@@ -108,7 +108,7 @@ public:
    * \param id
    * \return
    */
-  QList<Entity *> getEntityByAttrId (const QString &id);
+  QList<Entity *> entityByAttrId (const QString &id);
 
   /*!
    * \brief isDirty

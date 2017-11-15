@@ -173,7 +173,7 @@ PluginControl::launchProject (Project *project)
 {
   MessageControl *msgControl;
   IPluginFactory *factory;
-  LanguageType type = project->getProjectType ();
+  LanguageType type = project->projectType ();
 
   msgControl = new MessageControl (project);
   _messageControls[project] = msgControl;

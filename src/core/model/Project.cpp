@@ -55,7 +55,7 @@ Project::~Project ()
 }
 
 LanguageType
-Project::getProjectType ()
+Project::projectType ()
 {
   return this->_projectType;
 }
@@ -67,16 +67,16 @@ Project::setProjectType (LanguageType type)
 }
 
 Entity *
-Project::getEntityById (const QString &id)
+Project::entityByUid (const QString &uid)
 {
   QMutexLocker locker (_lockEntities);
-  Node *node = _nodes.contains (id) ? _nodes[id] : nullptr;
+  Node *node = _nodes.contains (uid) ? _nodes[uid] : nullptr;
 
   return dynamic_cast<Entity *> (node);
 }
 
 QList<Entity *>
-Project::getEntitiesbyType (const QString &type)
+Project::entitiesByType (const QString &type)
 {
   QMutexLocker locker (_lockEntities);
   QMapIterator<QString, Node *> it (_nodes);
@@ -93,7 +93,7 @@ Project::getEntitiesbyType (const QString &type)
 }
 
 QString
-Project::getLocation ()
+Project::location ()
 {
   return this->_projectLocation;
 }
@@ -267,7 +267,7 @@ Project::setDirty (bool isDirty)
 QString
 Project::generateUniqueAttrId (const QString &tagname)
 {
-  QList<Entity *> elements = getEntitiesbyType (tagname);
+  QList<Entity *> elements = entitiesByType (tagname);
   QList<QString> currentElementsNCLID;
   for (int i = 0; i < elements.size (); i++)
   {
@@ -284,7 +284,7 @@ Project::generateUniqueAttrId (const QString &tagname)
 }
 
 QList<Entity *>
-Project::getEntityByAttrId (const QString &id)
+Project::entityByAttrId (const QString &id)
 {
   QMutexLocker locker (_lockEntities);
   QMapIterator<QString, Node *> it (_nodes);
