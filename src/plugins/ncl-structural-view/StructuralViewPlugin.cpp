@@ -1024,7 +1024,7 @@ StructuralViewPlugin::adjustConnectors ()
       // load data from local connector
       if (child->type () == "causalConnector")
       {
-        QString connId = child->attr ("id");
+        auto connId = child->attr ("id");
         CPR_ASSERT (!connId.isEmpty ());
 
         QVector<QString> connConditions, connActions, connParams;
@@ -1037,37 +1037,35 @@ StructuralViewPlugin::adjustConnectors ()
       // load data from importBase
       else if (child->type () == "importBase")
       {
-        QString importAlias = child->attr ("alias");
-        QString importURI = child->attr ("documentURI");
+        auto projURI = project ()->getLocation (); // '/' as separator
+        auto alias = child->attr ("alias");
+        auto docUri = child->attr ("documentURI");
 
-        // projectURI uses '/' as separator
-        QString projectURI = project ()->getLocation ();
+        QFile importFile (projURI.left (projURI.lastIndexOf ("/")) + "/"
+                          + docUri);
+        if (!importFile.open (QIODevice::ReadOnly))
+          continue;
 
-        QFile importFile (projectURI.left (projectURI.lastIndexOf ("/")) + "/"
-                          + importURI);
+        QDomDocument doc;
+        if (!doc.setContent (&importFile))
+          continue;
 
-        if (importFile.open (QIODevice::ReadOnly))
+        QDomElement ncl = doc.firstChildElement ();  // <ncl>
+        QDomElement head = ncl.firstChildElement (); // <head>
+
+        for_each_qelem_child_of_type (connBase, head, "connectorBase")
         {
-          QDomDocument doc;
-          if (!doc.setContent (&importFile))
-            continue;
-
-          QDomElement ncl = doc.firstChildElement ();  // <ncl>
-          QDomElement head = ncl.firstChildElement (); // <head>
-
-          for_each_qelem_child_of_type (connBase, head, "connectorBase")
+          for_each_qelem_child_of_type (conn, connBase, "causalConnector")
           {
-            for_each_qelem_child_of_type (conn, connBase, "causalConnector")
-            {
-              QVector<QString> connConditions, connActions, connParams;
-              QString connId = importAlias + "#" + conn.attribute ("id");
+            CPR_ASSERT (!conn.attribute ("id").isEmpty ());
+            QString connId = alias + "#" + conn.attribute ("id");
 
-              connectorParts (conn, connConditions, connActions, connParams);
+            QVector<QString> connConditions, connActions, connParams;
+            connectorParts (conn, connConditions, connActions, connParams);
 
-              conditions.insert (connId, connConditions);
-              actions.insert (connId, connActions);
-              params.insert (connId, connParams);
-            }
+            conditions.insert (connId, connConditions);
+            actions.insert (connId, connActions);
+            params.insert (connId, connParams);
           }
         }
       }
