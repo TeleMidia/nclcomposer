@@ -931,11 +931,10 @@ StructuralViewPlugin::uidById (const QString &id, Entity *ent)
   return uid;
 }
 
-void
-StructuralViewPlugin::connectorParts (Entity *ent,
-                                      QVector<QString> &connConditions,
-                                      QVector<QString> &connActions,
-                                      QVector<QString> &connParams)
+// \fixme Merge the two connectorParts methods bellow in one.
+static void
+connector_parts (Entity *ent, QVector<QString> &connConditions,
+                QVector<QString> &connActions, QVector<QString> &connParams)
 {
   CPR_ASSERT (ent->type () == "causalConnector");
 
@@ -971,11 +970,9 @@ StructuralViewPlugin::connectorParts (Entity *ent,
   }
 }
 
-void
-StructuralViewPlugin::connectorParts (QDomElement connElt,
-                                      QVector<QString> &connConditions,
-                                      QVector<QString> &connActions,
-                                      QVector<QString> &connParams)
+static void
+connector_parts (QDomElement connElt, QVector<QString> &connConditions,
+                QVector<QString> &connActions, QVector<QString> &connParams)
 {
   QStack<QDomElement> next;
   for_each_qelem_child (role, connElt) next.push (role);
@@ -1007,6 +1004,22 @@ StructuralViewPlugin::connectorParts (QDomElement connElt,
   }
 }
 
+template <typename T>
+static void
+update_conn_parts (const QString &connId, const T conn,
+                   QMap<QString, QVector<QString> > &conds,
+                   QMap<QString, QVector<QString> > &acts,
+                   QMap<QString, QVector<QString> > &params)
+{
+  QVector<QString> connConds, connActs, connParams;
+
+  connector_parts (conn, connConds, connActs, connParams);
+
+  conds.insert (connId, connConds);
+  acts.insert (connId, connActs);
+  params.insert (connId, connParams);
+}
+
 // \todo this function should be called only when a change occurs in
 // <connectorBase>.  Currently, it is called every time the link's dialog is
 // shown.
@@ -1027,12 +1040,8 @@ StructuralViewPlugin::adjustConnectors ()
         auto connId = child->attr ("id");
         CPR_ASSERT (!connId.isEmpty ());
 
-        QVector<QString> connConditions, connActions, connParams;
-        connectorParts (child, connConditions, connActions, connParams);
-
-        conditions.insert (connId, connConditions);
-        actions.insert (connId, connActions);
-        params.insert (connId, connParams);
+        update_conn_parts<Entity *> (connId, child, conditions, actions,
+                                     params);
       }
       // load data from importBase
       else if (child->type () == "importBase")
@@ -1060,12 +1069,8 @@ StructuralViewPlugin::adjustConnectors ()
             CPR_ASSERT (!conn.attribute ("id").isEmpty ());
             QString connId = alias + "#" + conn.attribute ("id");
 
-            QVector<QString> connConditions, connActions, connParams;
-            connectorParts (conn, connConditions, connActions, connParams);
-
-            conditions.insert (connId, connConditions);
-            actions.insert (connId, connActions);
-            params.insert (connId, connParams);
+            update_conn_parts<QDomElement> (connId, conn, conditions, actions,
+                                            params);
           }
         }
       }

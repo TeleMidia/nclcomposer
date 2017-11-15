@@ -79,14 +79,6 @@ private:
   QStrMap viewPropsFromCoreEntity (const Entity *ent);
   QStrMap coreAttrsFromStructuralEntity (const QStrMap &props);
 
-  // \fixme Merge the two methods bellow in one.
-  void connectorParts (Entity *ent, QVector<QString> &connConditions,
-                       QVector<QString> &connActions,
-                       QVector<QString> &connParams);
-  void connectorParts (QDomElement connElt, QVector<QString> &connConditions,
-                       QVector<QString> &connActions,
-                       QVector<QString> &connParams);
-
   void clean ();
 
 private:
