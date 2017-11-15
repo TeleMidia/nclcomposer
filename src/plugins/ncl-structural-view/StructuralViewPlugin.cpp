@@ -72,8 +72,7 @@ StructuralViewPlugin::createConnections ()
 void
 StructuralViewPlugin::init ()
 {
-  QString data
-      = _project->getPluginData ("br.puc-rio.telemidia.structural");
+  QString data = _project->getPluginData ("br.puc-rio.telemidia.structural");
 
   if (!data.isEmpty ())
     _struct_scene->load (data);
@@ -904,6 +903,7 @@ QString
 StructuralViewPlugin::uidById (const QString &id, Entity *ent)
 {
   QString uid = "";
+
   if (ent == nullptr)
     ent = project ();
 
@@ -932,183 +932,141 @@ StructuralViewPlugin::uidById (const QString &id, Entity *ent)
 }
 
 void
+StructuralViewPlugin::connectorParts (Entity *ent,
+                                      QVector<QString> &connConditions,
+                                      QVector<QString> &connActions,
+                                      QVector<QString> &connParams)
+{
+  CPR_ASSERT (ent->type () == "causalConnector");
+
+  QStack<const Entity *> next;
+  for (const Entity *e : ent->entityChildren ())
+    next.push (e);
+
+  while (!next.isEmpty ())
+  {
+    const Entity *curr = next.pop ();
+
+    if ((curr->type () == "simpleCondition"
+         || curr->type () == "attributeAssessment")
+        && curr->hasAttr ("role"))
+    {
+      connConditions.append (curr->attr ("role"));
+    }
+    else if (curr->type () == "simpleAction" && curr->hasAttr ("role"))
+    {
+      connActions.append (curr->attr ("role"));
+    }
+    else if (curr->type () == "connectorParam" && curr->hasAttr ("name"))
+    {
+      connParams.append (curr->attr ("name"));
+    }
+    else if (curr->type () == "compoundCondition"
+             || curr->type () == "compoundAction"
+             || curr->type () == "assessmentStatement")
+    {
+      for (const Entity *e : curr->entityChildren ())
+        next.push (e);
+    }
+  }
+}
+
+void
+StructuralViewPlugin::connectorParts (QDomElement connElt,
+                                      QVector<QString> &connConditions,
+                                      QVector<QString> &connActions,
+                                      QVector<QString> &connParams)
+{
+  QStack<QDomElement> next;
+  for_each_qelem_child (role, connElt) next.push (role);
+
+  while (!next.isEmpty ())
+  {
+    QDomElement curr = next.pop ();
+
+    if ((curr.tagName () == "simpleCondition"
+         || curr.tagName () == "attributeAssessment")
+        && curr.hasAttribute ("role"))
+    {
+      connConditions.append (curr.attribute ("role"));
+    }
+    else if (curr.tagName () == "simpleAction" && curr.hasAttribute ("role"))
+    {
+      connActions.append (curr.attribute ("role"));
+    }
+    else if (curr.tagName () == "connectorParam" && curr.hasAttribute ("name"))
+    {
+      connParams.append (curr.attribute ("name"));
+    }
+    else if (curr.tagName () == "compoundCondition"
+             || curr.nodeName () == "compoundAction"
+             || curr.nodeName () == "assessmentStatement")
+    {
+      for_each_qelem_child (nc, curr) next.push (nc);
+    }
+  }
+}
+
+// \todo this function should be called only when a change occurs in
+// <connectorBase>.  Currently, it is called every time the link's dialog is
+// shown.
+void
 StructuralViewPlugin::adjustConnectors ()
 {
-  // TODO: this function should be called only when a change occurs in
-  // <connectorBase>.  Currently, this function is called every time the
-  // link's dialog is displayed.
   auto connectorBases = project ()->getEntitiesbyType ("connectorBase");
   if (!connectorBases.isEmpty ())
   {
     Entity *connBase = connectorBases.first ();
     QMap<QString, QVector<QString> > conditions, actions, params;
 
-    for (Entity *e : connBase->entityChildren ())
+    for (Entity *child : connBase->entityChildren ())
     {
-      // loading data from local causalConnector
-      if (e->type () == "causalConnector")
+      // load data from local connector
+      if (child->type () == "causalConnector")
       {
+        QString connId = child->attr ("id");
+        CPR_ASSERT (!connId.isEmpty ());
+
         QVector<QString> connConditions, connActions, connParams;
-        QString connId = e->attr ("id");
-
-        QStack<Entity *> next;
-        for (Entity *ec : e->entityChildren ())
-          next.push (ec);
-
-        while (!next.isEmpty ())
-        {
-          Entity *current = next.pop ();
-
-          if (current->type () == "simpleCondition"
-              && current->hasAttr ("role"))
-            connConditions.append (current->attr ("role"));
-
-          if (current->type () == "attributeAssessment"
-              && current->hasAttr ("role"))
-            connConditions.append (current->attr ("role"));
-
-          if (current->type () == "simpleAction" && current->hasAttr ("role"))
-            connActions.append (current->attr ("role"));
-
-          if (current->type () == "connectorParam"
-              && current->hasAttr ("name"))
-            connParams.append (current->attr ("name"));
-
-          if (current->type () == "compoundCondition"
-              || current->type () == "compoundAction"
-              || current->type () == "assessmentStatement")
-          {
-            for (Entity *ec : current->entityChildren ())
-              next.push (ec);
-          }
-        }
+        connectorParts (child, connConditions, connActions, connParams);
 
         conditions.insert (connId, connConditions);
         actions.insert (connId, connActions);
         params.insert (connId, connParams);
-
-        // loading data from importBases
       }
-      else if (e->type () == "importBase")
+      // load data from importBase
+      else if (child->type () == "importBase")
       {
-        QString importAlias, importURI, projectURI;
+        QString importAlias = child->attr ("alias");
+        QString importURI = child->attr ("documentURI");
 
-        importAlias = e->attr ("alias");
-        importURI = e->attr ("documentURI");
-
-        // projectURI use '/' as separator
-        projectURI = project ()->getLocation ();
+        // projectURI uses '/' as separator
+        QString projectURI = project ()->getLocation ();
 
         QFile importFile (projectURI.left (projectURI.lastIndexOf ("/")) + "/"
                           + importURI);
 
         if (importFile.open (QIODevice::ReadOnly))
         {
-          QDomDocument d;
-          if (d.setContent (&importFile))
+          QDomDocument doc;
+          if (!doc.setContent (&importFile))
+            continue;
+
+          QDomElement ncl = doc.firstChildElement ();  // <ncl>
+          QDomElement head = ncl.firstChildElement (); // <head>
+
+          for_each_qelem_child_of_type (connBase, head, "connectorBase")
           {
-            QDomElement r = d.firstChildElement (); // <ncl>
-            QDomElement h = r.firstChildElement (); // <head>
-            QDomElement b;                          // <connectorBase>
-
-            bool hasConnBase = false;
-
-            QDomNodeList hc = h.childNodes ();
-            for (int i = 0; i < hc.length (); i++)
+            for_each_qelem_child_of_type (conn, connBase, "causalConnector")
             {
-              if (hc.item (i).isElement ())
-              {
-                if (hc.item (i).nodeName () == "connectorBase")
-                {
-                  b = hc.item (i).toElement ();
-                  hasConnBase = true;
-                  break;
-                }
-              }
-            }
+              QVector<QString> connConditions, connActions, connParams;
+              QString connId = importAlias + "#" + conn.attribute ("id");
 
-            if (hasConnBase)
-            {
-              QDomNodeList bc = b.childNodes ();
-              for (int i = 0; i < bc.length (); i++)
-              {
-                if (bc.item (i).isElement ())
-                {
-                  if (bc.item (i).nodeName () == "causalConnector")
-                  {
-                    QString connId;
-                    QVector<QString> connConditions;
-                    QVector<QString> connActions;
-                    QVector<QString> connParams;
+              connectorParts (conn, connConditions, connActions, connParams);
 
-                    if (bc.item (i).attributes ().namedItem ("id").isNull ())
-                      break;
-
-                    connId = bc.item (i)
-                                 .attributes ()
-                                 .namedItem ("id")
-                                 .nodeValue ();
-                    connId = importAlias + "#" + connId;
-
-                    QDomNodeList bcc = bc.item (i).childNodes ();
-
-                    QStack<QDomNode> next;
-
-                    for (int j = 0; j < bcc.length (); j++)
-                      next.push (bcc.item (j));
-
-                    while (!next.isEmpty ())
-                    {
-                      QDomNode current = next.pop ();
-
-                      if (current.nodeName () == "simpleCondition")
-                        if (!current.attributes ()
-                                 .namedItem ("role")
-                                 .isNull ())
-                          connConditions.append (current.attributes ()
-                                                     .namedItem ("role")
-                                                     .nodeValue ());
-
-                      if (current.nodeName () == "attributeAssessment")
-                        if (!current.attributes ()
-                                 .namedItem ("role")
-                                 .isNull ())
-                          connConditions.append (current.attributes ()
-                                                     .namedItem ("role")
-                                                     .nodeValue ());
-
-                      if (current.nodeName () == "simpleAction")
-                        if (!current.attributes ()
-                                 .namedItem ("role")
-                                 .isNull ())
-                          connActions.append (current.attributes ()
-                                                  .namedItem ("role")
-                                                  .nodeValue ());
-
-                      if (current.nodeName () == "connectorParam")
-                        if (!current.attributes ()
-                                 .namedItem ("name")
-                                 .isNull ())
-                          connParams.append (current.attributes ()
-                                                 .namedItem ("name")
-                                                 .nodeValue ());
-
-                      if (current.nodeName () == "compoundCondition"
-                          || current.nodeName () == "compoundAction"
-                          || current.nodeName () == "assessmentStatement")
-                      {
-                        QDomNodeList nc = current.childNodes ();
-                        for (int j = 0; j < nc.length (); j++)
-                          next.push (nc.item (j));
-                      }
-                    }
-
-                    conditions.insert (connId, connConditions);
-                    actions.insert (connId, connActions);
-                    params.insert (connId, connParams);
-                  }
-                }
-              }
+              conditions.insert (connId, connConditions);
+              actions.insert (connId, connActions);
+              params.insert (connId, connParams);
             }
           }
         }

@@ -178,90 +178,90 @@
 
 namespace Structural
 {
-  enum Category
-  {
-    Node = 1,
-    Edge = 2,
-    Interface = 3,
+enum Category
+{
+  Node = 1,
+  Edge = 2,
+  Interface = 3,
 
-    NoCategory = 0
-  };
+  NoCategory = 0
+};
 
-  enum Type
-  {
-    Media = 1,
-    Body = 2,
-    Context = 3,
-    Switch = 4,
-    Link = 5,
-    Port = 6,
-    SwitchPort = 7,
-    Area = 8,
-    Property = 9,
-    Bind = 10,
-    Reference = 11,
-    Mapping = 12,
+enum Type
+{
+  Media = 1,
+  Body = 2,
+  Context = 3,
+  Switch = 4,
+  Link = 5,
+  Port = 6,
+  SwitchPort = 7,
+  Area = 8,
+  Property = 9,
+  Bind = 10,
+  Reference = 11,
+  Mapping = 12,
 
-    NoType = 0
-  };
+  NoType = 0
+};
 
-  enum Role
-  {
-    onBegin,
-    onEnd,
-    onSelection,
-    onResume,
-    onPause,
-    onBeginAttribution,
-    onEndAttribution,
-    onPauseAttribution,
-    onResumeAttribution,
+enum Role
+{
+  onBegin,
+  onEnd,
+  onSelection,
+  onResume,
+  onPause,
+  onBeginAttribution,
+  onEndAttribution,
+  onPauseAttribution,
+  onResumeAttribution,
 
-    Start,
-    Stop,
-    Resume,
-    Pause,
-    Set,
+  Start,
+  Stop,
+  Resume,
+  Pause,
+  Set,
 
-    NoRole
-  };
+  NoRole
+};
 
-  enum MimeType
-  {
-    Image = 1,
-    Audio = 2,
-    Video = 3,
-    Text = 4,
-    HTML = 5,
-    NCL = 6,
-    NCLua = 7,
-    Settings = 9,
-    Time = 10,
+enum MimeType
+{
+  Image = 1,
+  Audio = 2,
+  Video = 3,
+  Text = 4,
+  HTML = 5,
+  NCL = 6,
+  NCLua = 7,
+  Settings = 9,
+  Time = 10,
 
-    NoMimeType = 0
-  };
+  NoMimeType = 0
+};
 
-  enum Resize
-  {
-    Top = 1,
-    TopRight = 2,
-    Right = 3,
-    BottomRight = 4,
-    Bottom = 5,
-    BottomLeft = 6,
-    Left = 7,
-    TopLeft = 8,
+enum Resize
+{
+  Top = 1,
+  TopRight = 2,
+  Right = 3,
+  BottomRight = 4,
+  Bottom = 5,
+  BottomLeft = 6,
+  Left = 7,
+  TopLeft = 8,
 
-    NoResize = 0
-  };
+  NoResize = 0
+};
 
-  enum InteractionMode
-  {
-    Pointing = 1,
-    Linking = 2,
+enum InteractionMode
+{
+  Pointing = 1,
+  Linking = 2,
 
-    NoMode = 0
-  };
+  NoMode = 0
+};
 }
 
 typedef Structural::Category StructuralCategory;
@@ -271,9 +271,18 @@ typedef Structural::MimeType StructuralMimeType;
 typedef Structural::Role StructuralRole;
 typedef Structural::InteractionMode StructuralInteractionMode;
 
-#define MAP_REMOVE_IF_CONTAINS(MAP, KEY) \
-  if (MAP.contains (KEY)) \
-    MAP.remove (KEY)
+#define MAP_REMOVE_IF_CONTAINS(MAP, KEY)                                      \
+  if (MAP.contains (KEY))                                                     \
+  MAP.remove (KEY)
+
+// Som QDom utilities
+#define for_each_qelem_child(E, P)                                            \
+  for (QDomElement E = P.firstChildElement (); !E.isNull ();                  \
+       E = E.nextSiblingElement ())
+
+#define for_each_qelem_child_of_type(E, P, T)                                 \
+  for (QDomElement E = P.firstChildElement (T); !E.isNull ();                 \
+       E = E.nextSiblingElement (T))
 
 #include <QMap>
 typedef QMap<QString, QString> QStrMap;

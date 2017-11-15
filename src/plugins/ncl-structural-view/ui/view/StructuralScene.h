@@ -6,9 +6,9 @@
 #include <QGraphicsSceneContextMenuEvent>
 #include <QObject>
 
-#include "StructuralMenu.h"
-#include "StructuralEntity.h"
 #include "StructuralEdge.h"
+#include "StructuralEntity.h"
+#include "StructuralMenu.h"
 
 class StructuralView;
 
@@ -31,8 +31,8 @@ public:
 
   const QMap<QString, StructuralEntity *> &nodes ();
   const QMap<QString, StructuralEdge *> &edges (void);
-  QList <StructuralEdge *> edges (const QString &nodeuid);
-  QList <StructuralEdge *> parallelEdges (StructuralEdge *edge);
+  QList<StructuralEdge *> edges (const QString &nodeuid);
+  QList<StructuralEdge *> parallelEdges (StructuralEdge *edge);
   QStrMap &refs ();
 
   QString createId (StructuralType type, const QString &customPrefix = "");

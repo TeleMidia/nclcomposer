@@ -170,7 +170,6 @@ private:
   StructuralEntity *_linkingDest;
 
   QString _selected;
-
   StructuralEntity *_clipboard;
   QStrMap _clipboardRefs;
 

@@ -178,13 +178,6 @@ StructuralScene::hasBody ()
 {
   return body () != nullptr;
 }
-#define for_each_qelem_child(E, P)                                            \
-  for (QDomElement E = P.firstChildElement (); !E.isNull ();                  \
-       E = E.nextSiblingElement ())
-
-#define for_each_qelem_child_of_type(E, P, T)                                 \
-  for (QDomElement E = P.firstChildElement (T); !E.isNull ();                 \
-       E = E.nextSiblingElement (T))
 
 static QMap<QString, QString>
 qdom_attrs_to_qmap (const QDomNamedNodeMap &attrs)
