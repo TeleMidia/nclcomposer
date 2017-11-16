@@ -129,7 +129,7 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
       QString filename
           = QFileDialog::getOpenFileName (nclEditor, tr ("Select file"),
                                           // nclEditor->getDocumentUrl()
-                                          Utilities::getLastFileDialogPath ());
+                                          Utilities::lastFileDialogPath ());
       nclEditor->setEmitFocusOut (true);
 
       if (!filename.isEmpty () && !filename.isNull ())

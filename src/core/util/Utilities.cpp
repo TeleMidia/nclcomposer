@@ -26,19 +26,8 @@ Q_LOGGING_CATEGORY (CPR_GUI, "cpr.gui")
 QMap<QString, LanguageType> Utilities::_types
     = { { "cpr", NCL }, { "ncl", NCL }, { "smil", SMIL }, { "html", HTML } };
 
-QString
-Utilities::normalizeXMLID (const QString &id)
-{
-  QString tmp = id.normalized (QString::NormalizationForm_KD);
-  tmp.remove (QRegExp ("[^a-zA-Z_-\\.\\s]"));
-  if (tmp.at (0).isDigit ())
-    tmp = "_" + tmp;
-
-  return tmp;
-}
-
 LanguageType
-Utilities::getLanguageTypeByExtension (const QString &ext)
+Utilities::languageTypeByExtension (const QString &ext)
 {
   if (!_types.contains (ext))
     return NONE;
@@ -47,10 +36,9 @@ Utilities::getLanguageTypeByExtension (const QString &ext)
 }
 
 QString
-Utilities::getExtensionForLanguageType (LanguageType type)
+Utilities::extensionForLanguageType (LanguageType type)
 {
-  QMap<QString, LanguageType>::iterator it;
-  for (it = _types.begin (); it != _types.end (); ++it)
+  for (auto it = _types.begin (); it != _types.end (); ++it)
     if (type == it.value ())
       return it.key ();
   return "";
@@ -60,61 +48,58 @@ QString
 Utilities::relativePath (const QString &absPath, const QString &relTo,
                          bool bIsFile /*= false*/)
 {
-  // force the "/" instead of "\\"
   QString absolutePath = absPath;
-  absolutePath.replace ("\\", "/");
+  absolutePath.replace ("\\", "/"); // Force "/" instead of "\\".
   QString relativeTo = relTo;
   relativeTo = relativeTo.replace ("\\", "/");
 
-  QStringList absoluteDirectories
-      = absolutePath.split ("/", QString::SkipEmptyParts);
-  QStringList relativeDirectories
-      = relativeTo.split ("/", QString::SkipEmptyParts);
+  QStringList absoluteDirs = absolutePath.split ("/", QString::SkipEmptyParts);
+  QStringList relativeDirs = relativeTo.split ("/", QString::SkipEmptyParts);
 
-  // Get the shortest of the two paths
-  int length = absoluteDirectories.count () < relativeDirectories.count ()
-                   ? absoluteDirectories.count ()
-                   : relativeDirectories.count ();
+  // Get the shortest of the two paths.
+  int length = absoluteDirs.count () < relativeDirs.count ()
+                   ? absoluteDirs.count ()
+                   : relativeDirs.count ();
 
-  // Use to determine where in the loop we exited
+  // Use to determine where in the loop we exited.
   int lastCommonRoot = -1;
   int index;
 
-  // Find common root
+  // Find common root.
   for (index = 0; index < length; index++)
   {
-    if (absoluteDirectories[index] == relativeDirectories[index])
+    if (absoluteDirs[index] == relativeDirs[index])
       lastCommonRoot = index;
     else
       break;
   }
 
-  // If we didn't find a common prefix then throw
+  // If we didn't find a common prefix then throw an exception.
   if (lastCommonRoot == -1)
     throw QString ("Paths do not have a common base");
 
-  // Build up the relative path
+  // Build up the relative path.
   QString relativePath;
 
   // Add on the ..
   for (index = lastCommonRoot + 1;
-       index < absoluteDirectories.count () - (bIsFile ? 1 : 0); index++)
+       index < absoluteDirs.count () - (bIsFile ? 1 : 0); index++)
   {
-    if (absoluteDirectories[index].length () > 0)
+    if (absoluteDirs[index].length () > 0)
     {
       relativePath.append ("../");
-      //      relativePath.append(QDir::separator());
+      // relativePath.append(QDir::separator());
     }
   }
 
-  // Add on the folders
-  for (index = lastCommonRoot + 1; index < relativeDirectories.count () - 1;
+  // Add on the folders.
+  for (index = lastCommonRoot + 1; index < relativeDirs.count () - 1;
        index++)
   {
-    relativePath.append (relativeDirectories[index]).append ("/");
+    relativePath.append (relativeDirs[index]).append ("/");
   }
 
-  relativePath.append (relativeDirectories[relativeDirectories.count () - 1]);
+  relativePath.append (relativeDirs[relativeDirs.count () - 1]);
 
   return relativePath;
 }
@@ -130,7 +115,7 @@ Utilities::absolutePath (const QString &path, const QString &relativeTo)
 }
 
 QString
-Utilities::getLastFileDialogPath ()
+Utilities::lastFileDialogPath ()
 {
   GlobalSettings settings;
   QString lastFileDialogPath = QDir::homePath ();
@@ -160,8 +145,7 @@ QStringList
 Utilities::splitParams (QString &params)
 {
   QStringList plist;
-  QRegExp rx;
-  rx.setPattern ("([-${}\\w\\\\:]+|\\\".*\\\")");
+  QRegExp rx ("([-${}\\w\\\\:]+|\\\".*\\\")");
 
   int pos = 0;
   while ((pos = rx.indexIn (params, pos)) != -1)

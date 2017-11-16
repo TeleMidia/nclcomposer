@@ -46,20 +46,14 @@ public:
    * \param ext
    * \return
    */
-  static QString normalizeXMLID (const QString &);
-  /*!
-   * \brief getLanguageTypeByExtension
-   * \param ext
-   * \return
-   */
-  static LanguageType getLanguageTypeByExtension (const QString &ext);
+  static LanguageType languageTypeByExtension (const QString &ext);
 
   /*!
    * \brief getExtensionForLanguageType
    * \param type
    * \return
    */
-  static QString getExtensionForLanguageType (LanguageType type);
+  static QString extensionForLanguageType (LanguageType type);
 
   /*!
    * \brief relativePath
@@ -84,7 +78,7 @@ public:
    * \brief getLastFileDialogPath
    * \return
    */
-  static QString getLastFileDialogPath ();
+  static QString lastFileDialogPath ();
 
   /*!
    * \brief updateLastFileDialogPath
@@ -119,12 +113,16 @@ COMPOSERCORESHARED_EXPORT Q_DECLARE_LOGGING_CATEGORY (CPR_GUI)
 #define CPR_ASSERT_NOT_REACHED()                                              \
   CPR_ASSERT_X (false, "", "Should not reach here.")
 
+// Log macros.
+#define cpr_debug(module, msg) qCDebug (module, msg)
+#define cpr_warn(module, msg)
+#define cpr_error(module, msg)
+
 // Cast utilities.
 #define cast(a, b) (dynamic_cast<a> ((b)))
 #define instanceof(a, b) (cast (a, (b)) != nullptr)
-
 #define not_null(a) (a != nullptr)
 
-    CPR_CORE_END_NAMESPACE
+CPR_CORE_END_NAMESPACE
 
 #endif // DEFINITIONS_H

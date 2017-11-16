@@ -67,7 +67,7 @@ LanguageControl::loadProfile (const QString &fileName)
       {
         qCDebug (CPR_CORE)
             << "LanguageControl::loadProfiles Profile for language ("
-            << Utilities::getExtensionForLanguageType (type) << ") already"
+            << Utilities::extensionForLanguageType (type) << ") already"
             << "exists";
       }
       else

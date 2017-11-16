@@ -38,7 +38,7 @@ void
 PropertyButtons::openfile ()
 {
   QString filename = QFileDialog::getOpenFileName (
-      this, tr ("Select file"), Utilities::getLastFileDialogPath (), "",
+      this, tr ("Select file"), Utilities::lastFileDialogPath (), "",
       nullptr, QFileDialog::DontUseNativeDialog);
 
   if (!filename.isEmpty () && !filename.isNull ())

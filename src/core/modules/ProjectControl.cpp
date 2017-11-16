@@ -67,7 +67,7 @@ ProjectControl::launchProject (const QString &path)
 
   QString ext = path;
   ext = ext.remove (0, ext.lastIndexOf (".") + 1);
-  LanguageType type = Utilities::getLanguageTypeByExtension (ext);
+  LanguageType type = Utilities::languageTypeByExtension (ext);
 
   if (type == NONE)
   {
@@ -128,7 +128,7 @@ ProjectControl::importFromDocument (const QString &docPath,
 
   QString ext = docPath;
   ext = ext.remove (0, ext.lastIndexOf (".") + 1);
-  LanguageType type = Utilities::getLanguageTypeByExtension (ext);
+  LanguageType type = Utilities::languageTypeByExtension (ext);
 
   if (type == NONE)
   {

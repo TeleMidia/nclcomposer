@@ -187,7 +187,7 @@ ComposerMainWindow::promptChooseExtDirectory ()
   if (mBox.exec () == QMessageBox::No)
   {
     QString dirName = QFileDialog::getExistingDirectory (
-        this, tr ("Select Directory"), Utilities::getLastFileDialogPath (),
+        this, tr ("Select Directory"), Utilities::lastFileDialogPath (),
         QFileDialog::ShowDirsOnly);
     return dirName;
   }
@@ -926,7 +926,7 @@ ComposerMainWindow::saveAsCurrentProject ()
 
     QString destFileName = QFileDialog::getSaveFileName (
         this, tr ("Save as NCL Composer Project"),
-        Utilities::getLastFileDialogPath (),
+        Utilities::lastFileDialogPath (),
         tr ("NCL Composer Projects (*.cpr)"));
 
     if (!destFileName.isNull () && !destFileName.isEmpty ())
@@ -1263,7 +1263,7 @@ ComposerMainWindow::openProject ()
 {
   QString filename
       = QFileDialog::getOpenFileName (this, tr ("Open NCL Composer Project"),
-                                      Utilities::getLastFileDialogPath (),
+                                      Utilities::lastFileDialogPath (),
                                       tr ("NCL Composer Projects (*.cpr)"));
   if (filename != "")
   {
@@ -1321,7 +1321,7 @@ ComposerMainWindow::importFromDocument ()
 {
   QString docFilename = QFileDialog::getOpenFileName (
       this, tr ("Choose the NCL file to be imported"),
-      Utilities::getLastFileDialogPath (), tr ("NCL Documents (*.ncl)"));
+      Utilities::lastFileDialogPath (), tr ("NCL Documents (*.ncl)"));
 
   if (docFilename != "")
   {
@@ -1331,7 +1331,7 @@ ComposerMainWindow::importFromDocument ()
         this,
         tr ("Choose the NCL Composer Project where the NCL document must be "
             "imported"),
-        Utilities::getLastFileDialogPath (),
+        Utilities::lastFileDialogPath (),
         tr ("NCL Composer Projects (*.cpr)"));
 
     // Create the file
