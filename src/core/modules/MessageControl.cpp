@@ -36,8 +36,6 @@ MessageControl::MessageControl (Project *project)
   _qUndoStack = new QUndoStack (this);
 }
 
-MessageControl::~MessageControl () {}
-
 void
 MessageControl::anonymousAddEntity (const QString &type,
                                     const QString &parentEntityId,
@@ -138,10 +136,10 @@ MessageControl::anonymousChangeEntity (const QString &entityId,
 void
 MessageControl::anonymousUpdateFromModel ()
 {
-  QList<IPlugin *> instances
+  QList<IPlugin *> plugins
       = PluginControl::instance ()->pluginInstances (this->_project);
 
-  foreach (IPlugin *plugin, instances)
+  for (IPlugin *plugin : plugins)
   {
     plugin->updateFromModel ();
   }
@@ -359,9 +357,7 @@ MessageControl::removeEntity (Entity *entity)
         QStack<Node *> stack;
 
         // remove all children
-        /**
-     * \todo Change the following code to signal/slots with Project.
-     */
+        // \todo Change the following code to signal/slots with Project.
         stack.push (entity);
         while (stack.size ())
         {
@@ -384,10 +380,7 @@ MessageControl::removeEntity (Entity *entity)
           }
         }
 
-        /*!
-     * \todo remember to change, the append should come from the
-     *   plugin.
-     */
+        // \todo the append should come from the plugin.
         for (int i = willBeRemoved.size () - 1; i >= 0; i--)
         {
           sendMessageToPlugins (Message::ENTITY_REMOVED, pluginID,
@@ -440,16 +433,13 @@ void
 MessageControl::sendMessageToPlugins (Message message, const QString &senderId,
                                       Entity *entity)
 {
-  QList<IPlugin *>::iterator it;
   QList<IPlugin *> instances
       = PluginControl::instance ()->pluginInstances (this->_project);
 
   IPlugin *pluginMsgSrc = nullptr;
 
-  for (it = instances.begin (); it != instances.end (); ++it)
+  for (IPlugin *inst : instances)
   {
-    IPlugin *inst = *it;
-
     // \fixme: This is an workaround. I am delaying the calling for the plugin
     // that triggered the message
     if (inst->pluginInstanceID () == senderId)
@@ -504,15 +494,12 @@ MessageControl::sendCommentMessageToPlugins (Message message,
                                              const QString &senderId,
                                              Comment *comment)
 {
-  QList<IPlugin *>::iterator it;
   QList<IPlugin *> instances
       = PluginControl::instance ()->pluginInstances (this->_project);
 
   IPlugin *pluginMsgSrc = nullptr;
-  for (it = instances.begin (); it != instances.end (); ++it)
+  for (IPlugin *inst : instances)
   {
-    IPlugin *inst = *it;
-
     // \fixme: This is an workaround. I am delaying the calling for the plugin
     // that triggered the message
     if (inst->pluginInstanceID () == senderId)

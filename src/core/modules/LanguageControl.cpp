@@ -25,14 +25,10 @@ LanguageControl::LanguageControl () {}
 
 LanguageControl::~LanguageControl ()
 {
-  QMap<LanguageType, ILanguageProfile *>::iterator it;
-
-  for (it = _profiles.begin (); it != _profiles.end (); ++it)
+  for (ILanguageProfile *lp : _profiles.values ())
   {
-    ILanguageProfile *pf = it.value ();
-    assert (pf != nullptr);
-    delete pf;
-    pf = nullptr;
+    CPR_ASSERT_NON_NULL (lp);
+    delete lp;
   }
   _profiles.clear ();
 }
@@ -49,7 +45,6 @@ LanguageControl::removeProfile (LanguageType type)
     return false;
 
   delete lp;
-  lp = nullptr;
   _profiles.remove (type);
 
   return true;
@@ -148,12 +143,10 @@ LanguageControl::profileFromType (LanguageType type)
 QList<ILanguageProfile *>
 LanguageControl::loadedProfiles ()
 {
-  QMap<LanguageType, ILanguageProfile *>::iterator it;
   QList<ILanguageProfile *> list;
-
-  for (it = _profiles.begin (); it != _profiles.end (); ++it)
+  for (ILanguageProfile *lp : _profiles.values ())
   {
-    list.append (it.value ());
+    list.append (lp);
   }
   return list;
 }

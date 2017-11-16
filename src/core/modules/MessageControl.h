@@ -59,7 +59,7 @@ public:
   /*!
    * \brief Destructor.
    */
-  ~MessageControl ();
+  ~MessageControl () {}
 
 public slots:
   /*!

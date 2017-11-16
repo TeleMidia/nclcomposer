@@ -34,7 +34,7 @@ PluginControl::PluginControl ()
 
 PluginControl::~PluginControl ()
 {
-  // FIXME: BUG WHEN CLOSING ON WINDOWS
+  // \fixme bug when closing on windows
   QMultiHash<Project *, IPlugin *>::iterator itInst;
   QHash<QString, IPluginFactory *>::iterator itFac;
 
@@ -94,9 +94,7 @@ PluginControl::loadPlugin (const QString &fileName)
         _pluginFactories[pluginID] = pluginFactory;
         QList<LanguageType> types = pluginFactory->getSupportedLanguages ();
 
-        QList<LanguageType>::iterator it;
-
-        for (it = types.begin (); it != types.end (); ++it)
+        for (auto it = types.begin (); it != types.end (); ++it)
         {
           _pluginsByType.insert (*it, pluginFactory->id ());
         }
@@ -129,8 +127,8 @@ PluginControl::loadPlugin (const QString &fileName)
 void
 PluginControl::loadPlugins ()
 {
-  GlobalSettings settings;
-  QStringList extPaths = settings.getExtensionsPaths ();
+  GlobalSettings stngs;
+  QStringList extPaths = stngs.getExtensionsPaths ();
   // add all the paths to LibraryPath, i.e., plugins are allowed to install
   // dll dependencies in the extensions path.
   for (const QString &extDir : extPaths)
@@ -171,11 +169,10 @@ PluginControl::loadPlugins (const QString &pluginsDirPath)
 void
 PluginControl::launchProject (Project *project)
 {
-  MessageControl *msgControl;
   IPluginFactory *factory;
   LanguageType type = project->projectType ();
 
-  msgControl = new MessageControl (project);
+  MessageControl *msgControl = new MessageControl (project);
   _messageControls[project] = msgControl;
 
   QList<QString>::iterator it;
@@ -184,34 +181,34 @@ PluginControl::launchProject (Project *project)
   {
     factory = _pluginFactories[*it];
 
-    GlobalSettings settings;
-    settings.beginGroup ("loadPlugins");
-    if (!settings.contains (*it) || settings.value (*it).toBool () == true)
+    GlobalSettings stngs;
+    stngs.beginGroup ("loadPlugins");
+    if (!stngs.contains (*it) || stngs.value (*it).toBool () == true)
     {
       launchNewPlugin (factory, project);
     }
-    settings.endGroup ();
+    stngs.endGroup ();
   }
 }
 
 void
 PluginControl::launchNewPlugin (IPluginFactory *factory, Project *project)
 {
-  IPlugin *pluginInstance = factory->createPluginInstance ();
-  if (pluginInstance)
+  IPlugin *plgInstance = factory->createPluginInstance ();
+  if (plgInstance)
   {
-    pluginInstance->setPluginInstanceID (factory->id () + "#"
-                                         + QUuid::createUuid ().toString ());
-    pluginInstance->setProject (project);
-    launchNewPlugin (pluginInstance, _messageControls[project]);
+    plgInstance->setPluginInstanceID (factory->id () + "#"
+                                      + QUuid::createUuid ().toString ());
+    plgInstance->setProject (project);
+    launchNewPlugin (plgInstance, _messageControls[project]);
 
-    _pluginInstances.insert (project, pluginInstance);
-    _factoryByPlugin.insert (pluginInstance, factory);
+    _pluginInstances.insert (project, plgInstance);
+    _factoryByPlugin.insert (plgInstance, factory);
 
-    emit addPluginWidgetToWindow (factory, pluginInstance, project);
+    emit addPluginWidgetToWindow (factory, plgInstance, project);
 
     // TODO: CREATE A NEW FUNCTION TO UPDATE FROM SAVED CONTENT
-    pluginInstance->init ();
+    plgInstance->init ();
   }
   else
   {
@@ -265,13 +262,7 @@ PluginControl::connectParser (IDocumentParser *parser,
 QList<IPluginFactory *>
 PluginControl::loadedPlugins ()
 {
-  QHash<QString, IPluginFactory *>::iterator it;
-  QList<IPluginFactory *> pList;
-  for (it = _pluginFactories.begin (); it != _pluginFactories.end (); ++it)
-  {
-    pList.append (it.value ());
-  }
-  return pList;
+  return _pluginFactories.values();
 }
 
 bool
@@ -293,15 +284,11 @@ PluginControl::releasePlugins (Project *project)
   if (t)
   {
     delete t;
-    t = nullptr;
     _messageControls.remove (project);
   }
 
-  QList<IPlugin *> instances = _pluginInstances.values (project);
-  QList<IPlugin *>::iterator it;
-  for (it = instances.begin (); it != instances.end (); ++it)
+  for (IPlugin *inst : _pluginInstances.values (project))
   {
-    IPlugin *inst = *it;
     inst->saveSubsession ();
     IPluginFactory *fac = _factoryByPlugin.value (inst);
     _factoryByPlugin.remove (inst);
@@ -317,14 +304,10 @@ PluginControl::sendBroadcastMessage (const char *slot, void *obj)
 {
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender ());
 
-  QList<IPlugin *>::iterator it;
-  QList<IPlugin *> instances = _pluginInstances.values (plugin->project ());
-
   QString slotName (slot);
   slotName.append ("(QString,void*)");
-  for (it = instances.begin (); it != instances.end (); ++it)
+  for (IPlugin *inst : _pluginInstances.values (plugin->project ()))
   {
-    IPlugin *inst = *it;
     int idxSlot
         = inst->metaObject ()->indexOfSlot (slotName.toStdString ().c_str ());
     if (idxSlot != -1)
@@ -340,12 +323,8 @@ PluginControl::sendBroadcastMessage (const char *slot, void *obj)
 void
 PluginControl::savePluginsData (Project *project)
 {
-  QList<IPlugin *>::iterator it;
-  QList<IPlugin *> instances = _pluginInstances.values (project);
-
-  for (it = instances.begin (); it != instances.end (); ++it)
+  for (IPlugin *inst : _pluginInstances.values (project))
   {
-    IPlugin *inst = *it;
     inst->saveSubsession ();
   }
 }
@@ -359,11 +338,8 @@ PluginControl::messageControl (Project *project)
 QList<IPlugin *>
 PluginControl::pluginInstances (Project *project)
 {
-  QList<IPlugin *> instances;
-  if (_pluginInstances.contains (project))
-    instances = _pluginInstances.values (project);
-
-  return instances;
+  CPR_ASSERT (_pluginInstances.contains (project));
+  return _pluginInstances.values (project);
 }
 
 CPR_CORE_END_NAMESPACE
