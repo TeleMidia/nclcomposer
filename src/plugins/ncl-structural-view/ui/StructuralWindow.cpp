@@ -1,25 +1,19 @@
 #include "StructuralWindow.h"
 
 StructuralWindow::StructuralWindow (QWidget *parent)
-    : QMainWindow (parent), _view (new StructuralView (this))
+    : QMainWindow (parent), _view (this)
 {
   createActions ();
   createToolbar ();
   createConnections ();
 
-  setCentralWidget (_view);
+  setCentralWidget (&_view);
 }
 
 StructuralView *
-StructuralWindow::view () const
+StructuralWindow::view ()
 {
-  return _view;
-}
-
-void
-StructuralWindow::setView (StructuralView *view)
-{
-  _view = view;
+  return &_view;
 }
 
 void
@@ -31,7 +25,7 @@ StructuralWindow::createActions ()
   _undoAction->setText (tr ("Undo"));
   _undoAction->setIcon (QIcon (":/icon/undo"));
   _undoAction->setShortcut (QKeySequence ("Ctrl+Z"));
-  _view->menu ()->addAction (_undoAction);
+  _view.menu ()->addAction (_undoAction);
 
   // redo action
   _redoAction = new QAction (this);
@@ -39,8 +33,8 @@ StructuralWindow::createActions ()
   _redoAction->setText (tr ("Redo"));
   _redoAction->setIcon (QIcon (":/icon/redo"));
   _redoAction->setShortcut (QKeySequence ("Ctrl+Shift+Z"));
-  _view->menu ()->addAction (_redoAction);
-  _view->menu ()->addSeparator ();
+  _view.menu ()->addAction (_redoAction);
+  _view.menu ()->addSeparator ();
 
   // cut action
   _cutAction = new QAction (this);
@@ -48,7 +42,7 @@ StructuralWindow::createActions ()
   _cutAction->setText (tr ("Cut"));
   _cutAction->setIcon (QIcon (":/icon/cut"));
   _cutAction->setShortcut (QKeySequence ("Ctrl+X"));
-  _view->menu ()->addAction (_cutAction);
+  _view.menu ()->addAction (_cutAction);
 
   // copy action
   _copyAction = new QAction (this);
@@ -56,7 +50,7 @@ StructuralWindow::createActions ()
   _copyAction->setText (tr ("Copy"));
   _copyAction->setIcon (QIcon (":/icon/copy"));
   _copyAction->setShortcut (QKeySequence ("Ctrl+C"));
-  _view->menu ()->addAction (_copyAction);
+  _view.menu ()->addAction (_copyAction);
 
   // paste action
   _pasteAction = new QAction (this);
@@ -64,8 +58,8 @@ StructuralWindow::createActions ()
   _pasteAction->setText (tr ("Paste"));
   _pasteAction->setIcon (QIcon (":/icon/paste"));
   _pasteAction->setShortcut (QKeySequence ("Ctrl+V"));
-  _view->menu ()->addAction (_pasteAction);
-  _view->menu ()->addSeparator ();
+  _view.menu ()->addAction (_pasteAction);
+  _view.menu ()->addSeparator ();
 
   // delete action
   _deleteAction = new QAction (this);
@@ -73,8 +67,8 @@ StructuralWindow::createActions ()
   _deleteAction->setText (tr ("Delete"));
   _deleteAction->setToolTip (tr ("Delete"));
   _deleteAction->setIcon (QIcon (":/icon/delete"));
-  _view->menu ()->addAction (_deleteAction);
-  _view->menu ()->addSeparator ();
+  _view.menu ()->addAction (_deleteAction);
+  _view.menu ()->addSeparator ();
 
   // snapshot action
   _snapshotAction = new QAction (this);
@@ -82,7 +76,7 @@ StructuralWindow::createActions ()
   _snapshotAction->setText (tr ("Snapshot"));
   _snapshotAction->setToolTip (tr ("Take a Snapshot..."));
   _snapshotAction->setIcon (QIcon (":/icon/snapshot"));
-  // _view->getMenu ()->addAction (_snapshotAction);
+  // _view.getMenu ()->addAction (_snapshotAction);
 
   // zoomin action
   _zoominAction = new QAction (this);
@@ -132,9 +126,9 @@ StructuralWindow::createActions ()
   _autostartAction->setChecked (false);
   _autostartAction->setText (tr ("Set as starting node"));
   _autostartAction->setIcon (QIcon (""));
-  _view->menu ()->addAction (_autostartAction);
+  _view.menu ()->addAction (_autostartAction);
 
-  QMenu *insertMenu = new QMenu (_view->menu ());
+  QMenu *insertMenu = new QMenu (_view.menu ());
   insertMenu->setTitle (tr ("&Insert"));
 
   // media action
@@ -209,7 +203,7 @@ StructuralWindow::createActions ()
   _switchportAction->setShortcut (QKeySequence ("0"));
   insertMenu->addAction (_switchportAction);
 
-  _view->menu ()->addMenu (insertMenu);
+  _view.menu ()->addMenu (insertMenu);
 
   // minimap action
   _minimapAction = new QAction (this);
@@ -233,7 +227,7 @@ StructuralWindow::createActions ()
   _propertiesAction->setEnabled (false);
   _propertiesAction->setText (tr ("Properties"));
   _propertiesAction->setIcon (QIcon (":/icon/properties"));
-  _view->menu ()->addAction (_propertiesAction);
+  _view.menu ()->addAction (_propertiesAction);
 
   // insert group
   _insertActionGroup = new QActionGroup (this);
@@ -247,7 +241,7 @@ StructuralWindow::createActions ()
   _autoadjustAction = new QAction (this);
   _autoadjustAction->setEnabled (true);
   _autoadjustAction->setText (tr ("Auto adjust"));
-  _view->getMenu ()->addAction (_autoadjustAction);
+  _view.getMenu ()->addAction (_autoadjustAction);
 #endif
 }
 
@@ -328,87 +322,87 @@ StructuralWindow::createToolbar ()
 void
 StructuralWindow::createConnections ()
 {
-  connect (_snapshotAction, &QAction::triggered, _view,
+  connect (_snapshotAction, &QAction::triggered, &_view,
            &StructuralView::snapshot);
-  connect (_zoominAction, &QAction::triggered, _view, &StructuralView::zoomIn);
-  connect (_zoomoutAction, &QAction::triggered, _view,
+  connect (_zoominAction, &QAction::triggered, &_view, &StructuralView::zoomIn);
+  connect (_zoomoutAction, &QAction::triggered, &_view,
            &StructuralView::zoomOut);
-  connect (_zoomresetAction, &QAction::triggered, _view,
+  connect (_zoomresetAction, &QAction::triggered, &_view,
            &StructuralView::zoomOriginal);
 
-  connect (_minimapAction, &QAction::triggered, _view,
+  connect (_minimapAction, &QAction::triggered, &_view,
            &StructuralView::toggleMinimapVisibility);
 
-  connect (_undoAction, &QAction::triggered, _view, &StructuralView::undo);
-  connect (_redoAction, &QAction::triggered, _view, &StructuralView::redo);
-  connect (_cutAction, &QAction::triggered, _view, &StructuralView::cut);
-  connect (_copyAction, &QAction::triggered, _view, &StructuralView::copy);
-  connect (_pasteAction, &QAction::triggered, _view, &StructuralView::paste);
+  connect (_undoAction, &QAction::triggered, &_view, &StructuralView::undo);
+  connect (_redoAction, &QAction::triggered, &_view, &StructuralView::redo);
+  connect (_cutAction, &QAction::triggered, &_view, &StructuralView::cut);
+  connect (_copyAction, &QAction::triggered, &_view, &StructuralView::copy);
+  connect (_pasteAction, &QAction::triggered, &_view, &StructuralView::paste);
 
-  connect (_deleteAction, &QAction::triggered, _view,
+  connect (_deleteAction, &QAction::triggered, &_view,
            &StructuralView::deleteSelected);
 
-  connect (_pointerAction, &QAction::triggered, _view,
-           [&]() { _view->setMode (StructuralInteractionMode::Pointing); });
-  connect (_linkAction, &QAction::triggered, _view,
-           [&]() { _view->setMode (StructuralInteractionMode::Linking); });
+  connect (_pointerAction, &QAction::triggered, &_view,
+           [&]() { _view.setMode (StructuralInteractionMode::Pointing); });
+  connect (_linkAction, &QAction::triggered, &_view,
+           [&]() { _view.setMode (StructuralInteractionMode::Linking); });
 
-  connect (_autostartAction, &QAction::triggered, _view,
+  connect (_autostartAction, &QAction::triggered, &_view,
            &StructuralView::performAutostart);
 
   connect (_mediaAction, &QAction::triggered,
-           [&]() { _view->createEntity (StructuralType::Media); });
+           [&]() { _view.createEntity (StructuralType::Media); });
 
   connect (_contextAction, &QAction::triggered,
-           [&]() { _view->createEntity (StructuralType::Context); });
+           [&]() { _view.createEntity (StructuralType::Context); });
 
   connect (_switchAction, &QAction::triggered,
-           [&]() { _view->createEntity (StructuralType::Switch); });
+           [&]() { _view.createEntity (StructuralType::Switch); });
 
   connect (_bodyAction, &QAction::triggered,
-           [&]() { _view->createEntity (StructuralType::Body); });
+           [&]() { _view.createEntity (StructuralType::Body); });
 
   connect (_areaAction, &QAction::triggered,
-           [&]() { _view->createEntity (StructuralType::Area); });
+           [&]() { _view.createEntity (StructuralType::Area); });
 
   connect (_propertyAction, &QAction::triggered,
-           [&]() { _view->createEntity (StructuralType::Property); });
+           [&]() { _view.createEntity (StructuralType::Property); });
 
   connect (_portAction, &QAction::triggered,
-           [&]() { _view->createEntity (StructuralType::Port); });
+           [&]() { _view.createEntity (StructuralType::Port); });
 
   connect (_switchportAction, &QAction::triggered,
-           [&]() { _view->createEntity (StructuralType::SwitchPort); });
+           [&]() { _view.createEntity (StructuralType::SwitchPort); });
 
 #ifdef WITH_GRAPHVIZ
   connect (_autostartAction, &QAction::triggered, this,
            &StructuralView::performAutoAdjust);
 #endif
 
-  connect (_view, &StructuralView::canUndoChanged, _undoAction,
+  connect(&_view, &StructuralView::canUndoChanged, _undoAction,
            &QAction::setEnabled);
-  connect (_view, &StructuralView::canRedoChanged, _redoAction,
-           &QAction::setEnabled);
-
-  connect (_view, &StructuralView::canCutChanged, _cutAction,
-           &QAction::setEnabled);
-  connect (_view, &StructuralView::canCopyChanged, _copyAction,
-           &QAction::setEnabled);
-  connect (_view, &StructuralView::canPasteChanged, _pasteAction,
-           &QAction::setEnabled);
-  connect (_view, &StructuralView::canDeleteChanged, _deleteAction,
+  connect(&_view, &StructuralView::canRedoChanged, _redoAction,
            &QAction::setEnabled);
 
-  connect (_view, &StructuralView::zoomChanged, this,
+  connect(&_view, &StructuralView::canCutChanged, _cutAction,
+           &QAction::setEnabled);
+  connect(&_view, &StructuralView::canCopyChanged, _copyAction,
+           &QAction::setEnabled);
+  connect(&_view, &StructuralView::canPasteChanged, _pasteAction,
+           &QAction::setEnabled);
+  connect(&_view, &StructuralView::canDeleteChanged, _deleteAction,
+           &QAction::setEnabled);
+
+  connect(&_view, &StructuralView::zoomChanged, this,
            &StructuralWindow::handleZoomChange);
 
-  connect (_view, &StructuralView::interactionModeChanged, this,
+  connect(&_view, &StructuralView::interactionModeChanged, this,
            &StructuralWindow::handleInteractionModeChange);
 
-  connect (_view, &StructuralView::canAddBody, _bodyAction,
+  connect(&_view, &StructuralView::canAddBody, _bodyAction,
            &QAction::setEnabled);
 
-  connect (_view, &StructuralView::entitySelected, this,
+  connect(&_view, &StructuralView::entitySelected, this,
            &StructuralWindow::updateEnabledActions);
 }
 
@@ -445,10 +439,10 @@ StructuralWindow::handleInteractionModeChange (StructuralInteractionMode mode)
 void
 StructuralWindow::updateEnabledActions ()
 {
-  QString uid = _view->selectedUid ();
-  if (_view->scene ()->hasEntity (uid))
+  QString uid = _view.selectedUid ();
+  if (_view.scene ()->hasEntity (uid))
   {
-    StructuralType type = _view->scene ()->entity (uid)->structuralType ();
+    StructuralType type = _view.scene ()->entity (uid)->structuralType ();
     switch (type)
     {
       case Structural::Media:
@@ -533,7 +527,7 @@ StructuralWindow::updateEnabledActions ()
       _mediaAction->setEnabled (false);
       _contextAction->setEnabled (false);
       _switchAction->setEnabled (false);
-      _bodyAction->setEnabled ((_view->scene ()->body () == NULL));
+      _bodyAction->setEnabled ((_view.scene ()->body () == NULL));
       _areaAction->setEnabled (false);
       _propertyAction->setEnabled (false);
       _portAction->setEnabled (false);

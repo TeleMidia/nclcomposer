@@ -17,8 +17,7 @@ public:
   StructuralWindow (QWidget *parent = 0);
   virtual ~StructuralWindow () {}
 
-  StructuralView *view () const;
-  void setView (StructuralView *view);
+  StructuralView *view ();
 
 protected slots:
   void handleZoomChange (int zoom);
@@ -54,7 +53,7 @@ private:
 
   QActionGroup *_insertActionGroup;
 
-  StructuralView *_view;
+  StructuralView _view;
 };
 
 #endif // QNSTMAINWINDOW_H
