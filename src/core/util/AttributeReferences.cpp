@@ -21,7 +21,7 @@ AttributeReferences::AttributeReferences (const QString &elt,
                                           const QString &attr,
                                           const QString &ref_elt,
                                           const QString &ref_attr,
-                                          REFERENCE_SCOPE scope)
+                                          Scope scope)
 {
   this->_elt = elt;
   this->_attr = attr;
@@ -78,7 +78,7 @@ AttributeReferences::refAttribute ()
   return this->_ref_attr;
 }
 
-AttributeReferences::REFERENCE_SCOPE
+AttributeReferences::Scope
 AttributeReferences::getScope ()
 {
   return this->_scope;

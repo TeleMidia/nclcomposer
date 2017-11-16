@@ -255,7 +255,7 @@ PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
     {
       QString ref_tagname = ref->refElement ();
       QString ref_attr = ref->refAttribute ();
-      AttributeReferences::REFERENCE_SCOPE scope = ref->getScope ();
+      AttributeReferences::Scope scope = ref->getScope ();
 
       // Find the scope we should search the entity
       Entity *entityTargetScope = nullptr;

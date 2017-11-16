@@ -32,14 +32,13 @@ CPR_CORE_BEGIN_NAMESPACE
 class COMPOSERCORESHARED_EXPORT AttributeReferences
 {
 public:
-  enum REFERENCE_SCOPE
+  enum Scope
   {
     ANY_SCOPE = 0,
     SAME_SCOPE,
     USERDEFINED_SCOPE
   };
 
-public:
   /*!
    * \brief Constructor.
    *
@@ -52,7 +51,7 @@ public:
    */
   AttributeReferences (const QString &elt, const QString &attr,
                        const QString &ref_elt, const QString &ref_attr,
-                       REFERENCE_SCOPE scope = ANY_SCOPE);
+                       Scope scope = ANY_SCOPE);
   /*!
    * \brief Constructor.
    *
@@ -102,7 +101,7 @@ public:
    *
    * \return REFERENCE_SCOPE the type of the scope.
    */
-  REFERENCE_SCOPE getScope ();
+  Scope getScope ();
   /*!
    * \brief Gets the string where the user define the scope.
    *
@@ -113,11 +112,10 @@ public:
 private:
   QString _elt, _attr, _ref_elt, _ref_attr; /*!< TODO */
 
-  REFERENCE_SCOPE _scope;
+  Scope _scope;
   QString _userDefinedScope;
-  QMap<QString, REFERENCE_SCOPE> _str2scope;
+  QMap<QString, Scope> _str2scope;
 
-private:
   void initStr2Scope ();
 };
 

@@ -142,7 +142,7 @@ signals:
    * \param documentdId
    * \param location
    */
-  void newProjectLaunchedAndCreated (QString documentdId, QString location);
+  void newProjectLaunchedAndCreated (QString docId, QString location);
 
   /*!
    * \brief
@@ -182,20 +182,9 @@ private:
   virtual ~PluginControl ();
 
   QHash<QString, IPluginFactory *> _pluginFactories;
-  /*!< PluginFactory by pluginID */
-
   QMultiHash<LanguageType, QString> _pluginsByType;
-  /*!< pluginID given LanguageType */
-
-  /* TC by DocumentID */
-  /* Is this right??
-   * And when we have plugins that are not related to documents???
-   */
-  QHash<Project *, MessageControl *> _messageControls; /*!< TODO */
-
+  QHash<Project *, MessageControl *> _messageControls;
   QMultiHash<Project *, IPlugin *> _pluginInstances;
-  /*!< Plugin Instance given project location */
-
   QMultiHash<IPlugin *, IPluginFactory *> _factoryByPlugin;
 
   /*!< Maps each IPlugin to its corresponding IPluginFactory */

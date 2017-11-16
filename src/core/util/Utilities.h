@@ -92,9 +92,6 @@ public:
    * \return
    */
   static QStringList splitParams (QString &params);
-
-private:
-  static QMap<QString, LanguageType> _types; /*!< TODO */
 };
 
 COMPOSERCORESHARED_EXPORT

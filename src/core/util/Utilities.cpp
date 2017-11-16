@@ -23,7 +23,8 @@ CPR_CORE_BEGIN_NAMESPACE
 Q_LOGGING_CATEGORY (CPR_CORE, "cpr.core")
 Q_LOGGING_CATEGORY (CPR_GUI, "cpr.gui")
 
-QMap<QString, LanguageType> Utilities::_types
+static
+QMap<QString, LanguageType> _types
     = { { "cpr", NCL }, { "ncl", NCL }, { "smil", SMIL }, { "html", HTML } };
 
 LanguageType

@@ -28,6 +28,8 @@ CPR_GUI_BEGIN_NAMESPACE
 
 class GeneralPreferences : public IPreferencesPage
 {
+  Q_OBJECT
+
 public:
   /*!
    * \brief Constructor.
