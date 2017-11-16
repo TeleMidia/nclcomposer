@@ -35,34 +35,20 @@ PluginControl::PluginControl ()
 PluginControl::~PluginControl ()
 {
   // \fixme bug when closing on windows
-  QMultiHash<Project *, IPlugin *>::iterator itInst;
-  QHash<QString, IPluginFactory *>::iterator itFac;
-
-  IPlugin *inst = nullptr;
-  IPluginFactory *fac = nullptr;
-
-  for (itInst = _pluginInstances.begin (); itInst != _pluginInstances.end ();
-       ++itInst)
+  for (Project *prj : _pluginInstances.keys () )
   {
-    QList<IPlugin *> instances = _pluginInstances.values (itInst.key ());
-    QList<IPlugin *>::iterator it;
-
-    for (it = instances.begin (); it != instances.end (); ++it)
+    for (IPlugin *inst : _pluginInstances.values (prj))
     {
-      inst = *it;
-      fac = _factoryByPlugin.value (inst);
+      IPluginFactory *fac = _factoryByPlugin.value (inst);
       _factoryByPlugin.remove (inst);
       fac->releasePluginInstance (inst);
-      _pluginInstances.remove (itInst.key (), inst);
+      _pluginInstances.remove (prj, inst);
     }
   }
 
-  for (itFac = _pluginFactories.begin (); itFac != _pluginFactories.end ();
-       ++itFac)
+  for (IPluginFactory *fac : _pluginFactories.values())
   {
-    fac = itFac.value ();
     delete fac;
-    fac = nullptr;
   }
 
   _pluginFactories.clear ();
@@ -175,15 +161,13 @@ PluginControl::launchProject (Project *project)
   MessageControl *msgControl = new MessageControl (project);
   _messageControls[project] = msgControl;
 
-  QList<QString>::iterator it;
-  QList<QString> plugIDs = _pluginsByType.values (type);
-  for (it = plugIDs.begin (); it != plugIDs.end (); ++it)
+  for (const QString &plgId : _pluginsByType.values (type))
   {
-    factory = _pluginFactories[*it];
+    factory = _pluginFactories[plgId];
 
     GlobalSettings stngs;
     stngs.beginGroup ("loadPlugins");
-    if (!stngs.contains (*it) || stngs.value (*it).toBool () == true)
+    if (!stngs.contains (plgId) || stngs.value (plgId).toBool () == true)
     {
       launchNewPlugin (factory, project);
     }
@@ -194,21 +178,21 @@ PluginControl::launchProject (Project *project)
 void
 PluginControl::launchNewPlugin (IPluginFactory *factory, Project *project)
 {
-  IPlugin *plgInstance = factory->createPluginInstance ();
-  if (plgInstance)
+  IPlugin *plgInst = factory->createPluginInstance ();
+  if (plgInst)
   {
-    plgInstance->setPluginInstanceID (factory->id () + "#"
-                                      + QUuid::createUuid ().toString ());
-    plgInstance->setProject (project);
-    launchNewPlugin (plgInstance, _messageControls[project]);
+    plgInst->setPluginInstanceID (factory->id () + "#"
+                                  + QUuid::createUuid ().toString ());
+    plgInst->setProject (project);
+    launchNewPlugin (plgInst, _messageControls[project]);
 
-    _pluginInstances.insert (project, plgInstance);
-    _factoryByPlugin.insert (plgInstance, factory);
+    _pluginInstances.insert (project, plgInst);
+    _factoryByPlugin.insert (plgInst, factory);
 
-    emit addPluginWidgetToWindow (factory, plgInstance, project);
+    emit addPluginWidgetToWindow (factory, plgInst, project);
 
     // TODO: CREATE A NEW FUNCTION TO UPDATE FROM SAVED CONTENT
-    plgInstance->init ();
+    plgInst->init ();
   }
   else
   {
@@ -262,7 +246,7 @@ PluginControl::connectParser (IDocumentParser *parser,
 QList<IPluginFactory *>
 PluginControl::loadedPlugins ()
 {
-  return _pluginFactories.values();
+  return _pluginFactories.values ();
 }
 
 bool

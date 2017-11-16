@@ -22,15 +22,11 @@ INIT_SINGLETON (ProjectControl)
 
 ProjectControl::~ProjectControl ()
 {
-  QMap<QString, Project *>::iterator it;
-  PluginControl *pg = PluginControl::instance ();
-  for (it = _openProjects.begin (); it != _openProjects.end (); it++)
+  for (Project *proj : _openProjects.values ())
   {
-    Project *project = it.value ();
-    if (pg->releasePlugins (project))
+    if (PluginControl::instance ()->releasePlugins (proj))
     {
-      delete project;
-      project = nullptr;
+      delete proj;
     }
     else
     {
