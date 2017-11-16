@@ -64,7 +64,7 @@ public:
    * \brief
    * \param type
    */
-  ILanguageProfile *getProfileFromType (LanguageType type);
+  ILanguageProfile *profileFromType (LanguageType type);
 
   /*!
    * \brief
@@ -75,7 +75,7 @@ public:
   /*!
    * \brief
    */
-  QList<ILanguageProfile *> getLoadedProfiles ();
+  QList<ILanguageProfile *> loadedProfiles ();
 
 signals:
   /*!

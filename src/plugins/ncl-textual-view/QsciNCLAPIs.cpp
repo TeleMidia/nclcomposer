@@ -173,7 +173,7 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
           if (references[i]->getScope () == AttributeReferences::ANY_SCOPE)
           {
             elements = nclEditor->elementsByTagname (
-                references[i]->getRefElement ());
+                references[i]->refElement ());
           }
           else if (references[i]->getScope ()
                    == AttributeReferences::SAME_SCOPE)
@@ -191,13 +191,13 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
 
             // \todo suggest elements child of an element with no id.
             elements = nclEditor->elementsByTagname (
-                references[i]->getRefElement (), idValue);
+                references[i]->refElement (), idValue);
           }
           else if (references[i]->getScope ()
                    == AttributeReferences::USERDEFINED_SCOPE)
           {
             QString attr;
-            QString userDefinedScope = references[i]->getUserDefinedScope ();
+            QString userDefinedScope = references[i]->userDefinedScope ();
 
             // qCDebug (CPR_PLUGIN_TEXTUAL) << "User defined scope" <<
             // userDefinedScope;
@@ -210,7 +210,7 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
               QString idValue
                   = getAttributeValueFromCurrentElement (pos, attr);
               elements = nclEditor->elementsByTagname (
-                  references[i]->getRefElement (), idValue);
+                  references[i]->refElement (), idValue);
             }
             else if (userDefinedScope.startsWith ("$PARENT"))
             {
@@ -224,7 +224,7 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
 
               // qCDebug (CPR_PLUGIN_TEXTUAL) << "idValue = " << idValue;
               elements = nclEditor->elementsByTagname (
-                  references[i]->getRefElement (), idValue);
+                  references[i]->refElement (), idValue);
             }
             else if (userDefinedScope.startsWith ("$GRANDPARENT"))
             {
@@ -234,7 +234,7 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
               QString idValue = getAttributeValueFromCurrentElement (
                   grandparent_offset, attr);
               elements = nclEditor->elementsByTagname (
-                  references[i]->getRefElement (), idValue);
+                  references[i]->refElement (), idValue);
             }
           }
 
@@ -243,7 +243,7 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
             QDomElement node = elements.at (j).toElement ();
 
             QString attributeValue
-                = node.attribute (references[i]->getRefAttribute ());
+                = node.attribute (references[i]->refAttribute ());
 
             // qCDebug (CPR_PLUGIN_TEXTUAL) << context.count();
             for (int k = 0; k < context.count (); ++k)

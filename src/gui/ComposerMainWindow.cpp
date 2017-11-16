@@ -261,7 +261,7 @@ ComposerMainWindow::openProjects (const QStringList &projects)
       if (createDefaultProjStructure)
       {
         addDefaultStructureToProject (
-            ProjectControl::instance ()->getOpenProject (src), true, true,
+            ProjectControl::instance ()->project (src), true, true,
             true);
       }
     }
@@ -504,7 +504,7 @@ ComposerMainWindow::tabClosed (int index)
     return; // Do nothing
 
   QString location = _tabProjects->tabToolTip (index);
-  Project *project = ProjectControl::instance ()->getOpenProject (location);
+  Project *project = ProjectControl::instance ()->project (location);
 
   if (project != nullptr && project->isDirty ())
   {
@@ -565,7 +565,7 @@ ComposerMainWindow::closeAllFiles ()
     //    {
     //      QString location = _tabProjects->tabToolTip(i);
     //      Project *project =
-    //      ProjectControl::instance()->getOpenProject(location);
+    //      ProjectControl::instance()->project(location);
     //      if (project->isDirty())
     //      {
     //        qCDebug(CPR_GUI) << "ask to save" << location;
@@ -772,7 +772,7 @@ ComposerMainWindow::closeEvent (QCloseEvent *event)
   for (int index = 1; index < _tabProjects->count (); index++)
   {
     QString location = _tabProjects->tabToolTip (index);
-    Project *project = ProjectControl::instance ()->getOpenProject (location);
+    Project *project = ProjectControl::instance ()->project (location);
 
     qCDebug (CPR_GUI) << location << project;
     if (project != nullptr && project->isDirty ())
@@ -883,7 +883,7 @@ ComposerMainWindow::saveCurrentProject ()
   if (index != 0)
   {
     QString location = _tabProjects->tabToolTip (index);
-    Project *project = ProjectControl::instance ()->getOpenProject (location);
+    Project *project = ProjectControl::instance ()->project (location);
 
     PluginControl::instance ()->savePluginsData (project);
     ProjectControl::instance ()->saveProject (location);
@@ -942,7 +942,7 @@ ComposerMainWindow::saveAsCurrentProject ()
         ProjectControl::instance ()->moveProject (location, destFileName);
 
       Project *project
-          = ProjectControl::instance ()->getOpenProject (destFileName);
+          = ProjectControl::instance ()->project (destFileName);
 
       PluginControl::instance ()->savePluginsData (project);
       ProjectControl::instance ()->saveProject (destFileName);
@@ -1111,7 +1111,7 @@ ComposerMainWindow::launchProjectWizard ()
         // elements
         // by default
         Project *project
-            = ProjectControl::instance ()->getOpenProject (filename);
+            = ProjectControl::instance ()->project (filename);
 
         addDefaultStructureToProject (project,
                                       wizard.shouldCopyDefaultConnBase (),
@@ -1143,7 +1143,7 @@ ComposerMainWindow::addDefaultStructureToProject (
 
   Entity *nclEntity;
   MessageControl *msgControl
-      = PluginControl::instance ()->getMessageControl (project);
+      = PluginControl::instance ()->messageControl (project);
   msgControl->anonymousAddEntity ("ncl", project->uid (), nclAttrs);
 
   nclEntity = project->entitiesByType ("ncl").first ();
@@ -1457,7 +1457,7 @@ ComposerMainWindow::userPressedRecentProject (QString src)
 
       // \todo Ask for the import or not of the defaultConnBase.
       addDefaultStructureToProject (
-          ProjectControl::instance ()->getOpenProject (src), false, false,
+          ProjectControl::instance ()->project (src), false, false,
           true);
     }
   }
@@ -1563,7 +1563,7 @@ ComposerMainWindow::setProjectAsDirty (QString location, bool isDirty)
   QToolWindowManager *window = _projectsWidgets[location];
 
   QString projectId
-      = ProjectControl::instance ()->getOpenProject (location)->attr ("id");
+      = ProjectControl::instance ()->project (location)->attr ("id");
 
   int index = _tabProjects->indexOf (window);
 
@@ -1590,9 +1590,9 @@ ComposerMainWindow::undo ()
   if (index >= 1)
   {
     QString location = _tabProjects->tabToolTip (index);
-    Project *project = ProjectControl::instance ()->getOpenProject (location);
+    Project *project = ProjectControl::instance ()->project (location);
     MessageControl *msgControl
-        = PluginControl::instance ()->getMessageControl (project);
+        = PluginControl::instance ()->messageControl (project);
 
     if (msgControl != nullptr)
       msgControl->undo ();
@@ -1607,9 +1607,9 @@ ComposerMainWindow::redo ()
   if (index >= 1)
   {
     QString location = _tabProjects->tabToolTip (index);
-    Project *project = ProjectControl::instance ()->getOpenProject (location);
+    Project *project = ProjectControl::instance ()->project (location);
     MessageControl *msgControl
-        = PluginControl::instance ()->getMessageControl (project);
+        = PluginControl::instance ()->messageControl (project);
 
     if (msgControl != 0)
       msgControl->redo ();
@@ -1638,11 +1638,11 @@ ComposerMainWindow::autoSaveCurrentProjects ()
   for (int i = 1; i < _tabProjects->count (); i++)
   {
     QString location = _tabProjects->tabToolTip (i);
-    Project *project = ProjectControl::instance ()->getOpenProject (location);
+    Project *project = ProjectControl::instance ()->project (location);
     if (project->isDirty ())
     {
       PluginControl::instance ()->savePluginsData (project);
-      ProjectControl::instance ()->saveTemporaryProject (location);
+      ProjectControl::instance ()->saveTempProject (location);
     }
   }
 }
@@ -1797,7 +1797,7 @@ ComposerMainWindow::updateTabWithProject (int index, QString newLocation)
   }
 
   _tabProjects->setTabToolTip (index, newLocation);
-  Project *project = ProjectControl::instance ()->getOpenProject (newLocation);
+  Project *project = ProjectControl::instance ()->project (newLocation);
   if (project != nullptr)
   {
     QString projectId = project->attr ("id");

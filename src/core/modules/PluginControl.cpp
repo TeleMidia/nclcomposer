@@ -263,7 +263,7 @@ PluginControl::connectParser (IDocumentParser *parser,
 }
 
 QList<IPluginFactory *>
-PluginControl::getLoadedPlugins ()
+PluginControl::loadedPlugins ()
 {
   QHash<QString, IPluginFactory *>::iterator it;
   QList<IPluginFactory *> pList;
@@ -351,13 +351,13 @@ PluginControl::savePluginsData (Project *project)
 }
 
 MessageControl *
-PluginControl::getMessageControl (Project *project)
+PluginControl::messageControl (Project *project)
 {
   return _messageControls.value (project);
 }
 
 QList<IPlugin *>
-PluginControl::getPluginInstances (Project *project)
+PluginControl::pluginInstances (Project *project)
 {
   QList<IPlugin *> instances;
   if (_pluginInstances.contains (project))

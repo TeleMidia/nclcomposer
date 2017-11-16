@@ -46,12 +46,12 @@ class COMPOSERCORESHARED_EXPORT ProjectControl : public QObject
 
 public:
   /*!
-   * \brief getOpenProject
+   * \brief project
    *
    * \param location
    * \return
    */
-  Project *getOpenProject (const QString &location);
+  Project *project (const QString &path);
 
 public slots:
   /*!
@@ -59,13 +59,13 @@ public slots:
    * \param location
    * \return
    */
-  bool closeProject (const QString &location);
+  bool closeProject (const QString &path);
 
   /*!
    * \brief saveProject
    * \param location
    */
-  void saveProject (const QString &location);
+  void saveProject (const QString &path);
 
   /*!
    * \brief moveProject
@@ -74,7 +74,7 @@ public slots:
    * \param dest
    * \param saveDesc
    */
-  void moveProject (const QString &location, const QString &dest,
+  void moveProject (const QString &path, const QString &path_dest,
                     bool saveDesc = false);
 
   /*!
@@ -82,7 +82,7 @@ public slots:
    *
    * \param location
    */
-  void saveTemporaryProject (const QString &location);
+  void saveTempProject (const QString &path);
 
   /*!
    * \brief launchProject
@@ -90,7 +90,7 @@ public slots:
    * \param location
    * \return
    */
-  bool launchProject (const QString &location);
+  bool launchProject (const QString &path);
 
   /*!
    * \brief importFromDocument
@@ -136,7 +136,7 @@ private:
   /*!
    * \brief Constructor.
    */
-  ProjectControl ();
+  ProjectControl () {}
 
   /*!
    * \brief Destructor.

@@ -137,7 +137,7 @@ LanguageControl::loadProfiles (const QString &profilesDirPath)
 }
 
 ILanguageProfile *
-LanguageControl::getProfileFromType (LanguageType type)
+LanguageControl::profileFromType (LanguageType type)
 {
   if (_profiles.contains (type))
     return _profiles[type];
@@ -146,7 +146,7 @@ LanguageControl::getProfileFromType (LanguageType type)
 }
 
 QList<ILanguageProfile *>
-LanguageControl::getLoadedProfiles ()
+LanguageControl::loadedProfiles ()
 {
   QMap<LanguageType, ILanguageProfile *>::iterator it;
   QList<ILanguageProfile *> list;

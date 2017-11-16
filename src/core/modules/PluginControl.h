@@ -88,7 +88,7 @@ public:
    * \brief
    * \return QList<IPluginFactory *>
    */
-  QList<IPluginFactory *> getLoadedPlugins ();
+  QList<IPluginFactory *> loadedPlugins ();
 
   /*!
    * \brief
@@ -104,7 +104,7 @@ public:
    * \param
    * \return
    */
-  MessageControl *getMessageControl (Project *project);
+  MessageControl *messageControl (Project *project);
 
   /*!
    * \brief
@@ -117,7 +117,7 @@ public:
   /*!
    * \brief
    */
-  QList<IPlugin *> getPluginInstances (Project *project);
+  QList<IPlugin *> pluginInstances (Project *project);
   /* Should be private? */
 
 public slots:

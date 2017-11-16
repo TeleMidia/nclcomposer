@@ -253,8 +253,8 @@ PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
 
     for (AttributeReferences *ref : references)
     {
-      QString ref_tagname = ref->getRefElement ();
-      QString ref_attr = ref->getRefAttribute ();
+      QString ref_tagname = ref->refElement ();
+      QString ref_attr = ref->refAttribute ();
       AttributeReferences::REFERENCE_SCOPE scope = ref->getScope ();
 
       // Find the scope we should search the entity
@@ -277,7 +277,7 @@ PropertiesViewPlugin::getAttributeSuggestions (const QString &tagname)
       else if (scope == AttributeReferences::USERDEFINED_SCOPE)
       {
         QString attr_scope;
-        QString userDefinedScope = ref->getUserDefinedScope ();
+        QString userDefinedScope = ref->userDefinedScope ();
 
         QString idEntityScope = "";
         if (userDefinedScope.startsWith ("$THIS"))

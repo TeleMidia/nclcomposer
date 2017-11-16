@@ -39,14 +39,6 @@ public:
     USERDEFINED_SCOPE
   };
 
-private:
-  QString element, attr,     /*!< TODO */
-      ref_element, ref_attr; /*!< TODO */
-
-  REFERENCE_SCOPE scope;
-  QString userDefinedScope;
-  QMap<QString, REFERENCE_SCOPE> stringToScope;
-
 public:
   /*!
    * \brief Constructor.
@@ -58,8 +50,8 @@ public:
    *    attribute).
    * \param scope Which scope.
    */
-  AttributeReferences (const QString &element, const QString &attr,
-                       const QString &ref_element, const QString &ref_attr,
+  AttributeReferences (const QString &elt, const QString &attr,
+                       const QString &ref_elt, const QString &ref_attr,
                        REFERENCE_SCOPE scope = ANY_SCOPE);
   /*!
    * \brief Constructor.
@@ -71,40 +63,40 @@ public:
    *                    attribute).
    * \param scope Which scope (as a string).
    */
-  AttributeReferences (const QString &element, const QString &attr,
-                       const QString &ref_element, const QString &ref_attr,
+  AttributeReferences (const QString &elt, const QString &attr,
+                       const QString &ref_elt, const QString &ref_attr,
                        const QString &scope);
   /*!
    * \brief Get the source element.
    *
    * \return QString the name of the source element.
    */
-  QString getElement ();
+  QString element ();
   /*!
    * \brief Get the source attribute.
    *
    * \return QString the name of the source attribute.
    */
-  QString getAttribute ();
+  QString attribute ();
   /*!
    * \brief Get the name of referred element.
    *
    * \return QString The name of the referred element.
    */
-  QString getRefElement ();
+  QString refElement ();
   /*!
    * \brief Get the name of the referred attribute (an ref_element's
    * attribute).
    *
    * \return QString The name of the referred attribute.
    */
-  QString getRefAttribute ();
+  QString refAttribute ();
   /*!
    * \brief Sets the scope of the object as a string.
    *
    * \return QString the name of the scope.
    */
-  void setScope (const QString &scope);
+  void setScope (const QString &_scope);
   /*!
    * \brief Gets the scope of the object as a REFERENCE_SCOPE.
    *
@@ -116,10 +108,17 @@ public:
    *
    * \return QString the user defined scope.
    */
-  QString getUserDefinedScope ();
+  QString userDefinedScope ();
 
 private:
-  void initializeStringToScope ();
+  QString _elt, _attr, _ref_elt, _ref_attr; /*!< TODO */
+
+  REFERENCE_SCOPE _scope;
+  QString _userDefinedScope;
+  QMap<QString, REFERENCE_SCOPE> _str2scope;
+
+private:
+  void initStr2Scope ();
 };
 
 CPR_CORE_END_NAMESPACE

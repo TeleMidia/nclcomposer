@@ -372,7 +372,7 @@ NCLStructure::getReferences (const QString &element, const QString &attr)
   vector<AttributeReferences *> ref;
   foreach (AttributeReferences *value, _references->values (element))
   {
-    if (value->getAttribute () == attr)
+    if (value->attribute () == attr)
       ref.push_back (value);
   }
   return ref;

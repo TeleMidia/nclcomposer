@@ -17,87 +17,87 @@
 
 CPR_CORE_BEGIN_NAMESPACE
 
-AttributeReferences::AttributeReferences (const QString &element,
+AttributeReferences::AttributeReferences (const QString &elt,
                                           const QString &attr,
-                                          const QString &ref_element,
+                                          const QString &ref_elt,
                                           const QString &ref_attr,
                                           REFERENCE_SCOPE scope)
 {
-  this->element = element;
-  this->attr = attr;
-  this->ref_element = ref_element;
-  this->ref_attr = ref_attr;
-  this->scope = scope;
+  this->_elt = elt;
+  this->_attr = attr;
+  this->_ref_elt = ref_elt;
+  this->_ref_attr = ref_attr;
+  this->_scope = scope;
 
-  initializeStringToScope ();
+  initStr2Scope ();
 }
 
-AttributeReferences::AttributeReferences (const QString &element,
+AttributeReferences::AttributeReferences (const QString &elt,
                                           const QString &attr,
-                                          const QString &ref_element,
+                                          const QString &ref_elt,
                                           const QString &ref_attr,
                                           const QString &scope)
 {
-  this->element = element;
-  this->attr = attr;
-  this->ref_element = ref_element;
-  this->ref_attr = ref_attr;
+  this->_elt = elt;
+  this->_attr = attr;
+  this->_ref_elt = ref_elt;
+  this->_ref_attr = ref_attr;
 
-  initializeStringToScope ();
+  initStr2Scope ();
 
-  if (stringToScope.contains (scope))
-    this->scope = stringToScope.value (scope);
+  if (_str2scope.contains (scope))
+    this->_scope = _str2scope.value (scope);
   else
   {
-    this->scope = USERDEFINED_SCOPE;
-    this->userDefinedScope = scope;
+    this->_scope = USERDEFINED_SCOPE;
+    this->_userDefinedScope = scope;
   }
 }
 
 QString
-AttributeReferences::getElement ()
+AttributeReferences::element ()
 {
-  return this->element;
+  return this->_elt;
 }
 
 QString
-AttributeReferences::getAttribute ()
+AttributeReferences::attribute ()
 {
-  return this->attr;
+  return this->_attr;
 }
 
 QString
-AttributeReferences::getRefElement ()
+AttributeReferences::refElement ()
 {
-  return this->ref_element;
+  return this->_ref_elt;
 }
 
 QString
-AttributeReferences::getRefAttribute ()
+AttributeReferences::refAttribute ()
 {
-  return this->ref_attr;
+  return this->_ref_attr;
 }
 
 AttributeReferences::REFERENCE_SCOPE
 AttributeReferences::getScope ()
 {
-  return this->scope;
+  return this->_scope;
 }
 
 void
-AttributeReferences::initializeStringToScope ()
+AttributeReferences::initStr2Scope ()
 {
-  if (!stringToScope.size ())
+  if (!_str2scope.size ())
   {
-    stringToScope.insert (QString ("SAME"), SAME_SCOPE);
-    stringToScope.insert (QString ("ANY"), ANY_SCOPE);
+    _str2scope = {{QString ("SAME"), SAME_SCOPE},
+                 {QString ("ANY"), ANY_SCOPE}};
   }
 }
 
 QString
-AttributeReferences::getUserDefinedScope ()
+AttributeReferences::userDefinedScope ()
 {
-  return this->userDefinedScope;
+  return this->_userDefinedScope;
 }
 
 CPR_CORE_END_NAMESPACE

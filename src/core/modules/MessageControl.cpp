@@ -139,7 +139,7 @@ void
 MessageControl::anonymousUpdateFromModel ()
 {
   QList<IPlugin *> instances
-      = PluginControl::instance ()->getPluginInstances (this->_project);
+      = PluginControl::instance ()->pluginInstances (this->_project);
 
   foreach (IPlugin *plugin, instances)
   {
@@ -442,7 +442,7 @@ MessageControl::sendMessageToPlugins (Message message, const QString &senderId,
 {
   QList<IPlugin *>::iterator it;
   QList<IPlugin *> instances
-      = PluginControl::instance ()->getPluginInstances (this->_project);
+      = PluginControl::instance ()->pluginInstances (this->_project);
 
   IPlugin *pluginMsgSrc = nullptr;
 
@@ -506,7 +506,7 @@ MessageControl::sendCommentMessageToPlugins (Message message,
 {
   QList<IPlugin *>::iterator it;
   QList<IPlugin *> instances
-      = PluginControl::instance ()->getPluginInstances (this->_project);
+      = PluginControl::instance ()->pluginInstances (this->_project);
 
   IPlugin *pluginMsgSrc = nullptr;
   for (it = instances.begin (); it != instances.end (); ++it)

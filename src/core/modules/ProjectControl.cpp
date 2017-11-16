@@ -20,8 +20,6 @@ CPR_CORE_BEGIN_NAMESPACE
 
 INIT_SINGLETON (ProjectControl)
 
-ProjectControl::ProjectControl () {}
-
 ProjectControl::~ProjectControl ()
 {
   QMap<QString, Project *>::iterator it;
@@ -42,36 +40,36 @@ ProjectControl::~ProjectControl ()
 }
 
 bool
-ProjectControl::closeProject (const QString &location)
+ProjectControl::closeProject (const QString &path)
 {
-  if (!_openProjects.contains (location))
+  if (!_openProjects.contains (path))
     return false;
 
-  Project *project = _openProjects[location];
+  Project *project = _openProjects[path];
   if (PluginControl::instance ()->releasePlugins (project))
   {
     delete project;
     project = nullptr;
-    _openProjects.remove (location);
+    _openProjects.remove (path);
   }
   else
   {
-    qCDebug (CPR_CORE) << "Error: Failed to close the project :" << location;
+    qCDebug (CPR_CORE) << "Error: Failed to close the project :" << path;
     return false;
   }
   return true;
 }
 
 bool
-ProjectControl::launchProject (const QString &location)
+ProjectControl::launchProject (const QString &path)
 {
-  if (_openProjects.contains (location))
+  if (_openProjects.contains (path))
   {
-    emit projectAlreadyOpen (location);
+    emit projectAlreadyOpen (path);
     return false;
   }
 
-  QString ext = location;
+  QString ext = path;
   ext = ext.remove (0, ext.lastIndexOf (".") + 1);
   LanguageType type = Utilities::getLanguageTypeByExtension (ext);
 
@@ -82,7 +80,7 @@ ProjectControl::launchProject (const QString &location)
 
   /* Requests the LanguageProfile associated with this DocumentType */
   ILanguageProfile *profile
-      = LanguageControl::instance ()->getProfileFromType (type);
+      = LanguageControl::instance ()->profileFromType (type);
 
   if (!profile)
   {
@@ -91,48 +89,48 @@ ProjectControl::launchProject (const QString &location)
     return false;
   }
 
-  emit startOpenProject (location);
+  emit startOpenProject (path);
 
   QMap<QString, QString> atts;
-  QString documentId = location;
-  documentId = documentId.remove (0, location.lastIndexOf ("/") + 1);
+  QString documentId = path;
+  documentId = documentId.remove (0, path.lastIndexOf ("/") + 1);
   atts["id"] = documentId;
 
   ProjectReader pr;
-  Project *project = pr.readFile (location);
+  Project *project = pr.readFile (path);
 
-  if (project != nullptr)
+  if (project)
   {
     project->setAtrrs (atts);
     // The project was readed without a problem.
-    project->setLocation (location);
+    project->setLocation (path);
     project->setProjectType (type);
 
     PluginControl::instance ()->launchProject (project);
 
-    _openProjects[location] = project;
+    _openProjects[path] = project;
     connect (project, SIGNAL (dirtyProject (bool)), this,
              SLOT (projectIsDirty (bool)));
   }
   else
     qCDebug (CPR_CORE) << tr ("Project could not be open!");
 
-  emit endOpenProject (location);
+  emit endOpenProject (path);
 
   return true;
 }
 
 void
-ProjectControl::importFromDocument (const QString &docLocation,
-                                    const QString &projLocation)
+ProjectControl::importFromDocument (const QString &docPath,
+                                    const QString &projPath)
 {
-  if (_openProjects.contains (projLocation))
+  if (_openProjects.contains (projPath))
   {
-    emit projectAlreadyOpen (projLocation);
+    emit projectAlreadyOpen (projPath);
     return;
   }
 
-  QString ext = docLocation;
+  QString ext = docPath;
   ext = ext.remove (0, ext.lastIndexOf (".") + 1);
   LanguageType type = Utilities::getLanguageTypeByExtension (ext);
 
@@ -144,7 +142,7 @@ ProjectControl::importFromDocument (const QString &docLocation,
 
   /* Requests the LanguageProfile associated with this DocumentType */
   ILanguageProfile *profile
-      = LanguageControl::instance ()->getProfileFromType (type);
+      = LanguageControl::instance ()->profileFromType (type);
 
   if (!profile)
   {
@@ -153,32 +151,32 @@ ProjectControl::importFromDocument (const QString &docLocation,
     return;
   }
 
-  emit startOpenProject (projLocation);
+  emit startOpenProject (projPath);
 
   QMap<QString, QString> atts;
-  QString projectId = projLocation;
-  projectId.remove (0, projLocation.lastIndexOf ("/") + 1);
+  QString projectId = projPath;
+  projectId.remove (0, projPath.lastIndexOf ("/") + 1);
   atts["id"] = projectId;
 
   ProjectReader pr;
-  Project *project = pr.readFile (projLocation);
+  Project *project = pr.readFile (projPath);
   project->setAtrrs (atts);
 
   if (project != nullptr)
   {
     // The project was read without any problem.
-    project->setLocation (projLocation);
+    project->setLocation (projPath);
     project->setProjectType (type);
 
     PluginControl::instance ()->launchProject (project);
-    project->setLocation (projLocation);
+    project->setLocation (projPath);
 
-    _openProjects[projLocation] = project;
+    _openProjects[projPath] = project;
   }
   else
     qCDebug (CPR_CORE) << tr ("Project could not be open!");
 
-  emit endOpenProject (projLocation);
+  emit endOpenProject (projPath);
 
   QCoreApplication::processEvents ();
 
@@ -187,9 +185,9 @@ ProjectControl::importFromDocument (const QString &docLocation,
     IDocumentParser *parser;
     parser = profile->createParser (project);
     PluginControl::instance ()->connectParser (
-        parser, PluginControl::instance ()->getMessageControl (project));
+        parser, PluginControl::instance ()->messageControl (project));
 
-    QFile input (docLocation);
+    QFile input (docPath);
     if (input.open (QIODevice::ReadOnly))
       parser->parseContent (input.readAll ());
     else
@@ -200,26 +198,26 @@ ProjectControl::importFromDocument (const QString &docLocation,
 
   project->setDirty (false);
 
-  /* PluginControl::instance()->getMessageControl(project)
+  /* PluginControl::instance()->messageControl(project)
      ->setCurrentProjectAsDirty(); */
 }
 
 void
-ProjectControl::saveProject (const QString &location)
+ProjectControl::saveProject (const QString &path)
 {
-  Project *project = _openProjects.value (location);
-  QFile fout (location);
+  Project *project = _openProjects.value (path);
+  QFile fout (path);
 
   if (!fout.exists ())
   {
-    qCDebug (CPR_CORE) << "The file (" << location << ") doesn't exists. \
+    qCDebug (CPR_CORE) << "The file (" << path << ") doesn't exists. \
                            It will be created.";
   }
 
   if (!fout.open (QIODevice::WriteOnly))
   {
     // It could not open
-    qCDebug (CPR_CORE) << "Failed to open file (" << location
+    qCDebug (CPR_CORE) << "Failed to open file (" << path
                        << ") for writing.";
     return;
   }
@@ -232,48 +230,48 @@ ProjectControl::saveProject (const QString &location)
 }
 
 void
-ProjectControl::moveProject (const QString &location, const QString &dest,
+ProjectControl::moveProject (const QString &path, const QString &dest,
                              bool saveDest)
 {
   QFileInfo fileInfo (dest);
   if (fileInfo.absoluteDir ().exists ())
   {
-    Project *project = _openProjects.value (location);
+    Project *project = _openProjects.value (path);
     project->setLocation (dest);
     _openProjects.insert (dest, project);
-    _openProjects.remove (location); // remove de old
+    _openProjects.remove (path); // remove de old
 
     if (saveDest)
       saveProject (dest);
 
     QMap<QString, QString> atts;
     QString documentId = dest;
-    documentId = documentId.remove (0, location.lastIndexOf ("/") + 1);
+    documentId = documentId.remove (0, path.lastIndexOf ("/") + 1);
     atts["id"] = documentId;
     project->setAtrrs (atts);
   }
   else
     qCWarning (CPR_CORE) << "Could not copy the current project from  "
-                         << location << " to " << dest;
+                         << path << " to " << dest;
 }
 
 void
-ProjectControl::saveTemporaryProject (const QString &location)
+ProjectControl::saveTempProject (const QString &path)
 {
-  Project *project = _openProjects.value (location);
-  QFile fout (location + "~");
+  Project *project = _openProjects.value (path);
+  QFile fout (path + "~");
 
-  qCDebug (CPR_CORE) << "Trying to autosave: " << location;
+  qCDebug (CPR_CORE) << "Trying to autosave: " << path;
   if (!fout.exists ())
   {
-    qCDebug (CPR_CORE) << "The file (" << location << ") doesn't exists.\
+    qCDebug (CPR_CORE) << "The file (" << path << ") doesn't exists.\
                             It will be created.";
   }
 
   if (!fout.open (QIODevice::WriteOnly))
   {
     // It could not open
-    qCDebug (CPR_CORE) << "Failed to open file (" << location
+    qCDebug (CPR_CORE) << "Failed to open file (" << path
                        << ") for writing.";
     return;
   }
@@ -286,7 +284,7 @@ ProjectControl::saveTemporaryProject (const QString &location)
 }
 
 Project *
-ProjectControl::getOpenProject (const QString &location)
+ProjectControl::project (const QString &location)
 {
   if (_openProjects.contains (location))
     return _openProjects.value (location);
@@ -298,7 +296,7 @@ void
 ProjectControl::projectIsDirty (bool isDirty)
 {
   Project *project = qobject_cast<Project *> (QObject::sender ());
-  if (project != nullptr)
+  if (project)
   {
     emit dirtyProject (project->location (), isDirty);
   }

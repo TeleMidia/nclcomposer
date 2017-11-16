@@ -31,7 +31,7 @@ EditEntityCmd::EditEntityCmd (Project *project, Entity *entity,
   _attrs = entity->attrs ();
   this->_newAttrs = newAttrs;
 
-  _msgControl = PluginControl::instance ()->getMessageControl (project);
+  _msgControl = PluginControl::instance ()->messageControl (project);
 }
 
 void
@@ -55,7 +55,7 @@ RemoveEntityCmd::RemoveEntityCmd (Project *project, Entity *entity,
   this->_entity = entity;
   this->_project = project;
 
-  _msgControl = PluginControl::instance ()->getMessageControl (project);
+  _msgControl = PluginControl::instance ()->messageControl (project);
 
   _first = true;
 }
@@ -97,7 +97,7 @@ AddEntityCmd::AddEntityCmd (Project *project, Entity *entity,
 
   _first = true;
 
-  _msgControl = PluginControl::instance ()->getMessageControl (project);
+  _msgControl = PluginControl::instance ()->messageControl (project);
 }
 
 void
@@ -135,7 +135,7 @@ AddCommentCmd::AddCommentCmd (Project *project, Comment *comment,
 
   _first = true;
 
-  _msgControl = PluginControl::instance ()->getMessageControl (project);
+  _msgControl = PluginControl::instance ()->messageControl (project);
 }
 
 void
