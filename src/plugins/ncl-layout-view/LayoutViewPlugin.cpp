@@ -128,8 +128,7 @@ NCLLayoutViewPlugin::updateFromModel ()
 void
 NCLLayoutViewPlugin::loadRegionbase ()
 {
-  QList<Entity *> regionbaseList
-      = project ()->entitiesByType ("regionBase");
+  QList<Entity *> regionbaseList = project ()->entitiesByType ("regionBase");
 
   if (!regionbaseList.isEmpty ())
   {

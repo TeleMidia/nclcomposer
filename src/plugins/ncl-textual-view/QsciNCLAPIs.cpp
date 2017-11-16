@@ -172,8 +172,8 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
           // If we have an ANY_SCOPE, it doesn't need any special treatment.
           if (references[i]->getScope () == AttributeReferences::ANY_SCOPE)
           {
-            elements = nclEditor->elementsByTagname (
-                references[i]->refElement ());
+            elements
+                = nclEditor->elementsByTagname (references[i]->refElement ());
           }
           else if (references[i]->getScope ()
                    == AttributeReferences::SAME_SCOPE)

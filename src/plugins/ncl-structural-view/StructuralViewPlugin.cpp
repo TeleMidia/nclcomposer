@@ -718,8 +718,8 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
         {
           QString pUid = key.right (key.length () - key.lastIndexOf (':') - 1);
 
-          QStrMap pAttr = { {"name", props.value (key)},
-                            {"value", props.value (value + ":" + pUid)} };
+          QStrMap pAttr = { { "name", props.value (key) },
+                            { "value", props.value (value + ":" + pUid) } };
           _waiting = true;
           _notified = pUid;
 

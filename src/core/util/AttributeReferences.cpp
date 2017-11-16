@@ -89,8 +89,8 @@ AttributeReferences::initStr2Scope ()
 {
   if (!_str2scope.size ())
   {
-    _str2scope = {{QString ("SAME"), SAME_SCOPE},
-                 {QString ("ANY"), ANY_SCOPE}};
+    _str2scope
+        = { { QString ("SAME"), SAME_SCOPE }, { QString ("ANY"), ANY_SCOPE } };
   }
 }
 

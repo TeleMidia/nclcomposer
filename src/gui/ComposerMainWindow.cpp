@@ -261,8 +261,7 @@ ComposerMainWindow::openProjects (const QStringList &projects)
       if (createDefaultProjStructure)
       {
         addDefaultStructureToProject (
-            ProjectControl::instance ()->project (src), true, true,
-            true);
+            ProjectControl::instance ()->project (src), true, true, true);
       }
     }
   }
@@ -941,8 +940,7 @@ ComposerMainWindow::saveAsCurrentProject ()
       if (location != destFileName)
         ProjectControl::instance ()->moveProject (location, destFileName);
 
-      Project *project
-          = ProjectControl::instance ()->project (destFileName);
+      Project *project = ProjectControl::instance ()->project (destFileName);
 
       PluginControl::instance ()->savePluginsData (project);
       ProjectControl::instance ()->saveProject (destFileName);
@@ -1110,8 +1108,7 @@ ComposerMainWindow::launchProjectWizard ()
         // After launch the project we will insert NCL, HEAD and BODY
         // elements
         // by default
-        Project *project
-            = ProjectControl::instance ()->project (filename);
+        Project *project = ProjectControl::instance ()->project (filename);
 
         addDefaultStructureToProject (project,
                                       wizard.shouldCopyDefaultConnBase (),
@@ -1456,9 +1453,8 @@ ComposerMainWindow::userPressedRecentProject (QString src)
       }
 
       // \todo Ask for the import or not of the defaultConnBase.
-      addDefaultStructureToProject (
-          ProjectControl::instance ()->project (src), false, false,
-          true);
+      addDefaultStructureToProject (ProjectControl::instance ()->project (src),
+                                    false, false, true);
     }
   }
 }

@@ -217,8 +217,7 @@ ProjectControl::saveProject (const QString &path)
   if (!fout.open (QIODevice::WriteOnly))
   {
     // It could not open
-    qCDebug (CPR_CORE) << "Failed to open file (" << path
-                       << ") for writing.";
+    qCDebug (CPR_CORE) << "Failed to open file (" << path << ") for writing.";
     return;
   }
 
@@ -251,8 +250,8 @@ ProjectControl::moveProject (const QString &path, const QString &dest,
     project->setAtrrs (atts);
   }
   else
-    qCWarning (CPR_CORE) << "Could not copy the current project from  "
-                         << path << " to " << dest;
+    qCWarning (CPR_CORE) << "Could not copy the current project from  " << path
+                         << " to " << dest;
 }
 
 void
@@ -271,8 +270,7 @@ ProjectControl::saveTempProject (const QString &path)
   if (!fout.open (QIODevice::WriteOnly))
   {
     // It could not open
-    qCDebug (CPR_CORE) << "Failed to open file (" << path
-                       << ") for writing.";
+    qCDebug (CPR_CORE) << "Failed to open file (" << path << ") for writing.";
     return;
   }
 
