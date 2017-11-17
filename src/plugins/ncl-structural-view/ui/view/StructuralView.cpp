@@ -236,57 +236,58 @@ StructuralView::adjustReferences (StructuralEntity *ent)
       bool hasChange = false;
       if (ent->hasProperty (ST_ATTR_REF_REFER_ID))
       {
-        QString referUid = ent->property (ST_ATTR_REF_REFER_UID);
-        CPR_ASSERT (_scene->hasEntity (referUid));
+        QString referredUid = ent->property (ST_ATTR_REF_REFER_UID);
+        CPR_ASSERT (_scene->hasEntity (referredUid));
 
-        StructuralEntity *refer = _scene->entity (referUid);
-        CPR_ASSERT (ent != refer);
+        StructuralEntity *referredEnt = _scene->entity (referredUid);
+        CPR_ASSERT (ent != referredEnt);
 
-        if (!refer->isReference ())
+        // A media can only refer to another media.
+        CPR_ASSERT (referredEnt->structuralType() == Structural::Media);
+
+        if (!referredEnt->isReference ())
         {
-          if (refer->structuralType () == Structural::Media)
-          {
-            QString instance = "new";
-            if (ent->hasProperty (ST_ATTR_NODE_INSTANCE))
-              instance = ent->property (ST_ATTR_NODE_INSTANCE);
+          QString instance = "new";
+          if (ent->hasProperty (ST_ATTR_NODE_INSTANCE))
+            instance = ent->property (ST_ATTR_NODE_INSTANCE);
 
-            for (StructuralEntity *child : ent->children ())
+          for (StructuralEntity *child : ent->children ())
+          {
+            if (child->isReference ())
             {
-              if (child->isReference ())
+              QString referUid = child->property (ST_ATTR_REF_REFER_UID);
+              if (_scene->hasEntity (referUid))
               {
-                QString referUid = child->property (ST_ATTR_REF_REFER_UID);
-                if (_scene->hasEntity (referUid))
+                if (_scene->entity (referUid)->structuralParent () != referredEnt)
                 {
-                  if (_scene->entity (referUid)->structuralParent () != refer)
-                    _scene->remove (child->uid (),
-                            util::createSettings (false, false));
+                  _scene->remove (child->uid (),
+                                  util::createSettings (false, false));
                 }
               }
             }
 
-            QVector<QString> entities;
-            QStrMap refer2Child, child2Refer;
+            QVector<QString> childrenUids;
+            bimap<QString, QString> refer2child;
 
             for (StructuralEntity *child : ent->children ())
             {
               if (child->isReference ())
               {
                 QString referUid = child->property (ST_ATTR_REF_REFER_UID);
-                child2Refer[child->uid ()] = referUid;
-                refer2Child[referUid] = child->uid ();
+                refer2child.insert (referUid, child->uid());
               }
 
-              entities.append (child->uid ());
+              childrenUids.append (child->uid ());
             }
 
-            for (StructuralEntity *child : refer->children ())
+            for (StructuralEntity *child : referredEnt->children ())
             {
               if (child->category () == Structural::Interface)
               {
-                if (!refer2Child.contains (child->uid ()))
+                if (!refer2child.to ().contains (child->uid ()))
                 {
-                  if (!entities.contains (
-                          _scene->refs ().value (child->uid ())))
+                  if (!childrenUids.contains (
+                        _scene->refs ().value (child->uid ())))
                   {
                     QString uid = util::createUid ();
 
@@ -300,9 +301,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                     props.remove (ST_ATTR_ENT_TOP);
                     props.remove (ST_ATTR_ENT_LEFT);
 
-                    child2Refer[uid] = child->uid ();
-                    child2Refer[child->uid ()] = uid;
-
+                    refer2child.insert (uid, child->uid ());
                     _scene->refs ()[uid] = child->uid ();
 
                     QStrMap settings = util::createSettings (false, false);
@@ -334,7 +333,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                        _scene->refs ().keys (child->uid ()))
                   {
                     if (_scene->hasEntity (key)
-                        && _scene->entity (key)->structuralParent () != refer)
+                        && _scene->entity (key)->structuralParent () != referredEnt)
                     {
                       _scene->remove (key, util::createSettings (false, false));
                     }
@@ -347,7 +346,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
               {
                 if (child->category () == Structural::Interface)
                 {
-                  if (!child2Refer.contains (child->uid ()))
+                  if (!refer2child.from ().contains (child->uid ()))
                   {
                     if (!_scene->refs ().values ().contains (child->uid ()))
                     {
@@ -368,7 +367,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                       QStrMap settings = util::createSettings (false, false);
                       settings[ST_SETTINGS_ADJUST_REFERS] = ST_VALUE_FALSE;
 
-                      _scene->insert (uid, refer->uid (), props, settings);
+                      _scene->insert (uid, referredEnt->uid (), props, settings);
 
                       hasNewEntity = true;
                     }
@@ -378,7 +377,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
 
               if (hasNewEntity)
               {
-                for (const QString &key : _scene->refs ().keys (refer->uid ()))
+                for (const QString &key : _scene->refs ().keys (referredEnt->uid ()))
                 {
                   if (_scene->hasEntity (key) && key != ent->uid ())
                     adjustReferences (_scene->entity (key));
@@ -386,7 +385,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
               }
             }
 
-            _scene->refs ()[ent->uid ()] = refer->uid ();
+            _scene->refs ()[ent->uid ()] = referredEnt->uid ();
             ent->setReference (true);
             hasChange = true;
           }
