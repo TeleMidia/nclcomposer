@@ -906,7 +906,7 @@ StructuralViewPlugin::uidById (const QString &id, Entity *ent)
 }
 
 // A template function that can be used to get the connector's parts of an
-// entity * or a qdomdocument
+// Entity* or a QDomElement.
 #define connector_parts_func(T, __foreach_children, __tagname, __hasattr,     \
                              __attr)                                          \
 static void connector_parts (T ent, QVector<QString> &connConditions,         \
@@ -960,14 +960,14 @@ connector_parts_func (QDomElement,
                       .hasAttribute,
                       .attribute)
 
-#define update_conn_parts(coonId, conn, conds, acts, params) \
-  QVector<QString> connConds, connActs, connParams; \
+#define update_conn_parts(connId, conn, conds, acts, params) \
+  QVector<QString> ___connConds, ___connActs, ___connParams; \
   \
-  connector_parts (conn, connConds, connActs, connParams); \
+  connector_parts (conn, ___connConds, ___connActs, ___connParams); \
   \
-  conds.insert (connId, connConds); \
-  acts.insert (connId, connActs); \
-  params.insert (connId, connParams);
+  conds.insert (connId, ___connConds); \
+  acts.insert (connId, ___connActs); \
+  params.insert (connId, ___connParams);
 
 // \todo this function should be called only when a change occurs in
 // <connectorBase>.  Currently, it is called every time the link's dialog is
@@ -979,7 +979,7 @@ StructuralViewPlugin::adjustConnectors ()
   if (!connectorBases.isEmpty ())
   {
     Entity *connBase = connectorBases.first ();
-    QMap<QString, QVector<QString> > conditions, actions, params;
+    QMap<QString, QVector<QString> > conds, acts, params;
 
     for (Entity *child : connBase->entityChildren ())
     {
@@ -989,7 +989,7 @@ StructuralViewPlugin::adjustConnectors ()
         auto connId = child->attr ("id");
         CPR_ASSERT (!connId.isEmpty ());
 
-        update_conn_parts (connId, child, conditions, actions, params);
+        update_conn_parts (connId, child, conds, acts, params)
       }
       // load data from importBase
       else if (child->type () == "importBase")
@@ -1017,12 +1017,12 @@ StructuralViewPlugin::adjustConnectors ()
             CPR_ASSERT (!conn.attribute ("id").isEmpty ());
             QString connId = alias + "#" + conn.attribute ("id");
 
-            update_conn_parts (coonId, conn, conditions, actions, params);
+            update_conn_parts (connId, conn, conds, acts, params);
           }
         }
       }
     }
 
-    _struct_view->dialog ()->setBase (conditions, actions, params);
+    _struct_view->dialog ()->setBase (conds, acts, params);
   }
 }
