@@ -149,7 +149,16 @@ StructuralScene::createId (StructuralType type, const QString &customPrefix)
 void
 StructuralScene::clear ()
 {
-  // TODO: remove entities
+  QStrMap stngs = util::createSettings (true, false);
+  stngs.insert (ST_SETTINGS_UNDO_TRACE, "0");
+
+  // remove all the entities
+  while (!entities ().empty ())
+  {
+    QString uid = entities ().keys ().at (0);
+    remove (uid, stngs);
+  }
+
   _refs.clear ();
   _nodes.clear ();
   _edges.clear ();
@@ -281,7 +290,7 @@ StructuralScene::insertIntoMap (const QString &uid, StructuralEntity *ent)
     _edges.insert (uid, edge);
   }
   else
-    CPR_ASSERT_NOT_REACHED();
+    CPR_ASSERT_NOT_REACHED ();
 }
 
 void
@@ -648,4 +657,37 @@ StructuralScene::change (QString uid, QStrMap props, QStrMap stgs)
 
   if (stgs[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
     emit changed (uid, props, prev, stgs);
+}
+
+void
+StructuralScene::updateAngle (StructuralBind *bind)
+{
+  CPR_ASSERT (bind->hasOrigin() && bind->hasDestination());
+  int min = INT_MAX;
+  int max = INT_MIN;
+
+  for (StructuralEdge *e : parallelEdges (bind))
+  {
+    int cur = e->angle ();
+
+    if (e->destination ()->structuralType () != Structural::Link)
+      cur *= -1;
+
+    max = std::max (max, cur);
+    min = std::min (min, cur);
+  }
+
+  qreal angle = 0;
+  if (min != INT_MAX || max != INT_MIN)
+  {
+    if (max <= abs (min))
+      angle = max + 60;
+    else if (max > abs (min))
+      angle = min - 60;
+  }
+
+  if (bind->destination ()->structuralType () != Structural::Link)
+    angle *= -1;
+
+  bind->setAngle (angle);
 }

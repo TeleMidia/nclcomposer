@@ -11,6 +11,7 @@
 #include "StructuralMenu.h"
 
 class StructuralView;
+class StructuralBind;
 
 class StructuralScene : public QGraphicsScene
 {
@@ -52,6 +53,8 @@ public:
   void insert (QString uid, QString parent, QStrMap props, QStrMap stgs);
   void remove (QString uid, QStrMap stgs);
   void change (QString uid, QStrMap props, QStrMap stgs);
+
+  void updateAngle (StructuralBind *bind);
 
 public slots:
   void clear (); // override?

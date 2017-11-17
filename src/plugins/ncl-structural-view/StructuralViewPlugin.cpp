@@ -246,12 +246,12 @@ StructuralViewPlugin::clean ()
 }
 
 void
-StructuralViewPlugin::onEntityAdded (const QString &pluginID, Entity *ent)
+StructuralViewPlugin::onEntityAdded (const QString &plgID, Entity *ent)
 {
   if (_syncing)
     return;
 
-  if (pluginID != pluginInstanceID ())
+  if (plgID != pluginInstanceID ())
   {
     insertInView (ent);
   }
@@ -270,12 +270,12 @@ StructuralViewPlugin::errorMessage (const QString &error)
 }
 
 void
-StructuralViewPlugin::onEntityChanged (const QString &pluginID, Entity *ent)
+StructuralViewPlugin::onEntityChanged (const QString &plgID, Entity *ent)
 {
   if (_syncing)
     return;
 
-  if (pluginID != pluginInstanceID () && !_waiting)
+  if (plgID != pluginInstanceID () && !_waiting)
   {
     changeInView (ent);
   }
@@ -284,13 +284,13 @@ StructuralViewPlugin::onEntityChanged (const QString &pluginID, Entity *ent)
 }
 
 void
-StructuralViewPlugin::onEntityRemoved (const QString &pluginID,
+StructuralViewPlugin::onEntityRemoved (const QString &plgID,
                                        const QString &entID)
 {
   if (_syncing)
     return;
 
-  if (pluginID != pluginInstanceID ())
+  if (plgID != pluginInstanceID ())
   {
     removeInView (project ()->entityByUid (entID));
     _core2view_remove (entID);
@@ -298,13 +298,12 @@ StructuralViewPlugin::onEntityRemoved (const QString &pluginID,
 }
 
 void
-StructuralViewPlugin::changeSelectedEntity (const QString &pluginID,
-                                            void *param)
+StructuralViewPlugin::changeSelectedEntity (const QString &plgID, void *param)
 {
   if (_syncing)
     return;
 
-  if (pluginID != pluginInstanceID ())
+  if (plgID != pluginInstanceID ())
   {
     QString *entUid = (QString *)param;
 
@@ -427,13 +426,13 @@ StructuralViewPlugin::viewPropsFromCoreEntity (const Entity *ent)
     QString name, value;
     if (ent->type () == "linkParam")
     {
-      name = QString (ST_ATTR_LINKPARAM_NAME);
-      value = QString (ST_ATTR_LINKPARAM_VALUE);
+      name = ST_ATTR_LINKPARAM_NAME;
+      value = ST_ATTR_LINKPARAM_VALUE;
     }
     else
     {
-      name = QString (ST_ATTR_BINDPARAM_NAME);
-      value = QString (ST_ATTR_BINDPARAM_VALUE);
+      name = ST_ATTR_BINDPARAM_NAME;
+      value = ST_ATTR_BINDPARAM_VALUE;
     }
 
     if (ent->hasAttr ("name") && !ent->hasAttr ("value"))
@@ -492,7 +491,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
     _struct_scene->insert (uid, viewParentUid, props, stgs);
   }
   // LinkParam and BindParam are not represented as independent entities in
-  // StructuralView, thus instead of creating a new entity, we need to update
+  // StructuralView. Thus, instead of creating a new entity, we need to update
   // the associated link.
   else if (ent->type () == "linkParam" || ent->type () == "bindParam")
   {
@@ -527,8 +526,8 @@ StructuralViewPlugin::removeInView (Entity *ent, bool undo)
     QString name, value;
     if (ent->type () == "linkParam")
     {
-      name = QString (ST_ATTR_LINKPARAM_NAME);
-      value = QString (ST_ATTR_LINKPARAM_VALUE);
+      name = ST_ATTR_LINKPARAM_NAME;
+      value = ST_ATTR_LINKPARAM_VALUE;
     }
     else
     {
@@ -594,9 +593,9 @@ StructuralViewPlugin::changeInView (Entity *ent)
 }
 
 void
-StructuralViewPlugin::selectInView (Entity *entity)
+StructuralViewPlugin::selectInView (Entity *ent)
 {
-  QString coreUid = entity->uid ();
+  QString coreUid = ent->uid ();
   QString viewUid = _core2view.value (coreUid, "");
 
   if (_struct_scene->hasEntity (viewUid))
@@ -629,9 +628,9 @@ StructuralViewPlugin::coreAttrsFromStructuralEntity (const QStrMap &props)
 
 void
 StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
-                                    QStrMap stngs)
+                                    QStrMap stgs)
 {
-  Q_UNUSED (stngs);
+  Q_UNUSED (stgs);
 
   StructuralType type = util::strtotype (props[ST_ATTR_ENT_TYPE]);
   Entity *entParent = nullptr;
@@ -702,14 +701,14 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
       if (type == Structural::Link)
       {
         tag = "linkParam";
-        name = QString (ST_ATTR_LINKPARAM_NAME);
-        value = QString (ST_ATTR_LINKPARAM_VALUE);
+        name = ST_ATTR_LINKPARAM_NAME;
+        value = ST_ATTR_LINKPARAM_VALUE;
       }
       else
       {
         tag = "bindParam";
-        name = QString (ST_ATTR_BINDPARAM_NAME);
-        value = QString (ST_ATTR_BINDPARAM_VALUE);
+        name = ST_ATTR_BINDPARAM_NAME;
+        value = ST_ATTR_BINDPARAM_VALUE;
       }
 
       for (const QString &key : props.keys ())
@@ -873,9 +872,9 @@ StructuralViewPlugin::clearValidationMessages (QString, void *param)
 }
 
 void
-StructuralViewPlugin::validationError (QString pluginID, void *param)
+StructuralViewPlugin::validationError (QString plgID, void *param)
 {
-  Q_UNUSED (pluginID);
+  Q_UNUSED (plgID);
 
   if (_syncing)
     return;

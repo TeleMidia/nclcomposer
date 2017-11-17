@@ -37,31 +37,32 @@ public:
   StructuralViewPlugin (QObject *parent = 0);
   virtual ~StructuralViewPlugin () {}
 
-  virtual void init ();
-  virtual QWidget *widget ();
-  virtual bool saveSubsession ();
+  void init () override;
+  QWidget *widget () override;
+  bool saveSubsession () override;
 
 public slots:
-  virtual void updateFromModel ();
+  void updateFromModel () override;
 
-  virtual void onEntityAdded (const QString &pluginID, Entity *ent);
-  virtual void onEntityChanged (const QString &pluginID, Entity *ent);
-  virtual void onEntityRemoved (const QString &pluginID, const QString &entID);
-  virtual void changeSelectedEntity (const QString &pluginID, void *entUID);
+  void onEntityAdded (const QString &plgID, Entity *ent) override;
+  void onEntityChanged (const QString &plgID, Entity *ent) override;
+  void onEntityRemoved (const QString &plgID, const QString &entID) override;
+  void changeSelectedEntity (const QString &plgID, void *entUID);
 
-  virtual void errorMessage (const QString &error);
-  void clearValidationMessages (QString pluginID, void *param);
-  void validationError (QString pluginID, void *param);
+  void errorMessage (const QString &error) override;
 
-  void insertInView (Entity *entity, bool undo = true);
-  void removeInView (Entity *entity, bool undo = true);
-  void changeInView (Entity *entity);
-  void selectInView (Entity *entity);
+  void clearValidationMessages (QString plgID, void *param);
+  void validationError (QString plgID, void *param);
+
+  void insertInView (Entity *ent, bool undo = true);
+  void removeInView (Entity *ent, bool undo = true);
+  void changeInView (Entity *ent);
+  void selectInView (Entity *ent);
 
   void insertInCore (QString uid, QString parent, QStrMap props, QStrMap stgs);
   void removeInCore (QString uid, QStrMap stgs);
   void changeInCore (QString uid, QStrMap props, QStrMap previous,
-                     QStrMap settings);
+                     QStrMap stgs);
   void selectInCore (QString uid);
 
   void adjustConnectors ();

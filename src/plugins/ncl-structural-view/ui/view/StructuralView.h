@@ -147,8 +147,6 @@ private:
                    const QString &role = "", const QString &code = "");
   void createReference (StructuralEntity *tail, StructuralEntity *head);
 
-  qreal calcNewAngle (StructuralBind *edge);
-
   void adjustProperties (StructuralEntity *entity);
 
 #ifdef WITH_GRAPHVIZ

@@ -167,7 +167,7 @@ StructuralView::adjustEntity (StructuralEntity *e, const QStrMap &props,
   // Adjust 'angles'
   StructuralBind *bind = cast (StructuralBind *, e);
   if (bind && !props.contains (ST_ATTR_EDGE_ANGLE))
-    bind->setAngle (calcNewAngle (bind));
+    _scene->updateAngle (bind);
 
   // Adjust 'others'
   if (!props.contains (ST_ATTR_ENT_TOP) || !props.contains (ST_ATTR_ENT_LEFT))
@@ -200,41 +200,6 @@ StructuralView::adjustEntity (StructuralEntity *e, const QStrMap &props,
       }
     }
   }
-}
-
-qreal
-StructuralView::calcNewAngle (StructuralBind *bind)
-{
-  CPR_ASSERT (bind->hasOrigin() && bind->hasDestination());
-  int min = INT_MAX;
-  int max = INT_MIN;
-
-  QList <StructuralEdge *> parallelEdges = _scene->parallelEdges (bind);
-
-  for (StructuralEdge *e : parallelEdges)
-  {
-    int cur = e->angle ();
-
-    if (e->destination ()->structuralType () != Structural::Link)
-      cur *= -1;
-
-    max = std::max (max, cur);
-    min = std::min (min, cur);
-  }
-
-  qreal angle = 0;
-  if (min != INT_MAX || max != INT_MIN)
-  {
-    if (max <= abs (min))
-      angle = max + 60;
-    else if (max > abs (min))
-      angle = min - 60;
-  }
-
-  if (bind->destination ()->structuralType () != Structural::Link)
-    return angle *= -1;
-
-  return angle;
 }
 
 void
@@ -2072,17 +2037,6 @@ void
 StructuralView::clean ()
 {
   select ("", util::createSettings ());
-
-  // todo: the following code should be in StructuralScene
-  QStrMap settings = util::createSettings (true, false);
-  settings.insert (ST_SETTINGS_UNDO_TRACE, "0");
-  while (!_scene->entities ().empty ())
-  {
-    QString uid = _scene->entities ().keys ().at (0);
-    _scene->remove (uid, settings);
-  }
-  // endtodo
-
   _scene->clear ();
   _commands.clear (); // why?
 }
