@@ -3,10 +3,10 @@
 #include <assert.h>
 #include <set>
 
-#include <QDebug>
-#include <QMessageBox>
 #include <QClipboard>
+#include <QDebug>
 #include <QFileDialog>
+#include <QMessageBox>
 #include <QMimeData>
 #include <QUuid>
 
@@ -178,8 +178,7 @@ StructuralView::adjustEntity (StructuralEntity *e, const QStrMap &props,
   //  Adjust 'references' (again?)
   if (stgs[ST_SETTINGS_ADJUST_REFERS] != ST_VALUE_FALSE)
   {
-    if (p != nullptr
-        && e->category () == Structural::Interface
+    if (p != nullptr && e->category () == Structural::Interface
         && p->structuralType () == Structural::Media)
     {
       if (p->isReference ())
@@ -243,7 +242,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
         CPR_ASSERT (ent != referredEnt);
 
         // A media can only refer to another media.
-        CPR_ASSERT (referredEnt->structuralType() == Structural::Media);
+        CPR_ASSERT (referredEnt->structuralType () == Structural::Media);
 
         if (!referredEnt->isReference ())
         {
@@ -258,7 +257,8 @@ StructuralView::adjustReferences (StructuralEntity *ent)
               QString referUid = child->property (ST_ATTR_REF_REFER_UID);
               if (_scene->hasEntity (referUid))
               {
-                if (_scene->entity (referUid)->structuralParent () != referredEnt)
+                if (_scene->entity (referUid)->structuralParent ()
+                    != referredEnt)
                 {
                   _scene->remove (child->uid (),
                                   util::createSettings (false, false));
@@ -274,7 +274,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
               if (child->isReference ())
               {
                 QString referUid = child->property (ST_ATTR_REF_REFER_UID);
-                refer2child.insert (referUid, child->uid());
+                refer2child.insert (referUid, child->uid ());
               }
 
               childrenUids.append (child->uid ());
@@ -287,7 +287,7 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                 if (!refer2child.to ().contains (child->uid ()))
                 {
                   if (!childrenUids.contains (
-                        _scene->refs ().value (child->uid ())))
+                          _scene->refs ().value (child->uid ())))
                   {
                     QString uid = util::createUid ();
 
@@ -333,9 +333,11 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                        _scene->refs ().keys (child->uid ()))
                   {
                     if (_scene->hasEntity (key)
-                        && _scene->entity (key)->structuralParent () != referredEnt)
+                        && _scene->entity (key)->structuralParent ()
+                               != referredEnt)
                     {
-                      _scene->remove (key, util::createSettings (false, false));
+                      _scene->remove (key,
+                                      util::createSettings (false, false));
                     }
                   }
                 }
@@ -367,7 +369,8 @@ StructuralView::adjustReferences (StructuralEntity *ent)
                       QStrMap settings = util::createSettings (false, false);
                       settings[ST_SETTINGS_ADJUST_REFERS] = ST_VALUE_FALSE;
 
-                      _scene->insert (uid, referredEnt->uid (), props, settings);
+                      _scene->insert (uid, referredEnt->uid (), props,
+                                      settings);
 
                       hasNewEntity = true;
                     }
@@ -377,7 +380,8 @@ StructuralView::adjustReferences (StructuralEntity *ent)
 
               if (hasNewEntity)
               {
-                for (const QString &key : _scene->refs ().keys (referredEnt->uid ()))
+                for (const QString &key :
+                     _scene->refs ().keys (referredEnt->uid ()))
                 {
                   if (_scene->hasEntity (key) && key != ent->uid ())
                     adjustReferences (_scene->entity (key));
@@ -400,7 +404,8 @@ StructuralView::adjustReferences (StructuralEntity *ent)
           {
             if (child->isReference ())
             {
-              _scene->remove (child->uid (), util::createSettings (false, false));
+              _scene->remove (child->uid (),
+                              util::createSettings (false, false));
             }
             else
             {
@@ -850,7 +855,8 @@ StructuralView::removeEntity (QString uid, QStrMap stgs)
     if (p)
       parent = p->uid ();
 
-    Remove *cmd = new Remove (_scene, e->uid (), parent, e->properties (), stgs);
+    Remove *cmd
+        = new Remove (_scene, e->uid (), parent, e->properties (), stgs);
     cmd->setText (stgs[ST_SETTINGS_CODE]);
 
     _commands.push (cmd);
@@ -1523,7 +1529,6 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
         }
 
         QStrMap params = _dialog->getConditionParams ();
-
         for (const QString &key : params.keys ())
         {
           if (!params.value (key).isEmpty ())
@@ -1562,7 +1567,8 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
       if (!code.isEmpty ())
         settings[ST_SETTINGS_CODE] = code;
 
-      _scene->insert (uid, (parent != nullptr ? parent->uid () : ""), props, settings);
+      _scene->insert (uid, (parent != nullptr ? parent->uid () : ""), props,
+                      settings);
     }
   }
 }
@@ -1603,7 +1609,8 @@ StructuralView::createReference (StructuralEntity *orig,
 
       if (orig->structuralType () == Structural::Port)
       {
-        _scene->change (orig->uid (), props, util::createSettings (true, true));
+        _scene->change (orig->uid (), props,
+                        util::createSettings (true, true));
       }
       else if (orig->structuralType () == Structural::SwitchPort)
       {
@@ -2017,7 +2024,8 @@ StructuralView::dropEvent (QDropEvent *evt)
                   { ST_ATTR_ENT_LEFT,
                     QString::number (p.x () - ST_DEFAULT_CONTENT_W / 2) } };
 
-          _scene->insert (util::createUid (), "", props, util::createSettings ());
+          _scene->insert (util::createUid (), "", props,
+                          util::createSettings ());
         }
       }
       else if (util::validateKinship (type, Structural::Body))
@@ -2297,7 +2305,8 @@ StructuralView::pasteEntity (StructuralEntity *ent, StructuralEntity *parent,
   }
 
   QStrMap stngs = util::createSettings (ST_VALUE_TRUE, ST_VALUE_TRUE, code);
-  _scene->insert (uid, (parent != nullptr ? parent->uid () : ""), props, stngs);
+  _scene->insert (uid, (parent != nullptr ? parent->uid () : ""), props,
+                  stngs);
 
   if (_scene->hasEntity (uid))
   {

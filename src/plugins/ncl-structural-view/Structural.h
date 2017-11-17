@@ -275,7 +275,7 @@ typedef Structural::InteractionMode StructuralInteractionMode;
   if (MAP.contains (KEY))                                                     \
   MAP.remove (KEY)
 
-// Som QDom utilities
+// Some QDom macro utilities.
 #define for_each_qelem_child(E, P)                                            \
   for (QDomElement E = P.firstChildElement (); !E.isNull ();                  \
        E = E.nextSiblingElement ())
@@ -284,44 +284,51 @@ typedef Structural::InteractionMode StructuralInteractionMode;
   for (QDomElement E = P.firstChildElement (T); !E.isNull ();                 \
        E = E.nextSiblingElement (T))
 
+// Cpr macro utilities.
+#define foreach_cpr_ent_child(child, parent)                                  \
+  for (Entity * child : parent->entityChildren ())
+
 #include <QMap>
 typedef QMap<QString, QString> QStrMap;
 
 /*!
  * A very simple implementation of a bimap.
  */
-template
-<typename Ktype, typename Vtype>
-class bimap
+template <typename Ktype, typename Vtype> class bimap
 {
-  QMap <Ktype, Vtype> _to;
-  QMap <Vtype, Ktype> _from;
+  QMap<Ktype, Vtype> _to;
+  QMap<Vtype, Ktype> _from;
 
 public:
-  void insert (Ktype k, Vtype v)
+  void
+  insert (Ktype k, Vtype v)
   {
     _to.insert (k, v);
     _from.insert (v, k);
   }
 
-  void remove (Ktype k)
+  void
+  remove (Ktype k)
   {
     _from.remove (_to.value (k));
     _to.remove (k);
   }
 
-  void clear ()
+  void
+  clear ()
   {
     _from.clear ();
     _to.clear ();
   }
 
-  const QMap<Ktype, Vtype> &to ()
+  const QMap<Ktype, Vtype> &
+  to ()
   {
     return _to;
   }
 
-  const QMap<Vtype, Ktype> &from ()
+  const QMap<Vtype, Ktype> &
+  from ()
   {
     return _from;
   }

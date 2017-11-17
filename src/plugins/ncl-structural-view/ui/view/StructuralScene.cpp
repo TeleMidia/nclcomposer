@@ -49,7 +49,7 @@ StructuralScene::entities ()
   return entities;
 }
 
-const QMap<QString, StructuralEntity*> &
+const QMap<QString, StructuralEntity *> &
 StructuralScene::nodes ()
 {
   return _nodes;
@@ -70,10 +70,10 @@ QList<StructuralEdge *>
 StructuralScene::edges (const QString &nodeuid)
 {
   QList<StructuralEdge *> edges_of_k;
-  for (StructuralEdge *e: _edges.values())
+  for (StructuralEdge *e : _edges.values ())
   {
-    if ( (e->hasOrigin () && e->origin()->uid() == nodeuid) ||
-         (e->hasDestination() && e->destination()->uid() == nodeuid) )
+    if ((e->hasOrigin () && e->origin ()->uid () == nodeuid)
+        || (e->hasDestination () && e->destination ()->uid () == nodeuid))
     {
       edges_of_k.append (e);
     }
@@ -88,17 +88,17 @@ StructuralScene::edges (const QString &nodeuid)
 QList<StructuralEdge *>
 StructuralScene::parallelEdges (StructuralEdge *edge)
 {
-  CPR_ASSERT (edge->hasOrigin() && edge->hasOrigin ());
+  CPR_ASSERT (edge->hasOrigin () && edge->hasOrigin ());
   QList<StructuralEdge *> parallel_edges;
-  std::set<StructuralEntity *> edge_nodes = {edge->origin(),
-                                             edge->destination()};
+  std::set<StructuralEntity *> edge_nodes
+      = { edge->origin (), edge->destination () };
 
   for (StructuralEdge *e : edges ().values ())
   {
-    if (e != edge &&
-        e->hasOrigin() && e->hasDestination())
+    if (e != edge && e->hasOrigin () && e->hasDestination ())
     {
-      std::set<StructuralEntity *> e_nodes = {e->origin(), e->destination()};
+      std::set<StructuralEntity *> e_nodes
+          = { e->origin (), e->destination () };
       if (e_nodes == edge_nodes)
         parallel_edges.push_back (e);
     }
@@ -258,10 +258,10 @@ StructuralScene::createXmlElement (StructuralEntity *ent, QDomDocument *doc,
   {
     QDomElement elt = doc->createElement ("entity");
     CPR_ASSERT (!ent->uid ().isEmpty ());
-    CPR_ASSERT (!util::typetostr(ent->structuralType ()).isEmpty ());
+    CPR_ASSERT (!util::typetostr (ent->structuralType ()).isEmpty ());
 
     elt.setAttribute ("uid", ent->uid ());
-    elt.setAttribute ("type", util::typetostr(ent->structuralType ()));
+    elt.setAttribute ("type", util::typetostr (ent->structuralType ()));
 
     for (const QString &key : ent->properties ().keys ())
       elt.setAttribute (key, ent->property (key));
@@ -484,8 +484,8 @@ StructuralScene::insert (QString uid, QString parent, QStrMap props,
                   util::createSettings (false, false));
   }
 
-//  if (type == StructuralType::Body)
-//    emit canAddBody (false);
+  //  if (type == StructuralType::Body)
+  //    emit canAddBody (false);
 }
 
 void
@@ -504,9 +504,9 @@ StructuralScene::remove (QString uid, QStrMap stgs)
 
   removeChildren (e, stgs);
 
-  removeEdges (e, util::createSettings (
-                 ST_VALUE_TRUE, stgs.value (ST_SETTINGS_NOTIFY),
-                 stgs.value (ST_SETTINGS_CODE)));
+  removeEdges (e, util::createSettings (ST_VALUE_TRUE,
+                                        stgs.value (ST_SETTINGS_NOTIFY),
+                                        stgs.value (ST_SETTINGS_CODE)));
 
   if (type == Structural::Link || type == Structural::Bind)
     removeParams (e, stgs);
@@ -534,11 +534,11 @@ StructuralScene::remove (QString uid, QStrMap stgs)
   removeFromMap (uid);
   delete e;
 
-//  if (uid == _selected)
-//    emit select ("", stgs);
+  //  if (uid == _selected)
+  //    emit select ("", stgs);
 
-//  if (type == Structural::Body)
-//    emit canAddBody (true);
+  //  if (type == Structural::Body)
+  //    emit canAddBody (true);
 
   if (stgs[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
     emit removed (uid, stgs);
@@ -576,7 +576,7 @@ StructuralScene::removeReferences (StructuralEntity *ent, const QStrMap &stgs)
 void
 StructuralScene::removeEdges (StructuralEntity *ent, const QStrMap &stgs)
 {
-  CPR_ASSERT (hasEntity (ent->uid()));
+  CPR_ASSERT (hasEntity (ent->uid ()));
   for (StructuralEdge *edge : edges (ent->uid ()))
   {
     _view->removeEntity (edge->uid (), stgs);
@@ -586,7 +586,7 @@ StructuralScene::removeEdges (StructuralEntity *ent, const QStrMap &stgs)
 void
 StructuralScene::removeChildren (StructuralEntity *ent, const QStrMap &stgs)
 {
-  CPR_ASSERT (hasEntity (ent->uid()));
+  CPR_ASSERT (hasEntity (ent->uid ()));
   while (!ent->children ().isEmpty ())
   {
     _view->removeEntity (ent->children ().first ()->uid (), stgs);
@@ -662,7 +662,7 @@ StructuralScene::change (QString uid, QStrMap props, QStrMap stgs)
 void
 StructuralScene::updateAngle (StructuralBind *bind)
 {
-  CPR_ASSERT (bind->hasOrigin() && bind->hasDestination());
+  CPR_ASSERT (bind->hasOrigin () && bind->hasDestination ());
   int min = INT_MAX;
   int max = INT_MIN;
 

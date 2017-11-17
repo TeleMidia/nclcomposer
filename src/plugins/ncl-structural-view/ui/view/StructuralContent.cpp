@@ -105,13 +105,12 @@ StructuralContent::draw (QPainter *painter)
 {
   painter->setRenderHint (QPainter::SmoothPixmapTransform, true);
 
-  painter->drawPixmap (
-      ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
-      ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
-      width () - 2 * ST_DEFAULT_CONTENT_PADDING,
-      height () - 2 * ST_DEFAULT_CONTENT_PADDING
-          - 4 * ST_DEFAULT_CONTENT_PADDING,
-      QPixmap (StructuralUtil::mimeicon (getMimeType ())));
+  painter->drawPixmap (ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
+                       ST_DEFAULT_ENTITY_PADDING + ST_DEFAULT_CONTENT_PADDING,
+                       width () - 2 * ST_DEFAULT_CONTENT_PADDING,
+                       height () - 2 * ST_DEFAULT_CONTENT_PADDING
+                           - 4 * ST_DEFAULT_CONTENT_PADDING,
+                       QPixmap (StructuralUtil::mimeicon (getMimeType ())));
 
   if (!ST_OPT_WITH_BODY && !ST_OPT_USE_FLOATING_INTERFACES)
   {

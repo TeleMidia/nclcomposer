@@ -59,7 +59,11 @@ public:
     return _menu;
   }
 
-  QString selectedUid () { return _selected; }
+  QString
+  selectedUid ()
+  {
+    return _selected;
+  }
   void adjustEntity (StructuralEntity *e, const QStrMap &props,
                      const QStrMap &stgs);
 

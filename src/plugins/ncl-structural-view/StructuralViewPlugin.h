@@ -92,8 +92,8 @@ private:
   StructuralWindow _window;
 
   bimap<QString, QString> _core_view_bimap;
-  #define _core2view _core_view_bimap.to ()
-  #define _view2core _core_view_bimap.from ()
+#define _core2view _core_view_bimap.to ()
+#define _view2core _core_view_bimap.from ()
 
   StructuralScene *_struct_scene;
   StructuralView *_struct_view;

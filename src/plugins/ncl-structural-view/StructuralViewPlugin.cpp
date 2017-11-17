@@ -230,7 +230,7 @@ StructuralViewPlugin::setReferences (QStrMap &props)
 void
 StructuralViewPlugin::clean ()
 {
-  _core_view_bimap.clear();
+  _core_view_bimap.clear ();
 }
 
 void
@@ -905,85 +905,66 @@ StructuralViewPlugin::uidById (const QString &id, Entity *ent)
   return uid;
 }
 
-// \fixme Merge the two connector_parts methods bellow into one.
-static void
-connector_parts (Entity *ent, QVector<QString> &connConditions,
-                 QVector<QString> &connActions, QVector<QString> &connParams)
-{
-  CPR_ASSERT (ent->type () == "causalConnector");
-
-  QStack<const Entity *> next;
-  for (const Entity *e : ent->entityChildren ())
-    next.push (e);
-
-  while (!next.isEmpty ())
-  {
-    const Entity *curr = next.pop ();
-
-    if ((curr->type () == "simpleCondition"
-         || curr->type () == "attributeAssessment")
-        && curr->hasAttr ("role"))
-    {
-      connConditions.append (curr->attr ("role"));
-    }
-    else if (curr->type () == "simpleAction" && curr->hasAttr ("role"))
-    {
-      connActions.append (curr->attr ("role"));
-    }
-    else if (curr->type () == "connectorParam" && curr->hasAttr ("name"))
-    {
-      connParams.append (curr->attr ("name"));
-    }
-    else if (curr->type () == "compoundCondition"
-             || curr->type () == "compoundAction"
-             || curr->type () == "assessmentStatement")
-    {
-      for (const Entity *e : curr->entityChildren ())
-        next.push (e);
-    }
-  }
+// A template function that can be used to get the connector's parts of an
+// entity * or a qdomdocument
+#define connector_parts_func(T, __foreach_children, __tagname, __hasattr,     \
+                             __attr)                                          \
+static void connector_parts (T ent, QVector<QString> &connConditions,         \
+                             QVector<QString> &connActions,                   \
+                             QVector<QString> &connParams)                    \
+{                                                                             \
+  CPR_ASSERT (ent __tagname () == "causalConnector");                         \
+                                                                              \
+  QStack<T> next;                                                             \
+  __foreach_children (e, ent) next.push (e);                                  \
+                                                                              \
+  while (!next.isEmpty ())                                                    \
+  {                                                                           \
+    const T curr = next.pop ();                                               \
+                                                                              \
+    if ((curr __tagname () == "simpleCondition"                               \
+         || curr __tagname () == "attributeAssessment")                       \
+        && curr __hasattr ("role"))                                           \
+    {                                                                         \
+      connConditions.append (curr __attr ("role"));                           \
+    }                                                                         \
+    else if (curr __tagname () == "simpleAction"                              \
+             && curr __hasattr ("role"))                                      \
+    {                                                                         \
+      connActions.append (curr __attr ("role"));                              \
+    }                                                                         \
+    else if (curr __tagname () == "connectorParam"                            \
+             && curr __hasattr ("name"))                                      \
+    {                                                                         \
+      connParams.append (curr __attr ("name"));                               \
+    }                                                                         \
+    else if (curr __tagname () == "compoundCondition"                         \
+             || curr __tagname () == "compoundAction"                         \
+             || curr __tagname () == "assessmentStatement")                   \
+    {                                                                         \
+      __foreach_children (e, curr) next.push (e);                             \
+    }                                                                         \
+  }                                                                           \
 }
 
-static void
-connector_parts (QDomElement connElt, QVector<QString> &connConditions,
-                 QVector<QString> &connActions, QVector<QString> &connParams)
-{
-  QStack<QDomElement> next;
-  for_each_qelem_child (role, connElt) next.push (role);
+// Instantiate the above function for Entity * and QDomElement
+connector_parts_func (Entity *,
+                      foreach_cpr_ent_child,
+                      ->type,
+                      ->hasAttr,
+                      ->attr)
 
-  while (!next.isEmpty ())
-  {
-    QDomElement curr = next.pop ();
-
-    if ((curr.tagName () == "simpleCondition"
-         || curr.tagName () == "attributeAssessment")
-        && curr.hasAttribute ("role"))
-    {
-      connConditions.append (curr.attribute ("role"));
-    }
-    else if (curr.tagName () == "simpleAction" && curr.hasAttribute ("role"))
-    {
-      connActions.append (curr.attribute ("role"));
-    }
-    else if (curr.tagName () == "connectorParam" && curr.hasAttribute ("name"))
-    {
-      connParams.append (curr.attribute ("name"));
-    }
-    else if (curr.tagName () == "compoundCondition"
-             || curr.nodeName () == "compoundAction"
-             || curr.nodeName () == "assessmentStatement")
-    {
-      for_each_qelem_child (nc, curr) next.push (nc);
-    }
-  }
-}
+connector_parts_func (QDomElement,
+                      for_each_qelem_child,
+                      .tagName,
+                      .hasAttribute,
+                      .attribute)
 
 template <typename T>
-static void
-update_conn_parts (const QString &connId, const T conn,
-                   QMap<QString, QVector<QString> > &conds,
-                   QMap<QString, QVector<QString> > &acts,
-                   QMap<QString, QVector<QString> > &params)
+static void update_conn_parts (const QString &connId, const T conn,
+                               QMap<QString, QVector<QString> > &conds,
+                               QMap<QString, QVector<QString> > &acts,
+                               QMap<QString, QVector<QString> > &params)
 {
   QVector<QString> connConds, connActs, connParams;
 
