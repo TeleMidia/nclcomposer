@@ -287,4 +287,44 @@ typedef Structural::InteractionMode StructuralInteractionMode;
 #include <QMap>
 typedef QMap<QString, QString> QStrMap;
 
+/*!
+ * A very simple implementation of a bimap.
+ */
+template
+<typename Ktype, typename Vtype>
+class bimap
+{
+  QMap <Ktype, Vtype> _to;
+  QMap <Vtype, Ktype> _from;
+
+public:
+  void insert (Ktype k, Vtype v)
+  {
+    _to.insert (k, v);
+    _from.insert (v, k);
+  }
+
+  void remove (Ktype k)
+  {
+    _from.remove (_to.value (k));
+    _to.remove (k);
+  }
+
+  void clear ()
+  {
+    _from.clear ();
+    _to.clear ();
+  }
+
+  const QMap<Ktype, Vtype> &to ()
+  {
+    return _to;
+  }
+
+  const QMap<Vtype, Ktype> &from ()
+  {
+    return _from;
+  }
+};
+
 #endif // STRUCTURAL_H

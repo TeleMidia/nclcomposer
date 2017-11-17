@@ -19,18 +19,6 @@
 
 namespace util = StructuralUtil;
 
-#define _core2view_insert(key, value)                                         \
-  _core2view.insert (key, value);                                             \
-  _view2core.insert (value, key);
-
-#define _core2view_remove(key)                                                \
-  _view2core.remove (_core2view.value (key));                                 \
-  _core2view.remove (key);
-
-#define _core2view_clear()                                                    \
-  _core2view.clear ();                                                        \
-  _view2core.clear ();
-
 StructuralViewPlugin::StructuralViewPlugin (QObject *parent)
     : _window (new StructuralWindow ())
 {
@@ -242,7 +230,7 @@ StructuralViewPlugin::setReferences (QStrMap &props)
 void
 StructuralViewPlugin::clean ()
 {
-  _core2view_clear ();
+  _core_view_bimap.clear();
 }
 
 void
@@ -257,7 +245,7 @@ StructuralViewPlugin::onEntityAdded (const QString &plgID, Entity *ent)
   }
   else if (_waiting)
   {
-    _core2view_insert (ent->uid (), _notified);
+    _core_view_bimap.insert (ent->uid (), _notified);
 
     _waiting = false;
   }
@@ -293,7 +281,7 @@ StructuralViewPlugin::onEntityRemoved (const QString &plgID,
   if (plgID != pluginInstanceID ())
   {
     removeInView (project ()->entityByUid (entID));
-    _core2view_remove (entID);
+    _core_view_bimap.remove (entID);
   }
 }
 
@@ -445,7 +433,7 @@ StructuralViewPlugin::viewPropsFromCoreEntity (const Entity *ent)
       next[name + ":" + uid] = ent->attr ("name");
       next[value + ":" + uid] = ent->attr ("value");
 
-      _core2view_insert (uid, uid);
+      _core_view_bimap.insert (uid, uid);
     }
     else if (_core2view.contains (ent->uid ()))
     {
@@ -483,7 +471,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
 
     QString viewParentUid = _core2view.value (coreParentUid, "");
 
-    _core2view_insert (uid, uid);
+    _core_view_bimap.insert (uid, uid);
 
     if (!undo)
       setReferences (props);
@@ -501,7 +489,7 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
       QString viewParentUid = _core2view.value (coreParentUid);
       StructuralEntity *parent = _struct_scene->entity (viewParentUid);
 
-      _core2view_insert (uid, uid);
+      _core_view_bimap.insert (uid, uid);
 
       _struct_scene->change (parent->uid (), props, stgs);
     }
@@ -556,7 +544,7 @@ StructuralViewPlugin::removeInView (Entity *ent, bool undo)
     _struct_scene->remove (_core2view.value (ent->uid ()), stgs);
   }
 
-  _core2view_remove (ent->uid ());
+  _core_view_bimap.remove (ent->uid ());
 }
 
 void
@@ -586,7 +574,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
     QString uid = ent->uid ();
     QStrMap next = viewPropsFromCoreEntity (ent);
 
-    _core2view_insert (uid, uid);
+    _core_view_bimap.insert (uid, uid);
 
     _struct_scene->change (parent->uid (), next, stgs);
   }
@@ -652,8 +640,8 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
     if (!list.isEmpty ())
     {
       Entity *body = list.first ();
-      _core2view_remove (body->uid ());
-      _core2view_insert (body->uid (), uid);
+      _core_view_bimap.remove (body->uid ());
+      _core_view_bimap.insert (body->uid (), uid);
       return;
     }
 
@@ -741,7 +729,7 @@ StructuralViewPlugin::removeInCore (QString uid, QStrMap stgs)
     CPR_ASSERT_NON_NULL (ent);
 
     emit removeEntity (ent);
-    _core2view_remove (uid);
+    _core_view_bimap.remove (uid);
   }
 }
 
@@ -824,7 +812,7 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
             param = project ()->entityByUid (paramUids.at (index));
             paramUids.remove (index);
 
-            _core2view_insert (param->uid (), pUid);
+            _core_view_bimap.insert (param->uid (), pUid);
 
             _waiting = true;
 
