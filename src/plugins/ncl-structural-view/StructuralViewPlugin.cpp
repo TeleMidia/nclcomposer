@@ -960,20 +960,14 @@ connector_parts_func (QDomElement,
                       .hasAttribute,
                       .attribute)
 
-template <typename T>
-static void update_conn_parts (const QString &connId, const T conn,
-                               QMap<QString, QVector<QString> > &conds,
-                               QMap<QString, QVector<QString> > &acts,
-                               QMap<QString, QVector<QString> > &params)
-{
-  QVector<QString> connConds, connActs, connParams;
-
-  connector_parts (conn, connConds, connActs, connParams);
-
-  conds.insert (connId, connConds);
-  acts.insert (connId, connActs);
+#define update_conn_parts(coonId, conn, conds, acts, params) \
+  QVector<QString> connConds, connActs, connParams; \
+  \
+  connector_parts (conn, connConds, connActs, connParams); \
+  \
+  conds.insert (connId, connConds); \
+  acts.insert (connId, connActs); \
   params.insert (connId, connParams);
-}
 
 // \todo this function should be called only when a change occurs in
 // <connectorBase>.  Currently, it is called every time the link's dialog is
@@ -995,8 +989,7 @@ StructuralViewPlugin::adjustConnectors ()
         auto connId = child->attr ("id");
         CPR_ASSERT (!connId.isEmpty ());
 
-        update_conn_parts<Entity *> (connId, child, conditions, actions,
-                                     params);
+        update_conn_parts (connId, child, conditions, actions, params);
       }
       // load data from importBase
       else if (child->type () == "importBase")
@@ -1024,8 +1017,7 @@ StructuralViewPlugin::adjustConnectors ()
             CPR_ASSERT (!conn.attribute ("id").isEmpty ());
             QString connId = alias + "#" + conn.attribute ("id");
 
-            update_conn_parts<QDomElement> (connId, conn, conditions, actions,
-                                            params);
+            update_conn_parts (coonId, conn, conditions, actions, params);
           }
         }
       }
