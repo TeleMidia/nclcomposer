@@ -284,10 +284,6 @@ typedef Structural::InteractionMode StructuralInteractionMode;
   for (QDomElement E = P.firstChildElement (T); !E.isNull ();                 \
        E = E.nextSiblingElement (T))
 
-// Cpr macro utilities.
-#define foreach_cpr_ent_child(child, parent)                                  \
-  for (Entity * child : parent->entityChildren ())
-
 #include <QMap>
 typedef QMap<QString, QString> QStrMap;
 

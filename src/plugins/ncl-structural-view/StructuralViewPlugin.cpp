@@ -20,7 +20,6 @@
 namespace util = StructuralUtil;
 
 StructuralViewPlugin::StructuralViewPlugin (QObject *parent)
-    : _window (new StructuralWindow ())
 {
   Q_UNUSED (parent);
 
@@ -75,7 +74,7 @@ StructuralViewPlugin::widget ()
 bool
 StructuralViewPlugin::saveSubsession ()
 {
-  emit setPluginData ((_struct_scene->save ()).toUtf8 ());
+  emit setPluginData (_struct_scene->save ().toUtf8 ());
   return true;
 }
 
@@ -905,69 +904,113 @@ StructuralViewPlugin::uidById (const QString &id, Entity *ent)
   return uid;
 }
 
-// A template function that can be used to get the connector's parts of an
-// Entity* or a QDomElement.
-#define connector_parts_func(T, __foreach_children, __tagname, __hasattr,     \
-                             __attr)                                          \
-static void connector_parts (T ent, QVector<QString> &connConditions,         \
-                             QVector<QString> &connActions,                   \
-                             QVector<QString> &connParams)                    \
-{                                                                             \
-  CPR_ASSERT (ent __tagname () == "causalConnector");                         \
-                                                                              \
-  QStack<T> next;                                                             \
-  __foreach_children (e, ent) next.push (e);                                  \
-                                                                              \
-  while (!next.isEmpty ())                                                    \
-  {                                                                           \
-    const T curr = next.pop ();                                               \
-                                                                              \
-    if ((curr __tagname () == "simpleCondition"                               \
-         || curr __tagname () == "attributeAssessment")                       \
-        && curr __hasattr ("role"))                                           \
-    {                                                                         \
-      connConditions.append (curr __attr ("role"));                           \
-    }                                                                         \
-    else if (curr __tagname () == "simpleAction"                              \
-             && curr __hasattr ("role"))                                      \
-    {                                                                         \
-      connActions.append (curr __attr ("role"));                              \
-    }                                                                         \
-    else if (curr __tagname () == "connectorParam"                            \
-             && curr __hasattr ("name"))                                      \
-    {                                                                         \
-      connParams.append (curr __attr ("name"));                               \
-    }                                                                         \
-    else if (curr __tagname () == "compoundCondition"                         \
-             || curr __tagname () == "compoundAction"                         \
-             || curr __tagname () == "assessmentStatement")                   \
-    {                                                                         \
-      __foreach_children (e, curr) next.push (e);                             \
-    }                                                                         \
-  }                                                                           \
+// Some small wrappers functions to work with both Entity* and QDomElement.
+static QString
+tagname_tpl (Entity *e)
+{
+  return e->type ();
 }
 
-// Instantiate the above function for Entity * and QDomElement
-connector_parts_func (Entity *,
-                      foreach_cpr_ent_child,
-                      ->type,
-                      ->hasAttr,
-                      ->attr)
+static QString
+tagname_tpl (QDomElement e)
+{
+  return e.tagName ();
+}
 
-connector_parts_func (QDomElement,
-                      for_each_qelem_child,
-                      .tagName,
-                      .hasAttribute,
-                      .attribute)
+static bool
+hasattr_tpl (Entity *e, const QString &name)
+{
+  return e->hasAttr (name);
+}
 
-#define update_conn_parts(connId, conn, conds, acts, params) \
-  QVector<QString> ___connConds, ___connActs, ___connParams; \
-  \
-  connector_parts (conn, ___connConds, ___connActs, ___connParams); \
-  \
-  conds.insert (connId, ___connConds); \
-  acts.insert (connId, ___connActs); \
-  params.insert (connId, ___connParams);
+static bool
+hasattr_tpl (QDomElement e, const QString &name)
+{
+  return e.hasAttribute (name);
+}
+
+static QString
+attr_tpl (Entity *e, const QString &name)
+{
+  return e->attr (name);
+}
+
+static QString
+attr_tpl (QDomElement e, const QString &name)
+{
+  return e.attribute (name);
+}
+
+template <typename F>
+static void
+for_each_elt_children (Entity *parent, F func)
+{
+  for (Entity *child : parent->entityChildren ())
+    func (child);
+}
+
+template <typename F>
+static void
+for_each_elt_children (QDomElement parent, F func)
+{
+  for_each_qelem_child (e, parent) func (e);
+}
+
+// A template function that can be used to get the connector's parts of an
+// Entity* or a QDomElement.
+template <typename T>
+static void
+connector_parts_tpl (T ent, QVector<QString> &connConditions,
+                     QVector<QString> &connActions,
+                     QVector<QString> &connParams)
+{
+  QStack<T> next;
+
+  for_each_elt_children (ent, [&](T e) { next.push (e); });
+
+  while (!next.isEmpty ())
+  {
+    T curr = next.pop ();
+    if ((tagname_tpl (curr) == "simpleCondition"
+         || tagname_tpl (curr) == "attributeAssessment")
+        && hasattr_tpl (curr, "role"))
+    {
+      connConditions.append (attr_tpl (curr, "role"));
+    }
+    else if (tagname_tpl (curr) == "simpleAction"
+             && hasattr_tpl (curr, "role"))
+    {
+      connActions.append (attr_tpl (curr, "role"));
+    }
+    else if (tagname_tpl (curr) == "connectorParam"
+             && hasattr_tpl (curr, "name"))
+    {
+      connParams.append (attr_tpl (curr, "name"));
+    }
+    else if (tagname_tpl (curr) == "compoundCondition"
+             || tagname_tpl (curr) == "compoundAction"
+             || tagname_tpl (curr) == "assessmentStatement")
+    {
+      for_each_elt_children (curr, [&](T e) { next.push (e); });
+    }
+  }
+}
+
+template <typename T>
+static void
+update_conn_parts (const QString &connId, T conn,
+                   QMap<QString, QVector<QString> > &conds,
+                   QMap<QString, QVector<QString> > &acts,
+                   QMap<QString, QVector<QString> > &params)
+{
+  QVector<QString> connConds, connActs, connParams;
+
+  connector_parts_tpl (conn, connConds, connActs, connParams);
+
+  conds.insert (connId, connConds);
+  acts.insert (connId, connActs);
+  params.insert (connId, connParams);
+}
 
 // \todo this function should be called only when a change occurs in
 // <connectorBase>.  Currently, it is called every time the link's dialog is
@@ -983,15 +1026,15 @@ StructuralViewPlugin::adjustConnectors ()
 
     for (Entity *child : connBase->entityChildren ())
     {
-      // load data from local connector
+      // Load data from local connector.
       if (child->type () == "causalConnector")
       {
         auto connId = child->attr ("id");
         CPR_ASSERT (!connId.isEmpty ());
 
-        update_conn_parts (connId, child, conds, acts, params)
+        update_conn_parts (connId, child, conds, acts, params);
       }
-      // load data from importBase
+      // Load data from importBase.
       else if (child->type () == "importBase")
       {
         auto projURI = project ()->location (); // '/' as separator
