@@ -998,12 +998,17 @@ connector_parts_tpl (T ent, QVector<QString> &connConditions,
 
 template <typename T>
 static void
-update_conn_parts (const QString &connId, T conn,
+update_conn_parts (const QString &connBaseAlias, T conn,
                    QMap<QString, QVector<QString> > &conds,
                    QMap<QString, QVector<QString> > &acts,
                    QMap<QString, QVector<QString> > &params)
 {
   QVector<QString> connConds, connActs, connParams;
+
+  auto connId = attr_tpl (conn, "id");
+  CPR_ASSERT (!connId.isEmpty ());
+  if (!connBaseAlias.isEmpty ())
+    connId = connBaseAlias + "#" + connId;
 
   connector_parts_tpl (conn, connConds, connActs, connParams);
 
@@ -1018,21 +1023,16 @@ update_conn_parts (const QString &connId, T conn,
 void
 StructuralViewPlugin::adjustConnectors ()
 {
-  auto connectorBases = project ()->entitiesByType ("connectorBase");
-  if (!connectorBases.isEmpty ())
-  {
-    Entity *connBase = connectorBases.first ();
-    QMap<QString, QVector<QString> > conds, acts, params;
+  QMap<QString, QVector<QString> > conds, acts, params;
 
+  for (Entity *connBase : project ()->entitiesByType ("connectorBase"))
+  {
     for (Entity *child : connBase->entityChildren ())
     {
       // Load data from local connector.
       if (child->type () == "causalConnector")
       {
-        auto connId = child->attr ("id");
-        CPR_ASSERT (!connId.isEmpty ());
-
-        update_conn_parts (connId, child, conds, acts, params);
+        update_conn_parts ("", child, conds, acts, params);
       }
       // Load data from importBase.
       else if (child->type () == "importBase")
@@ -1057,15 +1057,12 @@ StructuralViewPlugin::adjustConnectors ()
         {
           for_each_qelem_child_of_type (conn, connBase, "causalConnector")
           {
-            CPR_ASSERT (!conn.attribute ("id").isEmpty ());
-            QString connId = alias + "#" + conn.attribute ("id");
-
-            update_conn_parts (connId, conn, conds, acts, params);
+            update_conn_parts (alias, conn, conds, acts, params);
           }
         }
       }
     }
-
-    _struct_view->dialog ()->setBase (conds, acts, params);
   }
+
+  _struct_view->dialog ()->setBase (conds, acts, params);
 }
