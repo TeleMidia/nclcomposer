@@ -271,10 +271,6 @@ typedef Structural::MimeType StructuralMimeType;
 typedef Structural::Role StructuralRole;
 typedef Structural::InteractionMode StructuralInteractionMode;
 
-#define MAP_REMOVE_IF_CONTAINS(MAP, KEY)                                      \
-  if (MAP.contains (KEY))                                                     \
-  MAP.remove (KEY)
-
 // Some QDom macro utilities.
 #define for_each_qelem_child(E, P)                                            \
   for (QDomElement E = P.firstChildElement (); !E.isNull ();                  \
