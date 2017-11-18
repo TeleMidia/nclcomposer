@@ -905,44 +905,44 @@ StructuralViewPlugin::uidById (const QString &id, Entity *ent)
 }
 
 // Some small wrappers functions to work with both Entity* and QDomElement.
-static QString
+static inline QString
 tagname_tpl (Entity *e)
 {
   return e->type ();
 }
 
-static QString
+static inline QString
 tagname_tpl (QDomElement e)
 {
   return e.tagName ();
 }
 
-static bool
+static inline bool
 hasattr_tpl (Entity *e, const QString &name)
 {
   return e->hasAttr (name);
 }
 
-static bool
+static inline bool
 hasattr_tpl (QDomElement e, const QString &name)
 {
   return e.hasAttribute (name);
 }
 
-static QString
+static inline QString
 attr_tpl (Entity *e, const QString &name)
 {
   return e->attr (name);
 }
 
-static QString
+static inline QString
 attr_tpl (QDomElement e, const QString &name)
 {
   return e.attribute (name);
 }
 
 template <typename F>
-static void
+static inline void
 for_each_elt_children (Entity *parent, F func)
 {
   for (Entity *child : parent->entityChildren ())
@@ -950,7 +950,7 @@ for_each_elt_children (Entity *parent, F func)
 }
 
 template <typename F>
-static void
+static inline void
 for_each_elt_children (QDomElement parent, F func)
 {
   for_each_qelem_child (e, parent) func (e);
