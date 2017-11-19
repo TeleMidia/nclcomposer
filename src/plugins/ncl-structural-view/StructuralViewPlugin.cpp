@@ -112,7 +112,6 @@ StructuralViewPlugin::updateFromModel ()
   }
 
   // Clean the scene.
-  _struct_view->clean ();
   clean ();
 
   // Get the entities from the core again in the required order
@@ -229,6 +228,7 @@ StructuralViewPlugin::setReferences (QStrMap &props)
 void
 StructuralViewPlugin::clean ()
 {
+  _struct_view->clean ();
   _core_view_bimap.clear ();
 }
 
@@ -279,7 +279,7 @@ StructuralViewPlugin::onEntityRemoved (const QString &plgID,
 
   if (plgID != pluginInstanceID ())
   {
-    removeInView (project ()->entityByUid (entID));
+    removeFromView (project ()->entityByUid (entID));
     _core_view_bimap.remove (entID);
   }
 }
@@ -402,7 +402,7 @@ StructuralViewPlugin::viewPropsFromCoreEntity (const Entity *ent)
       }
     }
   }
-  else if (ent->type () == "linkParam" || ent->type () == "bindParam")
+  else if (isLinkOrBindParam (ent->type ()))
   {
     StructuralEntity *parent
         = _struct_scene->entity (_core2view.value (ent->parentUid ()));
@@ -410,17 +410,8 @@ StructuralViewPlugin::viewPropsFromCoreEntity (const Entity *ent)
     QString uid;
     QStrMap next = parent->properties ();
 
-    QString name, value;
-    if (ent->type () == "linkParam")
-    {
-      name = ST_ATTR_LINKPARAM_NAME;
-      value = ST_ATTR_LINKPARAM_VALUE;
-    }
-    else
-    {
-      name = ST_ATTR_BINDPARAM_NAME;
-      value = ST_ATTR_BINDPARAM_VALUE;
-    }
+    QString name = ST_ATTR_PARAM_NAME (ent->type ());
+    QString value = ST_ATTR_PARAM_NAME (ent->type ());
 
     if (ent->hasAttr ("name") && !ent->hasAttr ("value"))
     {
@@ -480,22 +471,23 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
   // LinkParam and BindParam are not represented as independent entities in
   // StructuralView. Thus, instead of creating a new entity, we need to update
   // the associated link.
-  else if (ent->type () == "linkParam" || ent->type () == "bindParam")
+  else if (isLinkOrBindParam (ent->type ()))
   {
     if (ent->hasAttr ("name") && ent->hasAttr ("value"))
     {
       CPR_ASSERT (_core2view.contains (coreParentUid));
-      QString viewParentUid = _core2view.value (coreParentUid);
-      StructuralEntity *parent = _struct_scene->entity (viewParentUid);
+
+      QString linkUid = _core2view.value (coreParentUid);
+      StructuralEntity *link = _struct_scene->entity (linkUid);
 
       _core_view_bimap.insert (uid, uid);
 
-      _struct_scene->change (parent->uid (), props, stgs);
+      _struct_scene->change (link->uid (), props, stgs);
     }
   }
   else
   {
-    qWarning (CPR_PLUGIN_STRUCT) << "Trying to insert a entity of type "
+    qWarning (CPR_PLUGIN_STRUCT) << "Trying to insert an entity of type "
                                  << ent->type ()
                                  << " which is not handled by structural.";
     //    CPR_ASSERT_NOT_REACHED ();
@@ -503,24 +495,15 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
 }
 
 void
-StructuralViewPlugin::removeInView (Entity *ent, bool undo)
+StructuralViewPlugin::removeFromView (Entity *ent, bool undo)
 {
   CPR_ASSERT (_core2view.contains (ent->uid ()));
 
   QStrMap stgs = util::createSettings (undo, false);
-  if (ent->type () == "linkParam" || ent->type () == "bindParam")
+  if (isLinkOrBindParam (ent->type ()))
   {
-    QString name, value;
-    if (ent->type () == "linkParam")
-    {
-      name = ST_ATTR_LINKPARAM_NAME;
-      value = ST_ATTR_LINKPARAM_VALUE;
-    }
-    else
-    {
-      name = QString (ST_ATTR_BINDPARAM_NAME);
-      value = QString (ST_ATTR_BINDPARAM_VALUE);
-    }
+    QString name = ST_ATTR_PARAM_NAME (ent->type());
+    QString value = ST_ATTR_PARAM_VALUE (ent->type ());
 
     StructuralEntity *e
         = _struct_scene->entity (_core2view.value (ent->parentUid ()));
@@ -565,7 +548,7 @@ StructuralViewPlugin::changeInView (Entity *ent)
 
     _struct_scene->change (uid, props, stgs);
   }
-  else if (ent->type () == "linkParam" || ent->type () == "bindParam")
+  else if (isLinkOrBindParam (ent->type ()))
   {
     StructuralEntity *parent
         = _struct_scene->entity (_core2view.value (ent->parentUid ()));
@@ -613,6 +596,38 @@ StructuralViewPlugin::coreAttrsFromStructuralEntity (const QStrMap &props)
   return attrs;
 }
 
+static tuple<QString, QString, QString>
+param_tag_name_value (StructuralType type)
+{
+  CPR_ASSERT (type == Structural::Link || type == Structural::Bind);
+
+  QString tag, name, value;
+  if (type == Structural::Link)
+    tag = "linkParam";
+  else
+    tag = "bindParam";
+
+  name = ST_ATTR_PARAM_NAME (tag);
+  value = ST_ATTR_PARAM_VALUE (tag);
+
+  return std::make_tuple (tag, name, value);
+}
+
+bool
+StructuralViewPlugin::hasEntity (const QString &type)
+{
+  auto l = project ()->entitiesByType (type);
+  return l.size() != 0;
+}
+
+Entity *
+StructuralViewPlugin::firstEntityOfType (const QString &type)
+{
+  auto l = project()->entitiesByType (type);
+  CPR_ASSERT (l.size ());
+  return l.first ();
+}
+
 void
 StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
                                     QStrMap stgs)
@@ -634,83 +649,60 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
   }
   else if (type == Structural::Body)
   {
-    // Check if core already has a 'body' entity. If so, update the references.
-    QList<Entity *> list = project ()->entitiesByType ("body");
-    if (!list.isEmpty ())
-    {
-      Entity *body = list.first ();
-      _core_view_bimap.remove (body->uid ());
-      _core_view_bimap.insert (body->uid (), uid);
-      return;
-    }
-
-    // Check if core already has an 'ncl' entity.
-    // If it doesn't, adds and sets entity as parent.
-    list = project ()->entitiesByType ("ncl");
-    if (list.isEmpty ())
+    // If core does not have an <ncl>, adds one.
+    if (!hasEntity ("ncl"))
     {
       Entity *proj = project ();
       CPR_ASSERT_NON_NULL (proj);
-      QStrMap attrs;
-
-      emit addEntity ("ncl", proj->uid (), attrs);
+      emit addEntity ("ncl", proj->uid (), QStrMap ());
     }
 
-    list = project ()->entitiesByType ("ncl");
-    CPR_ASSERT (!list.isEmpty ());
-    entParent = list.first ();
+    entParent = firstEntityOfType ("ncl");
+
+    // If core already has a body, use it.
+    if (hasEntity ("body"))
+    {
+      Entity *body = firstEntityOfType ("body");
+      _core_view_bimap.remove (body->uid ());
+      _core_view_bimap.insert (body->uid (), uid);
+
+      return;
+    }
   }
   else if (parent.isEmpty () && !ST_OPT_WITH_BODY)
   {
-    QList<Entity *> list = project ()->entitiesByType ("body");
-    if (!list.isEmpty ())
-      entParent = list.first ();
+    entParent = hasEntity("body") ? firstEntityOfType ("body") : nullptr;
   }
   else
   {
     entParent = project ()->entityByUid (_view2core.value (parent));
   }
 
-  if (entParent)
+  CPR_ASSERT_NON_NULL (entParent);
+
+  QStrMap attrs = coreAttrsFromStructuralEntity (props);
+  _waiting = true;
+  _notified = uid;
+
+  emit addEntity (util::typetostr (type), entParent->uid (), attrs);
+
+  if (type == Structural::Link || type == Structural::Bind)
   {
-    QStrMap attrs = coreAttrsFromStructuralEntity (props);
+    QString tag, name, value;
+    std::tie (tag, name, value) = param_tag_name_value (type);
 
-    _waiting = true;
-    _notified = uid;
-
-    emit addEntity (util::typetostr (type), entParent->uid (), attrs);
-
-    if (type == Structural::Link || type == Structural::Bind)
+    for (const QString &key : props.keys ())
     {
-
-      QString tag, name, value;
-
-      if (type == Structural::Link)
+      if (key.contains (name))
       {
-        tag = "linkParam";
-        name = ST_ATTR_LINKPARAM_NAME;
-        value = ST_ATTR_LINKPARAM_VALUE;
-      }
-      else
-      {
-        tag = "bindParam";
-        name = ST_ATTR_BINDPARAM_NAME;
-        value = ST_ATTR_BINDPARAM_VALUE;
-      }
+        QString pUid = key.right (key.length () - key.lastIndexOf (':') - 1);
 
-      for (const QString &key : props.keys ())
-      {
-        if (key.contains (name))
-        {
-          QString pUid = key.right (key.length () - key.lastIndexOf (':') - 1);
+        QStrMap pAttr = { { "name", props.value (key) },
+                          { "value", props.value (value + ":" + pUid) } };
+        _waiting = true;
+        _notified = pUid;
 
-          QStrMap pAttr = { { "name", props.value (key) },
-                            { "value", props.value (value + ":" + pUid) } };
-          _waiting = true;
-          _notified = pUid;
-
-          emit addEntity (tag, _view2core.value (uid), pAttr);
-        }
+        emit addEntity (tag, _view2core.value (uid), pAttr);
       }
     }
   }
@@ -753,30 +745,17 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
     StructuralType type = util::strtotype (props[ST_ATTR_ENT_TYPE]);
     QStrMap attrs = coreAttrsFromStructuralEntity (props);
 
+
     if (type == Structural::Link || type == Structural::Bind)
     {
       QString tag, name, value;
-      if (type == Structural::Link)
-      {
-        tag = "linkParam";
-        name = QString (ST_ATTR_LINKPARAM_NAME);
-        value = QString (ST_ATTR_LINKPARAM_VALUE);
-      }
-      else
-      {
-        tag = "bindParam";
-        name = QString (ST_ATTR_BINDPARAM_NAME);
-        value = QString (ST_ATTR_BINDPARAM_VALUE);
-      }
+      std::tie (tag, name, value) = param_tag_name_value (type);
 
       QVector<QString> paramUids, paramNames;
-      for (Entity *c : ent->entityChildren ())
+      for (Entity *c : ent->entityChildrenByType (tag) )
       {
-        if (c->type () == tag)
-        {
-          paramUids.append (c->uid ());
-          paramNames.append (c->attr ("name"));
-        }
+        paramUids.append (c->uid ());
+        paramNames.append (c->attr ("name"));
       }
 
       for (const QString &key : props.keys ())

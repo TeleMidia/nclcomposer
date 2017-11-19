@@ -74,6 +74,10 @@
 #define ST_ATTR_BINDPARAM_NAME "bindparam:name"
 #define ST_ATTR_BINDPARAM_VALUE "bindparam:value"
 
+// Wrapper to link or bind param.
+#define ST_ATTR_PARAM_NAME(type) (type == "link") ? ST_ATTR_LINKPARAM_NAME : ST_ATTR_BINDPARAM_NAME;
+#define ST_ATTR_PARAM_VALUE(type) (type == "link") ? ST_ATTR_LINKPARAM_VALUE : ST_ATTR_BINDPARAM_VALUE;
+
 // Reference attributes defines.
 #define ST_ATTR_REF_LINK_ID "ref:link:id"
 #define ST_ATTR_REF_LINK_UID "ref:link:uid"

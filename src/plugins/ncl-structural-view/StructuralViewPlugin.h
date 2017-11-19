@@ -29,6 +29,8 @@ using namespace cpr::core;
 #include "StructuralView.h"
 #include "StructuralWindow.h"
 
+#define isLinkOrBindParam(type) (type == "linkParam" || type == "bindParam")
+
 class StructuralViewPlugin : public IPlugin
 {
   Q_OBJECT
@@ -55,7 +57,7 @@ public slots:
   void validationError (QString plgID, void *param);
 
   void insertInView (Entity *ent, bool undo = true);
-  void removeInView (Entity *ent, bool undo = true);
+  void removeFromView (Entity *ent, bool undo = true);
   void changeInView (Entity *ent);
   void selectInView (Entity *ent);
 
@@ -81,6 +83,9 @@ private:
   QStrMap coreAttrsFromStructuralEntity (const QStrMap &props);
 
   void clean ();
+
+  bool hasEntity (const QString &type);
+  Entity *firstEntityOfType (const QString &type);
 
 private:
   bool _syncing;
