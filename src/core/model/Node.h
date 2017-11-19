@@ -96,6 +96,13 @@ public:
   QList<Entity *> entityChildren () const;
 
   /*!
+   * \brief getEntityChildrenByType
+   * \return only the list of entity children (ignoring the comments) of the
+   * specified type.
+   */
+  QList<Entity *> entityChildrenByType (const QString &type) const;
+
+  /*!
    * \brief Converts the current Entity to an XML String.
    *
    * \param ntabs the number of tabs to be inserted before the current entity.

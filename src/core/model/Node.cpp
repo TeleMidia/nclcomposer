@@ -141,4 +141,18 @@ Node::entityChildren () const
   return children;
 }
 
+QList<Entity *>
+Node::entityChildrenByType (const QString& type) const
+{
+  QList<Entity *> children;
+  for (auto i = _children.begin (); i != _children.end (); ++i)
+  {
+    Entity *ent = dynamic_cast<Entity *> (*i);
+    if (ent && ent->type() == type)
+      children.append (ent);
+  }
+
+  return children;
+}
+
 CPR_CORE_END_NAMESPACE
