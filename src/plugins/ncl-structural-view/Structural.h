@@ -51,7 +51,6 @@
 
 #define ST_ATTR_ENT_AUTOSTART "ent:autostart"
 #define ST_ATTR_ENT_HIDDEN "ent:hidden"
-#define ST_ATTR_ENT_REFERENCE "ent:reference"
 #define ST_ATTR_ENT_COLLAPSED "ent:collapsed"
 
 // Node attributes defines.
@@ -90,9 +89,6 @@
 
 #define ST_ATTR_REF_XCONNECTOR_ID "ref:xconnector:id"
 #define ST_ATTR_REF_XCONNECTOR_UID "ref:xconnector:uid"
-
-#define ST_ATTR_REF_REFER_ID "ref:refer:id"
-#define ST_ATTR_REF_REFER_UID "ref:refer:uid"
 
 // Settings.
 #define ST_SETTINGS_UNDO "settings:undo"

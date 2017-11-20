@@ -96,9 +96,6 @@ public:
   bool isCollapsed () const;
   void setCollapsed (bool collapsed);
 
-  bool isReference () const;
-  void setReference (bool reference);
-
   qreal top () const;
   void setTop (qreal top);
 
@@ -229,8 +226,6 @@ private:
   bool _selected;
   bool _focused;
   bool _collapsed;
-
-  bool _reference;
 
   qreal _top;
   qreal _left;

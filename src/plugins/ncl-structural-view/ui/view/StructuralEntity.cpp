@@ -26,8 +26,6 @@ StructuralEntity::StructuralEntity (StructuralEntity *parent)
   setDragging (false);
   setHovering (false);
 
-  setReference (false);
-
   setTop (0);
   setLeft (0);
   setWidth (0);
@@ -130,10 +128,6 @@ StructuralEntity::setStructuralType (StructuralType type)
         addRestriction (ST_ATTR_NODE_SRC);
         addRestriction (ST_ATTR_NODE_INSTANCE);
       }
-
-      addRestriction (ST_ATTR_REF_REFER_ID);
-      addRestriction (ST_ATTR_REF_REFER_UID);
-
       break;
     }
 
@@ -144,7 +138,6 @@ StructuralEntity::setStructuralType (StructuralType type)
       addRestriction (ST_ATTR_REF_COMPONENT_UID);
       addRestriction (ST_ATTR_REF_INTERFACE_ID);
       addRestriction (ST_ATTR_REF_INTERFACE_UID);
-
       break;
     }
 
@@ -159,7 +152,6 @@ StructuralEntity::setStructuralType (StructuralType type)
       addRestriction (ST_ATTR_LINKPARAM_VALUE);
       addRestriction (ST_ATTR_BINDPARAM_NAME);
       addRestriction (ST_ATTR_BINDPARAM_VALUE);
-
       break;
     }
 
@@ -167,7 +159,6 @@ StructuralEntity::setStructuralType (StructuralType type)
     {
       addRestriction (ST_ATTR_LINKPARAM_NAME);
       addRestriction (ST_ATTR_LINKPARAM_VALUE);
-
       break;
     }
 
@@ -267,8 +258,6 @@ StructuralEntity::adjust (bool collision, bool recursion)
   setzIndex (_props[ST_ATTR_ENT_ZINDEX].toInt ());
 
   setHidden ((_props[ST_ATTR_ENT_HIDDEN] == ST_VALUE_TRUE ? true : false));
-  setReference (
-      (_props[ST_ATTR_ENT_REFERENCE] == ST_VALUE_TRUE ? true : false));
   setCollapsed (
       (_props[ST_ATTR_ENT_COLLAPSED] == ST_VALUE_TRUE ? true : false));
 
@@ -426,19 +415,6 @@ StructuralEntity::setCollapsed (bool collapsed)
   _collapsed = collapsed;
   _props[ST_ATTR_ENT_COLLAPSED]
       = (_collapsed ? ST_VALUE_TRUE : ST_VALUE_FALSE);
-}
-
-bool
-StructuralEntity::isReference () const
-{
-  return _reference;
-}
-
-void
-StructuralEntity::setReference (bool reference)
-{
-  _reference = reference;
-  _props[ST_ATTR_ENT_REFERENCE] = (reference ? ST_VALUE_TRUE : ST_VALUE_FALSE);
 }
 
 qreal
@@ -1013,8 +989,8 @@ StructuralEntity::paint (QPainter *painter,
   Q_UNUSED (option);
   Q_UNUSED (widget);
 
-  if (_reference)
-    painter->setOpacity (0.5);
+//  if (_reference)
+//    painter->setOpacity (0.5);
 
   draw (painter);
 

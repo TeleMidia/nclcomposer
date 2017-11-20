@@ -180,52 +180,6 @@ StructuralViewPlugin::updateFromModel ()
 }
 
 void
-StructuralViewPlugin::setReferences (QStrMap &props)
-{
-  if (props.contains (ST_ATTR_REF_REFER_ID))
-  {
-    QString coreUid = uidById (props.value (ST_ATTR_REF_REFER_ID));
-    CPR_ASSERT (_core2view.contains (coreUid));
-    props.insert (ST_ATTR_REF_REFER_UID, _core2view.value (coreUid));
-  }
-
-  if (props.contains (ST_ATTR_REF_COMPONENT_ID))
-  {
-    QString coreUid = uidById (props.value (ST_ATTR_REF_COMPONENT_ID));
-    CPR_ASSERT (_core2view.contains (coreUid));
-    props.insert (ST_ATTR_REF_COMPONENT_UID, _core2view.value (coreUid));
-  }
-
-  if (props.contains (ST_ATTR_REF_INTERFACE_ID))
-  {
-    bool hasReferInstead = false;
-    QMap<QString, StructuralEntity *> nodes = _struct_scene->nodes ();
-    if (nodes.contains (props.value (ST_ATTR_REF_COMPONENT_UID)))
-    {
-      StructuralEntity *ent
-          = nodes.value (props.value (ST_ATTR_REF_COMPONENT_UID));
-      for (StructuralEntity *e : ent->children ())
-      {
-        if (e->isReference ()
-            && e->id () == props.value (ST_ATTR_REF_INTERFACE_ID))
-        {
-          props.insert (ST_ATTR_REF_INTERFACE_UID, e->uid ());
-          hasReferInstead = true;
-          break;
-        }
-      }
-    }
-
-    if (!hasReferInstead)
-    {
-      QString coreUid = uidById (props.value (ST_ATTR_REF_INTERFACE_ID));
-      CPR_ASSERT (_core2view.contains (coreUid));
-      props.insert (ST_ATTR_REF_INTERFACE_UID, _core2view.value (coreUid));
-    }
-  }
-}
-
-void
 StructuralViewPlugin::clean ()
 {
   _struct_view->clean ();
@@ -463,9 +417,6 @@ StructuralViewPlugin::insertInView (Entity *ent, bool undo)
 
     _core_view_bimap.insert (uid, uid);
 
-    if (!undo)
-      setReferences (props);
-
     _struct_scene->insert (uid, viewParentUid, props, stgs);
   }
   // LinkParam and BindParam are not represented as independent entities in
@@ -544,7 +495,6 @@ StructuralViewPlugin::changeInView (Entity *ent)
     CPR_ASSERT (_struct_scene->hasEntity (uid));
 
     QStrMap props = viewPropsFromCoreEntity (ent);
-    setReferences (props);
 
     _struct_scene->change (uid, props, stgs);
   }

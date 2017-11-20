@@ -77,8 +77,6 @@ private:
 
   QString uidById (const QString &id, Entity *ent = nullptr);
 
-  void setReferences (QStrMap &props);
-
   QStrMap viewPropsFromCoreEntity (const Entity *ent);
   QStrMap coreAttrsFromStructuralEntity (const QStrMap &props);
 

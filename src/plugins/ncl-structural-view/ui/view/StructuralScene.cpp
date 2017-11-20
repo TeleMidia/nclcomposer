@@ -107,12 +107,6 @@ StructuralScene::parallelEdges (StructuralEdge *edge)
   return parallel_edges;
 }
 
-QMap<QString, QString> &
-StructuralScene::refs ()
-{
-  return _refs;
-}
-
 QList<StructuralEntity *>
 StructuralScene::entitiesByAttrId (const QString &id)
 {
@@ -500,8 +494,6 @@ StructuralScene::remove (QString uid, QStrMap stgs)
   if (stgs.value (ST_SETTINGS_UNDO_TRACE) != ST_VALUE_FALSE)
     stgs.insert (ST_SETTINGS_UNDO, ST_VALUE_TRUE);
 
-  removeReferences (e, stgs);
-
   removeChildren (e, stgs);
 
   removeEdges (e, util::createSettings (ST_VALUE_TRUE,
@@ -542,35 +534,6 @@ StructuralScene::remove (QString uid, QStrMap stgs)
 
   if (stgs[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)
     emit removed (uid, stgs);
-}
-
-void
-StructuralScene::removeReferences (StructuralEntity *ent, const QStrMap &stgs)
-{
-  CPR_ASSERT (hasEntity (ent->uid ()));
-
-  if (ent->category () == Structural::Interface)
-  {
-    QStrMap s = util::createSettings (ST_VALUE_FALSE, ST_VALUE_FALSE,
-                                      stgs.value (ST_SETTINGS_CODE));
-
-    for (const QString &key : refs ().keys (ent->uid ()))
-      remove (key, s);
-
-    // Only remove interface -> interface references. Keeping
-    // Media -> Media references to enable undo.  All "trash" references
-    // are ignore when saving the project.
-    refs ().remove (ent->uid ());
-  }
-  else if (ent->structuralType () == Structural::Media)
-  {
-    for (const QString &key : refs ().keys (ent->uid ()))
-    {
-      CPR_ASSERT (hasEntity (key));
-      entity (key)->setReference (false);
-      entity (key)->adjust (true);
-    }
-  }
 }
 
 void

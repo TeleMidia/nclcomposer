@@ -34,7 +34,6 @@ public:
   const QMap<QString, StructuralEdge *> &edges (void);
   QList<StructuralEdge *> edges (const QString &nodeuid);
   QList<StructuralEdge *> parallelEdges (StructuralEdge *edge);
-  QStrMap &refs ();
 
   QString createId (StructuralType type, const QString &customPrefix = "");
 
@@ -79,7 +78,6 @@ private:
   void createXmlElement (StructuralEntity *ent, QDomDocument *doc,
                          QDomElement parent);
 
-  void removeReferences (StructuralEntity *ent, const QStrMap &stgs);
   void removeEdges (StructuralEntity *ent, const QStrMap &stgs);
   void removeChildren (StructuralEntity *ent, const QStrMap &stgs);
   void removeParams (StructuralEntity *ent, const QStrMap &stgs);

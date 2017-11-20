@@ -158,7 +158,6 @@ StructuralView::adjustEntity (StructuralEntity *e, const QStrMap &props,
                               const QStrMap &stgs)
 {
   CPR_ASSERT_NON_NULL (e);
-  StructuralEntity *p = e->structuralParent ();
 
   // Adjust 'references'
   if (stgs[ST_SETTINGS_ADJUST_REFERS] != ST_VALUE_FALSE)
@@ -174,31 +173,6 @@ StructuralView::adjustEntity (StructuralEntity *e, const QStrMap &props,
     e->adjust (false);
   else
     e->adjust (true);
-
-  //  Adjust 'references' (again?)
-  if (stgs[ST_SETTINGS_ADJUST_REFERS] != ST_VALUE_FALSE)
-  {
-    if (p != nullptr && e->category () == Structural::Interface
-        && p->structuralType () == Structural::Media)
-    {
-      if (p->isReference ())
-      {
-        adjustReferences (p);
-      }
-      else
-      {
-        for (const QString &key : _scene->refs ().keys ())
-        {
-          if (_scene->refs ().contains (key)
-              && _scene->refs ().value (key) == p->uid ()
-              && _scene->hasEntity (key))
-          {
-            adjustReferences (_scene->entity (key));
-          }
-        }
-      }
-    }
-  }
 }
 
 void
@@ -212,7 +186,7 @@ StructuralView::adjustAllReferences ()
       StructuralEntity *e = _scene->entity (uid);
       CPR_ASSERT_NON_NULL (e);
       if (e->category () == Structural::Edge
-          || e->structuralType () == Structural::Port || e->isReference ())
+          || e->structuralType () == Structural::Port)
       {
         adjustReferences (e);
         e->adjust (true);
@@ -229,269 +203,6 @@ StructuralView::adjustReferences (StructuralEntity *ent)
   StructuralType type = ent->structuralType ();
   switch (type)
   {
-    case Structural::Media:
-    {
-      // Adjusting other media entities that refer to the current one
-      bool hasChange = false;
-      if (ent->hasProperty (ST_ATTR_REF_REFER_ID))
-      {
-        QString referredUid = ent->property (ST_ATTR_REF_REFER_UID);
-        CPR_ASSERT (_scene->hasEntity (referredUid));
-
-        StructuralEntity *referredEnt = _scene->entity (referredUid);
-        CPR_ASSERT (ent != referredEnt);
-
-        // A media can only refer to another media.
-        CPR_ASSERT (referredEnt->structuralType () == Structural::Media);
-
-        if (!referredEnt->isReference ())
-        {
-          QString instance = "new";
-          if (ent->hasProperty (ST_ATTR_NODE_INSTANCE))
-            instance = ent->property (ST_ATTR_NODE_INSTANCE);
-
-          for (StructuralEntity *child : ent->children ())
-          {
-            if (child->isReference ())
-            {
-              QString referUid = child->property (ST_ATTR_REF_REFER_UID);
-              if (_scene->hasEntity (referUid))
-              {
-                if (_scene->entity (referUid)->structuralParent ()
-                    != referredEnt)
-                {
-                  _scene->remove (child->uid (),
-                                  util::createSettings (false, false));
-                }
-              }
-            }
-
-            QVector<QString> childrenUids;
-            bimap<QString, QString> refer2child;
-
-            for (StructuralEntity *child : ent->children ())
-            {
-              if (child->isReference ())
-              {
-                QString referUid = child->property (ST_ATTR_REF_REFER_UID);
-                refer2child.insert (referUid, child->uid ());
-              }
-
-              childrenUids.append (child->uid ());
-            }
-
-            for (StructuralEntity *child : referredEnt->children ())
-            {
-              if (child->category () == Structural::Interface)
-              {
-                if (!refer2child.to ().contains (child->uid ()))
-                {
-                  if (!childrenUids.contains (
-                          _scene->refs ().value (child->uid ())))
-                  {
-                    QString uid = util::createUid ();
-
-                    QStrMap props = child->properties ();
-                    props[ST_ATTR_ENT_UID] = uid;
-                    props[ST_ATTR_ENT_REFERENCE] = ST_VALUE_TRUE;
-
-                    props[ST_ATTR_REF_REFER_ID] = child->id ();
-                    props[ST_ATTR_REF_REFER_UID] = child->uid ();
-
-                    props.remove (ST_ATTR_ENT_TOP);
-                    props.remove (ST_ATTR_ENT_LEFT);
-
-                    refer2child.insert (uid, child->uid ());
-                    _scene->refs ()[uid] = child->uid ();
-
-                    QStrMap settings = util::createSettings (false, false);
-                    settings[ST_SETTINGS_ADJUST_REFERS] = ST_VALUE_FALSE;
-
-                    _scene->insert (uid, ent->uid (), props, settings);
-                  }
-                }
-              }
-            }
-
-            if (instance == "new")
-            {
-              for (StructuralEntity *child : ent->children ())
-                if (!child->isReference ())
-                {
-                  for (const QString &key :
-                       _scene->refs ().keys (child->uid ()))
-                    _scene->remove (key, util::createSettings (false, false));
-                }
-            }
-            else if (instance == "instSame" || instance == "gradSame")
-            {
-              for (StructuralEntity *child : ent->children ())
-              {
-                if (!child->isReference ())
-                {
-                  for (const QString &key :
-                       _scene->refs ().keys (child->uid ()))
-                  {
-                    if (_scene->hasEntity (key)
-                        && _scene->entity (key)->structuralParent ()
-                               != referredEnt)
-                    {
-                      _scene->remove (key,
-                                      util::createSettings (false, false));
-                    }
-                  }
-                }
-              }
-
-              bool hasNewEntity = false;
-              for (StructuralEntity *child : ent->children ())
-              {
-                if (child->category () == Structural::Interface)
-                {
-                  if (!refer2child.from ().contains (child->uid ()))
-                  {
-                    if (!_scene->refs ().values ().contains (child->uid ()))
-                    {
-                      QString uid = util::createUid ();
-
-                      QStrMap props = child->properties ();
-                      props[ST_ATTR_ENT_UID] = uid;
-                      props[ST_ATTR_ENT_REFERENCE] = ST_VALUE_TRUE;
-
-                      props.remove (ST_ATTR_ENT_TOP);
-                      props.remove (ST_ATTR_ENT_LEFT);
-
-                      props[ST_ATTR_REF_REFER_ID] = child->id ();
-                      props[ST_ATTR_REF_REFER_UID] = child->uid ();
-
-                      _scene->refs ()[uid] = child->uid ();
-
-                      QStrMap settings = util::createSettings (false, false);
-                      settings[ST_SETTINGS_ADJUST_REFERS] = ST_VALUE_FALSE;
-
-                      _scene->insert (uid, referredEnt->uid (), props,
-                                      settings);
-
-                      hasNewEntity = true;
-                    }
-                  }
-                }
-              }
-
-              if (hasNewEntity)
-              {
-                for (const QString &key :
-                     _scene->refs ().keys (referredEnt->uid ()))
-                {
-                  if (_scene->hasEntity (key) && key != ent->uid ())
-                    adjustReferences (_scene->entity (key));
-                }
-              }
-            }
-
-            _scene->refs ()[ent->uid ()] = referredEnt->uid ();
-            ent->setReference (true);
-            hasChange = true;
-          }
-        }
-      }
-
-      if (_scene->refs ().contains (ent->uid ()))
-      {
-        if (!hasChange)
-        {
-          for (StructuralEntity *child : ent->children ())
-          {
-            if (child->isReference ())
-            {
-              _scene->remove (child->uid (),
-                              util::createSettings (false, false));
-            }
-            else
-            {
-              for (const QString &key : _scene->refs ().keys (child->uid ()))
-                _scene->remove (key, util::createSettings (false, false));
-            }
-          }
-
-          ent->setReference (false);
-        }
-      }
-
-      // Adjusting values of relatives entities
-      QVector<StructuralEntity *> relatives = util::neighbors (ent);
-      relatives += util::upneighbors (ent);
-
-      for (StructuralEntity *rel : relatives)
-      {
-        // Adjusting relative edges
-        if (rel->category () == Structural::Edge)
-        {
-          StructuralEdge *edge = cast (StructuralEdge *, rel);
-          CPR_ASSERT_NON_NULL (edge);
-
-          // Adjusting edge if it already has an tail and head defined.
-          if (edge->origin () == ent || edge->destination () == ent)
-          {
-            adjustReferences (edge);
-          }
-          // Adjusting edge if it is a bind and a component value was defined
-          else if (edge->structuralType () == Structural::Bind)
-          {
-            StructuralBind *bind = cast (StructuralBind *, edge);
-            CPR_ASSERT_NON_NULL (bind);
-
-            if (bind->hasProperty (ST_ATTR_REF_COMPONENT_ID)
-                && bind->hasProperty (ST_ATTR_REF_INTERFACE_ID))
-            {
-              QString compId = bind->property (ST_ATTR_REF_COMPONENT_ID);
-              if (ent->id () == compId)
-              {
-                if (bind->hasDestination ()
-                    && bind->destination ()->structuralType ()
-                           == Structural::Link)
-                {
-                  bind->setOrigin (ent);
-                  bind->setProperty (ST_ATTR_EDGE_ORIG, ent->uid ());
-                  bind->setProperty (ST_ATTR_REF_COMPONENT_UID, ent->uid ());
-                }
-                else if (bind->hasOrigin ()
-                         && bind->origin ()->structuralType ()
-                                == Structural::Link)
-                {
-                  bind->setDestination (ent);
-                  bind->setProperty (ST_ATTR_EDGE_DEST, ent->uid ());
-                  bind->setProperty (ST_ATTR_REF_COMPONENT_UID, ent->uid ());
-                }
-
-                adjustReferences (bind);
-              }
-            }
-          }
-        }
-
-        // Adjusting relative ports
-        else if (rel->category () == Structural::Interface)
-        {
-          StructuralInterface *interf = cast (StructuralInterface *, rel);
-          CPR_ASSERT_NON_NULL (interf);
-
-          if (!ST_OPT_SHOW_INTERFACES)
-          {
-            if (interf->structuralType () == Structural::Port)
-            {
-              if (interf->property (ST_ATTR_REF_COMPONENT_ID) == ent->id ())
-              {
-                ent->setProperty (ST_ATTR_ENT_AUTOSTART, ST_VALUE_TRUE);
-              }
-            }
-          }
-        }
-      }
-
-      break;
-    }
-
     case Structural::Reference:
     case Structural::Mapping:
     case Structural::Bind:
@@ -849,14 +560,13 @@ StructuralView::removeEntity (QString uid, QStrMap stgs)
   StructuralEntity *e = _scene->entity (uid);
   StructuralEntity *p = e->structuralParent ();
 
-  if (!e->isReference () || e->category () != Structural::Interface)
+  if (e->category () != Structural::Interface)
   {
-    QString parent = "";
+    QString pUid = "";
     if (p)
-      parent = p->uid ();
+      pUid = p->uid ();
 
-    Remove *cmd
-        = new Remove (_scene, e->uid (), parent, e->properties (), stgs);
+    Remove *cmd = new Remove (_scene, e->uid (), pUid, e->properties (), stgs);
     cmd->setText (stgs[ST_SETTINGS_CODE]);
 
     _commands.push (cmd);
@@ -1077,34 +787,8 @@ StructuralView::paste ()
       }
       else if (result == 2)
       {
-        QString uid = util::createUid ();
-
-        QStrMap props = _clipboard->properties ();
-        props[ST_ATTR_ENT_UID] = uid;
-
-        QString refID = _clipboard->id ();
-        refID = refID.section ('_', 1, 1);
-
-        int n = 0;
-        for (StructuralEntity *entity : _scene->entities ().values ())
-          if (entity->id ().startsWith ("r_" + refID))
-            ++n;
-
-        if (n > 0)
-          refID = "r_" + refID + "_" + QString::number (n);
-        else
-          refID = "r_" + refID;
-
-        props[ST_ATTR_ENT_ID] = refID;
-
-        props[ST_ATTR_REF_REFER_ID] = _clipboard->id ().section ('_', 1, 1);
-        props[ST_ATTR_REF_REFER_UID] = _clipboard->uid ();
-
-        props.remove (ST_ATTR_ENT_TOP);
-        props.remove (ST_ATTR_ENT_LEFT);
-
-        _scene->insert (uid, (parent != nullptr ? parent->uid () : ""), props,
-                        util::createSettings ());
+        // \todo Re-implement refer.
+        qWarning () << "Refer is not implemented.";
       }
 
       // Fix entity drag status
@@ -1365,7 +1049,6 @@ StructuralView::createBind (StructuralEntity *orig, StructuralEntity *dest,
   if ((parentOrig && parentDest) || !ST_OPT_WITH_BODY)
   {
     StructuralEntity *parent = nullptr;
-
     if (parentOrig == parentDest)
     {
       parent = parentOrig;
@@ -1819,8 +1502,8 @@ StructuralView::mouseReleaseEvent (QMouseEvent *evt)
 
     if (tailItems.count () && headtems.count ())
     {
-      StructuralEntity *orig = (StructuralEntity *)tailItems.first ();
-      StructuralEntity *dest = (StructuralEntity *)headtems.first ();
+      auto orig = cast (StructuralEntity *, tailItems.first ());
+      auto dest = cast (StructuralEntity *, headtems.first ());
 
       if (orig != dest)
       {
