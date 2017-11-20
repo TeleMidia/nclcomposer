@@ -72,7 +72,6 @@ private:
 
   QMap<QString, StructuralEntity *> _nodes;
   QMap<QString, StructuralEdge *> _edges;
-  QStrMap _refs;
 
   void load (QDomElement ent, QDomElement parent);
   void createXmlElement (StructuralEntity *ent, QDomDocument *doc,

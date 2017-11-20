@@ -661,4 +661,16 @@ validateKinship (StructuralType entT, StructuralType parentT)
 
   return false;
 }
+
+QStrMap qdom_attrs_to_qmap (const QDomNamedNodeMap &attrs)
+{
+  QMap<QString, QString> map;
+  for (int i = 0; i < attrs.count (); i++)
+  {
+    QDomAttr a = attrs.item (i).toAttr ();
+    map.insert (a.name (), a.value ());
+  }
+  return map;
+}
+
 } // namespace

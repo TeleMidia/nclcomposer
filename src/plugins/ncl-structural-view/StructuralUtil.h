@@ -2,6 +2,7 @@
 #define STRUCTURALUTIL_H
 
 #include <QMap>
+#include <QDomElement>
 #include <QObject>
 
 #include "StructuralEntity.h"
@@ -61,7 +62,18 @@ void adjustEdges (StructuralEntity *entity);
 QString formatId (const QString &id);
 
 bool validateKinship (StructuralType type, StructuralType parent);
+
+QStrMap qdom_attrs_to_qmap (const QDomNamedNodeMap &attrs);
 }
+
+// Some QDom macro utilities.
+#define for_each_qelem_child(E, P)                                            \
+  for (QDomElement E = P.firstChildElement (); !E.isNull ();                  \
+       E = E.nextSiblingElement ())
+
+#define for_each_qelem_child_of_type(E, P, T)                                 \
+  for (QDomElement E = P.firstChildElement (T); !E.isNull ();                 \
+       E = E.nextSiblingElement (T))
 
 template <typename K, typename V>
 std::pair<V, K>

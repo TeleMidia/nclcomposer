@@ -199,7 +199,7 @@ enum Type
   Area = 8,
   Property = 9,
   Bind = 10,
-  Reference = 11,
+  Reference = 11, // or a PortEdge?
   Mapping = 12,
 
   NoType = 0
@@ -270,15 +270,6 @@ typedef Structural::Resize StructuralResize;
 typedef Structural::MimeType StructuralMimeType;
 typedef Structural::Role StructuralRole;
 typedef Structural::InteractionMode StructuralInteractionMode;
-
-// Some QDom macro utilities.
-#define for_each_qelem_child(E, P)                                            \
-  for (QDomElement E = P.firstChildElement (); !E.isNull ();                  \
-       E = E.nextSiblingElement ())
-
-#define for_each_qelem_child_of_type(E, P, T)                                 \
-  for (QDomElement E = P.firstChildElement (T); !E.isNull ();                 \
-       E = E.nextSiblingElement (T))
 
 #include <QMap>
 typedef QMap<QString, QString> QStrMap;

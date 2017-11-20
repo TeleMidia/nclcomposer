@@ -29,8 +29,8 @@ StructuralInterface::adjust (bool collision, bool recursion)
   {
     if (!collision)
     {
-      // Tries (10x) to find a position where there is no collision
-      // with others relatives
+      // Tries (10x) to find a position where there is no collision with others
+      // relatives
       for (int i = 0; i < 10; i++)
       {
         bool colliding = false;
@@ -38,9 +38,7 @@ StructuralInterface::adjust (bool collision, bool recursion)
         {
           if (ent != this)
           {
-            int max = 1000;
-            int n = 0;
-
+            int n = 0, max = 1000;
             qreal current = 0.0;
 
             ent->setSelectable (false);

@@ -8,7 +8,6 @@ StructuralContent::StructuralContent (StructuralEntity *parent)
     : StructuralNode (parent)
 {
   setStructuralType (Structural::Media);
-
   setMimeType (Structural::NoMimeType);
 
   setWidth (ST_DEFAULT_CONTENT_W);

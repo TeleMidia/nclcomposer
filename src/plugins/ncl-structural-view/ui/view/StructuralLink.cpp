@@ -19,15 +19,10 @@ StructuralLink::draw (QPainter *painter)
 
   QColor drawColor = QColor (StructuralUtil::color (structuralType ()));
 
-  if (!error ().isEmpty () || !warning ().isEmpty ())
-  {
-    if (!error ().isEmpty ())
-      drawColor = QString (ST_DEFAULT_ALERT_ERROR_COLOR);
-    else
-      drawColor = QString (ST_DEFAULT_ALERT_WARNING_COLOR);
-
-    drawColor = drawColor.light ();
-  }
+  if (!error ().isEmpty ())
+    drawColor = QColor(ST_DEFAULT_ALERT_ERROR_COLOR).light ();
+  else if (!warning ().isEmpty ())
+    drawColor = QColor(ST_DEFAULT_ALERT_WARNING_COLOR).light ();
 
   painter->setBrush (drawColor);
   painter->setPen (QPen (drawColor.darker (), 0));

@@ -87,7 +87,7 @@ public slots:
   void snapshot ();
   void toggleMinimapVisibility ();
 
-  // FIXME: These methods should not be part of StructuralView
+  // \fixme These methods should not be part of StructuralView
   void deleteSelected ();
 
   void cut ();

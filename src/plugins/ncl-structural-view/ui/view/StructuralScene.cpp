@@ -125,7 +125,7 @@ StructuralScene::createId (StructuralType type, const QString &customPrefix)
 {
   QString prefix = customPrefix;
   if (prefix.isEmpty ())
-    prefix = StructuralUtil::prefix (type); // get a default prefix
+    prefix = util::prefix (type); // get a default prefix
 
   CPR_ASSERT (!prefix.isEmpty ());
 
@@ -153,7 +153,6 @@ StructuralScene::clear ()
     remove (uid, stngs);
   }
 
-  _refs.clear ();
   _nodes.clear ();
   _edges.clear ();
 
@@ -182,18 +181,6 @@ StructuralScene::hasBody ()
   return body () != nullptr;
 }
 
-static QMap<QString, QString>
-qdom_attrs_to_qmap (const QDomNamedNodeMap &attrs)
-{
-  QMap<QString, QString> map;
-  for (int i = 0; i < attrs.count (); i++)
-  {
-    QDomAttr a = attrs.item (i).toAttr ();
-    map.insert (a.name (), a.value ());
-  }
-  return map;
-}
-
 void
 StructuralScene::load (const QString &data)
 {
@@ -217,9 +204,9 @@ StructuralScene::load (QDomElement elt, QDomElement parent)
 
   QString entUid = elt.attribute ("uid");
   QString parentUid = parent.attribute ("uid");
-  QMap<QString, QString> props = qdom_attrs_to_qmap (elt.attributes ());
+  QStrMap props = util::qdom_attrs_to_qmap (elt.attributes ());
 
-  auto stgs = StructuralUtil::createSettings (false, false);
+  auto stgs = util::createSettings (false, false);
   stgs[ST_SETTINGS_ADJUST_REFERS] = ST_VALUE_FALSE;
 
   insert (entUid, parentUid, props, stgs);
@@ -468,13 +455,8 @@ StructuralScene::insert (QString uid, QString parent, QStrMap props,
 
   if (!ST_OPT_SHOW_INTERFACES)
   {
-    // Since interfaces are hidden, no update related with that entities
-    // are notified.  However, the structural view create a new id when this
-    // property is empty, then the change must be explicit notified for the
-    // hidden entities (interface in this case).
     emit changed (uid, e->properties (),
-                  e->properties (), // this param is not used
-                  // in this case
+                  e->properties (), // this param is not used in this case
                   util::createSettings (false, false));
   }
 
