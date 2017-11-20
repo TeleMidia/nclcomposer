@@ -325,8 +325,8 @@ StructuralScene::createEntity (StructuralType type)
       break;
 
     case Structural::Area:
-    case Structural::Property:
     case Structural::Port:
+    case Structural::Property:
     case Structural::SwitchPort:
       e = new StructuralInterface ();
       e->setStructuralType (type);
@@ -442,7 +442,7 @@ StructuralScene::insert (QString uid, QString parent, QStrMap props,
   // 5. Adjust the entity
   _view->adjustEntity (e, props, stgs);
   if (stgs.value (ST_SETTINGS_ADJUST_REFERS, "") != ST_VALUE_FALSE)
-    _view->adjustReferences (e);
+    _view->adjustEntityReferences (e);
 
   connect (e, &StructuralEntity::insertAsked, this, &StructuralScene::insert);
   connect (e, &StructuralEntity::changeAsked, _view,
@@ -523,9 +523,7 @@ StructuralScene::removeEdges (StructuralEntity *ent, const QStrMap &stgs)
 {
   CPR_ASSERT (hasEntity (ent->uid ()));
   for (StructuralEdge *edge : edges (ent->uid ()))
-  {
     _view->removeEntity (edge->uid (), stgs);
-  }
 }
 
 void
@@ -533,9 +531,7 @@ StructuralScene::removeChildren (StructuralEntity *ent, const QStrMap &stgs)
 {
   CPR_ASSERT (hasEntity (ent->uid ()));
   while (!ent->children ().isEmpty ())
-  {
     _view->removeEntity (ent->children ().first ()->uid (), stgs);
-  }
 }
 
 void
@@ -597,7 +593,7 @@ StructuralScene::change (QString uid, QStrMap props, QStrMap stgs)
   }
 
   ent->setProperties (props);
-  _view->adjustReferences (ent);
+  _view->adjustEntityReferences (ent);
   ent->adjust (true);
 
   if (stgs[ST_SETTINGS_NOTIFY] == ST_VALUE_TRUE)

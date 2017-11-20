@@ -12,6 +12,7 @@
 
 class StructuralView;
 class StructuralBind;
+class StructuralInterface;
 
 class StructuralScene : public QGraphicsScene
 {

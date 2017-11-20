@@ -64,8 +64,13 @@ public:
   {
     return _selected;
   }
+
   void adjustEntity (StructuralEntity *e, const QStrMap &props,
                      const QStrMap &stgs);
+
+  void adjustEntityReferences (StructuralEntity *entity);
+  void adjustEdgeReferences (StructuralEdge *edge);
+  void adjustInterfaceReferences (StructuralInterface *interf);
 
 public slots:
   // External methods
@@ -109,7 +114,6 @@ public slots:
   void clean ();
 
   void adjustAllReferences ();
-  void adjustReferences (StructuralEntity *entity);
 
 signals:
   void entitySelected (QString uid);
