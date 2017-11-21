@@ -322,9 +322,8 @@ NCLTextEditor::keyPressEvent (QKeyEvent *event)
     style = SendScintilla (SCI_GETSTYLEAT, pos);
 
 #ifdef AUTOREMOVE_ENDTAG
-    char curChar = SendScintilla (QsciScintilla::SCI_GETCHARAT, pos);
+    char curChar = SendScintilla (SCI_GETCHARAT, pos);
 
-    // \todo This should be defined as a preference!
     if (style == QsciLexerNCL::Tag && event->key () == Qt::Key_Slash
         && curChar == Qt::Key_Greater)
     {
@@ -350,7 +349,7 @@ NCLTextEditor::keyPressEvent (QKeyEvent *event)
           lineIndexFromPosition (pos + 2, &line, &index);
 
           // Check if the close tag is the same of the open tag.
-          if (_apis->getCurrentTagName (begin_del)
+          if (_apis->currentTagname (begin_del)
               == wordAtLineIndex (line, index))
           {
             int end_del = pos;

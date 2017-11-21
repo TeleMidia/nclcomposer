@@ -50,22 +50,19 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
 
     for (int i = 0; i < context.count (); ++i)
     {
-      QString father = getParentTagName (pos);
+      QString father = parentTagname (pos);
 
       if (father == "")
         father = "NULL";
 
-      map<QString, char> *elements = _nclStructure->getChildren (father);
-      map<QString, char>::iterator it;
-
-      if (elements != nullptr)
+      auto elements = _nclStructure->getChildren (father);
+      if (elements)
       {
-        it = elements->begin ();
-        for (; it != elements->end (); ++it)
+        for (auto kv : *elements)
         {
-          if (it->first.startsWith (context[i]))
+          if (kv.first.startsWith (context[i]))
           {
-            QString str (it->first);
+            QString str (kv.first);
             list.push_back (str);
           }
         }
@@ -75,31 +72,23 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
   else if (isAttribute (pos))
   {
     _suggesting = SUGGESTING_ATTRIBUTES;
-    QString tagname = getCurrentTagName (pos);
-    QStringList current_attrs;
-
-    getAttributesTyped (pos, current_attrs);
-
+    QString tagname = currentTagname (pos);
     if (tagname != "")
     {
-      map<QString, bool> *attrs = _nclStructure->getAttributes (tagname);
-      deque<QString> *attrs_ordered
-          = _nclStructure->getAttributesOrdered (tagname);
+      QStringList curr_attrs = attributesTyped (pos);
 
-      if (attrs != nullptr)
+      auto attrs = _nclStructure->getAttributes (tagname);
+      deque<QString> *attrs_ordered =
+          _nclStructure->getAttributesOrdered (tagname);
+
+      if (attrs)
       {
-        deque<QString>::iterator it;
-        for (int i = 0; i < context.count (); ++i)
+        for (const QString &str : context)
         {
-          it = attrs_ordered->begin ();
-
-          for (; it != attrs_ordered->end (); ++it)
+          for (const QString &attr : *attrs_ordered)
           {
-            if (it->startsWith (context[i]) && !current_attrs.contains (*it))
-            {
-              QString str = *it;
-              list.push_back (str);
-            }
+            if (attr.startsWith (str) && !curr_attrs.contains (attr))
+              list.push_back (attr);
           }
         }
       }
@@ -108,8 +97,8 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
   else if (isAttributeValue (pos))
   {
     _suggesting = SUGGESTING_ATTRIBUTE_VALUES;
-    QString tagname = getCurrentTagName (pos);
-    QString attribute = getCurrentAttribute (pos);
+    QString tagname = currentTagname (pos);
+    QString attribute = currentAttribute (pos);
     QString datatype
         = _nclStructure->getAttributeDatatype (tagname, attribute);
     NCLTextEditor *nclEditor = ((NCLTextEditor *)lexer ()->editor ());
@@ -178,16 +167,16 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
           else if (references[i]->getScope ()
                    == AttributeReferences::SAME_SCOPE)
           {
-            int parent_offset = getParentOffset (pos);
+            int parent_offset = parentOffset (pos);
             while (parent_offset >= 0
                    && !_nclStructure->defineScope (
-                          getCurrentTagName (parent_offset)))
+                          currentTagname (parent_offset)))
             {
-              parent_offset = getParentOffset (parent_offset);
+              parent_offset = parentOffset (parent_offset);
             }
 
             QString idValue
-                = getAttributeValueFromCurrentElement (parent_offset, "id");
+                = attrValueFromCurrentElement (parent_offset, "id");
 
             // \todo suggest elements child of an element with no id.
             elements = nclEditor->elementsByTagname (
@@ -208,7 +197,7 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
               attr = userDefinedScope.mid (6);
               // qCDebug (CPR_PLUGIN_TEXTUAL) << "$THIS" << attr;
               QString idValue
-                  = getAttributeValueFromCurrentElement (pos, attr);
+                  = attrValueFromCurrentElement (pos, attr);
               elements = nclEditor->elementsByTagname (
                   references[i]->refElement (), idValue);
             }
@@ -216,11 +205,11 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
             {
               attr = userDefinedScope.mid (8);
               // qCDebug (CPR_PLUGIN_TEXTUAL) << "$PARENT" << attr;
-              int parent_offset = getParentOffset (pos);
+              int parent_offset = parentOffset (pos);
               // qCDebug (CPR_PLUGIN_TEXTUAL) << "parent_offset" <<
               // parent_offset;
               QString idValue
-                  = getAttributeValueFromCurrentElement (parent_offset, attr);
+                  = attrValueFromCurrentElement (parent_offset, attr);
 
               // qCDebug (CPR_PLUGIN_TEXTUAL) << "idValue = " << idValue;
               elements = nclEditor->elementsByTagname (
@@ -230,8 +219,8 @@ QsciNCLAPIs::updateAutoCompletionList (const QStringList &context,
             {
               attr = userDefinedScope.mid (13);
               // qCDebug (CPR_PLUGIN_TEXTUAL) << "$GRANDPARENT" << attr;
-              int grandparent_offset = getParentOffset (getParentOffset (pos));
-              QString idValue = getAttributeValueFromCurrentElement (
+              int grandparent_offset = parentOffset (parentOffset (pos));
+              QString idValue = attrValueFromCurrentElement (
                   grandparent_offset, attr);
               elements = nclEditor->elementsByTagname (
                   references[i]->refElement (), idValue);
@@ -537,7 +526,7 @@ QsciNCLAPIs::isAttribute (int pos)
 }
 
 QString
-QsciNCLAPIs::getCurrentTagName (int pos)
+QsciNCLAPIs::currentTagname (int pos)
 {
   int p = pos;
   char ch
@@ -591,7 +580,7 @@ QsciNCLAPIs::getCurrentTagName (int pos)
 }
 
 QString
-QsciNCLAPIs::getCurrentAttribute (int pos)
+QsciNCLAPIs::currentAttribute (int pos)
 {
   int p = pos;
   char ch;
@@ -645,7 +634,7 @@ QsciNCLAPIs::getCurrentAttribute (int pos)
 
 // TODO: Eliminate closed tags in the way
 int
-QsciNCLAPIs::getParentOffset (int pos)
+QsciNCLAPIs::parentOffset (int pos)
 {
   int p = pos;
   char ch
@@ -698,12 +687,10 @@ QsciNCLAPIs::getParentOffset (int pos)
 }
 
 QString
-QsciNCLAPIs::getAttributeValueFromCurrentElement (int pos, const QString &attr)
+QsciNCLAPIs::attrValueFromCurrentElement (int pos, const QString &attr)
 {
-  qCDebug (CPR_PLUGIN_TEXTUAL)
-      << "QsciNCLAPIs::getAttributeValueFromCurrentElement";
-  int start = getStartTagBegin (pos);
-  int length = getStartTagLength (pos);
+  int start = startTagBegin (pos);
+  int length = startTagLength (pos);
   int end = start + length;
   QString attrValue = "";
 
@@ -715,10 +702,9 @@ QsciNCLAPIs::getAttributeValueFromCurrentElement (int pos, const QString &attr)
   lexer ()->editor ()->SendScintilla (QsciScintilla::SCI_GETTEXTRANGE, start,
                                       end, chars);
   text = QString (chars);
-  qCDebug (CPR_PLUGIN_TEXTUAL) << "text = " << text;
 
   QDomDocument domDoc;
-  QString tagname = getCurrentTagName (pos);
+  QString tagname = currentTagname (pos);
   // \fixme I am assuming that the text is not closing the tag. This will
   // probably cause some problem.
   text += "</";
@@ -733,11 +719,11 @@ QsciNCLAPIs::getAttributeValueFromCurrentElement (int pos, const QString &attr)
 }
 
 QString
-QsciNCLAPIs::getParentTagName (int pos)
+QsciNCLAPIs::parentTagname (int pos)
 {
-  int p_offset = getParentOffset (pos);
+  int p_offset = parentOffset (pos);
   if (p_offset > 0)
-    return getCurrentTagName (p_offset);
+    return currentTagname (p_offset);
   return "";
 }
 
@@ -746,7 +732,6 @@ QsciNCLAPIs::getParentTagName (int pos)
 bool
 QsciNCLAPIs::isAttributeValue (int pos)
 {
-  qCDebug (CPR_PLUGIN_TEXTUAL) << "QsciNCLAPIs::isAttributeValue";
   int style = lexer ()->editor ()->SendScintilla (
       QsciScintilla::SCI_GETSTYLEAT, pos);
 
@@ -761,7 +746,7 @@ QsciNCLAPIs::isAttributeValue (int pos)
 
 // FIXME: be sure we are in a start tag
 int
-QsciNCLAPIs::getStartTagBegin (int pos)
+QsciNCLAPIs::startTagBegin (int pos)
 {
   int p = pos;
   char ch
@@ -776,9 +761,9 @@ QsciNCLAPIs::getStartTagBegin (int pos)
 
 // FIXME: Be sure that we are in a start tag
 int
-QsciNCLAPIs::getStartTagLength (int pos)
+QsciNCLAPIs::startTagLength (int pos)
 {
-  int start = getStartTagBegin (pos);
+  int start = startTagBegin (pos);
   int p = pos;
   int text_length
       = lexer ()->editor ()->SendScintilla (QsciScintilla::SCI_GETLENGTH);
@@ -793,17 +778,19 @@ QsciNCLAPIs::getStartTagLength (int pos)
   return p >= text_length ? -1 : (p - start + 1);
 }
 
-void
-QsciNCLAPIs::getAttributesTyped (int pos, QStringList &attrs)
+QStringList
+QsciNCLAPIs::attributesTyped (int pos)
 {
-  int start = getStartTagBegin (pos);
-  int length = getStartTagLength (pos);
+  QStringList attrs;
+
+  int start = startTagBegin (pos);
+  int length = startTagLength (pos);
   int end = start + length;
 
   qCDebug (CPR_PLUGIN_TEXTUAL) << "start=" << start << " end=" << end;
 
   if (start < 0 || end < 0)
-    return;
+    return attrs;
 
   QString text;
   char *chars = (char *)malloc ((end - start) * sizeof (char) + 1);
@@ -822,7 +809,7 @@ QsciNCLAPIs::getAttributesTyped (int pos, QStringList &attrs)
   {
     if (index + attrRegex.matchedLength () > end)
       break;
-    qCDebug (CPR_PLUGIN_TEXTUAL) << index << " " << attrRegex.matchedLength ();
+
     attrs << text.mid (index, attrRegex.matchedLength ()).trimmed ();
 
     lastIndex = (index + attrRegex.matchedLength ());
@@ -830,6 +817,8 @@ QsciNCLAPIs::getAttributesTyped (int pos, QStringList &attrs)
   }
 
   delete chars;
+
+  return attrs;
 }
 
 QString

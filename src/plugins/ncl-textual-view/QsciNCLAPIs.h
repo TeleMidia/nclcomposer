@@ -63,17 +63,17 @@ public:
 
   bool event (QEvent *e);
 
-  QString getCurrentTagName (int pos);
+  QString currentTagname (int pos);
   bool isElement (int pos);
   bool isAttribute (int pos);
   bool isAttributeValue (int pos);
-  QString getCurrentAttribute (int pos);
-  int getParentOffset (int pos);
-  QString getParentTagName (int pos);
-  void getAttributesTyped (int pos, QStringList &attrs);
-  QString getAttributeValueFromCurrentElement (int pos, const QString &attr);
-  int getStartTagBegin (int pos);
-  int getStartTagLength (int pos);
+  QString currentAttribute (int pos);
+  int parentOffset (int pos);
+  QString parentTagname (int pos);
+  QStringList attributesTyped (int pos);
+  QString attrValueFromCurrentElement (int pos, const QString &attr);
+  int startTagBegin (int pos);
+  int startTagLength (int pos);
 
 private:
   NCLStructure *_nclStructure;

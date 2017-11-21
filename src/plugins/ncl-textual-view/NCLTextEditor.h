@@ -34,7 +34,7 @@
 #define PREF_FONT_SIZE 10
 
 #define LIGTHSTYLE 1
-#define AUTOREMOVE_ENDTAG
+#define AUTOREMOVE_ENDTAG 1
 
 #ifdef LIGTHSTYLE
 /* Light Style */
