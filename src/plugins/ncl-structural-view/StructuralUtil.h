@@ -5,6 +5,7 @@
 #include <QDomElement>
 #include <QObject>
 
+#include "util/Utilities.h"
 #include "StructuralEntity.h"
 #include <QLoggingCategory>
 
@@ -91,6 +92,33 @@ invert (const std::map<V, K> &map)
                   std::inserter (inverted, inverted.begin ()), flip<V, K>);
 
   return inverted;
+}
+
+/*!
+ * Gets a copy of only the pairs that have the keys passed as param.
+ */
+template <typename K, typename V>
+QMap<K, V>
+qmap_filter_by_keys (const QMap<K,V> &map, const QVector <K> &keys)
+{
+  QMap <K, V> ret;
+  for (K k : keys)
+  {
+    CPR_ASSERT (map.count (k));
+    ret.insert (k, map[k]);
+  }
+  return ret;
+}
+
+/*!
+ * Copy all key/values of orig to dest.
+ */
+template <typename K, typename V>
+void
+qmap_insert_all (QMap<K,V> &dest, const QMap<K,V> &orig)
+{
+  for (K k : orig.keys ())
+    dest.insert (k, orig[k]);
 }
 
 Q_DECLARE_LOGGING_CATEGORY (CPR_PLUGIN_STRUCT)

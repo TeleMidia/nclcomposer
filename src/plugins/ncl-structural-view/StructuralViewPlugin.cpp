@@ -92,27 +92,19 @@ StructuralViewPlugin::updateFromModel ()
     if (!id.isEmpty ())
     {
       QStrMap old_props = _struct_scene->entity (key)->properties ();
-      QStrMap old_pos_props
-          = { { ST_ATTR_ENT_TOP, old_props[ST_ATTR_ENT_TOP] },
-              { ST_ATTR_ENT_LEFT, old_props[ST_ATTR_ENT_LEFT] },
-              { ST_ATTR_ENT_WIDTH, old_props[ST_ATTR_ENT_WIDTH] },
-              { ST_ATTR_ENT_HEIGHT, old_props[ST_ATTR_ENT_HEIGHT] },
-              { ST_ATTR_ENT_COLLAPSED, old_props[ST_ATTR_ENT_COLLAPSED] },
-              { ST_ATTR_ENT_UNCOLLAPSED_TOP,
-                old_props[ST_ATTR_ENT_UNCOLLAPSED_TOP] },
-              { ST_ATTR_ENT_UNCOLLAPSED_LEFT,
-                old_props[ST_ATTR_ENT_UNCOLLAPSED_LEFT] },
-              { ST_ATTR_ENT_UNCOLLAPSED_WIDTH,
-                old_props[ST_ATTR_ENT_UNCOLLAPSED_WIDTH] },
-              { ST_ATTR_ENT_UNCOLLAPSED_HEIGHT,
-                old_props[ST_ATTR_ENT_UNCOLLAPSED_HEIGHT] } };
+
+      QStrMap old_pos_props = qmap_filter_by_keys (
+          old_props,
+          { ST_ATTR_ENT_TOP, ST_ATTR_ENT_LEFT, ST_ATTR_ENT_WIDTH,
+            ST_ATTR_ENT_HEIGHT, ST_ATTR_ENT_COLLAPSED,
+            ST_ATTR_ENT_UNCOLLAPSED_TOP, ST_ATTR_ENT_UNCOLLAPSED_LEFT,
+            ST_ATTR_ENT_UNCOLLAPSED_WIDTH, ST_ATTR_ENT_UNCOLLAPSED_HEIGHT });
 
       cache.insert (id, old_pos_props);
     }
   }
 
-  // Clean the scene.
-  clean ();
+  clean (); // Clean the scene.
 
   // Get the entities from the core again in the required order
   // (nodes->interfaces->edges).
@@ -142,7 +134,7 @@ StructuralViewPlugin::updateFromModel ()
           break;
 
         default:
-          // do nothing.
+          // CPR_ASSERT_NOT_REACHED ();
           break;
       }
 
@@ -152,14 +144,9 @@ StructuralViewPlugin::updateFromModel ()
 
   // Insert the nodes, interfaces, and edges entities in the view again (in
   // that order).
-  for (Entity *ent : nodes)
-    insertInView (ent, false);
-
-  for (Entity *ent : interfaces)
-    insertInView (ent, false);
-
-  for (Entity *ent : edges)
-    insertInView (ent);
+  insertall_in_view (nodes, false);
+  insertall_in_view (interfaces, false);
+  insertall_in_view (edges, false);
 
   // Restore the old position properties.
   QStrMap stgs = util::createSettings (false, false);
@@ -169,8 +156,7 @@ StructuralViewPlugin::updateFromModel ()
     if (cache.contains (id))
     {
       QStrMap props = ent->properties ();
-      for (const QString &key : cache[id].keys ())
-        props[key] = cache[id][key];
+      qmap_insert_all (props, cache[id]); // insert all cache[id] into props.
 
       _struct_scene->change (ent->uid (), props, stgs);
     }
@@ -453,7 +439,7 @@ StructuralViewPlugin::removeFromView (Entity *ent, bool undo)
   QStrMap stgs = util::createSettings (undo, false);
   if (isLinkOrBindParam (ent->type ()))
   {
-    QString name = ST_ATTR_PARAM_NAME (ent->type());
+    QString name = ST_ATTR_PARAM_NAME (ent->type ());
     QString value = ST_ATTR_PARAM_VALUE (ent->type ());
 
     StructuralEntity *e
@@ -564,16 +550,16 @@ param_tag_name_value (StructuralType type)
 }
 
 bool
-StructuralViewPlugin::hasEntity (const QString &type)
+StructuralViewPlugin::hasEntityOfType (const QString &type)
 {
   auto l = project ()->entitiesByType (type);
-  return l.size() != 0;
+  return l.size () != 0;
 }
 
 Entity *
 StructuralViewPlugin::firstEntityOfType (const QString &type)
 {
-  auto l = project()->entitiesByType (type);
+  auto l = project ()->entitiesByType (type);
   CPR_ASSERT (l.size ());
   return l.first ();
 }
@@ -600,7 +586,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
   else if (type == Structural::Body)
   {
     // If core does not have an <ncl>, adds one.
-    if (!hasEntity ("ncl"))
+    if (!hasEntityOfType ("ncl"))
     {
       Entity *proj = project ();
       CPR_ASSERT_NON_NULL (proj);
@@ -610,7 +596,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
     entParent = firstEntityOfType ("ncl");
 
     // If core already has a body, use it.
-    if (hasEntity ("body"))
+    if (hasEntityOfType ("body"))
     {
       Entity *body = firstEntityOfType ("body");
       _core_view_bimap.remove (body->uid ());
@@ -621,7 +607,7 @@ StructuralViewPlugin::insertInCore (QString uid, QString parent, QStrMap props,
   }
   else if (parent.isEmpty () && !ST_OPT_WITH_BODY)
   {
-    entParent = hasEntity("body") ? firstEntityOfType ("body") : nullptr;
+    entParent = hasEntityOfType ("body") ? firstEntityOfType ("body") : nullptr;
   }
   else
   {
@@ -695,14 +681,13 @@ StructuralViewPlugin::changeInCore (QString uid, QStrMap props,
     StructuralType type = util::strtotype (props[ST_ATTR_ENT_TYPE]);
     QStrMap attrs = coreAttrsFromStructuralEntity (props);
 
-
     if (type == Structural::Link || type == Structural::Bind)
     {
       QString tag, name, value;
       std::tie (tag, name, value) = param_tag_name_value (type);
 
       QVector<QString> paramUids, paramNames;
-      for (Entity *c : ent->entityChildrenByType (tag) )
+      for (Entity *c : ent->entityChildrenByType (tag))
       {
         paramUids.append (c->uid ());
         paramNames.append (c->attr ("name"));

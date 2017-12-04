@@ -82,7 +82,7 @@ private:
 
   void clean ();
 
-  bool hasEntity (const QString &type);
+  bool hasEntityOfType (const QString &type);
   Entity *firstEntityOfType (const QString &type);
 
 private:
@@ -102,10 +102,12 @@ private:
   StructuralView *_struct_view;
 };
 
-class StructuralViewFactory : public QObject,
-                              public IPluginFactoryTpl<StructuralViewPlugin>
+#define insertall_in_view(vect, undo) \
+  for (Entity *ent : vect) \
+    insertInView (ent, undo);
+
+class StructuralViewFactory : public IPluginFactoryTpl<StructuralViewPlugin>
 {
-  Q_OBJECT
   CPR_PLUGIN_METADATA ("br.puc-rio.telemidia.structural",
                        "ncl-structural-view.json")
 };
