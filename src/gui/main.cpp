@@ -1,4 +1,4 @@
-/* Copyright (C) 2011-2017 PUC-Rio/TeleMídia Lab.
+/* Copyright (C) 2011-2018 PUC-Rio/TeleMídia Lab.
 
  NCL Composer is free software: you can redistribute it and/or modify
  it under the terms of the GNU Lesser General Public License as published
@@ -80,7 +80,7 @@ handleArguments (QCommandLineParser &cmdParser, bool &initGUI)
   QString desc;
   desc += "NCL Composer is a flexible authoring tool for interactive \n"
           "multimedia applications.\n";
-  desc += "Copyright (C) 2011-2017 by ";
+  desc += "Copyright (C) 2011-2018 by ";
   desc += QCoreApplication::organizationName ();
   desc += ".";
   desc += "\n\nNCL Composer is free software; see the source for copying "
