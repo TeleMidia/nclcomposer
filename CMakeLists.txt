@@ -1,15 +1,28 @@
 cmake_minimum_required(VERSION 3.2)
-project(nclcomposer)
+cmake_policy (SET CMP0071 NEW)
 
-# get version from git
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
-include(GetGitRevisionDescription)
-git_describe(VERSION --tags)
-message (STATUS "Configuring NCL Composer ${VERSION}")
+project(nclcomposer)
 
 if (UNIX)
   add_definitions(-Wextra -Wall)
 endif()
+
+list(APPEND CMAKE_AUTOMOC_MACRO_NAMES "CPR_PLUGIN_METADATA")
+
+# get version from git
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+
+if (EXISTS ${CMAKE_SOURCE_DIR})
+  include(GetGitRevisionDescription)
+  git_describe(VERSION --tags)
+  # write version from git on version.txt
+  file (WRITE ${CMAKE_SOURCE_DIR}/version.txt ${VERSION})
+endif ()
+
+# get the version from version.txt
+file (READ version.txt VERSION)
+
+message (STATUS "Configuring NCL Composer ${VERSION}")
 
 #parse the version information into pieces.
 string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
