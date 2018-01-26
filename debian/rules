@@ -7,6 +7,8 @@
 # This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
+include /usr/share/dpkg/pkg-info.mk
+
 export DH_VERBOSE=1
 export PREFIX=/usr
 
@@ -18,7 +20,7 @@ APPNAME := nclcomposer
 build:
 	dh_testdir
 	mkdir -p $(BUILDDIR)
-	cd $(BUILDDIR); ${CMAKE} ..
+	cd $(BUILDDIR); ${CMAKE} -DVERSION=${DEB_VERSION_UPSTREAM} ..
 	$(MAKE) -j8 -C ${BUILDDIR}
 
 clean:

@@ -12,15 +12,13 @@ list(APPEND CMAKE_AUTOMOC_MACRO_NAMES "CPR_PLUGIN_METADATA")
 # get version from git
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
-if (EXISTS ${CMAKE_SOURCE_DIR})
-  include(GetGitRevisionDescription)
-  git_describe(VERSION --tags)
-  # write version from git on version.txt
-  file (WRITE ${CMAKE_SOURCE_DIR}/version.txt ${VERSION})
-endif ()
-
-# get the version from version.txt
-file (READ version.txt VERSION)
+# get version from git (if is not defined as a parameter)
+if ("${VERSION}" STREQUAL "")
+  if (EXISTS ${CMAKE_SOURCE_DIR})
+    include(GetGitRevisionDescription)
+    git_describe(VERSION --tags)
+  endif ()
+endif()
 
 message (STATUS "Configuring NCL Composer ${VERSION}")
 
