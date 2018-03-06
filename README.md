@@ -65,6 +65,21 @@ find the executable (and run):
 
     $ ./_build/bin/nclcomposer
 
+## Nightly builds
+
+**Linux Debian/Ubuntu/Mint**
+
+To install a nightly build of this repository you can run:
+
+    $ sudo add-apt-repository ppa:telemidia/daily-builds
+    $ sudo apt-get update
+    $ sudo apt-get install nclcomposer
+
+WARNING:  Nightly builds are automatically generated builds from the latest
+development code.  By their nature these builds are likely to contain bugs.
+**We value your help**.  Please, [report problems or give us feedbacks if you
+find any problem](https://github.com/telemidia/nclcomposer/issues).
+
 ## Main authors and contributors
   * Roberto Azevedo <robertogerson@telemidia.puc-rio.br>
   * Eduardo Araújo <edcaraujo@telemidia.puc-rio.br>
