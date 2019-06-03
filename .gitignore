@@ -26,4 +26,4 @@ doc/build
 *.qm
 qscintilla_*.ts
 *.rc
-
+_build

@@ -21,6 +21,7 @@
 #include <util/ComposerSettings.h>
 using namespace cpr::core;
 
+#include <QAction>
 #include <QDialog>
 #include <QStringListModel>
 #include <QTreeWidget>

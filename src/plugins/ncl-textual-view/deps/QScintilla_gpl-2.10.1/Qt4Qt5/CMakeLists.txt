@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.2)
 project(qscintilla2_telem)
 
-set (CMAKE_AUTOMOC ON)
+set (CMAKE_AUTOMOC OFF)
 set (CMAKE_AUTORCC ON)
 set (CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -23,7 +23,7 @@ set (QSCINTILLA_SOURCES
   ./Qsci/qscicommandset.h
   ./Qsci/qscidocument.h
   ./Qsci/qscilexer.h
-  
+
   ./Qsci/qscilexercustom.h
   ./Qsci/qscilexercpp.h
   ./Qsci/qscilexerpython.h
@@ -31,7 +31,7 @@ set (QSCINTILLA_SOURCES
   ./Qsci/qscilexerhtml.h
   ./Qsci/qscilexerxml.h
   ./Qsci/qscilexerlua.h
-  
+
   ./Qsci/qscimacro.h
   ./Qsci/qsciprinter.h
   ./Qsci/qscistyle.h
@@ -91,7 +91,7 @@ set (QSCINTILLA_SOURCES
   ../src/UniConversion.h
   ../src/ViewStyle.h
   ../src/XPM.h
-  
+
   qsciscintilla.cpp
   qsciscintillabase.cpp
   qsciabstractapis.cpp
@@ -100,7 +100,7 @@ set (QSCINTILLA_SOURCES
   qscicommandset.cpp
   qscidocument.cpp
   qscilexer.cpp
-  
+
   qscilexercustom.cpp
   qscilexercpp.cpp
   qscilexerpython.cpp
@@ -108,7 +108,7 @@ set (QSCINTILLA_SOURCES
   qscilexerhtml.cpp
   qscilexerxml.cpp
   qscilexerlua.cpp
-  
+
   qscimacro.cpp
   qsciprinter.cpp
   qscistyle.cpp
@@ -119,12 +119,12 @@ set (QSCINTILLA_SOURCES
   ListBoxQt.cpp
   PlatQt.cpp
   ScintillaQt.cpp
-  
+
   ../lexers/LexPython.cpp
   ../lexers/LexCPP.cpp
   ../lexers/LexHTML.cpp
   ../lexers/LexLua.cpp
-  
+
   ../lexlib/Accessor.cpp
   ../lexlib/CharacterCategory.cpp
   ../lexlib/CharacterSet.cpp
